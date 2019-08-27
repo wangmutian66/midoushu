@@ -1,0 +1,191 @@
+﻿<include file="public/layout" />
+
+<body>
+    <script>
+
+    function postdata(){
+        $.ajax({  
+            url: "{:U('/Company/System/doSetMobile')}",  
+            type: 'POST',  
+            data:$("#formf").serialize(),  
+            dataType: 'json',  
+            error: function(){alert('请刷新重试')},
+           
+            success: function(r){
+                if(r.status == 1){
+                    alert('数据更新成功！');
+                        location.href = "{:U('/Company/System/Modify')}";
+                    
+                }else{
+                    alert(r.info);
+                }
+            },
+            
+        });  
+        
+        
+        return false;
+    }
+  function sendcode(obj){
+      // countdown(obj);
+      //   return false;
+        var tel = $(obj).attr('rel');
+        if(tel == 0){
+            tel = $("#newmobile").val();
+        }
+        $.ajax({
+            url : "/index.php?m=Home&c=Api&a=send_validate_code&scene=6&type=mobile&send="+tel,
+            type:'post',
+            dataType:'json',
+            data:{send:tel},
+            success:function(res){
+                if(res.status==1){
+                    //成功
+                    alert(res.msg);
+                    countdown(obj);
+                }else{
+                    //失败
+                    alert(res.msg);
+                    $(obj).text('请刷新再试！');
+                    $(obj).attr('id','fetchcode');
+                }
+            }
+        })
+        
+    }
+
+
+    function countdown(obj){
+        var obj = $(obj);
+        var s = {$tpshop_config['sms_sms_time_out']};
+        //改变按钮状态
+        obj.unbind('click');
+        //添加样式
+        obj.attr('id','fetchcode');
+        callback();
+        //循环定时器
+        var T = window.setInterval(callback,1000);
+        function callback()
+        {
+            if(s <= 0){
+                //移除定时器
+                window.clearInterval(T);
+                obj.bind('click',sendcode)
+                obj.removeAttr('id','fetchcode');
+                obj.text('获取验证码');
+            }else{
+                obj.text(--s + '秒后再获取');
+            }
+        }
+    }
+    
+   
+</script>
+    <div class="mdk-drawer-layout js-mdk-drawer-layout" data-fullbleed data-push data-responsive-width="992px" data-has-scrolling-region>
+
+        <div class="mdk-drawer-layout__content">
+            <!-- header-layout -->
+            <div class="mdk-header-layout js-mdk-header-layout  mdk-header--fixed  mdk-header-layout__content--scrollable">
+             
+
+                <!-- content -->
+                <div class="mdk-header-layout__content ls-top-navbar mdk-header-layout__content--scrollable h-100">
+                    <!-- main content -->
+                    <div class="py-4 mb-3 bg-white border-bottom" style="padding:.5rem 0 !important;">
+                        <div class="container-fluid container-account">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="media media-user-info align-items-center">
+                                        <img src="picture/person-3.jpg" class="img-fluid rounded-circle mr-2" width="60" alt="">
+                                        <div class="media-body lh-1">
+                                            <p class="h4 m-0">{$company_info.cname|default='暂未设置公司名称'}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container-fluid">
+                        
+                        <div class="tab-content" id="accountTabsContent">
+                            <div class="fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+                                <div class="row">
+                                    <div class="col-lg-9">
+                                        <div class="card card-account">
+                                            <div class="card-body">
+                                                <form onsubmit="return postdata()" id="formf">
+                                                    
+                                                    <div class="form-group">
+                                                        <label for="instant-phone">原手机号</label>
+                                                        <div class="input-group input-group--inline">
+                                                            <div class="input-group-addon">
+                                                                <i class="material-icons">phone</i>
+                                                            </div>
+                                                            <textarea class="form-control" style="height:2.2rem;resize:none;" disabled="disabled">{$company_info.mobile|mobile_hide}</textarea>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>验证码</label>
+                                                        <div class="input-group input-group--inline">
+                                                            <div class="input-group-addon">
+                                                                <i class="material-icons">find_in_page</i>
+                                                            </div>
+                                                            <input type="text" class="form-control" placeholder="请输入验证码" id="code1" name="code1">
+                                                            <button type="button" class="btn btn-outline-primary" style="margin-left:.5rem;" onClick="sendcode(this)" rel="{$company_info.mobile}">发送验证码</button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="instant-phone">新手机号</label>
+                                                        <div class="input-group input-group--inline">
+                                                            <div class="input-group-addon">
+                                                                <i class="material-icons">phone</i>
+                                                            </div>
+                                                            <input type="text" class="form-control" name="lastname" placeholder="请输入手机号" id="newmobile" name="newmobile" >
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>验证码</label>
+                                                        <div class="input-group input-group--inline">
+                                                            <div class="input-group-addon">
+                                                                <i class="material-icons">find_in_page</i>
+                                                            </div>
+                                                            <input type="text" class="form-control" placeholder="请输入验证码"  id="code2" name="code2">
+                                                            <button type="button" class="btn btn-outline-primary" style="margin-left:.5rem;" onClick="sendcode(this)" rel='0'>发送验证码</button>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <button class="btn btn-success">保存修改</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            
+                            
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <!-- // END drawer-layout__content -->
+
+     
+       
+
+    </div>
+    <!-- // END drawer-layout -->
+
+
+
+
+</body>
+
+</html>

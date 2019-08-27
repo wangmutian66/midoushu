@@ -1,0 +1,165 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/js/company.js"></script>
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title">
+      <div class="item-title">
+        <ul class="tab-base nc-row">
+		<li><a  class="current" href="{:U('/Admin/Staff/qrcodeSearch')}">二维码搜索</a></li>
+		<li><a href="{:U('/Admin/Company/offline_detail/tz/2/from/qrcode')}">扫码自定义流水</a></li>
+		<li><a href="{:U('/Admin/WithdrawLog/too_index/from/qrcode')}">提现记录</a></li>
+    <li><a href="{:U('/Admin/Staff/search')}">查询</a></li>
+		</ul>
+      </div>
+    </div>
+  </div>
+  <!-- 操作说明 -->
+  <div class="flexigrid">
+    <div class="mDiv">
+      <div class="ftitle">
+        <h3>员工二维码列表</h3>
+        <h5>(共<span id="user_count">{$pager->totalRows}</span>条记录)</h5>
+      </div>
+      <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+	    <form action="__URL__/qrcodeSearch" id="search-form2" class="navbar-form form-inline" method="get">
+        <div class="sDiv">
+          <div class="sDiv2">           
+            <select name="company_id" id="company_id" class="select" onChange="company_change($(this))">
+              <option value="">请选择</option>
+			  <volist name='company_list' id='c_list'>
+			  <option value="{$c_list.cid}" <if condition="$c_list['cid'] eq $Request.param.company_id"> selected </if>>{$c_list.cname}</option>
+			  </volist>
+            </select>
+			
+			<select name="store_id" id="store_id" class="select">
+              <option value="">请选择</option>
+			  <volist name='store_list' id='s_list'>
+			  <option value="{$s_list.cid}" <if condition="$s_list['cid'] eq $Request.param.store_id"> selected </if>>{$s_list.cname}</option>
+			  </volist>
+            </select>
+			
+		
+			
+			<select name="t" id="t" class="select">
+				<option value="">请选择</option>
+				<option value="0" <if condition="$_GET['t'] eq 0 && $_GET['t']!=''"> selected </if>>员工</option>
+				<option value="1" <if condition="$_GET['t'] eq 1"> selected </if>>推广员</option>
+			</select>
+			
+            <input type="text" size="30" name="key_word" class="qsbox" style="width:200px;" placeholder="请输入手机号码或真实姓名..." value="{$Think.get.key_word|default=''}">
+            <input type="submit"  class="btn" value="搜索">
+          </div>
+        </div>
+      </form>
+    </div>
+    
+	<div class="hDiv">
+      <div class="hDivBox">
+        <table cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+			  <th align="center" abbr="article_title" axis="col1" class="">
+                <div style="text-align: center; width: 30px;" class="">ID</div>
+              </th>
+              <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">用户名</div>
+              </th>
+			        <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">真实姓名</div>
+              </th>
+			  <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">隶属子公司</div>
+              </th>
+			  <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">实体店</div>
+              </th>
+			   <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">手机号</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">邀请码</div>
+              </th>
+			  <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">二维码</div>
+              </th>
+            </tr>
+          </thead>
+
+		  <tbody class="bDiv">
+            <foreach name="list" item="vo" key="k" >
+              <tr>
+                <td align="center" abbr="article_title" axis="col1" class="">
+                  <div style="text-align: center; width: 30px;">{$vo.id}</div>
+                </td>
+                <td align="left" abbr="article_title" axis="col3" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.uname}</div>
+                </td>
+                <td align="left" abbr="article_title" axis="col3" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.real_name}</div>
+                </td>
+				<td align="left" abbr="article_title" axis="col3" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.company_name}</div>
+                </td>
+				<td align="left" abbr="article_title" axis="col3" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.story_name}</div>
+                </td>
+				<td align="left" abbr="article_title" axis="col3" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.phone}</div>
+                </td>
+                <td align="left" abbr="isadmin" axis="col4" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.invite_code}</div>
+                </td>
+				<td align="left" abbr="isadmin" axis="col4" class="">
+				  <a href="__PUBLIC__{$vo.qrcode}" target="_blank"><img src="__PUBLIC__{$vo.qrcode}" width="50"></a>&nbsp;&nbsp;
+				  <a href="/public/qrcode/{$vo.id}/bg.png" target="_blank"><img src="/public/qrcode/{$vo.id}/bg-small-thumb.png" width="50" id='mermberQcode'></a>
+				  <a href="/public/qrcode/{$vo.id}/bg_pay.png" target="_blank"><img src="/public/qrcode/{$vo.id}/bg-pay-small-thumb.png" width="50" id='mermberQcode'></a>
+                </td>
+              </tr>
+            </foreach>
+          </tbody>
+
+        </table>
+      </div>
+    </div>
+
+    <div class="hDiv" style="height: auto;">
+      <div class="hDivBox">
+	     <table cellspacing="0" cellpadding="0">
+          
+        </table>
+        <!--分页位置-->
+        {$page}
+
+      
+	  
+	  </div>
+      <div class="iDiv" style="display: none;"></div>
+    </div>
+    <!--分页位置--> 
+  </div>
+</div>
+<script>
+    $(document).ready(function(){
+	  // 表格行点击选中切换
+	  $('#flexigrid > table>tbody >tr').click(function(){
+		    $(this).toggleClass('trSelected');
+		});
+		// 点击刷新数据
+		$('.fa-refresh').click(function(){
+			location.href = location.href;
+		});
+
+        $(document).keydown(function(e){
+            if(e.keyCode == 13){
+                $("#search-form2").submit();
+            }
+        })
+		
+		
+	});
+</script>
+</body>
+</html>

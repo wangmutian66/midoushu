@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="renderer" content="webkit">
+<title>促销商品</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/second.css?v={$vnum}" rel="stylesheet">
+<script src="__STATIC__/js/jquery-1.11.1.min.js" type="text/javascript" ></script>
+<script type="text/javascript" src="__STATIC__/js/jquery.min.js"></script>
+<script type="text/javascript" src="__STATIC__/js/style.js" ></script>
+<script src="__PUBLIC__/js/baidu.js"></script>
+</head>
+
+<body>
+	<include file="public/top1" />
+
+	<div class="n-promotion">
+		<div class="bt">
+			<div class="num">促销商品</div>
+			<!-- <a href="" class="more"> 更多 >></a> -->
+		</div>
+		<div class="main">
+			<ul>
+				<volist name="goodsList" id="goods">
+					<li>
+						<div class="pic"><a href="{:U('Goods/goodsInfo',array('id'=>$goods[goods_id],'item_id'=>$goods[item_id]))}" target="_blank"><img src="{$goods.goods_id|goods_thum_images=270,270}"></a></div>
+						<div class="wz">
+							<a href="{:U('Goods/goodsInfo',array('id'=>$goods[goods_id],'item_id'=>$goods[item_id]))}" target="_blank" class="name">{$goods[goods_name]}</a>
+							<div class="price">
+								<div class="l">￥{$goods[shop_price]}</div>
+								<div class="r">{$goods[sales_sum]}人付款</div>
+							</div>
+							<div style="color:#999;font-size:14px;">赠送<span id="back_midou" style="color:red;">{$goods.back_midou}</span>米豆</div>
+						</div>
+					</li>
+				</volist>
+			</ul>
+		</div>
+		{$page}
+	</div>
+
+	<include file="public/footer"/>
+</body>
+</html>

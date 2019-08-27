@@ -1,0 +1,91 @@
+	
+	<header class="header">
+		<div class="top">
+			<if condition="$user">
+				<div class="left">
+					<a href="{:U('Home/User/index')}" class="lo userinfo">{$user['nickname']}</a>
+					<a href="{:U('Home/user/logout')}" class="re">安全退出</a>
+					<input type="hidden" name="" id="login_user_id" value="{$user.user_id}" />
+				</div>
+			<else />
+				<div class="left">
+					<a href="{:U('Home/user/login')}" class="lo">您好,请登录</a>
+					<a href="{:U('Home/user/reg')}" class="re">立即注册</a>
+					<input type="hidden" name="" id="login_user_id" value="" />
+				</div>
+			</if>
+			<div class="right">
+				<ul>
+					<li><a href="{:U('Home/User/index')}">个人中心</a></li>
+					<li><a href="{:U('Home/Cart/index')}" class="ys2">购物车</a></li>
+					<li><a href="{:U('Home/User/goods_collect')}" class="ys3">我的收藏</a></li>
+					<li><a href="{:U('Goods/all_category')}">商品分类</a></li>
+					<li><a href="tencent://message/?uin={$tpshop_config['shop_info_qq2']}&amp;Site={$tpshop_config['shop_info_store_title']}&amp;Menu=yes" class="ys1">联系客服</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="logo-bg">
+			<div class="logo-bk">
+				<div class="logo"><img src="{$tpshop_config['shop_info_store_logo']|default='/template/pc/chengxin/static/images/logo.png'}"></div>
+				<!-- <div class="logo-n">提交订单</div> -->
+				<div class="ri">
+					<div class="form">
+						<form id="searchForm" name="" method="get" action="{:U('Home/Goods/search')}">
+							<input autocomplete="off" name="q" id="q" type="text" value="{$Request.param.q}" placeholder="请输入搜索内容...">
+							<input type="submit" name="" value="搜索">
+						</form>
+					</div>
+					<a href="{:U('Home/Cart/index')}" class="car">
+						<div class="l"><img src="__STATIC__/images/car-2.png"></div>
+						<div class="r">我的购物车</div>
+					</a>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="__STATIC__/js/jquery_1.7.2.js"></script>
+		<script type="text/javascript" src="__STATIC__/js/public.js"></script>
+		<div class="dh">
+			<div class="dh-1 menu">
+				<ul>
+					<li class="ys1"><a href="{:U('Index/index')}" style="width:190px;" target="_blank" <if condition="CONTROLLER_NAME eq 'Index' ">class="ys1"</if> >商城首页</a></li>
+					<li><a href="{:U('Index/index')}" target="_blank" <if condition="(MODULE_NAME eq 'home') and (CONTROLLER_NAME neq 'ReturnIndex') and (CONTROLLER_NAME neq 'ReturnGoods') and (CONTROLLER_NAME neq 'ReturnCart') and (CONTROLLER_NAME neq 'Article') and ($Request.param.q neq '感恩') ">class="ys1"</if> >现金专区</a></li>
+					<li><a href="{:U('Homered/Index/index')}" target="_blank">米豆换购</a></li>
+					<li><a href="{:U('ReturnIndex/index')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'ReturnIndex') or (CONTROLLER_NAME eq 'ReturnGoods') or (CONTROLLER_NAME eq 'ReturnCart')">class="ys1"</if> >福利专区</a></li>
+					<li><a href="{:U('Article/detail',array('article_id'=>38))}" target="_blank" <if condition=" CONTROLLER_NAME eq 'Article' and ACTION_NAME neq 'special' ">class="ys1"</if> >操作指南&nbsp;<img src="__STATIC__/images/xjt.png"></a>
+						<div class="dropdown">
+							<span><a href="{:U('Article/detail',array('article_id'=>35))}" target="_blank" style="font-size: 14px;">现金专区PC端新手指南</a></span>	
+							<span><a href="{:U('Article/detail',array('article_id'=>36))}" target="_blank" style="font-size: 14px;">换购专区PC端新手指南</a></span>	
+							<span><a href="{:U('Article/detail',array('article_id'=>37))}" target="_blank" style="font-size: 14px;">福利专区PC端新手指南</a></span>									
+						</div>
+					</li>
+					<li>
+						<a href="{:U('Article/special')}" target="_blank" <if condition=" ACTION_NAME eq 'special' ">class="ys1"</if> >公司官网</a>
+					</li>
+                    <li>
+						<a href="https://www.midoushu.com/Home/Goods/search.html?q=%E6%84%9F%E6%81%A9" target="_blank" <if condition="ACTION_NAME eq 'search' and $Request.param.q eq '感恩'">class="ys1"</if> >教师节活动</a>
+					</li>
+				</ul>
+			</div>
+			<style>
+				.menu{position:relative;z-index:99999;}
+				.menu ul li{position:relative;z-index:9999;}
+				.menu ul li div.dropdown{ width:160px;display:none;position:absolute;left:-1px;top:40px;background:#ff3700;}
+				.menu ul li div.dropdown span{display:inline-block;width:100%; height:40px; line-height:40px;}
+				.menu ul li div.dropdown span a:hover{}
+				.menu ul li div.on{display:block;}
+			</style>
+			<script language="javascript">
+			$(document).ready(function(){			
+				$(".menu ul li").each(function(i){
+					$(this).hoverIntent(function(){			
+						$(this).addClass("on").siblings("li").removeClass("on");
+						$(this).find(".dropdown").slideDown("fast").parent().siblings().find(".dropdown").slideUp("fast");			
+					},function(){			
+						$(this).removeClass("on").find(".dropdown").slideUp("fast");
+						
+					});
+				});				
+			});
+			</script>
+		</div>
+	</header>

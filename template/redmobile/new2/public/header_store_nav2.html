@@ -1,0 +1,28 @@
+<style type="text/css">
+    .content{ position: relative;}
+    #province{
+        position: absolute;
+        top: 21px;
+        font-size: 24px;
+        right: 0;
+        border: none;
+        background: none;
+        color: #fff;
+    }
+</style>
+<div class="classreturn loginsignup ">
+    <div class="content">
+        <div class="ds-in-bl return">
+            <a href="javascript:;" onclick="history.go(-1)"><img src="__STATIC__/images/return.png" alt="返回"></a>
+        </div>
+        <div class="ds-in-bl search center">
+            <span>[title]-[province_id]</span>
+        </div>
+        <select name="province" id="province">
+            <option value="0">请选择</option>
+            <volist name="province" id="p1">
+                <option <if condition="$province_id eq $p1['id']">selected</if>  value="{$p1.id}">{$p1.name}</option>
+            </volist>
+        </select>
+    </div>
+</div>

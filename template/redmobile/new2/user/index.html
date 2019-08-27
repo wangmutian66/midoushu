@@ -1,0 +1,413 @@
+<include file="public/header" title="个人中心" body="g4"/>
+<style>
+    .my .content .floor_order ul li {
+        width: 20%;
+    }
+
+    body{
+        background: #f0f0f0 !important;
+    }
+</style>
+<link rel="stylesheet" href="__STATIC__/css/tian.css?v={$vnum}">
+    <div class="myhearder">
+        <div class="person ys">
+            <!--<a href="">-->
+                <div class="fl personicon">
+                    <div class="personicon">
+                        <img src="{$user[head_pic]|default="__STATIC__/images/user68.jpg"}"/>
+                    </div>
+                </div>
+                <div class="fl lors">
+                    <span class="ys">{$user['nickname']}</span>
+                    <if condition="$first_nickname neq ''">
+                        <br />
+                        <span class="ys">由({$first_nickname})推荐</span>
+                    </if>
+                    <div>
+                        <span><img src="__STATIC__/images/cash/cash_xianjin.png" style="width:0.91rem;"></span>
+                        <span style="margin-right:.2rem;">{$user.user_money|tk_money_format}</span>
+                        <span><img src="__STATIC__/images/cash/cash_midou.png" style="width:0.91rem;"></span>
+                        <span>{$user.midou}</span>
+                    </div>
+                </div>
+            <!--</a>-->
+        </div>
+
+        <div class="set ys">
+            <!--设置-->
+            <a class="setting" href="https://www.midoushu.com/customer_service/Chat/randkf"><i class="ys"></i></a>
+            <!--&lt;!&ndash;我的留言&ndash;&gt;-->
+            <!--<a class="massage" href="{:U('User/message_notice')}"><i></i></a>-->
+        </div>
+        <div class="set">
+            <!--设置-->
+            <a class="setting" href="{:U('Mobile/User/userinfo')}"><i></i></a>
+            <!--&lt;!&ndash;我的留言&ndash;&gt;-->
+            <!--<a class="massage" href="{:U('User/message_notice')}"><i></i></a>-->
+        </div>
+        <div class="scgz">
+            <ul>
+                <li>
+                    <a href="{:U('Mobilered/User/collect_list')}">
+                        <h2>{$user.collect_count}</h2>
+                        <p>我的收藏</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{:U('Mobile/User/message_notice')}">
+                        <h2>{$user_message_count}</h2>
+                        <p>消息通知</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    
+
+    <div class="floor my p cash_center_k">
+        <div class="content">
+            <!--订单管理模块-s-->
+            <div class="cash_order">
+                <div class="floor myorder p">
+                    <div class="content30">
+                        <div class="order">
+                            <div class="fl">
+                                <img src="__STATIC__/images/mlist.png"/>
+                                <span>我的订单</span>
+                            </div>
+                            <div class="fr">
+                                <a href="{:U('Mobilered/Order/order_list')}">
+                                    <span>全部订单</span>
+                                    <i class="Mright"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="floor floor_order">
+                    <ul>
+                        <li>
+                            <a href="{:U('/Mobilered/Order/order_list',array('type'=>'WAITPAY'))}">
+                                <span>{$user.waitPay}</span>
+                                <img src="__STATIC__/images/cash/cash_center_order1.png" alt="" />
+                                <p>待付款</p>
+                            </a>
+                        </li>
+                        <li><!--程序加-->
+                            <a href="{:U('/Mobilered/Order/order_list',array('type'=>'WAITSEND'))}">
+                                <span>{$user.waitSend}</span>
+                                <img src="__STATIC__/images/cash/cash_center_order2.png" alt="" />
+                                <p>待发货</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{:U('/Mobilered/Order/wait_receive',array('type'=>'WAITRECEIVE'))}">
+                                <span>{$user.waitReceive}</span>
+                                <img src="__STATIC__/images/cash/cash_center_order3.png" alt="" />
+                                <p>待收货</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{:U('Mobilered/Order/comment',array('status'=>0))}">
+                                <span>{$user.uncomment_count}</span>
+                                <img src="__STATIC__/images/cash/cash_center_order4.png" alt="" />
+                                <p>待评价</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{:U('Mobilered/Order/return_goods_list',array('type'=>1))}">
+                                <span>{$user.return_count}</span>
+                                <img src="__STATIC__/images/cash/cash_center_order5.png" alt="" />
+                                <p>退款/退货</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!--订单管理模块-e-->
+
+
+            <div class="cash_oper">
+                <div class="cash_oper_nk">
+                    <div class="kuang ys">
+                        <div class="content30">
+                            <div class="order">
+                                <div class="fl">
+                                    <span>基本服务</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="list">
+                    <ul>
+                        <li>
+                            <a href="{:U('Cart/index')}">
+                                <img src="__STATIC__/images/cash/midou_01.png">
+                                <p>购物车</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{:U('Mobilered/User/collect_list')}">
+                                <img src="__STATIC__/images/cash/midou_02.png">
+                                <p>我的收藏</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{:U('Mobilered/Order/order_list')}">
+                                <img src="__STATIC__/images/cash/midou_03.png">
+                                <p>我的订单</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{:U('Mobilered/Order/comment',array('status'=>1))}">
+                                <img src="__STATIC__/images/cash/midou_04.png">
+                                <p>我的评价</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{:U('/Mobilered/Order/return_goods_list')}">
+                                <img src="__STATIC__/images/cash/midou_05.png">
+                                <p>退货/退款</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{:U('Mobile/user/index',array('status'=>1))}">
+                                <img src="__STATIC__/images/cash/midou_06.png">
+                                <p>现金专区</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{:U('/mobile/User/red_envelope')}">
+                                <img src="__STATIC__/images/cash/midou_07.png">
+                                <p>我的米豆</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{:U('/Mobilered/user/already_rebate')}">
+                                <img src="__STATIC__/images/cash/midou_08.png">
+                                <p>我的福利</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="cash_oper">
+                <div class="cash_oper_nk">
+                    <div class="kuang ys">
+                        <div class="content30">
+                            <div class="order">
+                                <div class="fl">
+                                    <span>更多服务</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="list">
+                    <ul>
+                        <li>
+                            <a href="{:U('/Staff/System/login')}">
+                                <img src="__STATIC__/images/cash/midou_09.png">
+                                <p>推广员推广码登录口</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{:U('/Member/System/login')}">
+                                <img src="__STATIC__/images/cash/midou_10.png">
+                                <p>子公司实体店登录口</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- <div class="floor list7 ma-to-20">
+
+                
+                <div class="myorder p">
+                    <div class="content30">
+                    <a href="{:U('/Staff/System/login')}">    
+                            <div class="order">
+                                <div class="fl">
+                                    <img src="__STATIC__/images/hhr.png"/>
+                                    <span>推广员推广码登陆口</span>
+                                </div>
+                                <div class="fr">
+                                    <i class="Mright"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="myorder p">
+                    <div class="content30">
+                    <a href="{:U('/Member/System/login')}">    
+                            <div class="order">
+                                <div class="fl">
+                                    <img src="__STATIC__/images/zgs.png"/>
+                                    <span>子公司实体店登陆口</span>
+                                </div>
+                                <div class="fr">
+                                    <i class="Mright"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="myorder p">
+                    <div class="content30">
+                    <a href="{:U('Mobile/user/index',array('status'=>1))}">   
+                            <div class="order">
+                                <div class="fl">
+                                    <img src="__STATIC__/images/xj.png"/>
+                                    <span>现金专区</span>
+                                </div>
+                                <div class="fr">
+                                    <i class="Mright"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="myorder p">
+                    <div class="content30">
+                    <a href="{:U('/mobile/User/red_envelope')}">    
+                            <div class="order">
+                                <div class="fl">
+                                    <img src="__STATIC__/images/w11.png"/>
+                                    <span>我的米豆</span>
+                                </div>
+                                <div class="fr">
+                                    <i class="Mright"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="myorder p">
+                    <div class="content30">
+					<a href="{:U('Mobilered/Order/comment',array('status'=>1))}">	
+                            <div class="order">
+                                <div class="fl">
+                                    <img src="__STATIC__/images/w10.png"/>
+                                    <span>我的评价</span>
+                                </div>
+                                <div class="fr">
+                                    <i class="Mright"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="myorder p">
+                    <div class="content30">
+                        <a href="{:U('Mobilered/User/collect_list')}">
+                            <div class="order">
+                                <div class="fl">
+                                    <img src="__STATIC__/images/w2.png"/>
+                                    <span>我的收藏</span>
+                                </div>
+                                <div class="fr">
+                                    <i class="Mright"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="myorder p">
+                    <div class="content30">
+                        <a href="{:U('Cart/index')}">
+                            <div class="order">
+                                <div class="fl">
+                                    <img src="__STATIC__/images/w5.png"/>
+                                    <span>购物车</span>
+                                </div>
+                                <div class="fr">
+                                    <i class="Mright"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="myorder p">
+                    <div class="content30">
+                        <a href="{:U('Mobilered/Order/order_list')}">
+                            <div class="order">
+                                <div class="fl">
+                                    <img src="__STATIC__/images/w7.png"/>
+                                    <span>我的订单</span>
+                                </div>
+                                <div class="fr">
+                                    <i class="Mright"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+				<div class="myorder p">
+                    <div class="content30">
+                        <a href="{:U('/Mobilered/user/already_rebate')}">
+                            <div class="order">
+                                <div class="fl">
+                                    <img src="__STATIC__/images/w1-1.png"/>
+                                    <span>我的福利</span>
+                                </div>
+                                <div class="fr">
+                                    <i class="Mright"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+				
+                <div class="myorder p">
+                    <div class="content30">
+                        <a href="{:U('/Mobilered/Order/return_goods_list')}">
+                            <div class="order">
+                                <div class="fl">
+                                    <img src="__STATIC__/images/w8.png"/>
+                                    <span>退货退款</span>
+                                </div>
+                                <div class="fr">
+                                    <i class="Mright"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="myorder p">
+                    <div class="content30">
+                        <a href="https://www.midoushu.com/customer_service/Chat/randkf">
+                            <div class="order">
+                                <div class="fl">
+                                    <img src="__STATIC__/images/sm-ico-4.png"/>
+                                    <span>在线客服</span>
+                                </div>
+                                <div class="fr">
+                                    <i class="Mright"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+            </div> -->
+        </div>
+        <div class="setting">
+            <div class="close">
+                <a href="{:U('Mobile/User/logout')}" id="logout">安全退出</a>
+            </div>
+        </div>
+    </div>
+
+    <!--底部导航-start-->
+    <include file="public/footer_nav"/>
+    <!--底部导航-end-->
+    <script src="__STATIC__/js/style.js?v={$vnum}" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="renderer" content="webkit">
+<title>申请供货商</title>
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/member.css?v={$vnum}" rel="stylesheet">
+<script src="__STATIC__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+<link type="text/css" rel="stylesheet" href="/public/plugins/daterangepicker/daterangepicker-bs3.css">
+<script type="text/javascript" src="/public/plugins/daterangepicker/moment.min.js"></script>
+<script type="text/javascript" src="/public/plugins/daterangepicker/daterangepicker.js"></script>
+<script src="__PUBLIC__/js/global.js?v={$vnum}" type="text/javascript"></script>
+<script src="__PUBLIC__/static/js/layer/layer.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/baidu.js"></script>
+</head>
+
+<body class="bgg">
+	<include file="public/user_header" />
+	<div class="clear"></div>
+	
+	<div class="y-content">
+		<!--左侧菜单-->
+		<include file="public/user_lefter" />
+		
+		<!--右侧内容-->
+		<form id="add_form" action="" method="post">
+		<div class="y-right y-pdl fri">
+			<div class="y-sbt">
+				申请成为供货商
+			</div>
+
+            <div class="y-gong clearfix">
+            	<h2><span style="color:red;">*</span> 行业分类：</h2>
+            	<a href="{$url1}" <if condition="$suppliers_type eq 1" >class="on"</if> >其他商品行业</a>
+            	<a href="{$url2}" <if condition="$suppliers_type eq 2" >class="on"</if> >食品类行业</a>
+            </div>
+            <div class="y-gong">
+            	<p><span style="color:red;">*</span> 供货商名称</p>
+            	<input type="text" class="text" name="suppliers_name" id="suppliers_name" value="{$supplier.suppliers_name}" />
+            </div>
+            <div class="y-gong">
+            	<p>供应商等级</p>
+            	<select name="suppliers_level" id="suppliers_level" class="text">
+                    <option value="">请选择等级</option>
+                    <foreach name="levelList" item="v" key="k" >
+                        <option value="{$v['level_id']}" <if condition="$v['level_id'] eq $supplier['suppliers_level'] ">selected="selected"</if>>
+                              {$v['level_name']}
+                        </option>
+                    </foreach>
+                </select> 
+            </div>
+            <div class="y-gong">
+            	<p><span style="color:red;">*</span> 供货商联系人</p>
+            	<input type="text" class="text" name="suppliers_contacts" id="suppliers_contacts" value="{$supplier.suppliers_contacts}" />
+            </div>
+            <div class="y-gong">
+            	<p><span style="color:red;">*</span> 供货商电话</p>
+            	<input type="text" class="text" name="suppliers_phone" id="suppliers_phone" value="{$supplier.suppliers_phone}" />
+            </div>
+            <div class="y-gong">
+            	<p><span style="color:red;">*</span> 地址</p>
+            	<select onBlur="get_city(this,0)" id="province" name="province_id" title="请选择所在省份" class="text" style="width:150px;">
+                    <option value="">选择省份</option>
+                    <volist name="province" id="vo">
+                        <option value="{$vo.id}" <if condition="$supplier['province_id'] eq $vo['id']">selected</if> >{$vo.name}</option>
+                    </volist>
+                </select>
+                <select id="city" name="city_id" title="请选择所在城市" class="text" style="width:150px;">
+                    <option value="">选择城市</option>
+                    <volist name="city" id="vo">
+                        <option value="{$vo.id}" <if condition="$supplier['city_id'] eq $vo['id']">selected</if> >{$vo.name}</option>
+                    </volist>
+                </select>
+            </div>
+            <div class="y-gong y-bnh">
+            	<p>供货商描述</p>
+            	<textarea class="area" id="suppliers_desc" name="suppliers_desc">{$supplier.suppliers_desc}</textarea>
+            	<!-- <h6>描述信息不超过200个字符，还剩185</h6> -->
+            </div>
+            <div class="y-jie" style="font-size: 13px; color: #ff0000;">
+                注：资质填写越全面，通过率会越高。会被列为优质供货商。<br />
+                以下所需上传的图片格式为：.jpg .png，所有图片均不能超过2M，否则无法提交申请或提交失败！
+            </div>
+            <ul id="warp">
+            	<li class="scpas" style="width: 930px;">
+            		<h4><span style="color:red;">*</span> 营业执照号</h4>
+            		<input type="text" class="text" placeholder="营业执照号" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')" name="business_licence_number" id="business_licence_number" value="{$supplier.business_licence_number}">
+            	</li>
+            	<li class="scpas">
+            		<h4><span style="color:red;">*</span> 营业执照副本扫描件</h4>
+            		<img src="{$supplier.zhizhao|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_0" onClick="GetUploadify3(1,'zhizhao','suppliers','add_img','imgShow_WU_FILE_0')" />
+            		<input type="hidden" id="zhizhao" name="zhizhao" value="{$supplier.zhizhao}">
+            	</li>
+
+            	<li class="scpas">
+            		<h4><span style="color:red;">*</span> 开户许可证扫描件</h4>
+            		<img src="{$supplier.bank_licence_electronic|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_1" onClick="GetUploadify3(1,'bank_licence_electronic','suppliers','add_img','imgShow_WU_FILE_1')"  />
+            		<input type="hidden" name="bank_licence_electronic" id="bank_licence_electronic" value="{$supplier.bank_licence_electronic}">
+            	</li>
+            	<li class="scpas" style="width: 930px;">
+            		<h4>组织机构代码</h4>
+            		<input type="text" class="text" placeholder="组织机构代码" name="organization_code" id="organization_code" value="{$supplier.organization_code}">
+            	</li>
+            	<li class="scpas">
+            		<h4>组织机构代码证</h4>
+            		<img src="{$supplier.organization_code_electronic|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_2" onClick="GetUploadify3(1,'organization_code_electronic','suppliers','add_img','imgShow_WU_FILE_2')"  />
+            		<input type="hidden" id="organization_code_electronic" name="organization_code_electronic" value="{$supplier.organization_code_electronic}">
+            	</li>
+            	<li class="scpas">
+            		<h4>正规授权书，非微商</h4>
+            		<img src="{$supplier.formal_authorization|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_3" onClick="GetUploadify3(1,'formal_authorization','suppliers','add_img','imgShow_WU_FILE_3')"  />
+            		<input type="hidden" id="formal_authorization" name="formal_authorization" value="{$supplier.formal_authorization}">
+				    <h6 class="wi">非微商若是代理必填</h6>
+            	</li>
+            	<li class="scpas">
+            		<h4>一般纳税人认证通知书</h4>
+            		<img src="{$supplier.general_taxpayer|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_4" onClick="GetUploadify3(1,'general_taxpayer','suppliers','add_img','imgShow_WU_FILE_4')"  />
+            		<input type="hidden" id="general_taxpayer" name="general_taxpayer" value="{$supplier.general_taxpayer}">
+                    <h6 class="wi">如为一般纳税人必填</h6>
+            	</li>
+            	<li class="scpas" style="width: 930px;">
+            		<h4>全国企业信用信息公示系统：链接网址&查询公司信息截图</h4>
+            		<img src="{$supplier.enterprise_credit_information_img|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_5" onClick="GetUploadify3(1,'enterprise_credit_information_img','suppliers','add_img','imgShow_WU_FILE_5')"  />
+            		<input type="hidden" id="enterprise_credit_information_img" name="enterprise_credit_information_img" value="{$supplier.enterprise_credit_information_img}">
+            		<div style="clear: both;"></div>
+				    <input type="text" class="text" name="enterprise_credit_information_url" id="enterprise_credit_information_url" placeholder="链接网址" value="{$supplier.enterprise_credit_information_url}" />
+            	    <h6 class="wi">格式：http://***.****.com</h6>
+                </li>
+				<li class="scpas" style="width: 930px;">
+            		<h4><span style="color:red;">*</span> 法人身份证号码</h4>
+            		<input type="text" class="text" placeholder="法人身份证号码" name="id_card" id="id_card" value="{$supplier.id_card}" maxlength="18" />
+            		<h6 class="wi">必须与法人身份证一致</h6>
+            	</li>
+            	<li class="scpas">
+            		<h4><span style="color:red;">*</span> 法人身份证扫描件</h4>
+            		<img src="{$supplier.fr_idcard_front|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_6" onClick="GetUploadify3(1,'fr_idcard_front','suppliers','add_img','imgShow_WU_FILE_6')"  />
+            		<input type="hidden" id="fr_idcard_front" name="fr_idcard_front" value="{$supplier.fr_idcard_front}">
+				    <h6 class="wi">身份证正反面复印件加盖公章</h6>
+            	</li>
+            	<li class="scpas" style="width: 930px;">
+            		<h4>运营者身份证号码</h4>
+            		<input type="text" class="text" placeholder="运营者身份证号码" name="operator_id_card_no" id="operator_id_card_no" value="{$supplier.operator_id_card_no}" maxlength="18" />
+            		<h6 class="wi"></h6>
+            	</li>
+            	<li class="scpas">
+            		<h4>运营者身份证扫描件</h4>
+            		<img src="{$supplier.operator_idcard_front|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_7" onClick="GetUploadify3(1,'operator_idcard_front','suppliers','add_img','imgShow_WU_FILE_7')"  />
+            		<input type="hidden" id="operator_idcard_front" name="operator_idcard_front" value="{$supplier.operator_idcard_front}">
+				    <h6 class="wi">身份证正反面联系方式复印版加盖公章</h6>
+            	</li>
+            	<li class="scpas">
+            		<h4>产品的相关认证</h4>
+            		<img src="{$supplier.related_product_certification|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_8" onClick="GetUploadify3(1,'related_product_certification','suppliers','add_img','imgShow_WU_FILE_8')"  />
+            		<input type="hidden" id="related_product_certification" name="related_product_certification" value="{$supplier.related_product_certification}">
+            	</li>
+            	<div style="clear: both;"></div>
+            	<li class="scpas">
+            		<h4>报关证明</h4>
+            		<img src="{$supplier.customs_declaration|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_9" onClick="GetUploadify3(1,'customs_declaration','suppliers','add_img','imgShow_WU_FILE_9')"  />
+            		<input type="hidden" id="customs_declaration" name="customs_declaration" value="{$supplier.customs_declaration}">
+            	</li>
+            	<li class="scpas">
+            		<h4>海关检疫证明</h4>
+            		<img src="{$supplier.bank_licence_electronic|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_10" onClick="GetUploadify3(1,'customs_quarantine_certificate','suppliers','add_img','imgShow_WU_FILE_10')"  />
+            		<input type="hidden" id="customs_quarantine_certificate" name="customs_quarantine_certificate" value="{$supplier.customs_quarantine_certificate}">
+            	</li>
+                <li class="scpas">
+                    <h4>企业证书</h4>
+                    <img src="{$supplier.enterprise_certificate|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_24" onClick="GetUploadify3(1,'enterprise_certificate','suppliers','add_img','imgShow_WU_FILE_24')"  />
+                    <input type="hidden" id="enterprise_certificate" name="enterprise_certificate" value="{$supplier.enterprise_certificate}">
+                </li>
+                <li class="scpas">
+                    <h4>国家级认证证书</h4>
+                    <img src="{$supplier.national_certification_certificate|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_25" onClick="GetUploadify3(1,'national_certification_certificate','suppliers','add_img','imgShow_WU_FILE_25')"  />
+                    <input type="hidden" id="national_certification_certificate" name="national_certification_certificate" value="{$supplier.national_certification_certificate}">
+                </li>
+
+				<if condition="$suppliers_type eq 1" >
+					<li class="scpas" style="width: 930px;">
+	            		<h4>税务登记证号</h4>
+	            		<input type="text" class="text" placeholder="税务登记证号" name="tax_registration_certificate" id="tax_registration_certificate" value="{$supplier.tax_registration_certificate}">
+	            	</li>
+					<li class="scpas">
+	            		<h4>税务登记证号电子版</h4>
+	            		<img src="{$supplier.tax_registration_certificate_electronic|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_11" onClick="GetUploadify3(1,'tax_registration_certificate_electronic','suppliers','add_img','imgShow_WU_FILE_11')"  />
+	            		<input type="hidden" id="tax_registration_certificate_electronic" name="tax_registration_certificate_electronic" value="{$supplier.tax_registration_certificate_electronic}">
+	            	</li>
+	            	<li class="scpas">
+	            		<h4>税务登记证号电子版</h4>
+	            		<img src="{$supplier.tax_registration_certificate_electronic|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_12" onClick="GetUploadify3(1,'tax_registration_certificate_electronic','suppliers','add_img','imgShow_WU_FILE_12')"  />
+	            		<input type="hidden" id="tax_registration_certificate_electronic" name="tax_registration_certificate_electronic" value="{$supplier.tax_registration_certificate_electronic}">
+	            	</li>
+	            	<li class="scpas">
+	            		<h4>工业产品生产许可证</h4>
+	            		<img src="{$supplier.manufacturing_industrial_products_license|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_13" onClick="GetUploadify3(1,'manufacturing_industrial_products_license','suppliers','add_img','imgShow_WU_FILE_13')"  />
+	            		<input type="hidden" id="manufacturing_industrial_products_license" name="manufacturing_industrial_products_license" value="{$supplier.manufacturing_industrial_products_license}">
+	            	</li>
+	            	<li class="scpas">
+	            		<h4>卫生许可证</h4>
+	            		<img src="{$supplier.hygienic_license|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_14" onClick="GetUploadify3(1,'hygienic_license','suppliers','add_img','imgShow_WU_FILE_14')"  />
+	            		<input type="hidden" id="hygienic_license" name="hygienic_license" value="{$supplier.hygienic_license}">
+                        <h6 class="wi">化妆品类必填</h6>
+	            	</li>
+	            	<li class="scpas">
+	            		<h4>消毒许可证</h4>
+	            		<img src="{$supplier.disinfection_license|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_15" onClick="GetUploadify3(1,'disinfection_license','suppliers','add_img','imgShow_WU_FILE_15')"  />
+	            		<input type="hidden" id="disinfection_license" name="disinfection_license" value="{$supplier.disinfection_license}">
+	            	</li>
+	            	<li class="scpas">
+	            		<h4>化妆品行政（卫生）许可批件或备案凭证</h4>
+	            		<img src="{$supplier.cosmetics_instructions_permit|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_16" onClick="GetUploadify3(1,'cosmetics_instructions_permit','suppliers','add_img','imgShow_WU_FILE_16')"  />
+	            		<input type="hidden" id="cosmetics_instructions_permit" name="cosmetics_instructions_permit" value="{$supplier.cosmetics_instructions_permit}">
+	            	</li>
+	            	<li class="scpas">
+	            		<h4>国产非特殊化妆品备案登记凭证</h4>
+	            		<img src="{$supplier.non_special_cosmetics_registration_vouchers|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_17" onClick="GetUploadify3(1,'non_special_cosmetics_registration_vouchers','suppliers','add_img','imgShow_WU_FILE_17')"  />
+	            		<input type="hidden" id="non_special_cosmetics_registration_vouchers" name="non_special_cosmetics_registration_vouchers" value="{$supplier.non_special_cosmetics_registration_vouchers}">
+	            	</li>
+				<else />
+					<li class="scpas">
+	            		<h4>食品生产许可证</h4>
+	            		<img src="{$supplier.food_production_license|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_18" onClick="GetUploadify3(1,'food_production_license','suppliers','add_img','imgShow_WU_FILE_18')"  />
+	            		<input type="hidden" id="food_production_license" name="food_production_license" value="{$supplier.food_production_license}">
+	            	</li>
+	            	<li class="scpas">
+	            		<h4>食品流通许可证</h4>
+	            		<img src="{$supplier.food_circulation_permit|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_19" onClick="GetUploadify3(1,'food_circulation_permit','suppliers','add_img','imgShow_WU_FILE_19')"  />
+	            		<input type="hidden" id="food_circulation_permit" name="food_circulation_permit" value="{$supplier.food_circulation_permit}">
+	            	</li>
+	            	<li class="scpas">
+	            		<h4>商标注册书</h4>
+	            		<img src="{$supplier.trademark_registration|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_20" onClick="GetUploadify3(1,'trademark_registration','suppliers','add_img','imgShow_WU_FILE_20')"  />
+	            		<input type="hidden" id="trademark_registration" name="trademark_registration" value="{$supplier.trademark_registration}">
+	            		<h6 class="wi">若是品牌，最好是R标。</h6>
+	            	</li>
+	            	<div style="clear: both;"></div>
+	            	<li class="scpas">
+	            		<h4>保健食品卫生许可证</h4>
+	            		<img src="{$supplier.health_food_hygiene_license|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_21" onClick="GetUploadify3(1,'health_food_hygiene_license','suppliers','add_img','imgShow_WU_FILE_21')"  />
+	            		<input type="hidden" id="health_food_hygiene_license" name="health_food_hygiene_license" value="{$supplier.health_food_hygiene_license}">
+	            	</li>
+	            	<li class="scpas">
+	            		<h4>食品经营许可证</h4>
+	            		<img src="{$supplier.food_business_license|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_22" onClick="GetUploadify3(1,'food_business_license','suppliers','add_img','imgShow_WU_FILE_22')"  />
+	            		<input type="hidden" id="food_business_license" name="food_business_license" value="{$supplier.food_business_license}">
+                        <h6 class="wi">销售食品类企业必填。</h6>
+	            	</li>
+	            	<li class="scpas">
+	            		<h4>酒类流通备案登记表或酒类批发许可证</h4>
+	            		<img src="{$supplier.liquor_circulation_registration|default='__STATIC__/img/tb4.gif'}" id="imgShow_WU_FILE_23" onClick="GetUploadify3(1,'liquor_circulation_registration','suppliers','add_img','imgShow_WU_FILE_23')"  />
+	            		<input type="hidden" id="liquor_circulation_registration" name="liquor_circulation_registration" value="{$supplier.liquor_circulation_registration}">
+                        <h6 class="wi">销售酒类产品必填。</h6>
+	            	</li>
+				</if>
+
+                <div style="clear: both;"></div>
+                <style type="text/css">
+                    .m-imgshow .thumbnail-list { width: 100%; overflow: hidden; margin-bottom: -10px; }
+                    .pj-box .lr table { font-size: 12px; color: #414141; width: 610px; border-bottom: 1px dotted #ddd; }
+                    .fl { float: left; }
+                    .img_span { background: url(__STATIC__/img/tb4.gif) no-repeat center top; width: 200px; height: 150px; }
+                    .m-imgshow .btn-upload { float: left; width: 200px; height: 150px;  margin-right: 10px; margin-bottom: 10px; cursor: pointer; }
+                </style>
+                <li class="scpas" style="width: 900px;">
+                    <h4>其它补充资质</h4>
+                    <div id="bczz">
+                        <!--上传图片-s-->
+                        <div class="m-imgshow f-imgshow" >
+                            <div class="thumbnail-list" id="img_container" style="position: relative;">
+                                <div class="ev-img po-re fl" id="add_img">
+                                    <foreach name="$supplier['buchongImages']" item="vo" key="k" >
+                                        <if condition="$vo">
+                                            <span class="btn-upload" onclick="delimg('{$vo}',this)" ><input type="hidden" name="buchong[]" value="{$vo}"><img src="{$vo}" border="0" alt=""></span>
+                                        </if>
+                                    </foreach>
+                                    <span id="image-upload-741538" class="btn-upload img_span" onClick="uploadimg('#bczz')" style="position: relative; z-index: 0; "></span>
+                                </div>
+                            </div>
+                            <div class="bigimg-switch hide">
+                                <div class="bigimg-operate">
+                                    <a href="#" class="op-rotate1"><i></i><em>左转</em></a>
+                                    <a href="#" class="op-rotate2"><i></i><em>右转</em></a>
+                                    <a href="#" class="op-delete"><i></i><em>删除</em></a>
+                                </div>
+                                <div class="switch-inner"> <img src="" alt="" class="bigimg">
+                                    <div class="cursor-small"></div>
+                                    <div class="cursor-prev"></div>
+                                    <div class="cursor-next"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--上传图片-e-->
+                    </div>
+                </li>
+            	<div style="clear: both;"></div>
+            </ul>
+
+            <div class="y-gong y-wid fle">
+            	<input type="hidden" name="suppliers_type" value="{$suppliers_type}" />
+            	<input type="hidden" name="user_id" value="{$user.user_id}" />
+            	<input type="hidden" name="is_check" value="0" />
+            	<input type="button" class="sumt" value="确认信息并提交申请" onClick="checkUserUpdate();" />
+            </div>
+		</div>
+		</form>
+
+		<div class="clear"></div>
+	</div>
+
+	<include file="public/user_footer" />
+	<script type="text/javascript">
+		function check_submit(){
+	        $.ajax({
+	            type : "POST",
+	            url:"{:U('Home/User/reg')}",
+	            dataType: "json",
+	            data: $('#reg_form2').serialize(),
+	            success: function(data){
+	                if(data.status == 1){
+	                    layer.msg(data.msg, {icon: 1},function(){
+	                        window.location.href = "{:U('Home/Index/index')}";
+	                    });
+	                }else{
+	                    layer.alert(data.msg, {icon: 2},function(index){
+	                        $('.verifyImg').trigger('click');
+	                        layer.close(index);
+	                    });
+	                }
+	            }
+	        });
+	    }
+
+        //图片上传
+        var now_access;
+        function uploadimg(div){
+            now_access = $(div);
+            //检查是否超过限制数量
+            GetUploadify2(20,'','suppliers','add_imgs')
+        }
+        function delimg(file,t){
+            $.get(
+                    "/index.php?m=Home&c=Uploadify&a=delupload",{action:"del", filename:file},function(){}
+            );
+            $(t).siblings('.img_span').show();
+            $(t).remove();
+        }
+        function add_imgs(str){
+            var div_id =  now_access.selector;
+            var tpl_list = String(str).split(',');
+            for (var i=0;i<tpl_list.length;i++)
+            {
+                var tpl = '<span class="btn-upload" onclick="delimg(\'$IMG\',this)" ><input type="hidden" name="buchong[]" value="$IMG"><img src="$IMG" border="0" alt=""></span>';
+                var str_do = tpl.replace(/\$IMG/g,tpl_list[i]);
+                $(now_access).find('#img_container').find('#add_img').prepend(str_do);
+            }
+        }
+
+	    function add_img(str,inputid,imgid){
+			//var id_pic = $('#'+inputid).val();
+			$('#'+inputid).val(str);
+			$('#'+imgid).attr('src',str);
+		}
+
+		function checkUserUpdate(){
+	        var suppliers_name          = $.trim($('input[name="suppliers_name"]').val());
+	        var suppliers_contacts      = $.trim($('input[name="suppliers_contacts"]').val());
+	        var suppliers_phone         = $('input[name="suppliers_phone"]').val();
+	        var business_licence_number = $('input[name="business_licence_number"]').val();
+	        var organization_code       = $('input[name="organization_code"]').val();
+            var enterprise_credit_information_url = $('input[name="enterprise_credit_information_url"]').val();
+	        var fr_id_card_no           = $('input[name="id_card"]').val();
+	        var suppliers_password      = $('input[name="suppliers_password"]').val();
+	        var suppliers_password2     = $('input[name="suppliers_password2"]').val();
+            var business_licence_number = $('input[name="business_licence_number"]').val();
+            var zhizhao                 = $('input[name="zhizhao"]').val();
+            var bank_licence_electronic = $('input[name="bank_licence_electronic"]').val();
+            var fr_idcard_front         = $('input[name="fr_idcard_front"]').val();
+
+	        var error ='';
+	        if(suppliers_name == ''){
+	            error += "供应商名称不能为空\n";
+	        }
+
+	        if(suppliers_contacts == ''){
+	            error += "供应商联系人不能为空\n";
+	        }
+	        if(!checkMobile(suppliers_phone) && suppliers_phone != ''){
+	            error += "供应商电话填写有误\n";
+	        }
+	        if(suppliers_phone == ''){
+	            error += "供应商电话不能为空\n";
+	        }
+	        if(business_licence_number == ''){
+	            error += "营业执照号不能为空\n";
+	        }
+            if(business_licence_number.length != 18){
+                error += "营业执照号格式错误\n";
+            }
+            if(zhizhao ==''){
+                error += "执照副本扫描件不能为空\n";
+            }
+            if(bank_licence_electronic == ''){
+                error += "开户许可证扫描件不能为空\n";
+            }
+
+            /*if(enterprise_credit_information_url != ""){
+                var reg=/^([hH][tT]{2}[pP]:\/\/|[hH][tT]{2}[pP][sS]:\/\/)(([A-Za-z0-9-~]+)\.)+([A-Za-z0-9-~\/])+$/;
+                if(!reg.test(enterprise_credit_information_url)){
+                    error += "全国企业信用信息公示系统链接网址格式不正确\n";
+                }
+            }*/
+
+	        if(fr_id_card_no == ''){
+	            error += "法人身份证号码不能为空\n";
+	        }
+
+            if(fr_id_card_no.length != 18){
+                error += "法人身份证号码格式错误\n";
+            }
+
+            if(fr_idcard_front == ''){
+                error += "法人身份证扫描件不能为空\n";
+            }
+
+	        if(error){
+	            layer.alert(error, {icon: 2});  //alert(error);
+	            return false;
+	        }
+	        $('#add_form').submit();
+	    }
+
+	</script>
+</body>
+</html>

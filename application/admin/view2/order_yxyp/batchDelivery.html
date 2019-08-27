@@ -1,0 +1,137 @@
+<script type="text/javascript" src="__PUBLIC__/js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="__PUBLIC__/static/js/layer/layer.js"></script>
+<link rel="stylesheet" href="__PUBLIC__/bootstrap/css/bootstrap.css" />
+<link rel="stylesheet" href="__PUBLIC__/static/css/main.css" />
+<style>
+    .table-margin{ margin: 10px;    max-width: 900px;}
+    input[type=text]{ height: 25px;}
+    .table-conedit tr td div{ line-height: 25px;}
+    .tableoverflow-y{max-height: 400px; overflow-y: auto;}
+</style>
+<div class="table-margin">
+    <div class="tableoverflow-y">
+    <table class="table  table-striped table-bordered table-hover table-condensed table-conedit">
+
+ 	<tbody>
+    <tr>
+    <th>订单单号</th>
+    <th>收货人</th>
+    <th>订单配送号</th>
+    <th>配送方式</th>
+    <th>备注</th>
+    </tr>
+ 	<if condition="empty($orderList) eq true">
+ 		<tr data-id="0">
+	        <td class="no-data" align="center" axis="col0" colspan="50">
+	        	<i class="fa fa-exclamation-circle"></i>没有符合条件的记录
+	        </td>
+	     </tr>
+	<else/>
+ 	<volist name="orderList" id="list">
+  		<tr class="listorder" data-order-id="{$list.order_id}" id="{$list.order_id}">
+
+             <td align="left" abbr="order_sn" axis="col3" class="">
+               <div style="text-align: left; width: 200px;" class="">{$list.order_sn}</div>
+             </td>
+
+             <td align="left" abbr="consignee" axis="col4" class="">
+               <div style="text-align: left; width: 120px;" class="">{$list.consignee}</div>
+             </td>
+
+
+
+             <td align="center" abbr="invoice_no" axis="col6" class="">
+               <div style="text-align: center;" class="">
+                    <input type="text" name="invoice_no" class="invoice_no" placeholder="请填写订单配送号"/>
+               </div>
+             </td>
+
+             <td align="center" axis="col1" abbr="shipping_code">
+                 <div style="text-align: center; width: 120px;" class="">
+
+                     <select class="shipping_code" name="shipping_code">
+                         <option value="">请选择配送</option>
+                         <volist name="list[shipping_list]" id="val">
+                             <option  <if condition="$list[shipping_code] eq $val[code]">selected</if> value="{$val.code}">{$val.name}</option>
+                         </volist>
+                     </select>
+                 </div>
+             </td>
+             <td style="width:100%" axis="col7">
+                 <div style="text-align: center; width: 120px;" class="">
+                     <input type="text" class="note" name="note" placeholder="请填写订单备注"/>
+                 </div>
+             </td>
+           </tr>
+      </volist>
+      </if>
+    </tbody>
+</table>
+    </div>
+    <if condition="empty($orderList) eq false">
+        <div style="text-align: right;">
+            <button class="btn btn-primary" onclick="piliangfahuo()">提交</button>
+        </div>
+    </if>
+</div>
+<script>
+function piliangfahuo(){
+    var arr = [];
+    var order_id = [];
+    $('.listorder').each(function(key,element){
+
+        var orderId = $(element).data("order-id");
+        var invoiceno = $(element).find(".invoice_no").val();
+        var shippingcode = $(element).find(".shipping_code").val();
+        var note = $(element).find(".note").val();
+        $(element).find(".invoice_no").css("border","1px solid #ddd");;
+        $(element).find(".shipping_code").css("border","1px solid #ddd");;
+        $(element).find(".note").css("border","1px solid #ddd");;
+        if(invoiceno == ""){
+            $(element).find(".invoice_no").css("border","1px solid #da4f49");
+            layer.alert('请填写订单配送号');
+            return false;
+        }
+
+        if(shippingcode == ""){
+            $(element).find(".shipping_code").css("border","1px solid #da4f49");
+            layer.alert('请填写配送方式');
+            return false;
+        }
+
+        // if(note == ""){
+        //     $(element).find(".note").css("border","1px solid #da4f49");
+        //     layer.alert('请填写备注');
+        //     return false;
+        // }
+
+        var jsonArr={"order_id":orderId,"invoice_no":invoiceno,"shipping_code":shippingcode,"note":note};
+        arr.push(jsonArr);
+        order_id.push(orderId);
+    });
+
+
+
+    $.ajax({
+        url:"{:url('Admin/OrderYxyp/batchDelivery')}",
+        data:{"arr":arr,order_id:order_id},
+        dataType:"json",
+        type:"post",
+        success:function(data){
+            if(data.error == 0){
+                layer.alert('批量发货成功');
+                // window.location.reload();
+                $(".layui-layer-btn0").click(function(){
+                    window.location.reload();
+                    window.parent.location.reload();
+                });
+
+            }else{
+                layer.alert('批量发货失败');
+            }
+        }
+    });
+}
+
+</script>

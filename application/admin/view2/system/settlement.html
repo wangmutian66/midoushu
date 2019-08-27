@@ -1,0 +1,59 @@
+<include file="public/layout" />
+<body style="background-color: #FFF; overflow: auto;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>商城设置</h3>
+                <h5>网站全局内容基本选项设置</h5>
+            </div>
+            <ul class="tab-base nc-row">
+                <foreach name="group_list" item="v" key="k">
+                    <li><a href="{:U('System/index',['inc_type'=> $k])}" <if condition="$k==$inc_type">class="current"</if>><span>{$v}</span></a></li>
+                </foreach>
+            </ul>
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom"><i class="fa fa-lightbulb-o"></i>
+            <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+            <span id="explanationZoom" title="收起提示"></span> </div>
+        <ul>
+            <li>系统平台全局设置,包括基础设置、购物、短信、邮件、水印等相关模块。</li>
+        </ul>
+    </div>
+    <form method="post" enctype="multipart/form-data" name="form1" action="{:U('System/handle')}">
+        <input type="hidden" name="form_submit" value="ok" />
+        <div class="ncap-form-default">
+                        <dl class="row">
+                <dt class="tit">
+                    <label for="midou_rate">供货商结算账期</label>
+                </dt>
+                <dd class="opt">
+                    <input name="supplier_jstime_start" value="{$config.supplier_jstime_start|default='15'}" onpaste="this.value=this.value.replace(/[^\d]/g,'')" onKeyUp="this.value=this.value.replace(/[^\d]/g,'')" type="text">
+                    -
+                    <input name="supplier_jstime_end" value="{$config.supplier_jstime_end|default='20'}" onpaste="this.value=this.value.replace(/[^\d]/g,'')" onKeyUp="this.value=this.value.replace(/[^\d]/g,'')" type="text">
+                    <p class="notic">填写每月的几号至几号</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="midou_rate">分摊比例</label>
+                </dt>
+                <dd class="opt">
+                    <input name="share_rate" value="{$config.share_rate|default='0.3'}" onpaste="this.value=this.value.replace(/[^\d]/g,'')" type="text">
+                </dd>
+            </dl>
+            <div class="bot">
+                <input type="hidden" name="inc_type" value="{$inc_type}">
+                <a href="JavaScript:void(0);" class="ncap-btn-big ncap-btn-green" onclick="document.form1.submit()">确认提交</a>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="goTop"> <a href="JavaScript:void(0);" id="btntop"><i class="fa fa-angle-up"></i></a><a href="JavaScript:void(0);" id="btnbottom"><i class="fa fa-angle-down"></i></a></div>
+</body>
+</html>

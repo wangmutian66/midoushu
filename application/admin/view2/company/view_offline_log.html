@@ -1,0 +1,159 @@
+<include file="public/layout" />
+<body style="background-color: #FFF; overflow: auto;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3> 查询<if condition="$Request.param.tz">扫码支付<else/>代付订单</if> </h3>
+                <h5><a href="{:U('Admin/Company/offline_detail',['tz'=>$Request.param.tz])}" id="log_list"> 流水列表</a></h5>
+            </div>
+            
+        </div>
+    </div>
+	
+    <style>.tkpay{display:none}</style>
+
+        <div class="ncap-form-default">
+            
+              <dl class="row">
+                <dt class="tit">
+                    <label for="cname">用户:</label>
+                </dt>
+                <dd class="opt">
+                  	<a class="open" href="{:U('/Admin/user/detail',['id'=>$item.user_id])}" target="blank">
+                                        {$item.user_id}<i class="fa fa-external-link " title="新窗口打开"></i>
+                                    </a>
+                    <p class="notic">   </p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="cname">员工ID:</label>
+                </dt>
+                <dd class="opt">
+                  	{$item.staff_id}
+                    <p class="notic">   </p>
+                </dd>
+            </dl>
+              <dl class="row">
+                <dt class="tit">
+                    <label for="cname">员工姓名:</label>
+                </dt>
+                <dd class="opt">
+                  	{$item.staff_name}
+                    <p class="notic">   </p>
+                </dd>
+            </dl>
+            
+			  <dl class="row">
+                <dt class="tit">
+                    <label for="cname">所属店铺:</label>
+                </dt>
+                <dd class="opt">
+                  	{$item.store_id} : {$item.store_name}
+                    <p class="notic">   </p>
+                </dd>
+            </dl>
+            
+			  <dl class="row">
+                <dt class="tit">
+                    <label for="cname">所属子公司:</label>
+                </dt>
+                <dd class="opt">
+                  	{$item.company_id} : {$item.company_name}
+                    <p class="notic">   </p>
+                </dd>
+            </dl>
+            
+			<dl class="row">
+                <dt class="tit">
+                    <label for="cname">订单编码:</label>
+                </dt>
+                <dd class="opt">
+                  	{$item.paid_sn}
+                    <p class="notic">   </p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="cname">是否已经支付:</label>
+                </dt>
+                <dd class="opt">
+                  	 <if condition="$item.pay_status eq 1"> <font color="#FF0000">是</font> <else/>未支付</if>
+                    <p class="notic">   </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="cname">创建订单时间:</label>
+                </dt>
+                <dd class="opt">
+                  	<if condition="$item.create_time"> {$item.create_time|date="Y-m-d H:i:s",###}</if>
+                    <p class="notic">   </p>
+                </dd>
+            </dl>
+			
+			<dl class="row">
+                <dt class="tit">
+                    <label for="cname">支付时间:</label>
+                </dt>
+                <dd class="opt">
+                  	<if condition="$item.pay_time"> {$item.pay_time|date="Y-m-d H:i:s",###}</if>
+                    <p class="notic">   </p>
+                </dd>
+            </dl>
+			
+			<dl class="row">
+                <dt class="tit">
+                    <label for="cname">付款代码:</label>
+                </dt>
+                <dd class="opt">
+                  	<if condition="$item.pay_time"> {$item.pay_code}</if>
+                    <p class="notic">   </p>
+                </dd>
+            </dl>
+			
+			<dl class="row">
+                <dt class="tit">
+                    <label for="cname">付款方式:</label>
+                </dt>
+                <dd class="opt">
+                  	<if condition="$item.pay_time"> {$item.pay_name}</if>
+                    <p class="notic">   </p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="cname">备注:</label>
+                </dt>
+                <dd class="opt">
+                    {$item.remark}
+                    <p class="notic">   </p>
+                </dd>
+            </dl>
+------------------------------------------------------------
+<dl class="row">
+	<dt class="tit">
+		<label for="cname">是否为企业收款:</label>
+	</dt>
+	<dd class="opt">
+		<if condition="$item.is_store_collection"> 是  <else/> 否 </if>
+		<p class="notic">  
+			<a class="open" href="{:U('/Admin/Company/view_transfer_log',['paid_sn'=>$item.paid_sn])}" target="blank">
+                                      企业收款人详细信息<i class="fa fa-external-link " title="新窗口打开"></i>
+                                    </a>
+		 </p>
+	</dd>
+</dl>
+
+
+           
+        </div>
+    
+</div>
+<div id="goTop"> <a href="JavaScript:void(0);" id="btntop"><i class="fa fa-angle-up"></i></a><a href="JavaScript:void(0);" id="btnbottom"><i class="fa fa-angle-down"></i></a></div>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<include file="public/TK_public"/>
+<title>无标题文档</title>
+</head>
+
+<body>
+<script>
+
+	function postdata(){
+		$.ajax({  
+			url: "{:U('/Company/System/doSetMobile')}",  
+			type: 'POST',  
+			data:$("#formf").serialize(),  
+			dataType: 'json',  
+			error: function(){alert('请刷新重试')},
+			beforeSend:function(){
+				parent.layer.load('2',{shade: 0.6});
+			},
+			success: function(r){
+				if(r.status == 1){
+					layer.msg('数据更新成功！', {icon: 1,time: 3000},function (){
+						location.href = "{:U('/Company/System/Modify')}";
+					}); 
+				}else{
+					parent.layer.msg(r.info, {icon: 2,time: 2000});
+				}
+			},
+			complete:function(){
+				parent.layer.closeAll('loading');
+			}
+		});  
+		
+		
+		return false;
+	}
+	function sendcode(obj){
+	/*	countdown(obj);
+		return false;*/
+		var tel = $(obj).attr('rel');
+		if(tel == 0){
+			tel = $("#newmobile").val();
+		}
+		$.ajax({
+			url : "/index.php?m=Home&c=Api&a=send_validate_code&scene=6&type=mobile&send="+tel,
+			type:'post',
+			dataType:'json',
+			data:{send:tel},
+			success:function(res){
+				if(res.status==1){
+					//成功
+				//	showErrorMsg();
+					layer.alert(res.msg,{icon: 1,time:2000});	
+					countdown(obj);
+				}else{
+					//失败
+					showErrorMsg(res.msg);
+					$(obj).text('请刷新再试！');
+					$(obj).attr('id','fetchcode');
+				}
+			}
+		})
+		
+    }
+
+
+	function countdown(obj){
+        var obj = $(obj);
+        var s = {$tpshop_config['sms_sms_time_out']};
+        //改变按钮状态
+        obj.unbind('click');
+        //添加样式
+        obj.attr('id','fetchcode');
+        callback();
+        //循环定时器
+        var T = window.setInterval(callback,1000);
+        function callback()
+        {
+            if(s <= 0){
+                //移除定时器
+                window.clearInterval(T);
+                obj.bind('click',sendcode)
+                obj.removeAttr('id','fetchcode');
+                obj.text('获取验证码');
+            }else{
+                obj.text(--s + '秒后再获取');
+            }
+        }
+    }
+	
+	/**
+     * 提示弹窗
+     * @param msg
+     */
+    function showErrorMsg(msg){
+		layer.alert(msg,{icon: 2,time: 2000});
+    //    layer.open({content:msg,time:2000});
+    }
+</script>
+<div class="h-title" style="margin:3% 0 1% 3%">
+	换绑手机
+</div>
+<form onsubmit="return postdata()" id="formf">
+	<ul class="h-bd">
+		
+		<li>
+			<h6>原手机：</h6>
+			<input type="text" class="wenb" readonly="readonly" value="{$company_info.mobile|mobile_hide}" readonly style="width: 120px; " />
+			<a href="JavaScript:;" class="hb"  style="margin-left:20px;" onClick="sendcode(this)" rel="{$company_info.mobile}">发送验证码</a>
+			
+		</li>
+		<li>
+			<h6>验证码：</h6>
+			<input type="text" class="wenb" id="code1" name="code1" required="required" autofocus="autofocus" value=""  style="width:80px;">
+		</li>
+		<li>
+			<h6>新手机号：</h6>
+			<input type="text" class="wenb" id="newmobile" name="newmobile" required="required" style="width:120px;">
+			<a href="JavaScript:;" class="hb" style="margin-left:20px;"  onClick="sendcode(this)" rel=0>发送验证码</a>
+		</li>
+		<li>
+			<h6>验证码：</h6>
+			<input type="text" class="wenb" id="code2" name="code2" required="required" value=""  style="width:80px;">
+		</li>
+		
+	</ul>
+	<input type="submit" class="h-que2" value="确认修改" />
+</form>
+</body>
+</html>

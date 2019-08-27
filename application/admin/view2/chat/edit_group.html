@@ -1,0 +1,193 @@
+<include file="public/layout" />
+
+
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+            <div class="subject">
+                <h3>聊天分组编辑</h3>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="flexigrid">
+        <div class="mDiv">
+            
+            <!--<div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>-->
+        </div>
+        <div class="hDiv">
+            <div class="hDivBox">
+                <table cellspacing="0" cellpadding="0" style="width: 100%;">
+                    <thead>
+                    <tr>
+                        <th  width="5%"><div style="text-align: left;" class="">ID</div></th>
+                    <th align="left" width="30%" abbr="article_title" axis="col3" class="">
+                            <div style="text-align: left;" class="">昵称</div>
+                        </th>
+
+                        <th align="left"  width="20%" abbr="ac_id" axis="col4" class="">
+                            <div style="text-align: left; width: 100px;" class="">手机</div>
+                        </th>
+                        
+                        <th align="left"  width="20%" abbr="ac_id" axis="col4" class="">
+                            <div style="text-align: left; width: 100px;" class="">是否在线</div>
+                        </th>
+                        
+                        <th align="center"  width="20%" axis="col1" class="handle">
+                            <div style="text-align: center; width: 150px;">操作</div>
+                        </th>
+
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class="tDiv">
+            <div class="tDiv2">
+                <div class="fbutton"> <a href="{:U('Chat/add_edit_group',['tid'=>$chat_group['id']])}">
+                    <div class="add" title="添加本组会员">
+                        <span><i class="fa fa-plus"></i>添加本组会员</span>
+                    </div>
+                </a> </div>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+        <div class="bDiv" style="height: auto;">
+            <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+                <table>
+                    <tbody>
+                    <foreach name="list" item="vo" key="k" >
+                        <tr>
+                            <td  width="5%" align="left" class="">
+                                <div style="text-align: left;">{$vo.user_id}</div>
+                            </td>
+                            <td  width="30%" align="left" class="">
+                                <div style="text-align: left;">{$vo.nickname}</div>
+                            </td>
+
+                        
+                            <td  width="20%" align="center" class="">
+                                <div style="text-align: center; width: 100px;">{$vo.mobile}</div>
+                            </td>
+                             <td  width="20%" align="center" class="">
+                                <div style="text-align: center; width: 100px;"><if condition="$vo.is_line eq 1">在线
+                                	<a href="JavaScript:;" class="qzxx" user_id='{$vo.user_id}'>强制下线</a>
+                                <else/>不在线</if></div>
+                            </td>
+                            <td  width="20%" align="center" class="handle">
+                                <div style="text-align: center; width: 170px; max-width:170px;">
+
+                                      <a class="btn red"  href="{:U('Chat/record',['formid'=>$vo['user_id']])}" ><i class="fa-trash-o"></i>查看聊天记录</a>
+                                    <a class="btn red"  href="javascript:void(0)" data-url="{:U('Chat/del_edit_ajax')}" data-id="{$vo.user_id}" onClick="delfun(this)"><i class="fa fa-trash-o"></i>删除</a>
+                                </div>
+                            </td>
+
+                        </tr>
+                    </foreach>
+                    </tbody>
+                </table>
+
+
+            </div>
+            <div class="iDiv" style="display: none;"></div>
+        </div>
+        <!--分页位置-->
+        {$page} </div>
+</div>
+<script>
+    $(document).ready(function(){
+        // 表格行点击选中切换
+        // $('#flexigrid > table>tbody >tr').click(function(){
+        //     $(this).toggleClass('trSelected');
+        // });
+
+        // 点击刷新数据
+        $('.fa-refresh').click(function(){
+            location.href = location.href;
+        });
+
+    });
+
+	$(".qzxx").click(function (){
+		var user_id = $(this).attr('user_id');
+		$.post('/Admin/Chat/downline',{user_id:user_id},function (r){
+			location.reload(); 	
+		})
+	});
+
+    function findchatting(id){
+        $.ajax({
+            type:"post",
+            url:"{:url('admin/chat/findchatting')}",
+            data:{id:id},
+            dataType:"json",
+            success:function(data){
+                $("#nicknametable tr:gt(0)").remove();
+                var html='';
+                for(var i in data){
+                    html+="<tr><td data-toggle=\"modal\" data-target=\"#myModalhistory\" onclick='chathistory("+id+","+data[i]['user_id']+")'>"+data[i]['nickname']+"</td></tr>";
+                }
+                $("#nicknametable tr").eq(0).after(html);
+            }
+        });
+    }
+
+
+
+
+
+
+    function delfun(obj) {
+        // 删除按钮
+        layer.confirm('确认删除？', {
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+            $.ajax({
+                type: 'post',
+                url: $(obj).attr('data-url'),
+                data : {act:'del',id:$(obj).attr('data-id')},
+                dataType: 'json',
+                success: function (data) {
+                    layer.closeAll();
+                    if (data.status == 1) {
+                        layer.msg(data.msg, {icon: 1});
+                        $(obj).parent().parent().parent().remove();
+                    } else {
+                        layer.alert(data.msg, {icon: 2});
+                    }
+                }
+            })
+        }, function () {
+            layer.closeAll();
+        });
+    }
+
+
+    function chathistory($formid,$toid){
+        var iframe = "<iframe src='/index.php/admin/Chat/record/formid/"+$formid+"/toid/"+$toid+"'></if>";
+        $("#myModalhistory .modal-body").html(iframe);
+    }
+
+
+    function checkUserUpdate(){
+        
+        var name = $.trim($('input[name="name"]').val());
+        var error ='';
+        if(name == ''){
+            error += "昵称不能为空\n";
+        }
+        if(error){
+            layer.alert(error, {icon: 2});  //alert(error);
+            return false;
+        }
+        $('#add_form').submit();
+    }
+</script>
+</body>
+</html>

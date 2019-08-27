@@ -1,0 +1,84 @@
+<include file="public/header" title="米豆充值"/>
+<include file="public/header_nav" title="米豆充值" href="javascript:history.back(-1)"/>
+
+
+
+	<div class="sm_cz">
+		
+		
+        <if condition="$res.status eq 1">
+        <div class="tb"><img src="__STATIC__/images/czcg.png"></div>
+		<div class="wz">{$res.info}！</div>
+		<div class="price"><span>充值金额：</span><sapn class="ys">{$res.denomination|num_float}</sapn><span>米豆</span></div>
+        <else/>
+        <div class="tb"><img src="__STATIC__/images/czsb.png"></div>
+		<div class="wz">{$res.info}</div>
+        </if>
+		<div class="anniu">
+			<a href="{:url('/Mobilered')}">米豆专区</a>
+			<a href="{:url('/Mobile/User')}">会员中心</a>
+		</div>
+	</div>
+
+	<style type="text/css">
+		.sm_cz{
+			width:16rem;
+			margin-top:3rem;
+			overflow: hidden;
+		}
+
+		.sm_cz .tb{
+			width:4.5rem;
+			margin:0 auto;
+		}
+		
+		.sm_cz .tb img{
+			width:100%;
+		}
+
+		.sm_cz .wz{
+			width:16rem;
+			height:2rem;
+			line-height: 2rem;
+			font-size:1rem;
+			color:#333;
+			text-align: center;
+			margin:.5rem 0;
+		}
+
+		.sm_cz .price{
+			width:16rem;
+			height:1.5rem;
+			line-height: 1.5rem;
+			font-size:.8rem;
+			color:#666;
+			text-align: center;
+			margin:.5rem 0;
+		}
+
+		.sm_cz .price .ys{
+			color:#ff0000;
+		}
+
+		.sm_cz .anniu{
+			width:16rem;
+			height:2rem;
+			text-align: center;
+			margin-top:3.5rem;
+		}
+
+		.sm_cz .anniu a{
+			display: inline-block;
+			width:6rem;
+			height:1.5rem;
+			background: #ff4401;
+			color:#fff;
+			font-size:.75rem;
+			line-height: 1.5rem;
+			border-radius: .5rem;
+			margin:0 .5rem;
+		}
+	</style>
+
+</body>
+</html>

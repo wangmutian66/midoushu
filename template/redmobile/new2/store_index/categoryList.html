@@ -1,0 +1,81 @@
+<include file="public/header" title="个人中心" body="g4"/>
+<!--<include file="public/header_store_nav2" title="店铺分类" href="{:U('/Mobilered/User/index')}" province_id="{$p['id']}"/>-->
+
+
+<style type="text/css">
+    .content{ position: relative;}
+    #province{
+        font-size: .6rem;
+        appearance:none;
+        -moz-appearance:none;
+        -webkit-appearance:none;
+        border: none;
+        background: none;
+        color: #fff;
+        direction: rtl;
+        background: url(__STATIC__/images/arrow1.png) no-repeat scroll right center transparent;
+        padding-right: 31px;
+
+    }
+</style>
+<div class="classreturn loginsignup ">
+    <div class="content">
+        <div class="ds-in-bl return">
+            <a href="javascript:;" onclick="history.go(-1)"><img src="__STATIC__/images/return.png" alt="返回"></a>
+        </div>
+        <div class="ds-in-bl search center">
+            <span>店铺分类</span>
+        </div>
+        <div class="ds-in-bl menu">
+        <select name="province" id="province" onchange="provincecha(this)">
+            <option value="0">请选择</option>
+            <volist name="province" id="p1">
+                <option <if condition="$p['id'] eq $p1['id']">selected</if>  value="{$p1.id}">{$p1.name}</option>
+            </volist>
+        </select>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="floor list7 ">
+    <foreach name="companCategory" item="v" key="k" >
+    <!-- 登录口 -->
+    <div class="myorder p">
+        <div class="content30">
+            <a href="{:url('Mobilered/StoreIndex/categoryStore',['cid'=>$v.id])}?pro={$p['id']}">
+                <div class="order">
+                    <div class="fl">
+                        <!--<img src="{$v.cc_image}">-->
+                        <span>{$v.cc_name}</span>
+                    </div>
+                    <div class="fr">
+                        <i class="Mright">
+
+                        </i>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    </foreach>
+
+
+
+
+</div>
+<script type="text/javascript">
+    function provincecha(element){
+        var pro = $(element).val();
+        $('.list7 .content30 > a').each(function(key,elements){
+            var ahref = $(elements).attr('href');
+            var af = ahref.match('^\/Mobilered.*?\.html');
+            var yh = af[0];
+            $(elements).attr('href',yh+"?pro="+pro);
+        });
+    }
+</script>
+<!--底部导航-start-->
+<include file="public/footer_store_nav"/>
+<!--底部导航-end-->

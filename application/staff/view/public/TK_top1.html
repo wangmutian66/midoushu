@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+    <title>{$web_title|default='网站登录'}</title>
+	<link rel="stylesheet" href="__PUBLIC__/staff/css/Employee.css">
+	<script src="__PUBLIC__/staff/js/mobile-util.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" src="__PUBLIC__/static/js/jquery.js"></script>
+	<script type="text/javascript" src="/template/mobile/new2/static/js/layer.js"></script>
+	<script>
+		/**
+		 * 提示弹窗
+		 * @param msg
+		 */
+		function showErrorMsg(msg){
+			layer.open({content:msg,time:2000});
+		}
+	</script>
+</head>
+<body class="bgh">
+<div class="e-top">
+	<div class="content">
+		<div class="e-jian">
+			<a href="javascript:history.back(-1)"><img src="__PUBLIC__/staff/img/return.png"></a>
+		</div>
+		<div class="e-wen">
+			{$crumbs|default='米豆薯员工中心'}
+		</div>
+		<a href="{:U('/Staff/')}" class="e-huis"><img src="__PUBLIC__/staff/img/e-ico12.png" /></a>
+
+	</div>
+</div>
+
+<div class="e-main">
+	<div class="content">
+		<div class="wdx">
+			<div class="tx fl">
+				<a href="{:U('/Staff')}"> <!--{:U('/Staff/Profile')}--><img src="{$staff_info.head_pic|default='__STATIC__/images/headPic.jpg'}"></a>
+			</div>
+			<div class="xxi fl">
+				<div class="fm">
+					<if condition="$staff_info.real_name">{$staff_info.real_name}<else/>{$staff_info.uname}</if>
+					<if condition="$staff_info.type eq 1">
+						<span>等级：创业推广员</span>
+					<else/>
+						<if condition="$staff_info.level_name"><span>等级：{$staff_info.level_name}</span></if>
+					</if> 
+				</div>
+				<div class="dm">
+					门店：{$staff_info.store_name} <!--公司名称没显示，公司名称字段company_name-->
+				</div>
+			</div>
+		</div>
+		<div class="erm">
+			<a href="{:U('/Staff/index/tgm')}"><img src="__PUBLIC__/staff/img/tgm.png"></a>
+		</div>
+	</div>
+</div>

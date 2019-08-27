@@ -1,0 +1,20 @@
+		<div class="r">
+			<div class="bt">
+				<div class="left">热门文章</div>
+			</div>
+			<div class="main">
+				<ul>
+					<volist name="hot_article" id="vo">
+					<li>
+						<div class="tu"><img src="{$vo.article_id|article_thum_images=132,82}"></div>
+						<div class="wz">
+							<div class="fbt"><a href="{:U('Article/detail',array('article_id'=>$vo['article_id']))}">{$vo.title}</a></div>
+							<div class="bot">
+								<div class="ck">{$vo.add_time|date='Y-m-d',###}</div>
+							</div>
+						</div>
+					</li>
+					</volist>
+				</ul>
+			</div>
+		</div>

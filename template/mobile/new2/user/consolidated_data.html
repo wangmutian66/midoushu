@@ -1,0 +1,201 @@
+<include file="public/header" title="合并账户" body=""/>
+<include file="public/header_nav" title="合并账户"  href="{:U('User/userinfo')}"/>
+<style type="text/css">
+	.hb_box{
+		width:100%;
+		padding:1rem 2%;
+		box-sizing:border-box;
+	}
+	
+	.hb_box input[type="text"],.hb_box input[type="tel"]{
+		width:100%;
+		height:1.5rem;
+		border:1px solid #999;
+		border-radius:.5rem;
+		line-height:1.5rem;
+		padding:0 .5rem;
+		box-sizing:border-box;
+		outline:none;
+		margin:.5rem 0;
+		font-size:.68rem;
+		color:#333;
+	}
+	
+	.hb_box input[type="submit"]{
+		width:50%;
+		height:1.5rem;
+		line-height:1.5rem;
+		outline:none;
+		background:#ff4401;
+		color:#fff;
+		font-size:.68rem;
+		text-align:center;
+		margin:1rem auto 0;
+		cursor:pointer;
+		border-radius:.5rem;
+		border:none;
+		position:relative;
+		margin-left:25%;
+	}
+	
+	.tishi{
+		width:100%;
+		font-size:.6rem;
+		color:#ff0000;
+		overflow:hidden;
+		clear:both;
+	}
+	.fsyz{ 
+		width:40%;
+		height:1.5rem;
+		line-height:1.5rem;
+		outline:none;
+		border:1px solid #ff4401;
+		color:#ff4401;
+		font-size:.68rem;
+		text-align:center;
+		margin:.5rem auto;;
+		cursor:pointer;
+		border-radius:.5rem;
+		float:right;
+	}
+	
+	.fsyz.ys{
+		color:#999;
+		border:1px solid #999;
+	}
+	
+	.c_code_msg2{
+		width:50% !important;
+		float:left;
+	}
+</style>
+<div class="hb_box">
+	<form id="form1" onsubmit="return postdata(0)">
+    	<div id="jindu" style="height:50px"></div>
+    	<input type="hidden" name="n" id="n" value="0" />
+    	<input type="tel" name="mobile" id="mobile" value="{$Request.param.phone}" placeholder="请输入合并账户的用户名" />
+        <input type="text" class="c_code_msg2" id="mobile_code" name="mobile_code"  placeholder="请输入短信验证码"  >
+        <div class="fsyz ys"  onClick="sendcode(this)">获取验证码</div>
+        <br />
+        <div class="tishi"><label>提示：合并的账户会被删除，余额会直接转移至当前用户</label></div>
+        <br />
+		<input type="hidden" name="progress" id="progress" value="0" />
+        <input type="submit" id="dosubmit" value="提交" />
+    </form>
+</div>   
+
+ 
+    <script>
+	
+	function countdown(obj) {
+        var s = {$tpshop_config['sms_sms_time_out']};
+        //改变按钮状态
+        obj.disabled = true;
+        callback();
+        //循环定时器
+        var T = window.setInterval(callback,1000);
+        function callback()
+        {
+            if(s <= 0){
+                //移除定时器
+                window.clearInterval(T);
+                obj.disabled=false;
+                obj.innerHTML='获取验证码';
+            }else{
+                if(s<=10){
+                    obj.innerHTML = '0'+ --s + '秒后再获取';
+                }else{
+                    obj.innerHTML = --s+ '秒后再获取';
+                }
+            }
+        }
+    }
+	var flag = false;
+    //发送短信验证码
+    function sendcode(obj){
+		var mobile = $("#mobile").val();
+		if(mobile == ''){
+			showErrorMsg('手机不能空');
+			return false;
+		}
+		if(!checkMobile(mobile)){
+			showErrorMsg('手机号码错误，请重新输入');
+			return false;
+		}
+		
+        
+		$.ajax({
+			url:'/index.php?m=Home&c=Api&a=send_validate_code&t='+Math.random() ,
+			type:'post',
+			dataType:'json',
+			data:{send:mobile,scene:6,type:mobile},
+			success:function(res){
+				if(res.status==1){
+					//成功
+					showErrorMsg(res.msg);
+					countdown(obj);
+				}else{
+					//失败
+					showErrorMsg(res.msg);
+					$(obj).text('请刷新再试！');
+					$(obj).attr('id','fetchcode');
+				}
+			}
+		})
+	
+    }
+
+    /**
+     * 提示弹窗
+     * */
+    function showErrorMsg(msg){
+        layer.open({content:msg,time:2});
+    }
+	var referurl = '{$Think.session.referurl|urldecode}';
+	
+	function postdata(n){
+		$("#dosubmit").attr('disabled',true).css('background','#ccc');
+		$.ajax({
+			type: "POST",
+			url: '{:U("/Mobile/User/Consolidated_data")}',
+			data:$('#form1').serialize(),
+			dataType:"json",
+			success: function(r){
+				if(r.status == 0){
+					layer.open({content:r.info,skin: 'msg',time: 2});
+					$("#dosubmit").attr('disabled',false).css('background','#ff4401');
+					$('#dosubmit').removeAttr("disabled");
+				}else{
+					if(r.progress==100){
+						$('#jindu').html("当前进度："+r.progress+"%");
+						showErrorMsg('账户已合并完毕！');
+					/*	$('#dosubmit').attr("disabled",false);
+						$('#dosubmit').removeAttr("disabled");*/
+						setTimeout('gonext()',2000);
+					}else{
+						$('#jindu').html("当前进度："+r.progress+"%");
+						$("#n").val(r.n);
+						setTimeout(function (){
+							postdata(n);
+						},400);;	
+					}	
+				}
+				
+			}
+		});
+		return false;
+	}
+	function gonext(){
+		if(referurl == ''){
+			location.href='/Mobile/User/userinfo';	
+		}else{
+			location.href = referurl;	
+		}
+	}
+    </script>
+    <!--底部导航-start-->
+    <include file="public/footer_nav" />
+    <!--底部导航-end-->
+</body>
+</html>

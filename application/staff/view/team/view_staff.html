@@ -1,0 +1,47 @@
+<include file="public/TK_top" />
+
+<div class="e-tx">
+	<img src="{$staff_r.head_pic|default='__STATIC__/images/headPic.jpg'}">
+</div>
+
+<div class="e-zil">
+	<ul>
+		<li>
+			<div class="bt fl">
+				员工姓名
+		    </div>
+			<div class="nei fl">
+				{$staff_r.real_name}
+			</div>
+		</li>
+		<li>
+			<div class="bt fl">
+				推广员
+		    </div>
+			<div class="nei fl">
+				<if condition="$staff_r.type eq 1">是<else/>否</if>
+			</div>
+		</li>
+		<if condition="$staff_r.type neq 1">
+		<li>
+			<div class="bt fl">
+				员工等级
+		    </div>
+			<div class="nei fl">
+				{$staff_r.lv_name|default='未设等级'}
+			</div>
+		</li>
+		</if>
+		<li>
+			<div class="bt fl">
+				手机号码
+		    </div>
+			<div class="nei fl">
+				{$staff_r.phone|hide_mobile}
+			</div>
+		</li>
+	</ul>
+</div>
+
+</body>
+</html>

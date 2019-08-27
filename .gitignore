@@ -1,0 +1,10 @@
+/robots.txt
+/auto_fully.log
+/runtime/
+/public/upload/
+/public/qrcode/
+/application/config.php
+/application/database.php
+/plugins/payment/weixin/cert/
+/.idea
+/application/home/controller/Test.php

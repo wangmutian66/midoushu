@@ -1,0 +1,192 @@
+﻿<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>用户登录</title>
+    <!-- Prevent the demo from appearing in search engines -->
+    <meta name="robots" content="noindex">
+    <!-- App CSS -->
+    <link type="text/css" href="__PUBLIC__/storemobile/css/app.css" rel="stylesheet">
+    <link type="text/css" href="__PUBLIC__/storemobile/css/app.rtl.css" rel="stylesheet">
+    <!-- Simplebar -->
+    <link type="text/css" href="__PUBLIC__/storemobile/css/simplebar.css" rel="stylesheet">
+    <script type="text/javascript" src="__PUBLIC__/static/js/jquery.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/static/js/layer/layer.js"></script><!-- 弹窗js 参考文档 http://layer.layui.com/-->
+</head>
+
+<body>
+    <script>
+    // function post_check(){
+    //     $.post("{:U('/Storemobile/System/doLogin')}",$("form").serialize(),function (){
+    //         if(r.status == 1){
+    //             alert('登录成功！');
+    //             location.href='{:U("/Storemobile/Index/")}';
+    //         }
+    //     },'json');
+    // }
+
+	function post_check(){
+		
+		if($('#username').val()==''){
+			layer.msg('用户名不能为空！', {icon: 2,time: 2000});   
+			return false;	
+		}	
+		if($('#password').val()==''){
+			layer.msg('密码不能为空！', {icon: 2,time: 2000});   //alert('少年，用户名不能为空！');
+			return false;	
+		}
+		layer.load('2',{shade: 0.6});
+		$.post("{:U('/Storemobile/System/doLogin')}",$("form").serialize(),function (r){
+			if(r.status == 1){
+				layer.msg('登录成功！', {icon: 1,time: 1000},function (){
+					location.href='{:U("/Storemobile/Index/")}';
+				});
+            }else if(r.status == 2){
+                $.each(r.info,function (i,v){
+                    $('.yc ul').append("<li rel='"+v.cid+"'>"+v.cname+"</li>");
+                })
+                $('.yc ul').find('li').unbind('click');
+                $('.yc ul').find('li').bind('click',function (){
+                    $("#store_id").val($(this).attr('rel'));
+                    $("#staff_post_form").submit();
+                })
+                $(".yc").css("display","block");
+
+			}else{
+				layer.msg(r.info, {icon: 2,time: 2000});
+			}
+			layer.closeAll('loading');
+		},'json')
+		return false;
+	}
+
+</script>
+
+<style type="text/css">
+	.yc{
+		width:100%;
+		height:100%;
+		background:rgba(0,0,0,.5);
+		position: fixed;
+		top:0;
+		bottom:0;
+		z-index: 1000;
+		padding:1rem;
+		box-sizing: border-box;
+		display: none;
+	}
+
+	.yc .n{
+		/*width:70%;*/
+		width: 90%;
+		max-width: 450px;
+		height:auto;
+		max-height: 800px;
+		padding:1rem;
+		box-sizing: border-box;
+		background:#fff;
+		border-radius: .5rem;
+		margin: 0 auto;
+		margin-top:75%;
+		overflow-y:auto;
+		position: relative;
+
+	}
+
+	.yc .n ul,.yc .n li{
+		list-style: none;
+		width:100%;
+		overflow: hidden;
+	}
+
+	.yc .n li{
+		/*height:1.5rem;*/
+		line-height: 1.5rem;
+		border-bottom: 1px solid #eae7e7;
+		padding: 5px 0;
+	}
+
+	.yc .n li a{
+		font-size:.75rem;
+	}
+
+</style>
+
+    <div class="mdk-drawer-layout js-mdk-drawer-layout" data-fullbleed data-push data-has-scrolling-region>
+        <div class="mdk-drawer-layout__content mdk-header-layout__content--scrollable" style="overflow-y: auto;" data-simplebar data-simplebar-force-enabled="true">
+
+
+            <div class="container h-vh d-flex justify-content-center align-items-center flex-column">
+                <div class="d-flex justify-content-center align-items-center mb-3">
+                    
+                    <h2 class="ml-2 text-bg mb-0"><strong>【实体店管理平台】</strong></h2>
+                </div>
+                <div class="row w-100 justify-content-center">
+                    <div class="card card-login mb-3">
+                        <div class="card-body">
+                            <form method="post" id="staff_post_form"  onSubmit="return post_check();">
+                                <div class="form-group">
+                                    <label>用户名</label>
+
+                                    <div class="input-group input-group--inline">
+                                        <div class="input-group-addon">
+                                            <i class="material-icons">account_circle</i>
+                                        </div>
+                                        <input type="text" class="form-control" name="username" id="username"  placeholder="请输入登录账号">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="d-flex">
+                                        <label>密码</label>
+                                        <!-- <span class="ml-auto"><a href="forgot-password.html">忘记密码？</a></span> -->
+                                    </div>
+
+                                    <div class="input-group input-group--inline">
+                                        <div class="input-group-addon">
+                                            <i class="material-icons">lock_outline</i>
+                                        </div>
+                                        <input type="password" class="form-control" name="password" id="password" placeholder="请输入您的密码">
+                                    </div>
+                                </div>
+                                <input type="hidden" id="store_id" name="store_id" />
+                                <div class="text-center">
+                                    <input type="submit" class="btn btn-primary" value="我要登录">
+                                    <!-- <a onClick="post_check();" class="btn btn-primary">登录</a> -->
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center">
+                    <span class="mr-2">© 2018 米豆薯商城 版权所有，并保留所有权利</span>
+                    
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="yc">
+        <div class="n">
+            <ul>
+    
+            </ul>
+        </div>
+    </div>
+    <script>
+        (function() {
+            'use strict';
+
+            // Self Initialize DOM Factory Components
+            domFactory.handler.autoInit();
+        });
+    </script>
+</body>
+
+
+
+</html>

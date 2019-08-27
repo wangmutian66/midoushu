@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="renderer" content="webkit">
+<title>全部分类</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/second.css?v={$vnum}" rel="stylesheet">
+<script src="__PUBLIC__/js/baidu.js"></script>
+</head>
+
+<body>
+	<include file="public/top" />
+	<div class="all-class">
+		<volist name="goods_category_tree" id="v" key="kr">
+		<div class="fl-block">
+			<div class="sec-cl"><a href="{:U('Homeyxyp/Goods/goodsList',array('id'=>$v[id]))}" target="_blank">{$v[name]}</a></div>
+			<ul>
+				<foreach name="v['tmenu']" key="k2" item='v2'>
+				<if condition="$v2[parent_id] eq $v['id']">
+				<li>
+					<a href="{:U('Homeyxyp/Goods/goodsList',array('id'=>$v2[id]))}" class="left" target="_blank">{$v2[name]}</a>
+					<div class="right">
+						<foreach name="v2['sub_menu']" key="k3" item='v3'>
+						<if condition="$v3[parent_id] eq $v2['id']">
+							<a href="{:U('Homeyxyp/Goods/goodsList',array('id'=>$v3[id]))}" class="list" target="_blank">{$v3[name]}</a>
+						</if>
+						</foreach>
+					</div>
+				</li>
+				</if>
+				</foreach>
+			</ul>
+		</div>
+		</volist>
+	<include file="public/footer" />
+</body>
+</html>

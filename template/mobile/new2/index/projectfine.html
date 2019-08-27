@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>专题精选-{$tpshop_config['shop_info_store_title']}</title>
+    <meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+    <meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+    <link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+    <link rel="stylesheet" href="__STATIC__/css/style.css?v={$vnum}">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/css/iconfont.css?v={$vnum}"/>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/css/xq.css">
+    <script src="__STATIC__/js/jquery-3.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <!--<script src="__STATIC__/js/zepto-1.2.0-min.js" type="text/javascript" charset="utf-8"></script>-->
+    <script src="__STATIC__/js/mobile-util.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__STATIC__/js/swipeSlide.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__STATIC__/js/layer.js"  type="text/javascript" ></script>
+    <script src="__STATIC__/js/jq_scroll.js?v=20181027" type="text/javascript"></script>
+    <!-- <script src="__STATIC__/js/style.js"  type="text/javascript" ></script> -->
+
+    
+    
+</head>
+<body>
+    <include file="public/header_nav" title="专题精选" href="javascript:history.back()"/>
+
+    <div class="q-project">
+    	<!-- 轮播 -->
+        <div class="banner ban1">
+	        <div class="mslide xq_banner" id="slideTpshop-pro">
+	            <ul>
+	                <!--广告表-->
+                    <adv limit="3" item="v" pid="90">
+	                    <li>
+	                        <a href="{$v[ad_link]}">
+	                            <img src="{$v[ad_code]}" title="{$v[ad_name]}" style="{$v[style]}" alt="">
+	                        </a>
+	                    </li>
+
+                    </adv>
+	            </ul>
+	        </div>
+
+	    <!-- <div class="k_box1">
+            <fieldset class="k_fieldset">
+                <legend class="k_legend">专题精选</legend>
+            </fieldset>
+        </div> -->
+
+        <ul class="list" id="adv">
+            <volist name="adv_list" id="adv_val">
+            <li class="ys">
+        		<div class="bt">
+        			<a href="{$adv_val.ad_link}"><img class="lazy" data-original="{$adv_val.ad_code}" title="{$adv_val.ad_name}"></a>
+        		</div>
+        	</li>
+            </volist>
+       </ul>
+    </div>
+    </div>
+  
+    <!--底部导航-start-->
+    <include file="public/footer_nav"/>
+    <script src="__PUBLIC__/js/jqueryUrlGet.js?v={$vnum}"></script><!--获取get参数插件-->
+    <script src="__PUBLIC__/js/jquery.lazyload.min.js?v=20181031"></script>
+    <script src="__STATIC__/js/style.js?v={$vnum}" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="__STATIC__/js/sourch_submit.js?v={$vnum}"></script>
+    <script>
+        $(function(){
+            $("img.lazy").lazyload();
+        })
+
+        var before_request = 1; // 上一次请求是否已经有返回来, 有才可以进行下一次请求
+        var page = 1;
+        function ajax_sourch_submit(){
+            if(before_request == 0)// 上一次请求没回来 不进行下一次请求
+                return false;
+            before_request = 0;
+            page++;
+            $.ajax({
+                type : "get",
+                url:"/index.php?m=Mobile&c=Index&a=projectfine&isajax=1&p="+page,
+                success: function(data)
+                {
+                    if(data){
+                        $("#adv").append(data);
+                        $("img.lazy").lazyload();
+                        before_request = 1;
+                    }else{
+                        $('.get_more').hide();
+                    }
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

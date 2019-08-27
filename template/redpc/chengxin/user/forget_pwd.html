@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>安全设置</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/member.css?v={$vnum}" rel="stylesheet">
+<script src="__STATIC__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/js/global.js?v={$vnum}" type="text/javascript"></script>
+<script src="__PUBLIC__/static/js/layer/layer.js?v={$vnum}" type="text/javascript"></script>
+<script src="__PUBLIC__/js/baidu.js"></script>
+</head>
+
+<body class="bgg">
+	<include file="public/header2" />
+	<div class="clear"></div>
+	
+	<div class="y-content">
+		<!--右侧内容-->
+		<div class="y-right y-borm" style="margin: 35px auto 60px auto;">
+			<div class="y-title0">
+				找回密码
+			</div>
+            <div class="y-bz y-sbg1 clearfix">
+            	<p class="on">验证身份</p>
+            	<p>设置密码</p>
+            	<p>完成</p>
+            </div>
+            <div class="y-shr">
+		        <form action="" method="post" id="pwdform" class="yzm">
+		        	<div class="zhmm">
+			        	<h3>请填写手机号：</h3>
+			            <input type="text" class="yam" name="mobile" id="mobile">
+			            <div class="clear"></div>
+			        </div>
+			        <div class="zhmm">
+			        	<h3>请填写手机验证码：</h3>
+			            <input type="text" class="c_code_msg2" id="code" name="code">
+			            <input class="fsyz" type="button" name="" onclick="sendcode(this)" value="获取验证码" />
+			        </div>
+			        <div class="clear"></div>
+			        <input type="button" class="qrtx" onclick="nextstep()" value="确  认" />
+			        <div class="clear"></div>
+		        </form>
+			</div>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<include file="public/user_footer" />
+	<script type="text/javascript">
+		function sendcode(o){
+			$.ajax({
+				url:'/index.php?m=Home&c=Api&a=send_validate_code&scene=6&t='+Math.random(),
+				type:'get',
+				dataType:'json',
+				data:{type:'phone',send:$('#mobile').val()},
+				success:function(res){
+					if(res.status==1){
+						layer.alert(res.msg, {icon: 1});
+						timer(o);
+					}else{
+						layer.alert(res.msg, {icon: 2});
+					}
+				}
+			})
+		}
+
+		var wait=180;
+		function timer(o) {
+		    if (wait == 0) {  
+		        o.removeAttribute("disabled");            
+		        o.value="获取验证码";  
+		        wait = {$tpshop_config['sms_sms_time_out']};
+		    } else {  
+		        o.setAttribute("disabled", true);  
+		        o.classList.add("fsyz1");
+		        o.value="重新发送(" + wait + ")";  
+		        wait--;  
+		        setTimeout(function() {  
+		          timer(o)  
+		        }, 1000)  
+		    }  
+		}
+		
+		function nextstep(){
+			var code = $('#code').val();
+			if(code == ''){
+				layer.alert('验证码不能为空', {icon: 2});
+				return false;
+			}
+			if(code.length != 6){
+				layer.alert('验证码错误', {icon: 2});
+				return false;
+			}
+			$.ajax({
+				url:'/index.php?m=Home&c=Api&a=check_validate_code&t='+Math.random(),
+				type:'post',
+				dataType:'json',
+				data:{type:'phone',code:code,send:$('#mobile').val(),scene:6},
+				success:function(res){
+					if(res.status==1){
+						is_check = true;
+						window.location.href='/index.php?m=Home&c=User&a=set_pwd&t='+Math.random();
+					}else{
+						layer.alert(res.msg, {icon: 2});
+						return false;
+					}
+				}
+			})
+		}
+	</script>
+</body>
+</html>

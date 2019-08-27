@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+    <title>{$web_title|default='网站登录'}</title>
+	<link rel="stylesheet" href="__PUBLIC__/staff/css/Employee.css">
+	<script src="__PUBLIC__/staff/js/mobile-util.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" src="__PUBLIC__/static/js/jquery.js"></script>
+	<script type="text/javascript" src="/template/mobile/new2/static/js/layer.js"></script>
+</head>
+<style type="text/css">
+	.yc{
+		width:100%;
+		height:100%;
+		background:rgba(0,0,0,.5);
+		position: fixed;
+		top:0;
+		bottom:0;
+		z-index: 1000;
+		padding:1rem;
+		box-sizing: border-box;
+		display: none;
+	}
+
+	.yc .n{
+		width:100%;
+		height:60%;
+		padding:1rem;
+		box-sizing: border-box;
+		background:#fff;
+		border-radius: .5rem;
+		margin-top:40%;
+		overflow-y:scroll;
+		position: relative;
+	}
+
+	.yc .n .bt{
+		font-size:.75rem;
+		color:#333;
+		font-family: "微软雅黑";
+		text-align: center;
+		width:100%;
+		height:1rem;
+		line-height: 1rem;
+		margin-bottom:.5rem;
+	}
+
+	.yc .n ul,.yc .n li{
+		list-style: disc;
+		list-style-position:inside;
+	}
+
+	.yc .n li{
+		min-height:1.5rem;
+		line-height: 1.5rem;
+		text-decoration:underline;
+	}
+
+	.yc .n li a{
+		font-size:.75rem;
+	}
+
+</style>
+<script>
+/**
+ * 提示弹窗
+ * @param msg
+ */
+function showErrorMsg(msg){
+	layer.open({content:msg,time:2000});
+}
+	function post_check(){
+		if($('#user_name').val()==''){
+			showErrorMsg('用户名不能为空');
+			return false;	
+		}	
+		if($('#password').val()==''){
+			showErrorMsg('密码不能为空');
+			return false;	
+		}
+	
+		index = layer.open({type: 2,shadeClose: false});
+		
+		$.post("{:U('/Staff/System/login')}", { username: $("#user_name").val(),store_id:$("#store_id").val(), password: $("#password").val(),remember_psw:$("#remember_psw").is(':checked')}, function(r){
+			layer.closeAll(index);
+     		if(r.status == 1){
+				location.href="{:U('/Staff/Index/')}";	
+			}else if(r.status == 2){
+				$('.yc ul').find('li').remove();
+				$.each(r.info,function (i,v){
+					$('.yc ul').append("<li rel='"+v.store_id+"'>"+v.company_name+" - "+v.store_name+"</li>");
+				})
+				$('.yc ul').find('li').unbind('click');
+				$('.yc ul').find('li').bind('click',function (){
+					$("#store_id").val($(this).attr('rel'));
+					$("#staff_post_form").submit();
+				})
+				$(".yc").css("display","block");
+			}else{
+				showErrorMsg(r.info);
+			}
+   		}, "json");
+		
+		return false;	
+	}
+</script>
+<body class="sbg">
+<div class="e-box">
+    <div class="e-logo">
+    	<img src="__PUBLIC__/staff/img/e-logo.png">
+    </div>
+    <div class="e-bg">
+    	【员工中心】
+    </div>
+    <form action="" method="post" id="staff_post_form" onSubmit="return post_check()">
+    	<div class="e-dl">
+	    	<input type="text" id="user_name" class="text bgr bgt" placeholder="请输入登录账号" />
+	    	<input type="password" id="password" class="text bgs" autocomplete = 'new-password' placeholder="输入您的密码" />
+    	</div>
+    	<div class="e-dx clearfix">
+    		<p><input type="checkbox" id="remember_psw" class="checkbox fl" />记住密码</p>
+    		<a href="{:url('Staff/System/forgetPwd')}">忘记登录密码？</a>
+    	</div>
+        <!--<input type="hidden" value="'+$(this).attr('rel')+'" name="store_id" id="store_id">-->
+        <input type="hidden" value="0" name="store_id" id="store_id">
+    	<input type="submit" class="e-dan" value="我要登录" style="margin-top: 3%;">
+    	<div class="yc">
+			<div class="n">
+				<div class="bt">请在下方点击选择进入</div>
+				<ul style="font-size:.6rem">
+					
+				</ul>
+			</div>
+    	</div>
+    </form>
+</div>
+
+<include file="public/foot"/>
+
+</body>
+</html>
+

@@ -1,0 +1,53 @@
+ALTER TABLE  `tp_staff_balance` ADD  `frozen` DOUBLE( 11, 2 ) NOT NULL COMMENT  '冻结金额';
+ALTER TABLE  `tp_member_balance` ADD  `frozen` DOUBLE( 11, 2 ) NOT NULL COMMENT  '冻结金额';
+
+
+
+//子公司账号
+CREATE TABLE `tp_store_system_menu`  (
+  `id` smallint(6) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '权限名字',
+  `group` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '所属分组',
+  `right` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '权限码(控制器+动作)',
+  `is_del` tinyint(1) NULL DEFAULT 0 COMMENT '删除状态 1删除,0正常',
+  `type` tinyint(2) NULL DEFAULT 0 COMMENT '所属模块类型 0admin 1home 2mobile 3api',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+
+
+DROP TABLE IF EXISTS `tp_store_admin`;
+CREATE TABLE `tp_store_admin`  (
+  `admin_id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '用户id',
+  `user_name` varchar(60) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '用户名',
+  `email` varchar(60) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT 'email',
+  `password` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '密码',
+  `add_time` int(11) NOT NULL DEFAULT 0 COMMENT '添加时间',
+  `last_login` int(11) NOT NULL DEFAULT 0 COMMENT '最后登录时间',
+  `last_ip` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '最后登录ip',
+  `nav_list` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '权限',
+  `lang_type` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT 'lang_type',
+  `agency_id` smallint(5) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'agency_id',
+  `suppliers_id` smallint(5) UNSIGNED NULL DEFAULT 0 COMMENT 'suppliers_id',
+  `todolist` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT 'todolist',
+  `role_id` smallint(5) NULL DEFAULT 0 COMMENT '角色id',
+  `store_id` int(11) NULL DEFAULT 0 COMMENT '实体店id',
+  PRIMARY KEY (`admin_id`) USING BTREE,
+  INDEX `user_name`(`user_name`) USING BTREE,
+  INDEX `agency_id`(`agency_id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 64 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for tp_store_role
+-- ----------------------------
+DROP TABLE IF EXISTS `tp_store_role`;
+CREATE TABLE `tp_store_role`  (
+  `role_id` smallint(6) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '角色ID',
+  `role_name` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '角色名称',
+  `act_list` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '权限列表',
+  `role_desc` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '角色描述',
+  `store_id` int(11) NULL DEFAULT 0 COMMENT ' 实体店id',
+  PRIMARY KEY (`role_id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 30 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+SET FOREIGN_KEY_CHECKS = 1;

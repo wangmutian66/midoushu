@@ -1,0 +1,233 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<script src="__ROOT__/public/js/company.js"></script>
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title">
+      <div class="item-title">
+        <ul class="tab-base nc-row">
+		<li><a href="{:U('/Admin/Staff/qrcodeSearch')}">二维码搜索</a></li>
+		<li><a href="{:U('/Admin/Company/offline_detail/tz/2/from/qrcode')}">扫码自定义流水</a></li>
+		<li><a class="current" href="{:U('/Admin/WithdrawLog/too_index/from/qrcode')}">提现记录</a></li>
+		</ul>
+      </div>
+    </div>
+  </div>
+    <!-- 操作说明 -->
+
+    <div class="flexigrid">
+        <div class="mDiv">
+            <div class="ftitle">
+                <h3>提现记录列表</h3>
+                <h5>(共<span id="user_count">{$pager->totalRows}</span>条记录)</h5>
+            </div>
+            <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+            <form action="__URL__/too_index/from/qrcode" id="search-form2" class="navbar-form form-inline" method="get">
+                <input type="hidden" id="export" name="export"/>
+                <div class="sDiv">
+                    <div class="sDiv2">
+                        <select name="company_id" id="company_id" class="select" onChange="company_change($(this))">
+                            <option value="">请选择</option>
+                            <volist name='company_list' id='c_list'>
+                                <option value="{$c_list.cid}" <if condition="$c_list['cid'] eq $Request.param.company_id"> selected </if>>{$c_list.cname}</option>
+                            </volist>
+                        </select>
+
+                        <select name="store_id" id="store_id" class="select">
+                            <option value="">请选择</option>
+                            <volist name='store_list' id='s_list'>
+                                <option value="{$s_list.cid}" <if condition="$s_list['cid'] eq $Request.param.store_id"> selected </if>>{$s_list.cname}</option>
+                            </volist>
+                        </select>
+						<select name="result_code" id="result_code" class="select">
+                            <option value="">状态</option>
+                            <option value="FAIL">失败</option>
+                            <option value="SUCCESS">成功</option>
+                        </select>
+                        
+						<div class="sDiv2" style="margin-right: 10px;">
+							<input type="text" size="30" name="start_time" id="start_time" value="{$start_time}" placeholder="起始时间" class="qsbox">
+							<input type="button" class="btn" value="起始时间">
+						</div>
+						<div class="sDiv2" style="margin-right: 10px;">
+							<input type="text" size="30" name="end_time" id="end_time" value="{$end_time}" placeholder="截止时间" class="qsbox">
+							<input type="button" class="btn" value="截止时间">
+						</div>
+
+                        <input type="text" size="30" name="key_word" class="qsbox" style="width:200px;" placeholder="请输入提现手机号码或订单号码" value="{$Think.get.key_word|default=''}">
+                        <input type="submit"  class="btn" value="搜索">
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="hDiv">
+            <div class="hDivBox">
+                <table cellspacing="0" cellpadding="0" style="width: 100%;">
+                    <thead>
+                    <tr>
+                        <th class="sign" axis="col0">
+                            <div style="width: 24px;"><i class="ico-check"></i></div>
+                        </th>
+                        <th align="left" abbr="article_title" axis="col1" class="">
+                            <div style="text-align: left; width:40px;" class="">ID</div>
+                        </th>
+                        <th align="left"  class="">
+                            <div style="text-align: center; width:100px;" class="">实体店名称</div>
+                        </th>
+                        <th align="left"  class="">
+                            <div style="text-align: center; width:200px;" class="">子公司名称</div>
+                        </th>
+                        
+                        <th align="left"  axis="col4" class="">
+                            <div style="text-align: center; width: 100px;" class="">提现金额</div>
+                        </th>
+                        <th align="left"  axis="col4" class="">
+                            <div style="text-align: center; width:60px;" class="">手续费</div>
+                        </th>
+                        <th align="left"  axis="col4" class="">
+                            <div style="text-align: center; width: 100px;" class="">提现方式</div>
+                        </th>
+
+                        
+                        <th align="left"  axis="col4" class="">
+                            <div style="text-align: center; width: 200px;" class="">提现账号</div>
+                        </th>
+                        
+						<th align="left" abbr="ac_id" axis="col4" class="">
+                            <div style="text-align: left; width: 100px;" class="">业务结果</div>
+                          </th>
+                          <th align="left" class="">
+                            <div style="text-align: center; width: 150px;" class="">提现时间</div>
+                        </th>
+                          <th align="left" abbr="ac_id" axis="col4" class="">
+                            <div style="text-align: left; width: 100px;" class="">商户订单号</div>
+                          </th>
+
+						<!--<th align="left" class="">
+                            <div style="text-align: center; width:100px;" class="">操作</div>
+                        </th>-->
+
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+        <div class="bDiv" style="height: auto;">
+            <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+
+                <table>
+                    <tbody>
+                    <foreach name="store_withdraw_log" item="vo" key="k" >
+                        <tr>
+                            <td class="sign">
+                                <div style="width: 24px;"><i class="ico-check"></i></div>
+                            </td>
+                            <td align="left" class="">
+                                <div style="text-align: left; width:40px;">{$vo.id}</div>
+                            </td>
+                            <td align="left" class="">
+                                <div style="text-align: center; width: 100px;">{$vo.sName}</div>
+                            </td>
+                            <td align="left" class="">
+                                <div style="text-align: center; width: 200px;">{$vo.cname}</div>
+                            </td>
+                            <td align="left" class="">
+                                <div style="text-align: center; width: 100px;">{$vo.txje|tk_money_format}</div>
+                            </td>
+                            <td align="left" class="">
+                                <div style="text-align: center; width:60px;">{$vo.cmms_amt|tk_money_format}</div>
+                            </td>
+                            <td align="left" class="">
+                                <div style="text-align: center; width: 100px;"><if condition="$vo.is_card eq 0">零钱提现<else/>银行卡提现</if></div>
+                            </td>
+                             <td align="left" class="">
+                                <div style="text-align: center; width: 200px;"><if condition="$vo.is_card eq 0">手机号：{$vo.mobile}<else/>{$vo.enc_true_name}：{$vo.bank_no}</if></div>
+                            </td>
+                            <td align="left" class="">
+                            <div style="text-align: center; width: 100px;">
+                            <if condition="$vo.result_code eq 'SUCCESS'">
+                            <if condition="$vo.is_card eq 0">
+                            提现成功
+                            <else/>
+                                <if condition="$vo.stauts eq 'PROCESSING' || !$vo.status">
+                                处理中
+                                
+                                <else/>
+                                <span title='{$vo.status|query_bank_status} '>{$vo.status|query_bank_status} </span>
+                                </if>
+                                <a href="JavaScript:;" class="view_bankstatus" rel='{$vo.id}'>查询订单</a> 
+                                </if>
+                                <else/>
+                                申请失败
+                                </if>
+                                </div>
+                            </td>
+                            
+                            <td align="left" class="">
+                                <div style="text-align: center; width: 150px;">
+                                    <if condition="$vo.create_time">{$vo.create_time|date='Y-m-d H:i:s',###}</if>
+                                </div>
+                            </td>
+                           
+							
+                            <td align="left" class="">
+                                <div style="text-align: center; width: 100px;">{$vo.tradeNo}</div>
+                            </td>   
+                        </tr>
+                    </foreach>
+                    </tbody>
+                </table>
+                <!--分页位置-->
+                {$page}
+
+
+
+            </div>
+            <div class="iDiv" style="display: none;"></div>
+        </div>
+        <!--分页位置-->
+    </div>
+</div>
+
+<script type="text/javascript">
+$(".view_bankstatus").click(function (){
+	var id =$(this).attr('rel');
+	layer.load('2',{shade: 0.6});
+	$.getJSON("{:U('/Admin/WithdrawLog/get_bank_status')}",{id:id},function (r){	
+		layer.closeAll('loading');		
+		if(r.system_status == 0){
+			layer.alert(r.info);
+			return false;
+		}
+		var html ="";
+		html = "代付单状态：" + r.status + '<br>';
+		html += "代付金额："	+ r.amount+ ' 元<br>';
+		html += "商户下单时间：" + r.create_time+ '<br>';
+		if(r.pay_succ_time){
+			html += "成功付款时间："	+ r.pay_succ_time+ '<br>';	
+		}
+		if(r.reason){
+			html += "失败原因："	+ r.reason;		
+		}
+		layer.alert(html,{icon:1},function (){
+			location.reload();	
+		});
+	});
+});
+function downExcel(){
+    $('#export').val(1);
+    $('#search-form2').submit();
+}
+
+	$(document).ready(function(){
+		$('#start_time').layDate();
+		$('#end_time').layDate();
+	});
+</script>
+</body>
+</html>

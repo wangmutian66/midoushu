@@ -1,0 +1,13 @@
+<div class="TK_top">
+	
+	<ul>
+		<li><div class="t_b1"><!-- <span>{$handle_order}</span> --><a href="{:U('Supplier/Order/index',array('order_status'=>0))}">订单提醒</a></div></li>
+		<li><div class="t_b2"> <span>{$msg_num}</span><a target="workspace" href="{:U('/Supplier/Supplier/message_notice')}">站内消息</a></div></li>
+		<li><div class="t_b3 pl35"><a href="{:U('/Supplier/Supplier/logout')}">退出系统</a></div></li>
+		<li><div class="t_b4 pl35"><a href="/" target="_bland" class="ml40">网站首页</a></div></li>
+	</ul>
+	<div class="top_login_time">
+	本地登录：{$suppliers_log.log_time|date='Y-m-d H:i:s',###}
+	<if condition='isset($suppliers_log_old[0][log_time]) && !empty($suppliers_log_old[0][log_time])'> / 上次登录：{$suppliers_log_old.0.log_time|date='Y-m-d H:i:s',###}</if>
+	</div>
+</div>

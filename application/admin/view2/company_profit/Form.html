@@ -1,0 +1,270 @@
+<include file="public/layout" />
+<body style="background-color: #FFF; overflow: auto;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>新增子公司员工</h3>
+                <h5><a href="{:U('Admin/Staff/index')}" id="log_list">员工列表</a></h5>
+            </div>
+            
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    
+   <style>
+   	#handlepost input{width:300px;}
+	#handlepost textarea{width:400px; height:150px;}
+   </style>
+    
+    <form method="post" id="handlepost" action="__URL__/{$acts}" name="form1" autocomplete="off" >
+        <div class="ncap-form-default">
+            
+            <input type="hidden" name="{$pk}" id="{$pk}" value="{$item[$pk]}" />
+			
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">用户名:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="uname" name="uname"  value="{$item.uname}" autocomplete="new-password"  placeholder=""  type="text" /> 
+					
+                    <p class="notic"> 登录用用户名 </p>
+                </dd>
+            </dl>
+			
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">密码:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="psw" name="psw"  value="{$item.psw}" autocomplete="new-password"  placeholder=""  type="password" /> 
+					
+                    <p class="notic"> <eq name='acts' value='domodify'>如无需修改请留空</eq> </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">固定电话:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="tel" name="tel"  value="{$item.tel}"  placeholder=""  type="text" /> 
+					
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">手机:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="phone" name="phone"  value="{$item.phone}"  placeholder=""  type="text" /> 
+					
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">真实姓名:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="real_name" name="real_name"  value="{$item.real_name}"  placeholder=""  type="text" /> 
+					
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">员工编码:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="staff_code" name="staff_code"  value="{$item.staff_code}"  placeholder=""  type="text" size="10" /> 
+					
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">隶属子公司:</label>
+                </dt>
+                <dd class="opt">
+					<select id="top_id" name="top_id">
+						<option value="0">- - 请选择 - -</option>
+						<volist name="company_list" id="company_list_value">
+						<option value="{$company_list_value.cid}"  <eq name='company_list_value[cid]' value="$item['top_id']">selected</eq>>{$company_list_value.cname}</option>
+						</volist>
+					</select>
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">隶属上级:</label>
+                </dt>
+                <dd class="opt">
+                    
+					<select id="rid" name="rid">
+						<option value="0">- - 请选择 - -</option>
+						<volist name="rid_list" id="rid_value">
+						<option value="{$rid_value.id}"  <eq name='rid_value[id]' value="$item['rid']">selected</eq>>
+						<notempty name="rid_value['real_name']">
+						{$rid_value.real_name}
+						<else/>
+						{$rid_value.uname}
+						</notempty>
+						</option>
+						</volist>
+					</select>
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">用户余额:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="money" name="money"  value="{$item.money|}"  placeholder=""  type="text" /> 
+					
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">冻结金额:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="frozen" name="frozen"  value="{$item.frozen}"  placeholder=""  type="text" />
+					
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">用户状态:</label>
+                </dt>
+                <dd class="opt">
+				
+					<label><input type="radio" style="width:auto" value="1" name="is_lock"  <eq name="item['is_lock']" value='1'>checked</eq> >	正常</label>
+					<label><input type="radio" style="width:auto" value="0"  name="is_lock" <eq name="item['is_lock']" value='0'>checked</eq> > 冻结</label>
+					
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">所处层级:</label>
+                </dt>
+                <dd class="opt">
+					<select id="company_level" name="company_level">
+						<option value="0">- - 请选择 - -</option>
+						<volist name="company_level_list" id="company_level_list_value">
+						<option value="{$company_level_list_value.id}" v1="{$company_level_list_value.present_time_start}"  v2="{$company_level_list_value.present_time_end}"   v3="{$company_level_list_value.service_charge}"   v4="{$company_level_list_value.present_money}"  <eq name='company_level_list_value[id]' value="$item['company_level']">selected</eq>>{$company_level_list_value.lv_name}</option>
+						</volist>
+					</select>
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			<script>
+				$(function (){
+						$("#top_id").change(function (){
+							var obj = $(this);
+							var top_id = obj.val();
+							get_r_list(top_id);
+						})
+						
+						function get_r_list(top_id){
+							if(top_id !==0){
+								$.getJSON("{:U('/Admin/Staff/getTop/')}",{top_id:top_id,id:'{$item.id}'},function(r){
+									var top_options='<option value="0">- - 请选择 - -</option>';
+									if(r.status == 1){
+										$.each(r.list,function (i,k){
+											if(k.real_name != ''){
+												typename = k.real_name;
+											}else{
+												typename = k.uname
+											}
+											top_options += "<option value="+k.id+">"+typename +"</option>";
+										})	
+										
+									}else{
+										//失败	
+									}
+									$("#rid").html(top_options);
+								});	
+							}	
+						}
+						
+						$('#company_level').change(function (){
+							var obj = $('#company_level :selected');
+							
+							$('#present_time_start').val(obj.attr('v1'));
+							$('#present_time_end').val(obj.attr('v2'));
+							$('#service_charge').val(obj.attr('v3'));
+							$('#present_money').val(obj.attr('v4'));
+						});
+						
+				})
+			</script>
+			
+            <dl class="row">
+                <dt class="tit">
+                    <label for="lv">提现时间:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="present_time_start" name="present_time_start"  style="width:100px;"  value="{$item.present_time_start}"  placeholder=""  type="text" /> - 
+					<input id="present_time_end" name="present_time_end" style="width:100px;"  value="{$item.present_time_end}"  placeholder="" type="text" />
+					
+                    <p class="notic"> 每个月的几号至几号 </p>
+                </dd>
+            </dl>
+			
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">提现手续费:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="service_charge" name="service_charge"  value="{$item.service_charge}"  placeholder=""  type="text" /> 
+					
+                    <p class="notic"> 请填写小数表示 例：0.2      (0.2 = 20%) </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">提现最低限额:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="present_money" name="present_money"  value="{$item.present_money}"  placeholder=""  type="text" /> 
+					
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			
+            <dl class="row">
+                <dt class="tit">
+                    <label for="lv_name">推荐人手机号:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="recommend_tel" name="recommend_tel" value="{$item.recommend_tel}"    type="text" />
+                    <p class="notic">未实现（可忽略）</p>
+                </dd>
+            </dl>
+			
+            <div class="bot">
+                <a href="JavaScript:void(0);" class="ncap-btn-big ncap-btn-green" onClick="document.form1.submit()">确认提交</a>
+            </div>
+        </div>
+    </form>
+    
+    
+    
+   
+    
+    
+</div>
+<div id="goTop"> <a href="JavaScript:void(0);" id="btntop"><i class="fa fa-angle-up"></i></a><a href="JavaScript:void(0);" id="btnbottom"><i class="fa fa-angle-down"></i></a></div>
+</body>
+</html>

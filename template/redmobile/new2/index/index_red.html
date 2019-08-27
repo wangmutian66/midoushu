@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>米豆专区-{$tpshop_config['shop_info_store_title']}</title>
+    <link rel="stylesheet" href="__STATIC__/css/style.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/css/iconfont.css"/>
+    <link rel="stylesheet" href="__STATIC__/js/need/layer.css">
+    <script src="__STATIC__/js/jquery-3.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <!--<script src="__STATIC__/js/zepto-1.2.0-min.js" type="text/javascript" charset="utf-8"></script>-->
+    <script src="__STATIC__/js/mobile-util.js?v={$vnum}" type="text/javascript" charset="utf-8"></script>
+    <script src="__STATIC__/js/swipeSlide.min.js?v={$vnum}" type="text/javascript" charset="utf-8"></script>
+    <script src="__STATIC__/js/layer/layer.js?v={$vnum}"  type="text/javascript" ></script>
+</head>
+<body style="background: #fff;">
+    <!--顶部搜索栏-s-->
+    <header>
+        <div class="content">
+            <div class="ds-in-bl search">
+                <div class="sea-box">
+                    <div class="logo">
+                        <a href=""><img src="__STATIC__/images/logo-2.png" alt="LOGO"></a>
+                    </div>
+                    <span ></span>
+                    <form action=""  method="post">
+                        <div class="sear-input">
+                            <a href="{:U('Goods/ajaxSearch')}">
+                                <input type="text" name="q" id="search_text" class="search_text"   value="" placeholder="请输入您所搜索的商品">
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="ds-in-bl login">
+                <span>
+                <if condition="$user_id gt 0">
+                    <a href="{:U('Mobilered/User/index')}"> <img class="after_login" src="__STATIC__/images/my-2.png"></a>
+                <else/>
+                    <a href="{:U('Mobile/User/login')}"> 登录</a>
+                </if>
+            </span>
+            </div>
+        </div>
+    </header>
+    <!--顶部搜索栏-e-->
+
+    <!--顶部滚动广告栏-s-->
+    <div class="banner ban1">
+        <div class="mslide red_ys" id="new_red_ys">
+            <ul>
+                <!--广告表-->
+                <adv pid ="106" limit="5" item="v">
+                    <li>
+	                    <a href="{$v.ad_link}">
+	                        <img src="{$v[ad_code]}" title="{$v[title]}" style="{$v[style]}" alt="">
+	                    </a>
+                    </li>
+                </adv>
+            </ul>
+        </div>
+    </div>
+    <!--顶部滚动广告栏-e-->
+    
+    
+    <!--菜单-start-->
+    <div class="floor dh">
+        <nav>
+        	<!--<a href="{:U('Goods/categoryList')}">
+                <span>
+                    <img src="__STATIC__/images/icon_qb.png" alt="全部分类" /><br />
+                    <span>全部分类</span>
+                </span>
+            </a>-->
+            <a href="{:U('Mobile/Index/index_cash')}">
+                <span>
+                    <img src="__STATIC__/images/ico_new01.png" alt="现金专区" /><br />
+                    <span>现金专区</span>
+                </span>
+            </a>
+            <a href="{:U('Mobile/Index/specialSale')}">
+                <span>
+                    <img src="__STATIC__/images/ico_new04.png" alt="特卖专区" /><br />
+                    <span>特卖专区</span>
+                </span>
+            </a>
+            <a href="{:U('Mobileyxyp/Index/index')}">
+                <span>
+                    <img src="__STATIC__/images/ico_new06.png" alt="农创扶贫" /><br />
+                    <span>农创扶贫</span>
+                </span>
+            </a>
+            <a href="{:U('Mobilered/StoreIndex/index')}">
+                <span>
+                    <img src="__STATIC__/images/ico_new08.png" alt="服务周边" /><br />
+                    <span>服务周边</span>
+                </span>
+            </a>
+        </nav>
+    </div>
+    <!--菜单-end-->
+
+	<!--广告位-start-->
+    <div class="banner ma-to-20" style="margin-top: 3%;">
+        <adv limit="1" item="v" pid="43">
+            <a href="{$v[ad_link]}">
+            <img src="{$v[ad_code]}" title="{$v[title]}" style="{$v[style]}"/>
+            </a>
+        </adv>
+    </div>
+    <!--新加滑动列表-->
+    <div class="cash_gundong_bt">
+        <div class="l">米豆精选</div>
+        <div class="r"><a href="{:U('Activity/douding_sale')}"><div class="circle"></div><div class="circle"></div><div class="circle"></div></a></div>
+    </div>
+    <div>
+        <div class="guesslike ys">
+            <div class="likeshop ys2">
+                <ul class="product single_item info">
+                    <volist name="douding_list" id="douding_val">
+						<li class="new_index_list_newcash">
+							<div class="similer-product products_kuang">   
+								<a href="{:U('Mobilered/Goods/goodsInfo',array('id'=>$douding_val[goods_id]))}" title="{$douding_val.goods_name}">
+    								<img src="{$douding_val[goods_id]|goods_thum_images=400,400,'red'}"/>
+    								<span class="similar-product-text ys">{$douding_val[goods_name]}</span>
+								</a>
+								<span class="similar-product-price">
+									<span class="big-price">{$douding_val[midou_index]}</span>米豆
+									<span class="big-price" style="text-decoration:line-through;color:#999;margin-left:5px;"> ¥ {$douding_val[market_price]}</span>
+								</span>
+							</div>
+						</li>
+					</volist>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!---->
+
+    <!--新加滑动列表-->
+    <div class="cash_gundong_bt">
+        <div class="l">新品推荐</div>
+        <div class="r"><a href="{:U('Activity/new_sale')}"><div class="circle"></div><div class="circle"></div><div class="circle"></div></a></div>
+    </div>
+    <div>
+         <div class="guesslike ys">
+            <div class="likeshop ys2">
+                <ul class="product single_item info">
+                    <volist name="recommend_list" id="recommend_val">
+						<li class="new_index_list_newcash">
+							<div class="similer-product products_kuang">   
+								<a href="{:U('Mobilered/Goods/goodsInfo',array('id'=>$recommend_val[goods_id]))}" title="{$recommend_val.goods_name}">
+    								<img src="{$recommend_val[goods_id]|goods_thum_images=400,400,'red'}"/>
+    								<span class="similar-product-text ys">{$recommend_val[goods_name]|getSubstr=0,20}</span>
+								</a>
+								<span class="similar-product-price">
+									<span class="big-price">{$recommend_val[midou_index]}</span>米豆
+									<span class="big-price" style="text-decoration:line-through;color:#999;margin-left:5px;"> ¥ {$recommend_val[market_price]}</span>
+								</span>
+							</div>
+						</li>
+					</volist>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!---->
+
+    <!--新加滑动列表-->
+    <div class="cash_gundong_bt">
+        <div class="l">热销精选</div>
+        <!-- <div class="r"><a href="{:U('Activity/hot_sale')}">更多></a></div> -->
+    </div>
+    <div>
+         <div class="guesslike ys">
+            <div class="likeshop ys2">
+                <ul class="product single_item info">
+                    <volist name="hot_list" id="hot_val">
+                        <li class="new_index_list_newcash">
+							<div class="similer-product products_kuang">   
+								<a href="{:U('Mobilered/Goods/goodsInfo',array('id'=>$hot_val[goods_id]))}" title="{$hot_val.goods_name}">
+    								<img src="{$hot_val[goods_id]|goods_thum_images=400,400,'red'}"/>
+    								<span class="similar-product-text ys">{$hot_val[goods_name]|getSubstr=0,20}</span>
+								</a>
+								<span class="similar-product-price">
+									<span class="big-price">{$hot_val[midou_index]}</span>米豆
+									<span class="big-price" style="text-decoration:line-through;color:#999;margin-left:5px;"> ¥ {$hot_val[market_price]}</span>
+								</span>
+							</div>
+						</li>
+                    </volist>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!---->
+
+    <!--分类版块01-->
+
+    <div class="new_index_fl_01">
+        <div class="new_index_bt">—— 品类精选 ——</div>
+        <volist name="index_category" id='category_val'>
+            <div class="bt">
+                <a href="{:url('/Mobilered/Index/index8category',['catid'=>$category_val.id])}"><img src="{$category_val.image}" title="{$category_val.mobile_name}"></a>
+            </div>
+            <div class="guesslike ys_new">
+                <div class="likeshop ys_pl">
+                    <ul class="product single_item info">
+                        <volist name='category_val.goods_list' id='goods_val'>
+                            <li class="new_index_list_newcash">
+    							<div class="similer-product products_kuang">   
+    								<a href="{:U('Mobilered/Goods/goodsInfo',array('id'=>$goods_val[goods_id]))}" title="{$v.goods_name}">
+        								<img src="{$goods_val[goods_id]|goods_thum_images=400,400,'red'}"/>
+        								<span class="similar-product-text ys">{$goods_val[goods_name]|getSubstr=0,20}</span>
+    								</a>
+    								<span class="similar-product-price">
+    									<span class="big-price">{$goods_val[midou_index]}</span>米豆
+    									<span class="big-price" style="text-decoration:line-through;color:#999;margin-left:5px;"> ¥ {$goods_val[market_price]}</span>
+    								</span>
+    							</div>
+    						</li>
+                        </volist>
+                    </ul>
+                </div>
+            </div>
+        </volist>
+    </div>
+    <!---->
+    <!--猜你喜欢-start-->
+    <div class="guesslike ys">
+        <div class="bt">
+            <div class="l"><div class="tp"><img src="__STATIC__/images/zqbk-tj.png"></div><span id="guessTarget">猜你喜欢</span></div>
+            <div class="r">
+                <a href="{:U('index/guesslike')}">
+                    <span>更多</span>
+                    <div class="tb">></div>
+                </a>
+            </div>
+        </div>
+        <div class="floor guesslike"  style="margin-top:0rem">
+            <!--排序按钮-s-->
+            <nav class="storenav p search_list_dump" id="head_search_box product_sort">
+                <ul>
+                    <li class="<if condition="(($sort eq 'rand' or  empty($sort)) and empty($price) )">red</if>" >
+                    <a href="<?php echo urldecode(U('Mobilered/Index/index_red',array('sort'=>'rand')));?>#guessTarget" >
+                        <span class="dq">综合</span>
+                    </a>
+                    </li>
+                    <li class="<if condition="$sort eq 'sales_sum'">red</if>">
+                    <a href="<?php echo urldecode(U('Mobilered/Index/index_red',array('sort'=>'sales_sum','sort_asc'=>'desc')));?>#guessTarget" >
+                        <span class="dq" >销量</span>
+                    </a>
+                    </li>
+                    <li class="<if condition="$sort eq 'shop_price'">red</if>">
+                    <a href="<?php echo urldecode(U('Mobilered/Index/index_red',array('sort'=>'shop_price','sort_asc'=>'asc')));?>#guessTarget">
+                        <span class="jg dq">价格</span>
+                    </a>
+                    </li>
+                    <li class="<if condition="$price1 neq ''">red</if>">
+                    <span class="sx">筛选</span>
+                    <i class="fitter"></i>
+                    </li>
+
+                </ul>
+            </nav>
+            <!--筛选-s-->
+            <div class="screen_wi" style="z-index:99999;position: fixed;">
+                <div class="classreturn loginsignup">
+                    <div class="content">
+                        <div class="ds-in-bl return seac_retu">
+                            <a href="javascript:void(0);" ><img src="__STATIC__/images/return.png" alt="返回"></a>
+                        </div>
+                        <div class="ds-in-bl search center">
+                            <span class="sx_jsxz">价格筛选</span>
+                        </div>
+                        <div class="ds-in-bl suce_ok">
+                            <a href="javascript:void(0);">确定</a>
+                        </div>
+                    </div>
+                </div>
+                <!--一级筛选条件-s-->
+                <div class="list-se-all ma-to-20 one-related" >
+                    <!--全部分类-s-->
+                    <!--价格-s-->
+                    <div class="myorder p"  >
+                        <div class="content30">
+                            <div class="order" >
+                                <input type="text" name="price1" id="price1" style="width: 4rem;">-<input type="text" name="price2" id="price2" style="width: 4rem;">
+                            </div>
+                        </div>
+                    </div>
+                    <!--价格-e-->
+                    <input type="hidden" id="key" value="" />
+                </div>
+                <!--一级筛选条件-e-->
+            </div>
+            <div class="guesslike ys_new">
+                <div class="likeshop ys_pl" id="J_ItemList">
+                    <ul class="product single_item info">
+                        <volist name='guess_goods_list' id='goods_val'>
+                            <li class="new_index_list_newcash">
+                                <div class="similer-product products_kuang">
+                                    <a href="{:U('Mobilered/Goods/goodsInfo',array('id'=>$goods_val[goods_id]))}" title="{$v.goods_name}">
+                                        <img src="{$goods_val[goods_id]|goods_thum_images=400,400,'red'}"/>
+                                        <span class="similar-product-text ys">{$goods_val[goods_name]|getSubstr=0,20}</span>
+                                    </a>
+                                    <span class="similar-product-price">
+    									<span class="big-price">{$goods_val[midou_index]}</span>米豆
+    									<span class="big-price" style="text-decoration:line-through;color:#999;margin-left:5px;"> ¥ {$goods_val[market_price]}</span>
+    								</span>
+                                </div>
+                            </li>
+                        </volist>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--底部-start-->
+    <include file="public/footer"/>
+    <!--底部-end-->
+    <!--底部导航-start-->
+    <include file="public/footer_nav"/>
+    <!--底部导航-end-->
+    <script src="__PUBLIC__/js/jqueryUrlGet.js?v={$vnum}"></script><!--获取get参数插件-->
+    <script src="__STATIC__/js/style.js?v={$vnum}" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="__STATIC__/js/sourch_submit.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("img.lazy").lazyload();
+        })
+
+        /**
+         * 继续加载猜您喜欢
+         * */
+        var before_request = 1; // 上一次请求是否已经有返回来, 有才可以进行下一次请求
+        var page = 0;
+        var sorts = '{$sort}';
+        var sort_ascs = '{$sort_asc}';
+        var price1 = '{$price1}';
+        var price2 = '{$price2}';
+        function ajax_sourch_submit(){
+            if(before_request == 0)// 上一次请求没回来 不进行下一次请求
+                return false;
+            before_request = 0;
+            page++;
+            $.ajax({
+                type : "get",
+                url:"/index.php?m=Mobilered&c=Index&a=ajaxGuessMore&p="+page+"&sort="+sorts+"&sort_asc="+sort_ascs+"&price1="+price1+"&price2="+price2,
+                success: function(data)
+                {
+                    if(data){
+                        $("#J_ItemList>ul").append(data);
+                        //$("img.lazy").lazyload();
+                        before_request = 1;
+                    }else{
+                        $('.get_more').hide();
+                    }
+                }
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        //确定按钮
+        $('.suce_ok').click(function(){
+            var price1=$('#price1').val();
+            var price2=$('#price2').val();
+            if (price1 >= '0' && price2>'0') {
+                location.href= "/index.php/Mobilered/Index/index_red/price1/"+price1+"/price2/"+price2+".html#guessTarget";
+            }else{
+                location.href= "/index.php/Mobilered/Index/index_red.html#guessTarget";
+            }
+
+        })
+
+
+        //返回按钮
+        $('.seac_retu').click(function(){
+            //判断当前二级筛选状态
+            if($('.suce_ok').is('.two')){
+                $(".filter").each(function(i,o){
+                    //去掉全部选择
+                    $(o).find('.fr input').attr('checked',false);
+                });
+                $('#key').removeAttr('class');
+                //显示一级筛选
+                $('.screen_wi,.popcover,.one-related').show();
+                $('.two-related').hide();
+                $('.sx_jsxz').html('筛选');
+                $('.suce_ok').removeClass('two');
+            }else{
+                $('.screen_wi').animate({width: '0', opacity: 'hide'}, 'normal',function(){
+                    undercover();
+                    $('.screen_wi').hide();
+                });
+            }
+        })
+
+
+        //筛选弹窗的全部分类筛选
+        function cateArr(){
+            $('.catearr').show();
+            $('.tow-price').hide();
+            $('.filter').hide();
+            $('.filterspec').hide();
+        }
+
+
+        var  page = 1;
+
+        //显示隐藏筛选弹窗
+        var lb = $('.search_list_dump .lb')
+        var fil = $('.fil_all_comm');
+        var cs = $('.classreturn,.search_list_dump');
+        var son = $('.search_list_dump .jg').siblings();
+        $('.storenav ul li span').click(function(){
+            $(this).parent().addClass('red').siblings('li').removeClass('red')
+            if(!$(this).hasClass('lb')){
+                fil.hide();
+                undercover();
+                cs.removeClass('pore');
+            }
+            if(!$(this).hasClass('jg')){
+                son.removeClass('bpr1');
+                son.removeClass('bpr2');
+            }
+        });
+
+
+        $(function(){
+            //显示综合筛选弹窗
+            lb.click(function(){
+                fil.show();
+                cover();
+                cs.addClass('pore');
+            });
+
+            lb.html($('.on').html());
+            //筛选
+            $('.search_list_dump .sx').click(function(){
+                $('body').css('position','relative');
+                $('.screen_wi').animate({width: '14.4rem', opacity: 'show'}, 'normal',function(){
+                    $('.screen_wi').show();
+                    cover();
+                });
+            })
+            //切换商品排列样式
+            $('.listorimg').click(function(){
+                $(this).toggleClass('orimg');
+                $('#goods_list').toggleClass('addimgchan');
+                $('.orderlistshpop').toggleClass('addimgchan');
+            })
+        })
+
+    </script>
+	</body>
+</html>

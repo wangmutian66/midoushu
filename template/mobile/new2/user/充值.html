@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+    <title>成欣网</title>
+	<link rel="stylesheet" href="../static/css/style.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/iconfont.css"/>
+	<script src="../static/js/jquery-3.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../static/js/style.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../static/js/mobile-util.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/public/js/global.js"></script>
+	<script src="../static/js/layer.js"  type="text/javascript" ></script>
+	<script src="../static/js/swipeSlide.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+<body>
+<link rel="stylesheet" href="../static/css/tian.css">
+<div class="classreturn loginsignup ">
+    <div class="content">
+        <div class="ds-in-bl return">
+            <a href="[href]"><img src="../static/images/return.png" alt="返回"></a>
+        </div>
+        <div class="ds-in-bl search center">
+            <span>我的充值</span>
+        </div>
+        <div class="ds-in-bl menu">
+            <a href="javascript:void(0);"><img src="../static/images/class1.png" alt="菜单"></a>
+        </div>
+    </div>
+</div>
+<div class="flool tpnavf">
+    <div class="footer">
+        <ul>
+            <li>
+                <a class="yello" href="{:U('Index/index')}">
+                    <div class="icon">
+                        <i class="icon-shouye iconfont"></i>
+                        <p>首页</p>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="{:U('Goods/categoryList')}">
+                    <div class="icon">
+                        <i class="icon-fenlei iconfont"></i>
+                        <p>分类</p>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <!--<a href="shopcar.html">-->
+                <a href="{:U('Cart/index')}">
+                    <div class="icon">
+                        <i class="icon-gouwuche iconfont"></i>
+                        <p>购物车</p>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="{:U('User/index')}">
+                    <div class="icon">
+                        <i class="icon-wode iconfont"></i>
+                        <p>我的</p>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+    
+<div class="y-qia">
+	账户余额：10元
+</div>
+<!--<ul class="y-shu">
+	<li class="on">
+		<div class="se fle">
+			充值金额
+			<p><span>200.00</span>元</p>
+		</div>
+		<h2 class="ju1"><a href="#">点<br />击<br />充<br />值</a></h2>
+	</li>
+	<li>
+		<div class="se fle">
+			充值金额
+			<p><span>400.00</span>元</p>
+		</div>
+		<h2 class="ju2"><a href="#">点<br />击<br />充<br />值</a></h2>
+	</li>
+	<li>
+		<div class="se fle">
+			充值金额
+			<p><span>600.00</span>元</p>
+		</div>
+		<h2 class="ju3"><a href="#">点<br />击<br />充<br />值</a></h2>
+	</li>
+</ul>-->
+<fieldset id="view" class="toggle fle">
+	<input type="radio" name="view" id="view-list" value="list" class="pd" />
+	<label for="view-list" class="zi">
+		<div class="se fle">
+			充值金额
+			<p><span>600.00</span>元</p>
+		</div>
+		<h2 class="ju1"><a href="#">点<br />击<br />充<br />值</a></h2>
+	</label>
+	<input type="radio" name="view" id="view-grid" value="grid" class="pd" />
+	<label for="view-grid" class="zi">
+		<div class="se fle">
+			充值金额
+			<p><span>400.00</span>元</p>
+		</div>
+		<h2 class="ju2"><a href="#">点<br />击<br />充<br />值</a></h2>
+	</label>
+	<input type="radio" name="view" id="view-ads" value="das" class="pd" />
+	<label for="view-ads" class="zi">
+		<div class="se fle">
+			充值金额
+			<p><span>600.00</span>元</p>
+		</div>
+		<h2 class="ju3"><a href="#">点<br />击<br />充<br />值</a></h2>
+	</label>
+</fieldset>
+<script type="text/javascript" src="../static/js/custominput.js"></script>	
+<script type="text/javascript">
+	$(function(){
+		
+		$('input').customInput();
+		
+		$('.toggle').each(function(){
+			$('div:first',this).addClass('first');
+			$('div:last',this).addClass('last');	
+		}); 
+	});
+</script>
+<div class="clear"></div>
+<!--其他支付方式-s-->
+<div class="paylist">
+    <div class="myorder debit otherpay p">
+        <div class="content30">
+            <a href="javascript:void(0);">
+                <div class="order">
+                    <div class="fl">
+                        <span>支付方式</span>
+                    </div>
+                    <div class="fr">
+                        <!--<i class="Mright xjt"></i>-->
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="pay-list-4 p">
+    <div class="maleri30">
+        <ul>
+            <li  onClick="changepay(this);">
+                <label>
+                <div class="radio fl">
+					<span class="che cod">
+						<i>
+                            <input type="radio" value="pay_code=cod" class="c_checkbox_t" name="pay_radio" style="display:none;"/>
+                        </i>
+					</span>
+                </div>
+                <div class="pay-list-img fl">
+                    <img src="../static/images/y-08.png"/>
+                </div>
+                <div class="pay-list-font fl">
+                                        支付宝                        
+                </div>
+                </label>
+            </li>
+            <li  onClick="changepay(this);">
+                <label>
+                <div class="radio fl">
+					<span class="che alipayMobile">
+						<i>
+                            <input type="radio" value="pay_code=alipayMobile" class="c_checkbox_t" name="pay_radio" style="display:none;"/>
+                        </i>
+					</span>
+                </div>
+                <div class="pay-list-img fl">
+                    <img src="../static/images/y-07.png"/>
+                </div>
+                <div class="pay-list-font fl">
+                                         微信支付                            
+                </div>
+                </label>
+            </li>
+            <li  onClick="changepay(this);">
+                <label>
+                <div class="radio fl">
+					<span class="che alipayMobile">
+						<i>
+                            <input type="radio" value="pay_code=alipayMobile" class="c_checkbox_t" name="pay_radio" style="display:none;"/>
+                        </i>
+					</span>
+                </div>
+                <div class="pay-list-img fl">
+                    <img src="../static/images/y-06.png"/>
+                </div>
+                <div class="pay-list-font fl">
+                                         银联支付                            
+                </div>
+                </label>
+            </li>
+        </ul>
+        <div class="y-chong">
+        	充值金额：400.00元
+        </div>
+    </div>
+</div>
+<!--其他支付方式-s-->
+<div class="paiton y-mors">
+    <div class="maleri30">
+        <input type="hidden" name="order_id" value="1544" />
+        <a class="soon" href="javascript:void(0);" onClick="pay()"><span>立即支付</span></a>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        //默认选中第一个
+        $('.pay-list-4 div ul li:first').find('.che').addClass('check_t')
+                .end().find(':radio').attr('checked',true);
+    })
+    //切换支付方式
+    function changepay(obj){
+        $(obj).find('.che').addClass('check_t').parents('li').siblings('li').find('.che').removeClass('check_t');
+        //改变中状态
+        if($(obj).find('.che').hasClass('check_t')){
+            //选中
+            $(obj).find(':radio').attr('checked',true);
+            $(obj).siblings('li').find(':radio').removeAttr('checked');
+        }else{
+            //取消选中
+            $(obj).find(':radio').removeAttr('checked');
+        }
+
+    }
+
+    function pay(){
+        $('#cart4_form').submit();
+        return;
+        //微信JS支付
+    }
+
+    $(function(){
+        //使用银行卡
+        $('.usedeb').click(function(){
+            cover();
+            $('.chooseebitcard').show();
+        })
+        $('.gb-close').click(function(){
+            undercover();
+            $('.chooseebitcard').hide();
+        })
+
+//        // 其他支付方式
+//        $('.pay-list-4 ul li').click(function(){
+//            $(this).find('.che').toggleClass('check_t').parents('li').siblings('li').find('.che').removeClass('check_t');
+//        })
+
+        //选择银行卡
+        $('.card').click(function(){
+            $(this).find('.che').toggleClass('check_t').parents('.card').siblings().find('.che').removeClass('check_t');
+        })
+//        $('.che').click(function(){
+//            $(this).toggleClass('check_t')
+//        })
+
+        //支付失败弹窗
+        $('.lossbq').click(function(){
+            cover();
+            $('.losepay').show();
+        })
+        $('.qx-rebd .ax').click(function(){
+            undercover();
+            $('.losepay').hide();
+        })
+        $('.are').click(function(){
+            $('.losepay').hide();
+            $('.chooseebitcard').show();
+        })
+    })
+</script>
+
+</body>
+</html>

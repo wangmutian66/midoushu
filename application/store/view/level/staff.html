@@ -1,0 +1,240 @@
+<include file="public/layout" />
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title">
+      <div class="subject">
+        <h3>员工管理</h3>
+      </div>
+	  <ul class="tab-base nc-row">
+        <li><a href="{:U('/Store/Level/Staff',['t'=>2])}" class="current"><span>员工管理</span></a></li>
+        <li><a href="{:U('/Store/Member/Index')}"   ><span>成员管理</span></a></li>
+      </ul>
+    </div>
+  </div>
+  <!-- 操作说明 -->
+
+  <div class="flexigrid">
+    <div class="mDiv">
+      <div class="ftitle">
+        <h3>员工列表</h3>
+        <h5>(共{$pager->totalRows}条记录)</h5>
+      </div>
+      <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+	    <form action="__URL__/staff/" id="search-form2" class="navbar-form form-inline" method="get">
+        <div class="sDiv">
+			<div class="sDiv2">
+				<select name="t" id="t" class="select">
+				<option value="">请选择</option>
+				<option value="2" <if condition="$Request.param.t eq 2"> selected </if>>员工</option>
+				<option value="1" <if condition="$Request.param.t eq 1"> selected </if>>推广员</option>
+            </select>
+			</div>
+          <div class="sDiv2">           
+            
+            			
+		  	
+			
+            <input type="text" size="30" name="key_word" class="qsbox" style="width:200px;" placeholder="请输入手机号码或真实姓名..." value="{$Think.get.key_word|default=''}">
+            <input type="submit"  class="btn" value="搜索">
+          </div>
+        </div>
+      </form>
+    </div>
+	
+	
+    <div class="hDiv">
+      <div class="hDivBox">
+        <table cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+              <th class="sign" axis="col0">
+                <div style="width: 24px;"><i class="ico-check"></i></div>
+              </th>
+			        <th align="left" abbr="article_title" axis="col1" class="">
+                <div style="text-align: left; width: 60px;" class="">ID</div>
+              </th>
+              <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">用户名</div>
+              </th>
+			        <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">真实姓名</div>
+              </th>
+              </th>
+			  <th align="left" abbr="article_title" axis="col3" class="">
+				<div style="text-align: center; width:100px;" class="">层级</div>
+              </th>
+			  <th align="left" abbr="article_title" axis="col3" class="">
+				<div style="text-align: center; width:100px;" class="">是否是推广员</div>
+              </th>
+             
+			  <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">用户金额</div>
+              </th>
+			        <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">冻结金额</div>
+              </th>
+			     
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">手机号码</div>
+              </th>
+            
+			        <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">是否冻结</div>
+              </th>
+			        <th align="center" abbr="control" axis="col9" class="">
+                <div style="text-align: center; width: 180px;" class="">操作</div>
+              </th>
+              <th style="width:100%" axis="col7">
+                <div></div>
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    
+    <div class="bDiv" style="height: auto;">
+      <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+	  <!--表单开始-->
+	          <table>
+          <tbody>
+            <foreach name="list" item="vo" key="k" >
+              <tr>
+                <td class="sign">
+                  <div style="width: 24px;"><i class="ico-check"></i></div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: left; width: 60px;">{$vo.id}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.uname}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.real_name}</div>
+                </td>
+				<td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.lv_name}</div>
+                </td>
+				<td align="left" class="">
+                  <div style="text-align: center; width: 100px;">
+				  	<if condition="$vo['type'] eq 0">员工<else/>推广员</if>
+				  </div>
+                </td>
+                
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.money|tk_money_format}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.frozen|tk_money_format}</div>
+                </td>
+                
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.phone}</div>
+                </td>
+                
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">
+				   <eq name='vo[is_lock]' value='1'> 是 <else/> 否 </eq>
+                    <!--<a href="JavaScript:;" class="is_lock" class="is_lock_{$vo.id}" rid="{$vo.id}" rstatus='{$vo.is_lock}'> <eq name='vo[is_lock]' value='1'> 是 <else/> 否 </eq></a>-->
+                  </div>
+                </td>
+                <td align="center" class="">
+                  <div style="text-align: center; width:180px;">
+                    <a class="btn blue" href="{:U('/Store/Level/staff_view',array('id'=>$vo['id']))}"><i class="fa fa-pencil-square-o"></i>查看详细</a>
+                  </div>
+                </td>
+                <td align="" class="" style="width: 100%;">
+                  <div>&nbsp;</div>
+                </td>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+        <!--分页位置-->
+        {$pager->show()}
+	  <!--表单结束-->
+	  </div>
+      <div class="iDiv" style="display: none;"></div>
+    </div>
+    <!--分页位置--> 
+  </div>
+</div>
+<script>
+    $(document).ready(function(){
+	  // 表格行点击选中切换
+	  $('#flexigrid > table>tbody >tr').click(function(){
+		    $(this).toggleClass('trSelected');
+		});
+		// 点击刷新数据
+		$('.fa-refresh').click(function(){
+			location.href = location.href;
+		});
+		
+		/*$(".is_lock").click(function (){
+			var obj = $(this);
+			var id = obj.attr('rid');
+			
+			$.getJSON("{:U('/Store/Level/is_lock')}",{id:id,rstatus:$(this).attr('rstatus')},function (r){
+				if(r.status == 1){
+					obj.attr('rstatus',r.save_status);
+					if(r.save_status == 0){
+						$("#is_lock_"+id).html('正常');
+						obj.text('锁定状态');
+					}else{
+						$("#is_lock_"+id).html('锁定状态');	
+						obj.text('正常');
+					}
+				}else{
+					alert(r.msg);
+				}
+			})
+		})*/
+	});
+
+  //选择分类
+  $(function(){
+    $(document).on("change",'#company_id',function(){
+      get_company($(this).val(),'store_id','0');
+    })
+  })
+
+  $(document).ready(function () {
+    // ajax 加载商品列表
+ //   ajax_get_table('search-form2', 1);
+  });
+
+  // ajax 抓取页面 form 为表单id  page 为当前第几页
+ 
+	
+	function AddData(){
+		location.href	=	"{:U('Admin/Staff/Add')}";	
+	}
+    /*function delfun(obj) {
+      // 删除按钮
+      layer.confirm('确认删除？', {
+        btn: ['确定', '取消'] //按钮
+      }, function () {
+        $.ajax({
+          type: 'post',
+          url: $(obj).attr('data-url'),
+          data: {act: 'del', article_id: $(obj).attr('data-id')},
+          dataType: 'json',
+          success: function (data) {
+            layer.closeAll();
+            if (data) {
+              $(obj).parent().parent().parent().remove();
+            } else {
+              layer.alert('删除失败', {icon: 2});  //alert('删除失败');
+            }
+          }
+        })
+      }, function () {
+        layer.closeAll();
+      });
+    }*/
+</script>
+</body>
+</html>

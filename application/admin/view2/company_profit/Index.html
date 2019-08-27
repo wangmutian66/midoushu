@@ -1,0 +1,306 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/js/company.js"></script>
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+
+	<div class="fixed-bar">
+		<div class="item-title">
+			<div class="subject">
+				<h3>流水管理</h3>
+				<h5>成员、员工账户日志</h5>
+				
+			</div>
+			<ul class="tab-base nc-row">
+				<li><a <if condition="$Request.param.is_staff eq 1 || empty($Request.param.is_staff)">  class="current" </if> href="{:U('/Admin/CompanyProfit/index/company_id/'.$Think.get.company_id.'/is_staff/1')}"><span>员工流水</span></a></li>
+				<li><a <if condition="$Request.param.is_staff eq 2"> class="current" </if>  href="{:U('/Admin/CompanyProfit/index/company_id/'.$Think.get.company_id.'/is_staff/2')}"><span>成员流水</span></a></li>
+			</ul>
+		</div>
+	</div>
+  <!-- 操作说明 -->
+  <div class="flexigrid">
+    <div class="mDiv">
+      <div class="ftitle">
+        <h3>流水列表</h3>
+        <h5>(共{$pager->totalRows}条记录)</h5>
+      </div>
+      <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+	  
+	    <form action="__URL__/index" id="search-form2" class="navbar-form form-inline" method="get">
+        <div class="sDiv">
+          <div class="sDiv2">           
+            <select name="company_id" id="company_id" class="select parent_id" onChange="company_change($(this))">
+              <option value="">请选择</option>
+			  <volist name='company_list' id='c_list'>
+			  <option value="{$c_list.cid}" <if condition="$c_list['cid'] eq $Request.param.company_id"> selected </if>>{$c_list.cname}</option>
+			  </volist>
+            </select>
+			</div>
+			<div class="sDiv2"> 
+			<select name="store_id" id="store_id" class="select parent_id" onChange="store_change()">
+              <option value="">请选择</option>
+			  <volist name='store_list' id='s_list'>
+			  <option value="{$s_list.cid}" <if condition="$s_list['cid'] eq $Request.param.store_id"> selected </if>>{$s_list.cname}</option>
+			  </volist>
+            </select>
+			</div>
+			<div class="sDiv2"> 
+			<if condition="$Request.param.is_staff eq 2">
+			<select name="member_id" id="member_id" class="select">
+				<option value="">请选择</option>
+				<volist name='member_list' id='dlist'>
+				<option value="{$dlist.id}" <if condition="$dlist['id'] eq $Request.param.member_id"> selected </if>>{$dlist.real_name}</option>
+				</volist>
+			</select>
+			<else/>
+			<select name="t" id="t" class="select">
+				<option value="">请选择</option>
+				<option value="0" <if condition="$Request.param.t eq 0 && $Request.param.t!=''"> selected </if>>员工</option>
+				<option value="1" <if condition="$Request.param.t eq 1"> selected </if>>推广员</option>
+			</select>
+			</if>
+			</div>
+			<div class="sDiv2"> 
+			<select class="select" name="serchtype" id="serchtype">
+				<option value="">请选择</option>
+				<option value="2" <if condition="$Request.param.serchtype eq 2"> selected </if>>线上商城订单编号</option>
+				<option value="5" <if condition="$Request.param.serchtype eq 5"> selected </if>>线下流水编码</option>
+				<option value="6" <if condition="$Request.param.serchtype eq 6"> selected </if>>员工手机号码</option>
+				<option value="7" <if condition="$Request.param.serchtype eq 7"> selected </if>>员工姓名</option>
+			</select>
+			</div>
+			<div class="sDiv2"> 
+			<input type="hidden" name="is_staff" id="is_staff" value="{$Request.param.is_staff}"/>
+            <input type="text" size="30" name="key_word" class="qsbox" style="width:200px;" placeholder="请输入关键词..." value="{$Request.param.key_word|default=''}">
+			<input type="hidden" name="export" id="export" value="0">
+            <input type="submit"  class="btn" value="搜索">
+          </div>
+        </div>
+      </form>
+	  <script>
+	   function form_submit(v){
+			$('#export').val(v);
+			$('#search-form2').submit();
+			$('#export').val(0);
+		}
+	  	$(function (){
+			$('.parent_id').change(function (){
+				$.getJSON('{:U("/Admin/CompanyProfit/ajax_get_member")}',{parent_id:$(this).val()},function (r){
+					var html = '<option value="">请选择</option>';
+					if(r.status == 1){
+						$.each(r.list,function (i,k){
+							html += "<option value='"+k.id+"'>"+k.real_name+"</option>";
+						})
+					}
+					$("#member_id").html(html);
+				})	
+			})	
+		})
+	  </script>
+	  
+    </div>
+	
+	<div class="tDiv">
+		<div class="tDiv2">
+			<div class="fbutton"> 
+				<a href="javascript:;" onClick="form_submit(1)">
+                    <div class="add" title="导出excel">
+                        <span><i class="fa fa-plus"></i>导出excel</span>
+                    </div>
+                </a> 
+			</div>
+			<div class="fbutton">
+			
+				<div class="add"  onClick="$('title',window.parent.document).html('成欣网子公司流水');window.print();" title="打印数据">
+					<span><i class="fa fa-share"></i>打印数据</span>
+				</div>
+			</div>
+		</div>
+		<div style="clear:both"></div>
+	</div>
+	
+	
+    <div class="hDiv">
+      <div class="hDivBox">
+        <table cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+              <th class="sign" axis="col0">
+                <div style="width: 24px;"><i class="ico-check"></i></div>
+              </th>
+			  <th align="left" abbr="article_title" axis="col1" class="">
+                <div style="text-align: left; width: 60px;" class="">ID</div>
+              </th>
+            
+			  <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">真实姓名</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">流水金额</div>
+              </th>
+			  <if condition="$Request.param.is_staff eq 2">
+			  <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 200px;" class="">隶属上级</div>
+              </th>
+			  <else/>
+			   <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 200px;" class="">隶属公司</div>
+              </th>
+			  
+			   <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 150px;" class="">实体店</div>
+              </th>
+			  </if>
+			   <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 320px;" class="">备注</div>
+              </th>
+			  
+			
+			  <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 120px;" class="">流水日期</div>
+              </th>
+             
+			  <th align="center" abbr="control" axis="col9" class="">
+                <div style="text-align: center; width: 80px;" class="">操作</div>
+              </th>
+              
+              
+              <th style="width:100%" axis="col7">
+                <div></div>
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    
+    <div class="bDiv" style="height: auto;">
+      <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+        <table>
+          <tbody>
+            <foreach name="list" item="vo" key="k" >
+              <tr>
+                <td class="sign">
+                  <div style="width: 24px;"> <input type="checkbox" name="ids[]" class="ids" value="{$vo.id}" ></div>
+                </td>
+				<td align="left" class="">
+                  <div style="text-align: left; width: 60px;">{$vo.id}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.real_name}</div>
+                </td>
+				<td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.money}</div>
+                </td>
+                <if condition="$Request.param.is_staff eq 2">
+				<td align="left" class="">
+                  <div style="text-align: center; width: 200px;">{$vo.company_name}</div>
+                </td>
+				<else/>
+				<td align="left" class="">
+                  <div style="text-align: center; width: 200px;">{$vo.company_name}</div>
+                </td>
+			   <td align="left" class="">
+                  <div style="text-align: center; width: 150px;">{$vo.store_name}</div>
+                </td>
+				</if>
+				<td align="left" class="">
+                  <div style="text-align: center; width:320px;">{$vo.info}</div>
+                </td>
+				
+				<td align="left" class="">
+                  <div style="text-align: center; width: 120px;">{$vo.create_time|date="Y-m-d H:i",###}</div>
+                </td>
+                <td align="center" class="">
+                  <div style="text-align: center; width:80px;">
+				  	<!--两个删除， 暂时先不做-->
+					<!--<a href="__URL__/del/id/{$vo.id}" onClick="if(confirm('确认删除吗?')){ return true;}else{return false;}">删除</a>-->
+				  </div>
+                </td>
+                <td align="" class="" style="width: 100%;">
+                  <div>&nbsp;</div>
+                </td>
+              </tr>
+            </foreach>
+		
+          </tbody>
+        </table>
+      </div>
+      <div class="iDiv" style="display: none;"></div>
+    </div>
+    <!--分页位置--> 
+    {$pager->show()} </div>
+</div>
+<script>
+    $(document).ready(function(){
+	
+			
+	    // 表格行点击选中切换
+	    $('#flexigrid > table>tbody >tr').click(function(){
+		    $(this).toggleClass('trSelected');
+		});
+		
+		// 点击刷新数据
+		$('.fa-refresh').click(function(){
+			location.href = location.href;
+		});
+		
+		$(".is_lock").click(function (){
+			var obj = $(this);
+			var id = obj.attr('rid');
+			
+			$.getJSON("{:U('Admin/staff/is_lock')}",{id:id,rstatus:$(this).attr('rstatus')},function (r){
+				if(r.status == 1){
+					obj.attr('rstatus',r.save_status);
+					if(r.save_status == 0){
+						$("#is_lock_"+id).html('正常');
+						obj.text('锁定状态');
+					}else{
+						$("#is_lock_"+id).html('锁定状态');	
+						obj.text('正常');
+					}
+				}else{
+					alert(r.msg);
+				}
+			})
+		})
+
+        $(document).keydown(function(e){
+            if(e.keyCode == 13){
+                $("#search-form2").submit();
+            }
+        })
+		
+		
+		
+	});
+	
+	
+    /*function delfun(obj) {
+      // 删除按钮
+      layer.confirm('确认删除？', {
+        btn: ['确定', '取消'] //按钮
+      }, function () {
+        $.ajax({
+          type: 'post',
+          url: $(obj).attr('data-url'),
+          data: {act: 'del', article_id: $(obj).attr('data-id')},
+          dataType: 'json',
+          success: function (data) {
+            layer.closeAll();
+            if (data) {
+              $(obj).parent().parent().parent().remove();
+            } else {
+              layer.alert('删除失败', {icon: 2});  //alert('删除失败');
+            }
+          }
+        })
+      }, function () {
+        layer.closeAll();
+      });
+    }*/
+</script>
+</body>
+</html>

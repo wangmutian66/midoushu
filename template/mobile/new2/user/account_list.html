@@ -1,0 +1,44 @@
+<include file="public/header" title="账户明细" body=""/>
+<include file="public/header_nav" title="账户明细"  href="{:U('User/index')}"/>
+<link rel="stylesheet" href="/public/static/css/page.css?v={$vnum}">
+<div class="allaccounted">
+    <div class="maleri30">
+        <div class="head_acc ma-to-20">
+            <ul>
+                <li <if condition="$type eq 'all'">class="red"</if>">
+                    <a href="{:U('User/account_list',array('type'=>'all'))}"  data-list="1">全部</a>
+                </li>
+                <li <if condition="$type eq 'plus'">class="red"</if>>
+                    <a href="{:U('User/account_list',array('type'=>'plus'))}"   data-list="2">赚取</a>
+                </li>
+                <li  <if condition="$type eq 'minus'">class="red"</if>>
+                    <a href="{:U('User/account_list',array('type'=>'minus'))}"  data-list="3">消费</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="allpion">
+            <div class="fll_acc fll_acc-h">
+              <ul><li class="orderid-h">订单</li><li class="price-h">金额</li><li class="time-h"  style="width:4.892rem">时间</li></ul>
+            </div>  	
+              <foreach name="account_log" item="v">
+                  <div class="fll_acc" onclick="ajax_account_detail(this)" data-url="{:U('Mobile/User/account_detail',['log_id'=>$v['log_id']])}">
+                      <ul>
+                          <li class="orderid-h">{$v[order_sn]|default='无'}</li>
+                          <li class="price-h">{$v[user_money]}</li>
+                          <li class="time-h">{:date('Y-m-d H:i:s',$v[change_time])}</li>
+                      </ul>
+                      <div class="des-h">描述:{$v[desc]}</div>
+                  </div>
+              </foreach>
+        </div>
+
+    </div>
+		
+	
+</div>
+<div style="text-align:center">
+		{$page}
+	</div>
+</body>
+</html>

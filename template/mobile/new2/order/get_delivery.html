@@ -1,0 +1,28 @@
+<include file="public/header" title="查看物流信息" body="f3"/>
+<include file="public/header_nav" title="查看物流信息" href="javascript:history.back(-1)"/>
+<div class="dindboxt p">
+    <div class="maleri30">
+        <div class="fl_addextra fl">
+            <p><span class="gray">运单编号：</span><span>{$invoice_no}</span></p>
+            <p><span class="gray">配送方式：</span><span>{$comname}</span></p>
+        </div>
+        <!--<div class="fr_extra fr">-->
+        <!--<a class="tuid sueye" href="javascript:void(0);">我要催单</a>-->
+        <!--</div>-->
+    </div>
+</div>
+<div class="listschdule orderrefuce ma-to-20">
+        <p class="logis-detail-date" id="express_info"></p>
+        <volist name="wuliudata" id="vo">
+            <eq name="$key" value="0">
+                <div class='tittimlord red-around'><h2>{$vo.context}</h2> <p>{$vo.ftime}</p></div>
+                <else/>
+                <div class='tittimlord gray-around'><h2>{$vo.context}</h2> <p>{$vo.ftime}</p></div>
+            </eq>
+
+        </volist>
+
+</div>
+<div class="mask-filter-div" style="display: none;"></div>
+</body>
+</html>

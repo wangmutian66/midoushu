@@ -1,0 +1,54 @@
+@charset "UTF-8";
+html,body{
+	margin:0;
+	padding:0;
+	font-size: 12px;
+}
+
+html,body a{
+	text-decoration: none;
+	color:#000;
+}
+
+html,body ul,li{
+	margin:0;
+	padding:0;
+	list-style: none;
+}
+
+html,body h1,h2,h3,h4,h5,h6,p,span{
+	margin:0;
+	padding:0;
+}
+
+body{background: #f0f3ef;}
+
+button,input,optgroup,select,textarea {
+	color:inherit;
+	font:inherit;
+	margin:0
+}
+
+.clearfix:after{
+ clear:both;
+ display:block;
+ visibility:hidden;
+ height:0;
+ line-height:0;
+ content:'';
+
+}
+.clearfix{zoom:1;} /*解决ie6/7兼容问题*/
+.hide{display: none;}
+.show{display: block;}
+
+
+/* 登录 */
+.chicuele {
+    cursor: pointer;
+    width: 100px;
+    position: RELATIVE;
+    left: 18px;
+    top: 12px;
+    height: 37px;
+}

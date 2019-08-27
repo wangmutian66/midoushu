@@ -1,0 +1,171 @@
+<include file="public/header" title="在线留言" body="g4"/>
+<include file="public/header_nav" title="在线留言" href="JavaScript:window.history.back(-1);"/>
+	<style type="text/css">
+		.message{
+			width:100%;
+			padding:.5rem;
+			box-sizing: border-box;
+		}
+
+		.message .from{
+			width:100%;
+			overflow: hidden;
+			margin-top:1rem;
+		}
+
+		.message .from .line{
+			width:100%;
+			height:1.8rem;
+			margin:.3px auto;
+			margin-bottom:1rem;
+		}
+
+		.message .from .line .l{
+			width:15%;
+			height:1.8rem;
+			line-height: 1.8rem;
+			font-size:.68rem;
+			color:#7c7873;
+			float:left;
+		}
+
+		.message .from .line .inp{
+			width:85%;
+			height:1.8rem;
+			border:1px solid #999;
+			border-radius: .5rem;
+			line-height: 1.8rem;
+			padding:0 .5rem;
+			box-sizing: border-box;
+			color:#7c7873;
+			background: none;
+			outline: none;
+			font-size:.68rem;
+		}
+
+		.message .from .wz{
+			width:100%;
+			height:10rem;
+			margin:0 auto;
+		}
+
+		.message .from .wz textarea{
+			width:100%;
+			height:10rem;
+			border:1px solid #999;
+			border-radius: .5rem;
+			padding:.5rem;
+			box-sizing: border-box;
+			color:#7c7873;
+			background: none;
+			outline: none;
+			font-size:.68rem;
+			resize: none;
+		}
+
+		.message .from .line.ys{
+			text-align: center;
+			margin-top:1rem;
+		}
+
+		.message .from .line .btn{
+			width:100%;
+			height:1.8rem;
+			background: #ff4401;
+			color:#fff;
+			font-size:.7rem;
+			font-family: "微软雅黑";
+			line-height: 1.8rem;
+			text-align: center;
+			border:none;
+			outline: none;
+			cursor: pointer;
+			border-radius: .5rem;
+		}
+	</style>
+	<div class="message">
+		<div class="from">
+			<form>
+            	<div class="line" style="margin-bottom:0.2rem;">
+					<div class="l" style="width:90%;">紧急联系电话：400-100-8690</div>
+                </div>
+				<div class="line">
+					<input type="text" name="lyname" placeholder="您的姓名" id="lyname" class="inp">
+				</div>
+				<div class="line">
+					<input type="text" name="mobile" placeholder="您的联系电话" id="mobile" class="inp">
+				</div>
+				<div class="wz">
+					<textarea placeholder="请输入留言内容..." id="content"></textarea>
+				</div>
+				<div class="line ys">
+					<input type="submit" name="" onclick="return sendChatMessage()" value="发送留言" class="btn">
+				</div>
+			</form>
+		</div>
+	</div>
+    <script>
+	/**
+	 * 手机号码格式判断
+	 * @param tel
+	 * @returns {boolean}
+	 */
+	function tkcheckMobile(tel) {
+		//var reg = /(^1[3|4|5|7|8][0-9]{9}$)/;
+		var reg = /^1[0-9]{10}$/;
+		if (reg.test(tel)) {
+			return true;
+		}else{
+			return false;
+		};
+	}
+    	function sendChatMessage(){
+			var lyname = $("#lyname").val();
+			var mobile = $("#mobile").val();
+			var content = $("#content").val();
+		
+		
+			if(lyname == ""){
+				layer.open({content: '请填写姓名',time: 2});
+				return false;
+			}
+		
+			if(mobile == ""){
+				layer.open({content: '请填写手机号',time: 2});
+				return false;
+			}
+		
+			if(!tkcheckMobile(mobile)){
+				layer.open({content: '请填写正确手机号',time: 2});
+				return false;
+			}
+		
+			if(content == ""){
+				layer.open({content: '请填写留言内容',time: 2});
+				return false;
+			}
+		
+			var param = new Object();
+			param['lyname'] = lyname;
+			param['mobile'] = mobile;
+			param['content'] = content;
+		
+			$.ajax({
+				url:"/home/Api/sendChatMessage",
+				data:param,
+				dataType:"json",
+				type:"post",
+				success:function(data){
+					if(data == 1){
+					   layer.open({content: '留言成功',time: 2});
+					    setTimeout("history.go(-1);",2000);
+					}
+				}
+		
+			});
+			return false;
+		}
+    </script>
+    
+</body>
+</html>

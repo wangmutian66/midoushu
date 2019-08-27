@@ -1,0 +1,118 @@
+﻿<include file="public/layout" />
+
+<body>
+    <div class="mdk-drawer-layout js-mdk-drawer-layout" data-fullbleed data-push data-responsive-width="992px" data-has-scrolling-region>
+
+        <div class="mdk-drawer-layout__content">
+            <!-- header-layout -->
+            <div class="mdk-header-layout js-mdk-header-layout  mdk-header--fixed  mdk-header-layout__content--scrollable">
+                <!-- header -->
+                
+                <!-- content -->
+                <div class="mdk-header-layout__content ls-top-navbar mdk-header-layout__content--scrollable h-100">
+                    <!-- main content -->
+
+                    <div class="container-fluid">                      
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row align-items-center">
+                                    <div class="col-md-4">
+                                        <div class="card-title">成员管理<span>成员列表/{$pager->totalRows}条记录</span></div>
+                                    </div>
+                                    <form class="form-inline" style="margin-top:1rem;width:100%" action="__URL__" method="get" >
+                                        <div class="col-md-8 d-flex justify-content-md-end" style="margin-top:1rem;">
+                                            <select class="form-control ys" style="width:100%;margin-right:0">
+                                                <option>查看全部</option>
+                                                <volist name='store_list' id='sList'>
+                                                <option value="{$sList.cid}" <if condition="$sList['cid'] eq $_GET['store_id']"> selected </if>>{$sList.cname}</option>
+                                                </volist>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-8 d-flex justify-content-md-end" style="margin-top:1rem;">
+                                            <div class="form-group mx-sm-3" style="margin-bottom:0;width:60%;margin-right:5%;">
+                                                <input type="text" name="key_word" class="form-control" placeholder="请输入手机号/真实姓名" style="float:right;width:100%;">
+                                            </div>
+                                            <button type="submit" class="btn btn-primary" style="float:right;width:35%;">搜索</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="liebiao">
+                                <ul>
+                                   <volist name="list" id="vo">
+                                    <li>
+                                        <div class="hang">
+                                            <div class="l">真实姓名</div>
+                                            <div class="r2">{$vo.real_name}</div>
+                                            <div class="l">余额</div>
+                                            <div class="r2">{$vo.money|tk_money_format}</div>
+                                        </div>
+                                        <div class="panel">
+                                        <div class="hang">
+                                            <div class="l">手机号</div>
+                                            <div class="r1">{$vo.phone}</div>
+                                        </div>
+
+                                        <div class="hang">
+                                            <div class="l">所属层级</div>
+                                            <div class="r1">{$vo.lv_name}</div>
+                                        </div>
+
+                                        <div class="hang">
+                                            <div class="l">创建时间</div>
+                                            <div class="r1">{$vo.create_time|date='Y-m-d H:i:s',###}</div>
+                                        </div>
+                                        
+                                        <div class="hang">
+                                            <div class="l">是否冻结</div>
+                                            <div class="r2"><if condition='$vo[is_lock] eq 1'>是<else/>否</if></div>
+                                            <div class="l">操作</div>
+                                            <div class="r2"><a href="{:U('/Companymobile/Member/view',array('id'=>$vo['id']))}">查看详细</a></div>
+                                        </div>
+                                        </div>
+                                        <div class="flip">>>更多信息（查看/收起）</div>
+                                    </li>
+                                    </volist>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12 col-md-7">
+                                <div class="dataTables_paginate paging_simple_numbers" id="data-table_paginate">
+                                    <ul class="pagination">
+                                        {$pager->show()}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- // END drawer-layout__content -->
+
+
+    </div>
+    <!-- // END drawer-layout -->
+
+
+
+   
+    
+    <style type="text/css">
+        .panel{display: none;}
+        .flip{line-height:2rem;text-align:center;color:#3783b5;}
+    </style>
+    <script> 
+        $(document).ready(function(){
+            $(".flip").click(function(){
+                $(this).prev($(".panel")).slideToggle("slow");
+            });
+        });
+    </script>
+ 
+
+</body>
+
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="/public/staff/css/Employee.css">
+
+<title>无标题文档</title>
+</head>
+
+<body>
+<table style="width:1200px;" border="1">
+    <tr>
+        <td width="100">ID</td>
+        <td width="100">用户金额</td>
+        <td width="100">冻结金额</td>
+        <td width="150">变动时间</td>
+        <td width="100">变动描述</td>
+        <td width="100">订单编号</td>
+        <td width="100">订单ID</td>
+        <td width="100">米豆</td>
+        <td width="100">总返利米豆余额</td>
+ 
+        <td></td>
+    </tr>
+<volist name='list' id='vo'>
+<tr style="height:30px; font-size:12px;">
+	<td>{$vo.log_id}</td>
+    <td>{$vo.user_money} </td>
+    <td>{$vo.frozen_money} </td>
+    <td>{$vo.change_time|date="Y-m-d H:i:s",###}</td>
+    <td>{$vo.desc}</td>
+    <td>{$vo.order_sn}</td>
+    <td>{$vo.order_id}</td>
+    <td>{$vo.midou}</td>
+    <td>{$vo.midou_all}</td>
+    <td></td>
+</tr>
+
+    
+    
+</volist>
+</table>
+
+
+<div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<include file="public/layout" />
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+	<div class="fixed-bar">
+    <div class="item-title">
+      <div class="subject">
+        <h3>当前分组名称： {$chat_group_name}</h3>
+        <h5></h5>
+      </div>
+    </div>
+  </div>
+  
+	<div class="flexigrid">
+		  <div class="mDiv">
+            <form class="navbar-form form-inline"  id="search-form2" method="post" action="">
+                <div class="sDiv">
+                    <div class="sDiv2">
+                        <input type="text" id="search_key" size="30" name="mobile" class="qsbox" placeholder="手机...">
+                        <input type="submit" class="btn" value="搜索">
+                    </div>
+                </div>
+            </form>
+        </div>
+      
+		<div class="hDiv">
+			<div class="hDivBox">
+				<table cellspacing="0" cellpadding="0">
+					<thead>
+					<tr>
+						<th class="sign" axis="col0">
+							<div style="width: 24px;">ID</div>
+						</th>
+						<th align="left" abbr="article_title" axis="col3" class="">
+							<div style="text-align: left; width: 250px;" class="">昵称</div>
+						</th>
+						
+						<th align="left" abbr="ac_id" axis="col4" class="">
+							<div style="text-align: left; width:100px;" class="">手机</div>
+						</th>
+						<th align="center" axis="col1" class="handle">
+							<div style="text-align: center; width: 150px;">操作</div>
+						</th>
+						<th style="width:100%" axis="col7">
+							<div></div>
+						</th>
+					</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+		<div class="tDiv">
+			
+			<div style="clear:both"></div>
+		</div>
+		<div class="bDiv" style="height: auto;">
+			<div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+				<table>
+					<tbody>
+					<foreach name="list" item="vo" key="k" >
+						<tr>
+							<td class="sign">
+								<div style="width: 24px;">{$vo.user_id}</div>
+							</td>
+							<td align="left" class="">
+								<div style="text-align: left; width: 250px;">{$vo.nickname}</div>
+							</td>
+						
+						
+							<td align="center" class="">
+								<div style="text-align: center; width: 100px;">{$vo.mobile}</div>
+							</td>
+							
+							<td align="center" class="handle">
+								<div style="text-align: center; width: 170px; max-width:170px;">
+									<a class="btn red"  href="javascript:void(0)" data-url="{:U('Chat/add_edit_ajax')}" data-id="{$vo.user_id}" onClick="delfun(this)">添加进入分组</a>
+								</div>
+							</td>
+							<td align="" class="" style="width: 100%;">
+								<div>&nbsp;</div>
+							</td>
+						</tr>
+					</foreach>
+					</tbody>
+				</table>
+			</div>
+			<div class="iDiv" style="display: none;">
+            	
+            </div>
+             {$page}
+		</div>
+
+	</div>
+</div>
+<script>
+	$(document).ready(function(){
+		// 表格行点击选中切换
+		$('#flexigrid > table>tbody >tr').click(function(){
+			$(this).toggleClass('trSelected');
+		});
+
+		// 点击刷新数据
+		$('.fa-refresh').click(function(){
+			location.href = location.href;
+		});
+
+	});
+
+
+	function delfun(obj) {
+		// 删除按钮
+		layer.confirm('确认加入分组？', {
+			btn: ['确定', '取消'] //按钮
+		}, function () {
+			$.ajax({
+				type: 'post',
+				url: $(obj).attr('data-url'),
+				data : {act:'del',ppid:$(obj).attr('data-id'),jkl:{$jkl}},
+				dataType: 'json',
+				success: function (data) {
+					layer.closeAll();
+					if (data) {
+						$(obj).parent().parent().parent().remove();
+						location.href = "/admin/chat/edit_group/pid/{$jkl}";
+					} else {
+						layer.alert('加入失败', {icon: 2});  //alert('删除失败');
+					}
+				}
+			})
+		}, function () {
+			layer.closeAll();
+		});
+	}
+</script>
+</body>
+</html>

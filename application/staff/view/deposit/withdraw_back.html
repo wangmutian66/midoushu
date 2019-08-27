@@ -1,0 +1,147 @@
+<include file="public/layout" />
+<body style="background-color: #FFF; overflow: auto;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>提现管理</h3>
+                <h5><a href="{:U('Staff/Withdrawal/Index')}" id="log_list">提现记录</a></h5>
+            </div>
+            
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    
+    <form method="post" id="handlepost" name="form1" autocomplete="off" >
+        <div class="ncap-form-default">
+
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">提现金额:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="money" name="money" type="text" required  /> 
+                    <p class="notic"> 登录用用户名 </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">支付密码:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="pay_password" name="pay_password"  type="text" /> 
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+            
+            <dl class="row">
+                <dt class="tit">
+                    <label for="lv">银行名称:</label>
+                </dt>
+                <dd class="opt">
+                    <select name="bank_name" id="bank_name" required>
+						<option value="">请选择</option>
+						<volist name='bank_list' id='v'>
+							<option value="{$v}">{$v}</option>
+						</volist>
+					</select>
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">开户地址:</label>
+                </dt>
+                <dd class="opt">
+                   	<input type="text" name="bank_address" id="bank_address" >
+                    <p class="notic">  各大银行汇款需要开户地址，支付宝、微信请无视 </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">账号:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="bank_card" name="bank_card"    placeholder=""  type="text" required /> 
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">提款人姓名:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="real_name" name="real_name"  placeholder=""  type="text" required /> 
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">备注:</label>
+                </dt>
+                <dd class="opt">
+                    <textarea name="remark" id="remark" style="width:400px; height:100px;" ></textarea>
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="record_no">手续费：</label>
+                </dt>
+                <dd class="opt">
+                     
+                </dd>
+            </dl>
+			
+			
+            <div class="bot">
+				<input  type="submit" value="确认提交" class="tk_submit">
+            </div>
+        </div>
+    </form>
+</div>
+<div id="goTop"> <a href="JavaScript:void(0);" id="btntop"><i class="fa fa-angle-up"></i></a><a href="JavaScript:void(0);" id="btnbottom"><i class="fa fa-angle-down"></i></a></div>
+<script type="text/javascript">
+    //选择分类
+   $("#handlepost").validate({
+		rules: {
+			money:{
+				required:true,
+				digits:true
+			},
+			bank_address: {
+				check_address:true,
+			},
+		}, messages: {
+				  money: {
+					required: "请输入提现金额",
+					digits: "提现金额必须为数字"
+				  },
+				  }
+	  });
+	
+	jQuery.validator.addMethod("check_address", function(value, element) {
+		if($("#bank_name").val() == ''){
+			return true;	
+		}
+		if($("#bank_name").val() != '微信' && $("#bank_name").val() != '支付宝'){
+			if(value == ''){
+				$(element).data('error-msg','请输入您的开户行地址');
+        		return false;
+			}else{
+				return true;	
+			}
+		}else{
+			return true;	
+		}
+	}, function(params, element) {
+    	return $(element).data('error-msg');
+	});
+
+
+</script>
+
+</body>
+</html>

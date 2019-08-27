@@ -1,0 +1,80 @@
+/**添加会员样式**/
+/*会员中心首页*/
+.fle{ float: left;}
+.fri{ float: right;}
+.clearfix{zoom:1;}
+.clearfix:after{content:"."; display:block; clear:both; height:0; font:0/0 sans-serif; visibility:hidden;}
+.clear{ clear:both}
+.y-botj{ border-top: 1px solid #ff4401; padding: 0 .64rem;}
+.h-money{ color: #717171; font-size: .55rem; line-height: 1.11rem; padding: 0.64rem;}
+.h-money p{ color: #ff4401; font-size: .512rem;}
+.h-money p span{ font-size: .812rem;}
+.h-bot{ border-bottom: 1px solid #999;}
+.h-jan a{ background: #d93c59; color: #fff; padding: 0.32rem 0.64rem; float: right; font-size: .55rem; margin-bottom: 0.64rem;}
+.h-jan a.ju{ background: #ff4401; margin-left: 0.2rem;}
+/*我的红包*/
+.bgbb{ background: #fff;}
+.y-mort{}
+.y-mort .time{ padding:0.45rem 0.64rem; background: #f1f1f1; font-size: 0.55rem;}
+.y-mort .nei{ padding: 0.45rem 0.64rem;}
+.y-mort .nei .sp img{ width: 3.5rem; height: 3.5rem;}
+.y-mort .wen{ width: 10.5rem;}
+.y-mort .wen p{ font-size: 0.5rem; height: 1.8rem; line-height: 0.9rem; overflow: hidden;}
+.y-mort .wen h2{ line-height: 0.9rem; color: #999;}
+.y-mort .wen h2 span{ color: #ff4401; font-size: 0.55rem;}
+.y-mort .wen h3{ font-size: 0.5rem; color: #999; font-weight: normal;}
+/*分页*/
+.y-tco{ text-align: center;}
+.y-sxfy{ padding-top: 20px; color: #979797; margin: 1.1rem 0;}
+.y-sxfy a{ color: #7f8281; text-transform: uppercase; padding: 0.1rem 0.5rem; margin: 0 1px; font-size: 0.55rem; background: #fff; border: 1px solid #ddd; border-radius: 3px;}
+.y-sxfy a:hover ,.y-sxfy a.on{ background: #999; color: #fff; border: 1px solid #999;}
+/*退款管理*/
+.y-padd{ padding: 0 .64rem;}
+.y-tui{ display: block; overflow: hidden; margin-top: 0.8rem;}
+.y-tui p, .y-tui select, .y-tui .dao{ color: #313131; font-family:"微软雅黑"; float: left; font-size: .512rem;}
+.y-tui p{ width: 3.12rem; line-height: 1.32rem; text-align: right;}
+.y-tui select, .y-tui .dao{ border: 1px solid #adadad;}
+.y-tui select{ width: 10.6rem; height: 1.32rem; line-height: 1.32rem; padding-left: 0.2rem;}
+.y-tui select, .y-tui .ti, .y-fla .qian a, .y-tbd .dan .que{ border-radius: 0.2rem; -webkit-border-radius: 0.2rem; -moz-border-radius: 0.2rem;}
+/*我的返利*/
+.y-sm{ color: #292929; font-size: 0.46rem; line-height: 0.8rem; font-family: "微软雅黑"; padding: .64rem; margin-top: 0.64rem;}
+.y-sm p{ color: #ff0000;}
+.y-xuan{}
+.y-xuan a{ font-size: 0.55rem; font-family: "微软雅黑"; padding: 0.46rem 0.86rem; background: #e3e3e3; display: inline-block; float: left;}
+.y-xuan a.on{ background: #ff4401; color: #fff;}
+.y-jind{ width: 100%; display: block; overflow: hidden;}
+.y-jind li{ width: 100%; background: #fff; border: 1px solid #e7eaec; border-top: 6px solid #00a0e9; margin-top: 30px; padding: 0 0.64rem;}
+.y-jind li h4{ border-bottom: 1px solid #c5c5c5; line-height: 1.1rem; color: #3e3e3e; font-weight: normal; font-size: .46rem;}
+.y-jind li .jdt{ margin: .64rem 0;}
+.y-jind li .jdt h3{ width: 50%; float: left; font-size: 0.52rem; line-height: 1.25rem;}
+.y-jind li .jdt h2, .y-jind li .jdt h5{ float: left; width: 40%; float: right; color: #fff; font-weight: normal; text-align: center; line-height: 1.25rem; border-radius: 4px; -webkit-border-radius: 4px;
+ -moz-border-radius: 4px; font-size: 0.52rem;}
+.y-jind li .jdt h2{ background: #ff9d00;}
+.y-jind li .jdt h5{ background: #ff4401;}
+/*提现*/
+.y-xinj{ width: 100%; border: 3px solid #ffc832; padding: 20px 5%; background: #fff6e0;}
+.y-xinj h2{ font-weight: normal; line-height: 1.06rem; color: #797979; font-size: 0.68rem;}
+.y-xinj h2.yan{ color: #ff7b2b;}
+.y-xinj h2 span{ font-size: 0.8rem;}
+.y-tbd{ width: 100%; margin-top: 60px;}
+.y-tbd .dan{ display: block; overflow: hidden; margin-bottom: 22px;}
+.y-tbd .dan p, .y-tbd .dan h2 span, .y-tbd .dan h4{ font-size: .58rem; float: left; line-height: 1.2rem;}
+.y-tbd .dan p{ width: 100%;}
+.y-tbd .dan p span{ color: #ff0000; padding-right: 5px;}
+.y-tbd .dan h2{ width: 60%; height: 1.25rem; border: 1px solid #dbdbdb; float: left;}
+.y-tbd .dan h2 .text{ width:80%; height: 1.2rem; border: 0; padding-left: 3%;}
+.y-tbd .dan h2 span{ width: 20%; height: 1.2rem; line-height: 1.2rem; text-align: center; background: #e7e7e7; display: inline-block; font-weight: normal;}
+.y-tbd .dan .tqw{ width: 100%;  height: 1.2rem; border: 1px solid #ddd; padding-left: 3%; font-size: 0.52rem;}
+.y-tbd .dan h6{ margin-top: 8px; line-height: 0.7rem; font-size: 0.42rem; font-weight: normal; color: #989898; float: left;}
+.y-tbd .dan img{height: 1.2rem; float: left; margin-left: 3%;}
+.y-tbd .dan h4{ font-weight: normal; font-size: 0.42rem; line-height: 0.8rem; margin-top: 3%;}
+.y-tbd .dan h4 a{ background: #f3fbff; border: 1px solid #ddd; display: inline-block; text-align: center; padding: 0 10px;}
+.y-tbd .dan h4, .y-tbd .dan h4 a{ color: #ff0000;}
+.y-tbd .dan .que{ width: 40%; height: 1.2rem; border: 1px solid #dbdde1; font-size: 0.58rem; margin-left: 7%; margin-bottom: 5%;}
+.y-tbd .dan .bg0{ background: #e33434; color: #fff;}
+.y-tbd .dan .bg1{ background: #f5f5f5; color: #666; display: block; text-align: center; line-height: 1.2rem;}
+.y-xinl{ margin: 0.32rem 0.64rem; border: 1px solid #dadada; background: #fff;}
+.y-xinl p{ background: #e4f2fd; height: 1.1rem; line-height: 1.1rem; padding: 0 0.64rem; font-size: 0.55rem;}
+.y-xinl .qi{ padding: 10px 0;}
+.y-xinl .qi h2{ width: 50%; float: left; line-height: 1.4rem; font-size: 0.56rem;}
+.y-xinl .qi h2 span{ color: #fe4300; font-size: 0.64rem;}

@@ -1,0 +1,226 @@
+<include file="public/layout" />
+<body style="background-color: #FFF; overflow: auto;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>比例设置</h3>
+                <h5>红包比例设置</h5>
+            </div>
+            <ul class="tab-base nc-row">
+                <foreach name="group_list" item="v" key="k">
+                    <li><a href="{:U('System/index',['inc_type'=> $k])}" <if condition="$k==$inc_type">class="current"</if>><span>{$v}</span></a></li>
+                </foreach>
+            </ul>
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom"><i class="fa fa-lightbulb-o"></i>
+            <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+            <span id="explanationZoom" title="收起提示"></span> </div>
+        <ul>
+            <li>系统平台全局设置,包括基础设置、购物、短信、邮件、水印等相关模块。</li>
+        </ul>
+    </div>
+	<script>		
+		function postcheck(){
+			var total_ratio= $("#total_ratio").val();
+			if(total_ratio == ''){
+				layer.alert('请设定资金池，全返，线下，推广员总百分比！',{icon:2,time:2000},function(){
+					$("#total_ratio").focus();
+				})
+				return false;
+			}
+			
+			var total_ratio_arr = total_ratio.split('|');
+			if(total_ratio_arr.length != 4){
+				layer.alert('请设定资金池，全返，线下，推广员总百分比设置有问题，请重试！',{icon:2,time:2000},function(){
+					$("#total_ratio").focus();
+				})
+				return false;
+			}
+			
+			/*var a = 0;
+			for(i=0;i<total_ratio_arr.length;i++){
+				a += Number(total_ratio_arr[i]);	
+			}
+			if(a != 1){
+				layer.alert('资金池，全返，线下，推广员总百分比相加必须为1',{icon:2,time:2000},function(){
+					$("#total_ratio").focus();
+				})
+				return false;
+			}*/
+			//全返
+			var back_proportion = $("#back_proportion").val();
+			var b = 0;
+			if(back_proportion == ''){
+				layer.alert('请设定档次，以及每个档次的比例！',{icon:2,time:2000},function(){
+					$("#back_proportion").focus();
+				})
+				return false;
+			}	
+			
+			var a = 0;
+			var b = 0;
+			var back_proportion_arr = back_proportion.split('|',3);
+			if(back_proportion_arr.length != 3){
+				layer.alert('档次，以及每个档次的比例出错，请按照格式进行设置！',{icon:2,time:2000},function(){
+					$("#back_proportion").focus();
+				})
+				return false;
+			}
+			for(i=0;i<back_proportion_arr.length;i++){
+			//	console.log( total_ratio_arr[i]);
+				a += Number( back_proportion_arr[i].split(',')[0]);
+				
+				b += Number( back_proportion_arr[i].split(',')[1]);
+			}
+			if(a != 1 || b != 1){
+				layer.alert('档次，以及每个档次的比例出错，所有档次相加必须得1，所有比例相加必须得1！',{icon:2,time:2000},function(){
+					$("#back_proportion").focus();
+				})
+				return false;
+			}
+			//子公司
+			
+			var company_rebate= $("#company_rebate").val();
+			if(company_rebate == ''){
+				layer.alert('请设定子公司内部百分比！',{icon:2,time:2000},function(){
+					$("#company_rebate").focus();
+				})
+				return false;
+			}
+			
+			var company_rebate_arr = company_rebate.split('|');
+			if(company_rebate_arr.length != 3){
+				layer.alert('子公司百分比设置有问题，请重试！',{icon:2,time:2000},function(){
+					$("#company_rebate").focus();
+				})
+				return false;
+			}
+			
+			var c = 0;
+			for(i=0;i<company_rebate_arr.length;i++){
+				c += Number(company_rebate_arr[i]);	
+			}
+			if(c != 1){
+				layer.alert('子公司百分比相加必须为1',{icon:2,time:2000},function(){
+					$("#company_rebate").focus();
+				})
+				return false;
+			}
+			
+			
+			
+		}
+		
+	</script>
+    <form method="post" id="handlepost" action="{:U('System/handle')}" enctype="multipart/form-data" name="form1" onSubmit="return postcheck();">
+        <input type="hidden" name="form_submit" value="ok" />
+		<div>
+			<img src="__PUBLIC__/images/syt.jpg" width="500" style="margin-left:100px;">
+		</div>
+        <div class="ncap-form-default">
+           <!-- <dl class="row">
+                <dt class="tit">
+                    <label for="charge_envelope">充值红包比例</label>
+                </dt>
+                <dd class="opt">
+                    <input id="charge_envelope" name="charge_envelope" value="{$config.charge_envelope}" class="input-txt" type="text" />
+                    <p class="notic">客户充值时返回的相应红包比例  例：0.1</p>
+                </dd>
+            </dl>-->
+          <!--  <dl class="row">
+                <dt class="tit">
+                    <label for="cash_envelope">现金平台消费比例</label>
+                </dt>
+                <dd class="opt">
+                    <input id="cash_envelope" name="cash_envelope" value="{$config.cash_envelope}" class="input-txt" type="text" />
+                    <p class="notic">客户在现金平台消费时返回的红包比例  例：0.2</p>
+                </dd>
+            </dl>
+            
+           -->
+             <dl class="row">
+                <dt class="tit">
+                    <label for="red_envelope"> 返利提现比例 </label>
+                </dt>
+                <dd class="opt">
+                    <input id="red_envelope" name="red_envelope" value="{$config.red_envelope}" class="input-txt" type="text" />
+                    <p class="notic">返利提现现金与红包比例   例：0.2|0.8  （0.2是现金，0.8是红包）, 两值和必须为 1 </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="red_envelope">设定资金池，全返，线下，推广员总百分比</label>
+                </dt>
+                <dd class="opt">
+                    <input id="total_ratio" name="total_ratio" value="{$config.total_ratio}" class="input-txt" type="text" />
+                    <p class="notic">例：0.2|0.3|0.4|0.1  中间用竖线隔开 “|”</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="red_envelope">设定公益池，全返，线下，推广员总百分比</label>
+                </dt>
+                <dd class="opt">
+                    <input id="total_welfare" name="total_welfare" value="{$config.total_welfare}" class="input-txt" type="text" />
+                    <p class="notic">例：0.2|0.3|0.4|0.1  中间用竖线隔开 “|”</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="red_envelope">全返档数比例</label>
+                </dt>
+                <dd class="opt">
+                    <input id="back_proportion" name="back_proportion" value="{$config.back_proportion}" class="input-txt" type="text" />
+                    <p class="notic">全返档数比例 例：0.2,0.2|0.3,0.2|0.5,0.6    (每个竖线逗号前面为分档，逗号后面为比例 ,每个档次、比例 用竖线隔开 “ | ” )</p>
+                </dd>
+            </dl>
+           
+		   	<dl class="row">
+                <dt class="tit">
+                    <label for="red_envelope">设定员工，实体店，子公司分红比例</label>
+                </dt>
+                <dd class="opt">
+                    <input id="company_rebate" name="company_rebate" value="{$config.company_rebate}" class="input-txt" type="text" />
+                    <p class="notic">例：0.3|0.4|0.1 中间用竖线（“|”）隔开 <font color="#FF0000">注意顺序</font></p>
+                </dd>
+            </dl>
+		   
+		  <hr>
+		   <div style="height:30px; line-height:30px;">以上为线上订单部分，  下面为线下扫码，代付部分</div>
+		    <hr>
+		   <dl class="row">
+                <dt class="tit">
+                    <label for="red_envelope">推广员，线下部分分红比例</label>
+                </dt>
+                <dd class="opt">
+                    <input id="txian" name="txian" value="{$config.txian}" class="input-txt" type="text" />
+                    <p class="notic">例：0.2|0.5 中间用竖线（“|”）隔开 <font color="#FF0000">注意顺序</font></p>
+                </dd>
+            </dl>
+			
+			<dl class="row">
+                <dt class="tit">
+                    <label for="red_envelope">设定员工，实体店，子公司分红比例</label>
+                </dt>
+                <dd class="opt">
+                    <input id="xian_ms" name="xian_ms" value="{$config.xian_ms}" class="input-txt" type="text" />
+                    <p class="notic">例：0.3|0.4|0.1 总数不能大于1，中间用竖线（“|”）隔开 <font color="#FF0000">注意顺序</font></p>
+                </dd>
+            </dl>
+		   
+            <div class="bot">
+                <input type="hidden" name="inc_type" value="{$inc_type}">
+                <input type="submit"  class="tk_submit" value="确认提交">
+            </div>
+        </div>
+    </form>
+</div>
+<div id="goTop"> <a href="JavaScript:void(0);" id="btntop"><i class="fa fa-angle-up"></i></a><a href="JavaScript:void(0);" id="btnbottom"><i class="fa fa-angle-down"></i></a></div>
+</body>
+</html>

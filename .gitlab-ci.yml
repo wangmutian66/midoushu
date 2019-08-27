@@ -1,0 +1,14 @@
+stages:
+  - build
+  - test
+  - deploy
+
+job1:
+  stage: test
+  script:
+    - cd /usr/local/nginx/html/dev
+    - git pull
+  only:
+    - dev
+  tags:
+    - centos1

@@ -1,0 +1,182 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/js/company.js"></script>
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page" style="padding:10px">
+  <div class="flexigrid">
+    <div class="mDiv">
+      <div class="ftitle">
+        <h3>员工列表</h3>
+        <h5>(共{$pager->totalRows}条记录)</h5>
+      </div>
+      <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+	   <form action="__URL__/search_promotders" id="search-form2" class="navbar-form form-inline" method="get">
+        <div class="sDiv">
+          <div class="sDiv2">           
+            <select name="company_id" id="company_id" class="select" onChange="company_change($(this))">
+              <option value="">请选择</option>
+			  <volist name='company_list' id='c_list'>
+			  <option value="{$c_list.cid}" <if condition="$c_list['cid'] eq $Request.param.company_id"> selected </if>>{$c_list.cname}</option>
+			  </volist>
+            </select>
+			
+			<select name="store_id" id="store_id" class="select" onChange="store_change()">
+              <option value="">请选择</option>
+			  <volist name='store_list' id='s_list'>
+			  <option value="{$s_list.cid}" <if condition="$s_list['cid'] eq $Request.param.store_id"> selected </if>>{$s_list.cname}</option>
+			  </volist>
+            </select>
+		
+			
+            <input type="text" size="30" name="key_word" class="qsbox" style="width:200px;" placeholder="请输入手机号码或真实姓名..." value="{$Think.get.key_word|default=''}">
+            <input type="submit"  class="btn" value="搜索">
+          </div>
+        </div>
+      </form>
+	  
+    </div>
+    <div class="hDiv">
+      <div class="hDivBox">
+        <table cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+              <th class="sign" axis="col0">
+                <div style="width: 24px;"><i class="ico-check"></i></div>
+              </th>
+			        <th align="left" abbr="article_title" axis="col1" class="">
+                <div style="text-align: left; width: 60px;" class="">ID</div>
+              </th>
+              <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">用户名</div>
+              </th>
+			        <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">真实姓名</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">所属层级</div>
+              </th>
+			  
+			  
+			        <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 200px;" class="">隶属公司</div>
+              </th>
+			  
+			  <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">手机号码</div>
+              </th>
+			        <th align="center" abbr="control" axis="col9" class="">
+                <div style="text-align: center; width: 80px;" class="">操作</div>
+              </th>
+              <th style="width:100%" axis="col7">
+                <div></div>
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    
+    <div class="bDiv" style="height: auto;">
+      <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+        <table>
+          <tbody>
+            <foreach name="list" item="vo" key="k" >
+              <tr>
+                <td class="sign">
+                  <div style="width: 24px;"> <input type="checkbox" name="ids[]" class="ids" value="{$vo.id}" ></div>
+                </td>
+				        <td align="left" class="">
+                  <div style="text-align: left; width: 60px;">{$vo.id}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.uname}</div>
+                </td>
+				        <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.real_name}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.lv_name}</div>
+                </td>
+			        
+				        <td align="left" class="">
+                  <div style="text-align: center; width: 200px;">{$vo.company_name}</div>
+                </td>
+				      
+				        <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.phone}</div>
+                </td>
+                <td align="center" class="">
+                  <div style="text-align: center; width:80px;">
+				  	        <a href="JavaScript:set_s('{$vo.id}')">设置</a>
+				          </div>
+                </td>
+                <td align="" class="" style="width: 100%;">
+                  <div>&nbsp;</div>
+                </td>
+              </tr>
+            </foreach>
+      			<tr>
+      				<td colspan="13">  
+  
+                  <!-- <div style="text-align: left; padding-left:10px; width:98%;"><a href="JavaScript:;" id="tg">设为推广员(选择多个时，只取第一个)</a> </div> --> 
+              </td>
+      			</tr>
+          </tbody>
+        </table>
+        <div class="sDiv" style="float:left;margin-top:10px">
+          <div class="sDiv2" style="border:0px">
+            <input type="button" onClick="select_promotders()"  class="btn" value="确定">
+          </div>
+        </div>
+      </div>
+      <div class="iDiv" style="display: none;"></div>
+    </div>
+    <!--分页位置--> 
+    {$pager->show()} </div>
+</div>
+<script type="text/javascript">
+
+$(document).ready(function(){ 
+  
+  $('#flexigrid > table>tbody >tr').click(function(){
+      $(this).toggleClass('trSelected');
+      
+      var checked = $(this).hasClass('trSelected'); 
+     $(this).find('input[type="checkbox"]').attr('checked',checked); 
+ 
+  });
+  
+  $('.ico-check ' , '.hDivBox').click(function(){
+    $('tr' ,'.hDivBox').toggleClass('trSelected' , function(index,currentclass){
+        var hasClass = $(this).hasClass('trSelected');
+        $('tr' , '#flexigrid').each(function(){
+          if(hasClass){
+            $(this).addClass('trSelected');
+          }else{
+            $(this).removeClass('trSelected');
+          }
+        });  
+      });
+  });
+});
+ 
+function set_s(id){
+	javascript:window.parent.call_back(id);
+}
+  
+function select_promotders()
+{   
+ 
+    if($("input[type='checkbox']:checked").length == 0)
+    {
+        layer.alert('请选择推广员', {icon: 2}); //alert('请选择商品');
+        return false;
+    }
+     //将没选中的复选框所在的  tr  remove  然后删除复选框
+    var promotders_id = $('.ids:checked').val();
+    javascript:window.parent.call_back(promotders_id);
+}    
+</script>
+</body>
+</html>

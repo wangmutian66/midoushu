@@ -1,0 +1,16 @@
+<volist name="goods_list" id="goods_val">
+<li class="new_index_list_newcash">
+    <div class="similer-product products_kuang">
+        <a href="{:U('Mobile/Goods/goodsInfo',array('id'=>$goods_val[goods_id]))}" title="{$goods_val.goods_name}">
+            <img class="lazy" data-original="{$goods_val[goods_thum_images]}">
+            <span class="similar-product-text ys">{$goods_val.goods_name}</span>
+        </a>
+        <span class="similar-product-price">
+                            ¥<span class="big-price">{$goods_val[shop_price]}</span>
+                        </span>
+        <span class="similar-product-price">
+                            <span class="big-price" style="color:#999;font-size:0.58rem;line-height:1rem;">赠送<span id="back_midou" style="color:red;">{$goods_val.back_midou}</span>米豆</span>
+                        </span>
+    </div>
+</li>
+</volist>

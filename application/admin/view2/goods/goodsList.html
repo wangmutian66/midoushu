@@ -1,0 +1,476 @@
+<include file="public/layout" />
+<link rel="stylesheet" href="__ROOT__/public/progressbar/styles/progressbar.css">
+<div class="jindutiao">
+  <section class="container">
+    <div class="progress"> <span class="blue" style="width:0%;"><span>0%</span></span> </div>
+  </section>
+</div>
+
+<script type="text/javascript" src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<style>
+span.type-virtual {
+  background-color: #3598DC;
+  line-height: 16px;
+  color: #FFF;
+  display: inline-block;
+  height: 16px;
+  padding: 1px 4px;
+  margin-right: 2px;
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.25);
+  cursor: default;
+}
+</style>
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+
+  <div id="append_parent"></div>
+  <div id="ajaxwaitid"></div>
+  <div class="page">
+    <div class="fixed-bar">
+      <div class="item-title">
+        <div class="subject">
+          <h3>商品管理</h3>
+          <h5>商城所有商品索引及管理</h5>
+        </div>
+        <ul class="tab-base nc-row">
+          <li><a href="{:U('Goods/goodsList',array('sp'=>0))}" <if condition="$Request.param.sp eq 0">class="current"</if>><span>全部商品</span></a></li>
+          <li><a href="{:U('Goods/goodsList',array('sp'=>2))}" <if condition="$Request.param.sp eq 2">class="current"</if>><span>自营商品</span></a></li>
+          <li><a href="{:U('Goods/goodsList',array('sp'=>1))}" <if condition="$Request.param.sp eq 1">class="current"</if>><span>供货商商品</span></a></li>
+        </ul>
+      </div>
+    </div>
+    <!-- 操作说明 -->
+    <div id="explanation" class="explanation" style="color: rgb(44, 188, 163); background-color: rgb(237, 251, 248); width: 99%; height: 100%;">
+      <div id="checkZoom" class="title"><i class="fa fa-lightbulb-o"></i>
+        <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+        <span title="收起提示" id="explanationZoom" style="display: block;"></span>
+      </div>
+      <ul>
+        <li>商品管理注意发布商品后清理缓存.</li>
+        <li>商品缩列图也有缓存.</li>
+      </ul>
+    </div>
+    <div class="flexigrid">
+      <div class="mDiv">
+        <div class="ftitle">
+          <h3>商品列表</h3>
+          <h5></h5>
+        </div>
+        <a href=""><div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div></a>
+        <form action="" id="search-form2" class="navbar-form form-inline" method="post" >
+          <div class="sDiv">
+            <div class="sDiv2">           
+            <!--<select name="cat_id" id="cat_id" class="select">
+              <option value="">所有分类</option>
+              <foreach name="categoryList" item="v" key="k" >
+                  <option value="{$v['id']}"> {$v['name']}</option>
+              </foreach>
+            </select>-->
+            <select name="cat_id1" id="cat_id1" class="select" onchange="category_change(this,'cat_id2')">
+              <option value="">选择分类</option>
+              <foreach name="categoryList" item="v" key="k" >
+                <option value="{$v['id']}"> {$v['name']}</option>
+              </foreach>
+            </select>
+            <select name="cat_id2" id="cat_id2" class="select" onchange="category_change(this,'cat_id3')">
+              <option value="">选择分类</option>
+            </select>
+            <select name="cat_id3" id="cat_id3" class="select">
+              <option value="">选择分类</option>
+            </select>
+
+            <select name="suppliers_id" id="suppliers_id" class="select">
+              <option value="">所有供货商</option>
+              <foreach name="suppliersList" item="v" key="k" >
+                <option value="{$v['suppliers_id']}"> {$v['suppliers_name']}</option>
+              </foreach>
+            </select>   
+            <select name="is_on_sale" id="is_on_sale" class="select">
+              <option value="">全部</option>                  
+              <option value="1">上架</option>
+              <option value="0">下架</option>
+            </select>
+            <select name="is_check" id="is_check" class="select">
+              <option value="">全部</option>                  
+              <option value="1">通过审核</option>
+              <option value="0">未通过审核</option>
+            </select>
+            <select name="intro" class="select">
+              <option value="0">全部</option>
+              <option value="is_new">新品</option>
+              <option value="is_hot">热销</option>
+              <option value="is_recommend">推荐</option>
+              <option value="is_tgy_good">推购</option>
+              <option value="is_hot_sell">优热</option>
+              <option value="is_brand_sell">品供</option>
+              <option value="is_tao_sell">一淘</option>
+              <option value="is_temai">特卖</option>
+              <option value="is_yxyp">一乡一品</option>
+            </select>
+            <select name="is_allreturn" class="select">
+              <option value="">全部</option>
+              <option value="0">普通商品</option>
+              <option value="1">福利商品</option>
+            </select>
+            <!--排序规则-->
+            <input type="hidden" name="orderby1" value="goods_id" />
+            <input type="hidden" name="orderby2" value="desc" />
+            <input type="hidden" name="sp" value="{$Request.param.sp}" />
+            <input type="hidden" name="goods_ids" value="">
+            <input type="text" size="30" name="key_word" class="qsbox" placeholder="搜索词...">
+            <input type="button" onClick="ajax_get_table('search-form2',1)" class="btn" value="搜索">
+            <input style="display:none"/>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="hDiv">
+      <div class="hDivBox">
+        <table cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+              <th class="sign" axis="col6" onClick="checkAllSign(this)">
+                <div style="width: 24px;"><i class="ico-check"></i></div>
+              </th>
+              <th align="left" abbr="article_title" axis="col6" class="">
+                <div style="text-align: left; width:65px;" class="">操作</div>
+              </th>              
+              <th align="left" abbr="article_title" axis="col6" class="">
+                <div style="text-align: left; width:50px;" class="" onClick="sort('goods_id');">id</div>
+              </th>
+              <th align="left" abbr="ac_id" axis="col4" class="">
+                <div style="text-align: left; width: 300px;" class="" onClick="sort('goods_name');">商品名称</div>
+              </th>
+              <th align="center" abbr="suppliers_id" axis="col6" class="">
+                <div style="text-align: center; width: 150px;" class="" onClick="sort('suppliers_id');">供货商</div>
+              </th>
+              <th align="center" abbr="article_show" axis="col6" class="">
+                <div style="text-align: center; width: 100px;" class="" onClick="sort('goods_sn');">货号</div>
+              </th>
+              <th align="center" abbr="article_time" axis="col6" class="">
+                <div style="text-align: center; width: 100px;" class="" onClick="sort('cat_id');">分类</div>
+              </th>
+              <th align="center" abbr="article_time" axis="col6" class="">
+                <div style="text-align: center; width:60px;" class="" onClick="sort('listorder');">品类排序</div>
+              </th>
+              <th align="center" abbr="article_time" axis="col6" class="">
+                <div style="text-align: center; width: 50px;" class="" onClick="sort('sales_sum');">销量</div>
+              </th>
+              <th align="center" abbr="article_time" axis="col6" class="">
+                <div style="text-align: center; width: 50px;" class="" onClick="sort('shop_price');">价格</div>
+              </th> 
+			        <!-- <th align="center" abbr="article_time" axis="col6" class="">
+                <div style="text-align: center; width: 30px;" class="">红包</div>
+              </th>    -->              
+              <th align="center" abbr="article_time" axis="col6" class="">
+                <div style="text-align: center; width: 30px;" class="" onClick="sort('is_recommend');">推荐</div>
+              </th>                       
+              <th align="center" abbr="article_time" axis="col6" class="">
+                <div style="text-align: center; width: 30px;" class="" onClick="sort('is_new');">新品</div>
+              </th>                                     
+              <th align="center" abbr="article_time" axis="col6" class="">
+                <div style="text-align: center; width: 30px;" class="" onClick="sort('is_hot');">热卖</div>
+              </th>  
+              <th align="center" abbr="article_time" axis="col6" class="">
+                <div style="text-align: center; width: 50px;" class="" onClick="sort('on_time');">上/下架</div>
+              </th>
+              <th align="center" abbr="article_time" axis="col6" class="">
+                <div style="text-align: center; width: 50px;" class="" onClick="sort('is_allreturn');">福利</div>
+              </th>
+              <th align="center" abbr="article_time" axis="col6" class="">
+                <div style="text-align: center; width: 50px;" class="" onClick="sort('is_tgy_good');">推购</div>
+              </th>
+              <th align="center" abbr="article_time" axis="col6" class="">
+                <div style="text-align: center; width: 50px;" class="" onClick="sort('is_hot_sell');">优热</div>
+              </th>
+              <th align="center" abbr="article_time" axis="col6" class="">
+                <div style="text-align: center; width: 50px;" class="" onClick="sort('is_brand_sell');">品供</div>
+              </th>
+              <th align="center" abbr="article_time" axis="col6" class="">
+                <div style="text-align: center; width: 50px;" class="" onClick="sort('is_tao_sell');">一淘</div>
+              </th>
+              <th align="center" abbr="article_time" axis="col6" class="">
+                <div style="text-align: center; width: 50px;" class="" onClick="sort('is_temai');">特卖</div>
+              </th>
+              <th align="center" abbr="article_time" axis="col6" class="">
+                <div style="text-align: center; width: 100px;" class="" onClick="sort('is_yxyp');">一乡一品</div>
+              </th>
+              <th align="center" abbr="article_time" axis="col6" class="">
+                <div style="text-align: center; width: 50px;" class="" onClick="sort('store_count');">库存</div>
+              </th>
+              <th align="center" abbr="article_time" axis="col6" class="">
+                <div style="text-align: center; width: 50px;" class="" onClick="sort('sort');">排序</div>
+              </th>
+              <th align="center" abbr="is_check" axis="col6" class="">
+                <div style="text-align: center; width: 120px;" class="" onClick="sort('is_check');">审核</div>
+              </th>   
+              <th style="width:100%" axis="col7">
+                <div></div>
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>    
+    <div class="tDiv">
+      <div class="tDiv2">
+        <div class="fbutton">       
+          <a href="{:U('Admin/goods/addEditGoods')}">
+            <div class="add" title="添加商品">
+              <span><i class="fa fa-plus"></i>添加商品</span>
+            </div>
+          </a>          
+        </div> 
+
+        <div class="fbutton"> 
+          <a href="javascript:exportReport()">
+            <div class="add" title="选定行数据导出excel文件,如果不选中行，将导出列表所有数据">
+              <span><i class="fa fa-plus"></i>导出数据</span>
+            </div>
+          </a> 
+        </div>
+
+        <div class="fbutton">
+          <a href="{:U('Admin/Goods/initGoodsSearchWord')}">
+            <div class="add" title="初始化商品搜索关键词">
+              <span><i class="fa fa-plus"></i>初始化商品搜索关键词</span>
+            </div>
+          </a>
+        </div>
+        <div class="fbutton">
+          <a href="javascript:;" onClick="publicHandleAll('del')">
+            <div class="add" title="批量删除">
+              <span>批量删除</span>
+            </div>
+          </a>
+        </div>
+        <div class="fbutton">
+          <a onclick="is_checks();">
+            <div class="add" title="批量审核商品">
+              <span><i class="fa fa-send"></i>批量审核商品</span>
+            </div>
+          </a>
+        </div>
+        <!--<div class="sDiv2" style="margin-left: 10px;">-->
+          <!--<input type="text" size="30" id="add_time_begin" name="add_time_begin" style="height: 22px;line-height: 22px" value="" class="qsbox" autocomplete="off" placeholder="商品创建开始时间">-->
+        <!--</div>-->
+        <!--<div class="sDiv2" style="margin-left: 10px;">-->
+          <!--<input type="text" size="30" id="add_time_end" name="add_time_end" style="height: 22px;line-height: 22px" value="" class="qsbox" autocomplete="off" placeholder="商品创建结束时间">-->
+        <!--</div>-->
+        <!--<div class="sDiv2" style="margin-left: 10px;">-->
+        <!--<select name="is_jindie_downed" id="is_jindie_downed" class="select" style="height: 22px;line-height: 22px">-->
+            <!--<option value="">全部</option>-->
+            <!--<option value="0">未导出</option>-->
+            <!--<option value="1">已导出</option>-->
+        <!--</select>-->
+        <!--</div>-->
+        <!--<div class="sDiv2" style="margin-left: 10px;">-->
+          <!--<select name="catid1" id="catid1" class="select">-->
+            <!--<option value="">选择分类</option>-->
+            <!--<foreach name="categoryList" item="v" key="k" >-->
+              <!--<option value="{$v['id']}"> {$v['name']}</option>-->
+            <!--</foreach>-->
+          <!--</select>-->
+        <!--</div>-->
+        <div class="fbutton">
+
+          <!--<a style="display: inline-block;" href="javascript:form_submit_jindie()">-->
+            <!--<div class="add" title="选定行数据导出excel文件,如果不选中行，将导出列表所有数据">-->
+              <!--<span><i class="fa fa-plus"></i>导出金蝶数据</span>-->
+            <!--</div>-->
+          <!--</a>-->
+            <!-- <div class="add" style="display: inline-block;margin-left: 5px;border: 1px solid green" title="">
+                <span style="color: green;"><i class="fa"></i>已导出金蝶数据</span>
+            </div>
+            <div class="add" style="display: inline-block;margin-left: 5px;border: 1px solid red" title="">
+                <span style="color: red;"><i class="fa"></i>未导出金蝶数据</span>
+              </div> -->
+            </div>
+          </div>
+          <div style="clear:both"></div>
+        </div>
+        <div class="bDiv" style="height: auto;">
+         <!--ajax 返回 --> 
+         <div id="flexigrid" cellpadding="0" cellspacing="0" border="0" data-url="{:U('admin/goods/delGoods')}"></div>
+       </div>
+
+     </div>
+   </div>
+   <script>
+    $(document).ready(function(){
+      // $('#add_time_begin').layDate();
+      // $('#add_time_end').layDate();
+		// 刷选条件 鼠标 移动进去 移出 样式
+		$(".hDivBox > table > thead > tr > th").mousemove(function(){
+			$(this).addClass('thOver');
+		}).mouseout(function(){
+			$(this).removeClass('thOver');
+		});
+
+      // 表格行点击选中切换
+      $(document).on('click','#flexigrid > table>tbody >tr',function(){
+        $(this).toggleClass('trSelected');
+        var checked = $(this).hasClass('trSelected');
+        $(this).find('input[type="checkbox"]').attr('checked',checked);
+      });
+    });
+
+    $(document).ready(function () {
+        // ajax 加载商品列表
+        ajax_get_table('search-form2', 1);
+
+        $(document).keydown(function(e){
+          if(e.keyCode == 13){
+            ajax_get_table('search-form2',1);
+          }
+        })
+
+      });
+
+    function category_change(obj,selectid){
+      var cat_id = $(obj).val();
+      $("#"+selectid).attr("disabled",true).css("background-color","#EEEEEE;");
+      $.getJSON('/Admin/Goods/ajax_get_category',{cat_id:cat_id},function (r){
+        var html = '<option value="">选择分类</option>';
+        if(r.status == 1){
+          $.each(r.list,function (i,k){
+            html += "<option value='"+k.id+"'>"+k.name+"</option>";
+          })
+        }
+        $("#"+selectid).html(html).attr("disabled",false).css("background-color","");
+      })
+    }
+
+    // ajax 抓取页面 form 为表单id  page 为当前第几页
+    function ajax_get_table(form, page) {
+        cur_page = page; //当前页面 保存为全局变量
+        $.ajax({
+          type: "POST",
+            url: "/index.php?m=Admin&c=goods&a=ajaxGoodsList&p=" + page,//+tab,
+            data: $('#' + form).serialize(),// 你的formid
+            success: function (data) {
+              $("#flexigrid").html('');
+              $("#flexigrid").append(data);
+            }
+          });
+      }
+
+    // 点击排序
+    function sort(field)
+    {
+     $("input[name='orderby1']").val(field);
+     var v = $("input[name='orderby2']").val() == 'desc' ? 'asc' : 'desc';             
+     $("input[name='orderby2']").val(v);
+     ajax_get_table('search-form2',cur_page);
+   }
+
+    //批量审核商品
+    function is_checks()
+    {
+      var obj = $('.trSelected');
+      var url = "{:U('Admin/Goods/is_check')}";
+      if(obj.length > 0){
+        var check_val = [];
+        obj.each(function(){
+          check_val.push($(this).attr('data-id'));
+        });
+        url += "?t=0&goods_id_array="+check_val;
+        layer.open({
+          type: 2,
+          title: '商品审核',
+          shadeClose: true,
+          shade: 0.8,
+          area: ['580px', '480px'],
+          content: url
+        });
+      }else{
+        layer.msg('请选择商品',{icon:2});
+      }
+    }
+
+    /**
+     * 回调函数
+     */
+     function call_back(v) {
+      layer.closeAll();
+      if (v == 1) {
+        layer.msg('发送成功',{icon:1});
+      } else {
+        layer.msg('发送失败',{icon:2});
+      }
+    }
+
+
+    function exportReport(){
+      var selected_ids = '';
+      $('.trSelected' , '#flexigrid').each(function(i){
+        selected_ids += $(this).data('id')+',';
+      });
+      if(selected_ids != ''){
+        $('input[name="goods_ids"]').val(selected_ids.substring(0,selected_ids.length-1));
+      }
+      $('#search-form2').attr('action','{:U("Goods/export_goods")}');
+      $('#search-form2').submit();
+    }
+
+    function exportReport2(){
+      
+    }
+
+
+
+
+    function form_submit_jindie(){
+
+         progressbarText(1);
+    }
+
+    function progressbarText(p){
+        urlpage = "/p/"+p;
+
+        var addtimebegin = $("#add_time_begin").val();
+        var addtimeend = $("#add_time_end").val();
+        var downed =  $("#is_jindie_downed").val();
+        var catid1 = $("#catid1").val();
+
+        var param = new Object();
+        param["addtimebegin"]=addtimebegin;
+        param["addtimeend"]=addtimeend;
+        param["downed"]=downed;
+        param["catid1"] = catid1;
+        $.ajax({
+            type : "post",
+            url:"__URL__/export_goods_jindie_data"+urlpage,
+            data : param,// 你的formid
+            dataType:"json",
+            success:function(data){
+                if(data.error=="1"){
+                    layer.alert(data.msg, {icon: 1,time: 3000});
+                }else{
+                    $(".jindutiao").show();
+                    loading(data+"%");
+                    if(data != 100){
+                        progressbarText((p+1));
+                    }
+                }
+
+            }
+        });
+    }
+
+    function loading(percent){
+        $('.progress > span').animate({"width":percent,"overflow":"inherit"},1000,function(){
+            $(this).children().html(percent);
+            if(percent=='100%'){
+                setTimeout(function(){
+                    $(".jindutiao").hide();
+                    $('.progress > span > span').html("0%");
+                    $('.progress > span').css("width","0%");
+                    location.href="{:url('/admin/Goods/export_datajindie_order')}";
+                },1000);
+            }
+        })
+    }
+
+  </script>
+</body>
+</html>

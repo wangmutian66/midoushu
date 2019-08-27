@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+    <title>{$web_title|default='网站登录'}</title>
+	<link rel="stylesheet" href="__PUBLIC__/staff/css/Employee.css">
+	<script src="__PUBLIC__/staff/js/mobile-util.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" src="__PUBLIC__/static/js/jquery.js"></script>
+	<script type="text/javascript" src="/template/mobile/new2/static/js/layer.js"></script>
+</head>
+<body class="bgh">
+<div class="e-top">
+	<div class="content">
+		<div class="e-jian">
+			<a href="{:U('/Staff/Paid/Index')}"><img src="__PUBLIC__/staff/img/return.png"></a>
+		</div>
+		<div class="e-wen">
+			{$crumbs|default='米豆薯员工中心'}
+		</div>
+		<a href="{:U('/Staff/')}" class="e-huis"><img src="__PUBLIC__/staff/img/e-ico12.png" /></a>
+
+	</div>
+</div>
+
+<div class="e-main">
+	<div class="content">
+		<div class="wdx">
+			<div class="tx fl">
+				<a href="{:U('/Staff')}"> <!--{:U('/Staff/Profile')}--><img src="{$staff_info.head_pic|default='__STATIC__/images/headPic.jpg'}"></a>
+			</div>
+			<div class="xxi fl">
+				<div class="fm">
+					<if condition="$staff_info.real_name">{$staff_info.real_name}<else/>{$staff_info.uname}</if>
+					<if condition="$staff_info.type eq 1">
+						<span>等级：推广员</span>
+					<else/>
+						<if condition="$staff_info.level_name"><span>等级：{$staff_info.level_name}</span></if>
+					</if> 
+				</div>
+				<div class="dm">
+					门店：{$staff_info.store_name} <!--公司名称没显示，公司名称字段company_name-->
+				</div>
+			</div>
+		</div>
+		<div class="erm">
+			<a href="{:U('/Staff/Profile/qrcode')}"><img src="__PUBLIC__/staff/img/tgm.png"></a>
+		</div>
+	</div>
+</div>
+<style type="text/css">
+.layout{
+    width:100%;
+    padding:50px 0;
+    margin:0 auto;
+}
+.erhuh{
+    padding:30px 0;
+    text-align: center; 
+}
+
+.erhuh h3{
+    font-size:25px;
+    color:#333;
+    font-family: "微软雅黑";
+    padding: 10px 0;
+}
+
+.erhuh p{
+    padding: 20px 0;
+}
+
+.succ-tip{
+    font-size:12px;
+    color:#333;
+    font-family: "微软雅黑";
+    padding: 10px 0;
+}
+
+.ddxq-xiaq{
+    text-align: center;
+    margin:15px auto;
+}
+
+.ddxq-xiaq a{
+    border:1px solid #ff4401;
+    border-radius: 5px;
+    font-size:14px;
+    color:#ff4401;
+    padding:10px 15px;
+}
+.ddxq-xiaq a.ys{
+    border:1px solid #333;
+    color:#333;
+}
+</style>
+
+<div class="layout after-ta order-ha">
+	<div class="erhuh">
+		<i class="icon-succa"></i>
+		<if condition="$order.pay_status eq 1"><h3>恭喜您，代付成功！</h3><else/><h3  style="color:#ff0000">对不起，代付失败！</h3></if>
+		<p class="succ-p">单号： {$order.paid_sn}</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;金额（元）： <b>{$order.money|tk_money_format}</b> <b>元</b></p>
+		<if condition="$order.pay_status eq 1">
+			<div class="succ-tip">
+				您代付的金额
+			</div>
+		<else>
+			<div class="succ-tip">
+				您代付的金额未到账，请重新支付
+			</div>
+		</if>
+	</div>
+	<div class="ddxq-xiaq">
+		
+		<if condition="$order.pay_status eq 1">
+			<a href="{:U('/Staff/Paid/Index',['pay_status'=>999])}">代付记录<i></i></a>
+		<else/>
+			<a href="{:U('/Staff/Paid/Pay',['id'=>$Request.param.id])}" style="margin-left:10px">重新支付<i></i></a>
+		</if>
+	</div>
+
+</div>
+
+
+
+</body>
+</html>

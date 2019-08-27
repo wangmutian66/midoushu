@@ -1,0 +1,241 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="format-detection" content="telephone=no" />
+    <title>客服系统 - 米豆薯商城</title>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/pc/css/user-style.css" />
+    <link rel="stylesheet" type="text/css" href="__STATIC__/fonts/iconfont.css?v=2016070717">
+    <script src="__STATIC__/qqFace/js/jquery.min.js"></script>
+    <script src="__STATIC__/js/dist/flexible/flexible_css.debug.js"></script>
+    <script src="__STATIC__/js/dist/flexible/flexible.debug.js"></script>
+    <script src="__STATIC__/qqFace/js/jquery.qqFace.js"></script>
+    <script src="/public/static/js/layer/layer.js" type="text/javascript"></script>
+    <script src="__STATIC__/js/jquery.superslide.2.1.1.js"></script>
+    <script type="text/javascript">
+		$(document).ready(function(e) {
+			$('#cl-1').click(function(e) {
+				$("#cl-1").addClass('ys');
+				$("#cl-2").removeClass('ys');
+				$(".nr span").css('font-size','12px');
+			});
+	
+			$('#cl-2').click(function(e) {
+				$("#cl-2").addClass('ys');
+				$("#cl-1").removeClass('ys');
+				$(".nr span").css('font-size','14px');
+			});
+			$(".set-content").slide({autoPlay:false,trigger:"click",delayTime:700,pnLoop:false});
+
+		});
+	</script>
+    <style>
+        img{
+          max-width:100%;
+        }
+        .qqFace {margin-top: -5rem; background: #fff; padding: 2px; border: 1px #dfe6f6 solid; position: absolute !important;bottom:.8rem !important;left:.5rem !important;}
+        .qqFace table{
+          width:100%;
+        }
+        .qqFace table td { padding: 0px; }
+        .qqFace table td img { cursor: pointer; border: 1px #fff solid; }
+        .qqFace table td img:hover { border: 1px #0066cc solid; }
+		.shop-online {padding-left:30px; line-height:50px; float:left; width:100px;}
+    </style>
+</head>
+<body>
+<div class="right-main">
+		<div class="top">
+			<div class="l shop-titlte"></div>
+            <div class="shop-online"></div>
+			<div class="r">
+				<span>聊天文字大小：</span>
+				<a id="cl-1" class="ys">12px</a>
+				<a id="cl-2">14px</a>
+			</div>
+		</div>
+		<div class="bot">
+			<div class="l">
+				<div class="t" id="chat_content">
+					
+				</div>
+				<div class="b">
+					<div class="top">
+						<div class="ins">
+							<div class="an"><a href="JavaScript:;" id="qqface" class="qqface"><img src="__STATIC__/pc/images/face.png"></a></div>
+							<div class="an"><a href="JavaScript:;" class="image_up"><img src="__STATIC__/pc/images/pic.png"></a></div>
+						</div>
+					</div>
+					<div class="inp">
+						<form>
+							<pre name="sendBox" contenteditable="true" class="send-textarea" id="saytext"></pre> 
+                            <input type="file" name="pic" id="file" style="display: none">
+							<a href="JavaScript:;" class="btn-1 send-btn">发送</a>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="r">
+            	<if condition="empty($user_id)">
+                <div class="set-middle-list">
+                    <ul  style="height:300px;overflow:scroll; ">
+                    <volist name="goods_list" id="vo">
+                        <li>
+                            <div class="sp">
+                            	<if condition="$vo.is_red eq 0">
+                                <div class="tu"><a href="<if condition="$vo.is_allreturn eq 0">{:U('Home/Goods/goodsInfo',array('id'=>$vo[goods_id]))}<else/>{:U('Home/ReturnGoods/goodsInfo',array('id'=>$vo[goods_id]))}</if>"  target="_blank"><img src="{$vo.goods_id|goods_thum_images=400,400}"></a></div>
+                                <div class="wz">
+                                    <div class="bt"><a href="<if condition="$vo.is_allreturn eq 0">{:U('Home/Goods/goodsInfo',array('id'=>$vo[goods_id]))}<else/>{:U('Home/ReturnGoods/goodsInfo',array('id'=>$vo[goods_id]))}</if>"  target="_blank">{$vo.goods_name|getSubstr=0,20}</a></div>
+                                    <div class="xx">
+                                        <div class="price"><span>¥</span><span>{$vo[shop_price]}</span></div>
+                                        <if condition="$vo.suppliers_id eq 0"><div class="dp">自营</div></if>
+                                    </div>
+                                    <div class="fs"><a href="JavaScript:;" class="send_goods" rel='{$vo.goods_id}' is_red='0' all_return='{$vo.is_allreturn}' img_src='{$vo.goods_id|goods_thum_images=400,400}' rel_href='<if condition="$vo.is_allreturn eq 0">{:U('Home/Goods/goodsInfo',array('id'=>$vo[goods_id]))}<else/>{:U('Home/ReturnGoods/goodsInfo',array('id'=>$vo[goods_id]))}</if>' rel_title='{$vo.goods_name|getSubstr=0,20}' rel_price='{$vo[shop_price]}'>发送</a></div>
+                                </div>
+                                <else/>
+                                <div class="tu"><a href="{:U('Homered/Goods/goodsInfo',array('id'=>$vo[goods_id]))}"  target="_blank"><img src="{$vo.goods_id|goods_thum_images=400,400,'red'}"></a></div>
+                                <div class="wz">
+                                    <div class="bt"><a href="{:U('Homered/Goods/goodsInfo',array('id'=>$vo[goods_id]))}" target="_blank">{$vo.goods_name|getSubstr=0,20}</a></div>
+                                    <div class="xx">
+                                        <div class="price"><span>¥</span><span>{$vo[shop_price]}</span></div>
+                                        <if condition="$vo.suppliers_id eq 0"><div class="dp">自营</div></if>
+                                    </div>
+                                    <div class="fs"><a href="JavaScript:;" class="send_goods" rel='{$vo.goods_id}' is_red='1' all_return='0' img_src="{$vo.goods_id|goods_thum_images=400,400,'red'}" rel_href='{:U('Homered/Goods/goodsInfo',array('id'=>$vo[goods_id]))}' rel_title='{$vo.goods_name|getSubstr=0,20}' rel_price='{$vo[shop_price]}'>发送</a></div>
+                                </div>
+                                </if>
+                            </div>
+                        </li>
+                    </volist>
+                    </ul>
+                </div>
+                <else/>
+				<div class="set-content">
+		            <div class="set-title hd">
+		                <ul class="clearfix">
+		                    <li class="on">现金订单</li>
+		                    <li>米豆订单</li>
+		                </ul>
+		            </div>
+		            <div class="set-middle bd">
+		                <ul class="set-middle-item">
+		                    <li>
+		                        <div class="set-middle-list">
+		                            <ul>
+                                    	<volist name='goods_list' id='vo'>
+		                                <li>
+		                                    <div class="sp">
+												<div class="tu"><a href="<if condition="$vo.is_allreturn eq 0">{:U('Home/Goods/goodsInfo',array('id'=>$vo[goods_id]))}<else/>{:U('Home/ReturnGoods/goodsInfo',array('id'=>$vo[goods_id]))}</if>"><img src="{$vo.goods_id|goods_thum_images=400,400}"></a></div>
+												<div class="wz">
+													<div class="bt"><a href="<if condition="$vo.is_allreturn eq 0">{:U('Home/Goods/goodsInfo',array('id'=>$vo[goods_id]))}<else/>{:U('Home/ReturnGoods/goodsInfo',array('id'=>$vo[goods_id]))}</if>">{$vo.goods_name|getSubstr=0,20}</a></div>
+													<div class="xx">
+														<div class="price"><span>¥</span><span>{$vo[goods_price]}</span></div>
+														<if condition="$vo.suppliers_id eq 0"><div class="dp">自营</div></if>
+													</div>
+													<div class="fs"><a href="JavaScript:;" class='send_order_code' rel='{$vo.order_sn}' is_midou='0' goods_id='{$vo[goods_id]}' is_return='{$vo.is_allreturn}'>发送单号</a></div>
+												</div>
+											</div>
+		                                </li>
+		                                </volist>
+		                            </ul>
+		                        </div>
+		                    </li>
+		                </ul>
+		                <ul class="set-middle-item">
+		                    <li>
+		                       
+		                        <div class="set-middle-list">
+		                            <ul>
+		                                <volist name='midou_goods_list' id='vo'>
+		                                <li>
+		                                    <div class="sp">
+												<div class="tu"><a href="{:U('Homered/Goods/goodsInfo',array('id'=>$vo[goods_id]))}"><img src="{$vo.goods_id|goods_thum_images=400,400,'red'}"></a></div>
+												<div class="wz">
+													<div class="bt"><a href="{:U('Homered/Goods/goodsInfo',array('id'=>$vo[goods_id]))}">{$vo.goods_name|getSubstr=0,20}</a></div>
+													<div class="xx">
+														<div class="price"><span>¥</span><span>{$vo[goods_price]}</span></div>
+														<if condition="$vo.suppliers_id eq 0"><div class="dp">自营</div></if>
+													</div>
+													<div class="fs"><a href="JavaScript:;" class='send_order_code' rel='{$vo.order_sn}' is_midou='1' goods_id='{$vo[goods_id]}'>发送单号</a></div>
+												</div>
+											</div>
+		                                </li>
+		                                </volist>
+		                            </ul>
+		                        </div>
+		                    </li>
+		                </ul>
+		                
+		            </div>
+                    
+		        </div>
+                </if>
+				<div class="kjhf">
+					<div class="bt">
+						<div class="tp"><img src="__STATIC__/pc/images/quick.png"></div>
+						<span>常见问题</span>
+					</div>
+					<div class="nr">
+						<ul>
+                        	<volist name='question_list' id='vo'>
+							<li><a href="JavaScript:;"  rel='{$vo.cq_id}' class="answer">{$vo.cq_question}</a>
+                            <input type="hidden" id="cq_{$vo.cq_id}" value="{$vo.cq_answer}" />
+                            </li>
+							</volist>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<audio id="chatAudio"><source src="__STATIC__/images/1.mp3" type="audio/mpeg"></audio>
+
+<a href="JavaScript:;" style="display:none" class="default_send_goods" rel='{$send_goods.goods_id}' is_red='{$send_goods["is_red"]}' img_src='{$send_goods.goods_id|goods_thum_images=400,400}' rel_href='{$send_goods.goods_url}' rel_title='{$send_goods.goods_name|getSubstr=0,20}' rel_price='{$send_goods[shop_price]}'>发送</a>
+<script>
+	var Socket_url = '{$socket_url}';
+	var send_goods_id = '{$send_goods.goods_id}';
+    /**
+	 * 提示弹窗
+	 * @param msg
+	 */
+	function showErrorMsg(msg){
+		layer.open({content:msg,time:2000});
+	}
+	var fromid = '{$fromid}';
+	
+	var toid = '{$toid}';
+	
+	var fromip = "{$fromip}";
+	
+	var from_head = '';
+	
+	var to_head = '';
+	
+	var online = 0;
+	
+	var to_name='';
+	
+	var from_name = '';
+	
+	var API_URL = "{:U('/customer_service/Api/','','')}";
+	
+	var STATIC = '__STATIC__';
+	
+	var is_user = 1;
+	
+	var more_page = 0;
+	
+	var from_url = '{$from_url}';
+	/*	ws.send(default_message);
+	save_message(send_text,3);	
+	go_bottom();*/
+	
+	var chat_autoreply = {$autoreply.leaveTimeReply};
+//	var chat_autoreply = 10;
+	var leaveReply = "{$autoreply.leaveReply}";
+	var onlineReply = "{$autoreply.onlineReply}";
+	
+</script>
+<script src="__STATIC__/js/chat_public.js?v={$version_number}"></script>
+</body>
+</html>

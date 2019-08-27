@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="__STATIC__/qqFace/js/jquery.min.js"></script>
+<title>无标题文档</title>
+</head>
+<style type="text/css">
+	body{
+		margin:0;
+		padding: 0;
+	}
+	.list-box{
+		width:100%;
+		margin: 0;
+		padding: 0 1rem;
+		box-sizing: border-box;
+	}
+
+	.list-box ul{
+		list-style: none;
+		margin:0;
+		padding: 0;
+	}
+
+	.list-box li{
+		width:100%;
+		padding:1rem .5rem;
+		box-sizing: border-box;
+	}
+
+	.list-box li a{
+		color:#3f80a4;
+		float:left;
+		font-size:1rem;
+		text-decoration: none;
+	}
+
+	.list-box li span{
+		float:left;
+	}
+
+	.list-box li span.zt{
+		border:1px solid #ff7435;
+		border-radius: .5rem;
+		padding:0 .5rem;
+		line-height: 1rem;
+		/*float:right;*/
+		color:#ff7435;
+		font-size:.68rem;
+		margin-left:1rem;
+	}
+
+	.list-box li span.zt.ys{
+		border:1px solid #aaa;
+		color:#aaa;
+	}
+
+	.list-box li .sz{
+		font-size:.68rem;
+		line-height: 1rem;
+		float:left;
+		color:#666;
+		text-decoration: underline;
+	}
+</style>
+
+<body>
+<div class="list-box">
+	<ul>
+	<volist name="chat_group" id='vo'>
+    	<li><a href="JavaScript:;" rel='{$vo.id}' class="group_name">{$vo.name}</a></li>
+    </volist>
+    </ul>
+    <ul id="user_list">
+    	
+    </ul>
+</div>
+    <script>
+    	$(function (){
+			$(".group_name").click(function (){
+				$.post("/customer_service/chat/get_users",{group_id:$(this).attr('rel')},function(r){
+					$("#user_list").show();
+					var user_is_line = '';
+					$("#user_list").html('');
+					$.each(r,function (i,v){
+						if(v.is_line == 1){
+							user_is_line	= '在线';
+						}else{
+							user_is_line	=	'不在线';	
+						}
+						$("#user_list").append("<li><a href='JavaScript:;'>"+v.nickname+"</a><span class='zt'>"+user_is_line+"</span><a href='JavaScript:;' rel="+v.user_id+" class='sz' nickname='"+v.nickname+"'>设置</a></li>");
+					})
+					$('.sz').bind('click',set_up);
+				},'json');
+			});
+			function set_up(){
+				javascript:window.parent.ohter_user_call_back($(this).attr('rel'),$(this).attr('nickname'));
+			}
+		})
+    </script>
+</body>
+</html>

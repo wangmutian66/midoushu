@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="renderer" content="webkit">
+<title>个人信息</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/member.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+<script src="__STATIC__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="__STATIC__/js/slider.js?v={$vnum}"></script>
+<script src="__PUBLIC__/js/layer/layer-min.js"></script><!--弹窗js 参考文档 http://layer.layui.com/-->
+<script src="__PUBLIC__/js/baidu.js"></script>
+<style>
+	.red, .ls-dlzc a:hover {
+	    color: #ff4401;
+	}
+	.co_blue {
+	    color: #4280d3;
+	}
+    .wddd-li ul li {
+        float: left;
+        margin: 10px 20px;
+        font-size: 14px;
+    }
+
+    .tp_message {
+        padding: 40px 26px;
+        background: #fff;
+        margin-top: 0px
+    }
+
+    .tp_message h3 {
+        border-bottom: 1px solid #dedede;
+        margin-bottom: 6px;
+        padding-bottom: 4px;
+        word-wrap: break-word;
+    }
+
+    .tp_message .tpcontent {
+        text-indent: 2em;
+        word-wrap: break-word;
+    }
+
+    .tp_message .checknoti {
+        text-align: right;
+        margin-top: 4px
+    }
+
+    .tp_message a {
+        cursor: pointer;
+        color: #e63547;
+        text-decoration: blink
+    }
+</style>
+</head>
+
+<body class="bgg">
+	<include file="public/user_header" />
+	<div class="clear"></div>
+	
+	<div class="y-content">
+		<!--左侧菜单-->
+		<include file="public/user_lefter" />
+		
+		<!--右侧内容-->
+		<div class="right00 fri">
+			<div class="y-hbt">
+				我的消息
+			</div>
+			<div class="y-grxx">
+				<div class="wddd-li">
+                    <ul>
+                        <li id="ALL" onclick="ajax_message();"><a href="javascript:" class="red">全部消息</a></li>
+                        <li id="WAITPAY" onclick="ajax_message(0);"><a href="javascript:" >系统消息<em></em></a></li>
+                        <li id="WAITSEND" onclick="ajax_message(1);"><a href="javascript:" >活动通知<em></em></a></li>
+                        <li id="delete"><a href="javascript:;" class="co_blue" onclick="del_all_message(this)" data-msg_type="0">清空消息</a></li>
+                    </ul>
+                </div>
+                <div class="ui_tab">
+                    <div style="border-top: 0;" class="ui_tab_content">
+                        <div class="wddd-js ov-in">
+                            <div class="tp_notice p">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+			</div>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<include file="public/user_footer" />
+	<script type="text/javascript">
+	    $(function () {
+	        ajax_message();
+	        $('.wddd-li ul li a').click(function () {
+	            $(this).addClass('red').parent().siblings('li').find('a').removeClass('red');
+	        });
+	    });
+	    /**
+	     * @author dyr
+	     * 消息ajax请求
+	     * @param type
+	     */
+	    function ajax_message(type) {
+	        $('#delete').find('a').attr('data-msg_type',type)
+	        $.ajax({
+	            type: "POST",
+	            url: "{:U('Home/User/ajax_message_notice')}",
+	            data: {type: type},
+				// dataType: 'html',
+	            success: function (data) {
+	                if (data) {
+	                    $(".tp_notice").html('');
+	                    $(".tp_notice").append(data);
+	                } else {
+	                    $(".tp_notice").html('');
+	                }
+	            }
+	        });
+	    }
+
+
+	    /**
+	     * 清除这类型下全部消息
+	     * @param type
+	     */
+	    function del_all_message(obj) {
+	        layer.confirm('消息删除后将无法找回！', {
+	            btn: ['是','否']
+	        }, function() {
+	            var msg_type = $(obj).data('msg_type');
+	            $.ajax({
+	                type: "POST",
+	                url: "{:U('Home/User/set_message_notice')}",
+	                data: {type:msg_type,status:'2'},
+	                dataType:'json',
+	                success: function (data) {
+	                    if (data.status==1) {
+	                        layer.alert(data.msg , {icon:1, time:2000});
+	                        location.reload()
+	                    } else {
+	                        layer.alert(data.msg , {icon:2, time:2000});
+	                    }
+	                },
+	                error:function(){
+	                    layer.alert('网络错误，请稍后再试', {icon:2, time:2000});
+	                }
+	            });
+	        }, function(tmp){
+	            layer.close(tmp);
+	        })
+	    }
+
+	    /**
+	     * 清除单条消息
+	     * @param type
+	     */
+	    function del_message(type,msg_id,t) {
+	        layer.confirm('消息删除后将无法找回！', {
+	            btn: ['是','否']
+	        }, function() {
+	            $.ajax({
+	                type: "POST",
+	                url: "{:U('Home/User/set_message_notice')}",
+	                data: {type: type, msg_id: msg_id, status: t},
+	                dataType: 'json',
+	                success: function (data) {
+	                    if (data.status == 1) {
+	                        layer.alert(data.msg, {icon: 1, time: 2000});
+	                        if(t == 2){
+		                        $('#del_'+msg_id).remove();
+		                    } else {
+		                        $('#del_'+msg_id).find('.du').text('已读');
+		                    }
+	                    } else {
+	                        layer.alert(data.msg, {icon: 2, time: 2000});
+	                    }
+	                },
+	                error: function () {
+	                    layer.alert('网络错误，请稍后再试', {icon: 2, time: 2000});
+	                }
+	            });
+	        }, function(tmp){
+	            layer.close(tmp);
+	        })
+
+	    }
+	</script>
+</body>
+</html>

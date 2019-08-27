@@ -1,0 +1,126 @@
+	<footer class="footer">
+		<div class="four">
+			<ul>
+				<li>
+					<div class="l"><img src="__STATIC__/images/bot-ico-1.png"></div>
+					<div class="r">
+						<div class="t">品类齐全，轻松购物</div>
+						<!--<div class="b">正品行货放心选购</div>-->
+					</div>
+				</li>
+				<li>
+					<div class="l"><img src="__STATIC__/images/bot-ico-2.png"></div>
+					<div class="r">
+						<div class="t">专业配送，按时按需</div>
+						<!--<div class="b">7天无理由退货</div>-->
+					</div>
+				</li>
+				<li>
+					<div class="l"><img src="__STATIC__/images/bot-ico-3.png"></div>
+					<div class="r">
+						<div class="t">品质护航，轻松购物</div>
+						<!--<div class="b">收货时间由你做主</div>-->
+					</div>
+				</li>
+				<li>
+					<div class="l"><img src="__STATIC__/images/bot-ico-4.png"></div>
+					<div class="r">
+						<div class="t">惠及万家，畅选无忧</div>
+						<!--<div class="b">您的购物帮助指南</div>-->
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="bot-dh">
+			<div class="main">
+				<tpshop sql="select * from `__PREFIX__article_cat` where cat_id < 5" key="k" item='v'>
+					<div class="k">
+						<div class="tu"><img src="__STATIC__/images/bot-ico-{$k+5}.jpg"></div>
+						<div class="wz">
+							<ul>
+								<div class="bt">{$v[cat_name]}</div>
+								<tpshop sql="select * from `__PREFIX__article` where cat_id = $v[cat_id]  and is_open=1 limit 4" key="k2" item='v2'>
+								<li><a href="{:U('Home/Article/detail',array('article_id'=>$v2[article_id]))}">{$v2[title]}</a></li>
+								</tpshop>
+							</ul>
+						</div>
+					</div>
+				</tpshop>
+			</div>
+		</div>
+		<div class="bottom">
+			<div class="dh">
+				<tpshop sql="select * from `__PREFIX__article` where cat_id = 5 and is_open=1" key="k" item='v'>
+				<a href="{:U('Home/Article/detail',array('article_id'=>$v[article_id]))}" class="link">{$v[title]}</a>
+				<span>丨</span>
+				</tpshop>
+			</div>
+			<div class="bq">Copyright © 2006-2018 {$tpshop_config['shop_info_store_name']|default='米豆薯'}版权所有.All Rights Reserved 未经许可不得复制、转载或摘抄违者必究    ICP备案号：{$tpshop_config['shop_info_record_no']}</div>
+			<div class="phone">全国 Tel：{$tpshop_config['shop_info_phone']}</div>
+			<div class="b-link">
+				<a href="" class=""><img src="__STATIC__/images/b-01.jpg"></a>
+				<a href="" class=""><img src="__STATIC__/images/b-02.jpg"></a>
+				<a href="" class=""><img src="__STATIC__/images/b-03.jpg"></a>
+				<a href="" class=""><img src="__STATIC__/images/b-04.jpg"></a>
+				<a href="" class=""><img src="__STATIC__/images/b-05.jpg"></a>
+			</div>
+		</div>
+	</footer>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?dec42866d74c439cd6b8f9b0ffa1ccda";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<button id="fhdb" class="go_top"><img src="__STATIC__/images/go_top.png"></button>
+    <script>
+        // $('#fhdb').click(function(){$('html,body').animate({scrollTop: '0px'}, 300);});
+
+		$(function(){
+		        //当滚动条的位置处于距顶部100像素以下时，跳转链接出现，否则消失
+		        $(function () {
+		            $(window).scroll(function(){
+		                if ($(window).scrollTop()>100){
+		                    $("#fhdb").fadeIn(500);
+		                }
+		                else
+		                {
+		                    $("#fhdb").fadeOut(500);
+		                }
+		            });
+
+		            //当点击跳转链接后，回到页面顶部位置
+		            $("#fhdb").click(function(){
+		                //$('body,html').animate({scrollTop:0},1000);
+		        if ($('html').scrollTop()) {
+		                $('html').animate({ scrollTop: 0 }, 300);
+		                return false;
+		            }
+		            $('body').animate({ scrollTop: 0 }, 300);
+		                 return false;            
+		           });       
+		     });    
+		});
+	</script>
+
+<style type="text/css">
+	.go_top{
+		width:40px;
+		position:fixed;
+		right:20px;
+		bottom:100px;
+		border:none;
+		outline: none;
+		background: none;
+		margin:0;
+		padding: 0;
+	}
+	.go_top img{
+		width:100%;
+	}
+</style>

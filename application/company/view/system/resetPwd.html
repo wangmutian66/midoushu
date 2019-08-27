@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>线下管理平台</title>
+		<link href="/template/pc/chengxin/static/css/style.css?v=X.X.X.8" rel="stylesheet">
+		<link href="/template/pc/chengxin/static/css/member.css?v=X.X.X.8" rel="stylesheet">
+		<link href="__PUBLIC__/company/css/hou.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="__PUBLIC__/static/js/jquery.js"></script>
+		<script type="text/javascript" src="__PUBLIC__/static/js/layer/layer.js"></script><!-- 弹窗js 参考文档 http://layer.layui.com/-->
+		<script src="__PUBLIC__/js/baidu.js"></script>
+
+	</head>
+<body class="h-box">
+	<div class="h-dl">
+		<div class="logo">
+			<img src="__PUBLIC__/company/img/h-logo0.png">
+			<p>【线下管理平台】</p>
+		</div>
+	</div>
+	<div class="y-content">
+		<!--右侧内容-->
+		<div class="y-right y-borm" style="margin: 35px auto 60px auto;background:#fff;">
+			<div class="y-title0">
+				修改密码
+			</div>
+			<div class="y-bz y-sbg2 clearfix">
+				<p>验证身份</p>
+				<p class="on">设置密码</p>
+				<p>完成</p>
+			</div>
+			<div class="y-srmm clearfix">
+				<form action="" method="post" id="pwdform">
+					<div class="mm">
+						<p>设置密码：</p>
+						<input type="password" class="pass" name="password" id="password" />
+					</div>
+					<div class="mm">
+						<p>确认密码：</p>
+						<input type="password" class="pass" name="confirm_password" id="confirm_password" />
+					</div>
+					<div class="mm">
+						<p>&nbsp;</p>
+						<input type="button" class="qrtx" onclick="checkSubmit()" value="确  认" />
+						<a href="javascript:history.go(-1);">返  回</a>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="clear"></div>
+	</div>
+<div class="yc">
+	<div class="n">
+		<ul>
+
+		</ul>
+	</div>
+</div>
+<include file="public/foot"/>
+	<script type="text/javascript">
+        //显示密码安全等级
+        function securityLevel(sValue) {
+            var modes = 0;
+            //正则表达式验证符合要求的
+            if (sValue.length < 6 ) return modes;
+            if (/\d/.test(sValue)) modes++; //数字
+            if (/[a-z]/.test(sValue)) modes++; //小写
+            if (/[A-Z]/.test(sValue)) modes++; //大写
+            if (/\W/.test(sValue)) modes++; //特殊字符
+            $('.lowzg').eq(modes-1).addClass('red').siblings('.lowzg').removeClass('red');
+        };
+
+        function checkSubmit(){
+            var password = $('#password').val();
+            var confirm_password = $('#confirm_password').val();
+            if(password == ''){
+                layer.alert('新登录密码不能为空', {icon: 2});
+                return false;
+            }
+            if(password.length<6 || password.length>18){
+                layer.alert('密码长度不符合规范', {icon: 2});
+                return false;
+            }
+            if(password != confirm_password){
+                layer.alert('两次密码不一致', {icon: 2});
+                return false;
+            }
+            $('#pwdform').submit();
+        }
+	</script>
+</body>
+</html>

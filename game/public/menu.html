@@ -1,0 +1,48 @@
+<?php session_start();?>
+<div class="nav-collapse collapse">
+		<ul class="nav">
+			<li>
+					<a href="index.php" target="_self">首页</a>
+				</li><li>
+					<a href="7.php" target="_self">关于我们</a>
+				</li><li>
+					<a href="2.php" target="_self">用户纠纷处理方式</a>
+				</li><li>
+					<a href="4.php" target="_self">被盗申诉</a>
+				</li><li>
+					<a href="5.php" target="_self">防盗防骗</a>
+				</li><li>
+					<a href="6.php" target="_self">防沉迷系统</a>
+				</li><li>
+					<a href="shenqingliucheng.php" target="_self">家长监控</a>
+				<!--</li><li>
+					<a href="game.html" target="_self">在线充值</a>
+				</li> -->               </ul>
+	</div>
+	<?php
+		$isLogin = @$_SESSION['username'];
+		if(empty($isLogin)) {
+	?>
+	<div class="nav-collapse collapse pull-right">
+							<ul class="nav" style="margin-right:0">
+				<li>
+					<a href="login.php">登录</a>
+				</li>
+				<li>
+					<a href="register.php">注册</a>
+				</li>
+			</ul>
+	</div>
+	<?php } else {?>
+		<div class="nav-collapse collapse pull-right">
+							<ul class="nav" style="margin-right:0">
+				<li>
+					<a href="javascript:void(0);"><?php echo @$_SESSION['real_name'];?></a>
+				</li>
+				<li>
+					<a href="logout.php">退出</a>
+				</li>
+			</ul>
+	</div>
+	<?php }?>
+</div>

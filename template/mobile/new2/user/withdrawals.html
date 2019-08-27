@@ -1,0 +1,407 @@
+<include file="public/header" title="申请提现" body=""/>
+<include file="public/header_nav" title="申请提现" href="javascript:history.back(-1)"/>
+<input type="hidden" id="openid" value="{$user.openid}">
+		<div class="loginsingup-input ma-to-20">
+			<form method="post" id="returnform">
+				<div class="content30">
+					<!--<div class="lsu" style="height:1.83467rem"><span>账号类型：</span>-->
+                          <!--<input type="radio" name="atype" style="width:.8rem;height:1rem;" checked value="支付宝">支付宝-->
+                          <!--<input type="radio" name="atype" style="width:.8rem;height:1rem;" value="微信">微信-->
+                          <!--<input type="radio" name="atype" style="width:.8rem;height:1rem;" value="银行卡">银行卡-->
+					<!--</div>-->
+					<div style="width: 100%; font-size: .554667rem; line-height: .75rem; color: #666;">提现手续费为提现金额的<em style="color: #000;">{$service_fee}%</em>，最低提现额度{$distribut_min}<br />当前账户金额：<em style="color: #e12c20;">{$user.user_money|num_float}</em>元，本次提现总额为：<em id="v" style="color: #000;">0</em>元</div>
+                    
+                    <div class="lsu lsu-recharge">
+                        <span>提现金额：</span>
+                        <input type="text" name="money" id="money" value="" usermoney="{$user.user_money}" placeholder="可提金额：{$user.user_money}元" onKeyUp="this.value=this.value.replace(/[^\d.]/g,'')">
+                    </div>
+                    <script type="text/javascript">
+                            $('#money').keyup(function(){
+                                var m = parseFloat($(this).val());
+                                var l = parseFloat({$service_fee});
+                                var v = m + m*l/100;
+                                $('#v').text(v);
+                            });
+                    </script>
+                    <!--  ray add 弹出层-->	
+					<style type="text/css">
+					#dialog-overlay {
+					
+					width:100%; 
+					height:100%;
+					filter:alpha(opacity=30); 
+					-moz-opacity:0.3; 
+					-khtml-opacity: 0.3; 
+					opacity: 0.3; 
+					position:absolute; 
+					background:#000; 
+					top:0; left:0; 
+					z-index:3000; 
+					display:none;
+					}
+					#dialog-box {
+					-webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+					-moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+					-moz-border-radius: 5px;
+					-webkit-border-radius: 5px;
+					background:#eee;
+					width: 60%; 
+					position:absolute; 
+					z-index:5000; 
+					display:none;
+					border: 6px solid #8D8D8D;
+					}
+					
+					#dialog-box .dialog-content {
+					text-align:left; 
+					padding:10px; 
+					margin:13px;
+					color:#666; 
+					font-family:arial;
+					}
+					a.button {
+					margin:10px auto 0 auto;
+					text-align:center;
+					background-color: #e33100;
+					display: block;
+					
+					padding: 5px 10px 6px;
+					color: #fff;
+					text-decoration: none;
+					font-weight: bold;
+					line-height: 1;
+					-moz-border-radius: 5px;
+					-webkit-border-radius: 5px;
+					-moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+					-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+					text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
+					border-bottom: 1px solid rgba(0,0,0,0.25);
+					position: relative;
+					cursor: pointer;
+					}
+					
+					a.button:hover {
+					background-color: #c33100; 
+					}
+					
+					#dialog-box .dialog-content p {
+					font-weight:700; margin:0;
+					}
+					
+					#dialog-box .dialog-content ul {
+					margin:10px 0 10px 20px; 
+					padding:0; 
+					height:50px;
+					}
+					
+					.wrapper {
+					margin-bottom: 10px;
+					}
+					/*复选框*/
+					.checkbox-box {
+					display: inline-block;
+					width: 20px;
+					height: 20px;
+					margin-right: 10px;
+					position: relative;
+					border: 2px solid #ff4401;
+					vertical-align: middle;
+					}
+					.checkbox-box input {
+					opacity: 0;
+					position: absolute;
+					top:0;
+					left:0;
+					z-index:10;
+					}
+					.checkbox-box span {
+					position: absolute;
+					top: -10px;
+					right: 3px;
+					
+					font-weight: bold;
+					font-family: Arial;
+					-webkit-transform: rotate(30deg);
+					transform: rotate(30deg);
+					color: #ff4401;
+					} 
+					.checkbox-box input[type="radio"] + span {
+					opacity:0;
+					}
+					.checkbox-box input[type="radio"]:checked + span {
+					opacity: 1;
+					}
+					
+					.select-area{
+					   position: relative;
+					  left: 31%;
+					  width: 60%; 
+					}
+					.select-area select{
+					  position: absolute;
+					  left: 0;
+					  top: 0;
+					  width: 85%;
+					}
+					select {  	
+						border: 0;	
+						display: block;	
+						position: relative;	
+						min-height: 1.146667rem;	
+						line-height: 1.146667rem;	
+						white-space: nowrap;	
+						width: 100%;	
+						overflow: hidden;	
+						padding-right: .6rem;	
+						background-color: #eee;  	
+						background: transparent;  	
+						appearance:none;	
+						-moz-appearance:none; /* Firefox */	
+						-webkit-appearance:none; /* Safari 和 Chrome */
+					
+					}
+					.layui-layer-title {
+						    padding: 0 80px 0 20px;
+						    height: 42px;
+						    line-height: 42px;
+						    border-bottom: 1px solid #eee;
+						    color: #333;
+						    text-overflow: ellipsis;
+						    white-space: nowrap;
+						}
+					.adds{
+						width: 16% !important;
+						font-size: 0.64rem !important;
+						height: 1.87733rem !important;
+						line-height: 1.87733rem !important;
+						color: #fff;
+						background-color: #e12c20 !important;
+						border-radius: .0rem !important;
+						-webkit-box-shadow: 0 0px 10px rgba(225,44,32,1) !important;
+						box-shadow: 0 0px 0px rgba(225,44,32,1) !important;
+						float: right !important;
+						margin-top: -12%;
+					}	 
+					.ass{
+					     
+					}
+					</style>
+                    <script type="text/javascript">
+					$(document).ready(function () {
+						 $('.button').click(function () {  
+						  $('#dialog-overlay, #dialog-box').hide();  
+						  return false;
+						 });
+					});
+					function popup(numbers) {
+						//alert(message);
+						$('#dialog-message').html('');
+						 var maskHeight = $(document).height();  
+						 var maskWidth = $(window).width();
+						 var dialogTop =  (maskHeight/3) - ($('#dialog-box').height());  
+						 var dialogLeft = (maskWidth/2) - ($('#dialog-box').width()/2); 
+							$('#dialog-overlay').css({height:maskHeight, width:maskWidth}).show();
+							$('#dialog-box').css({top:dialogTop, left:dialogLeft}).show();
+					   $.ajax({
+					        type: 'post',
+					        dataType: 'html',
+					        data: {b:numbers},
+					        url: "{:U('Mobile/User/withdrawalsajax')}",
+					        success: function (data) {
+					        	//alert(data);
+					            $('#dialog-message').append(data);
+					        } 
+					    });
+					}
+					function numbers(a,b){
+						//alert(a+b);
+						$('#bank_card').val(a);  
+						$('#realname').val(b);  
+					}
+					$(function(){
+						$("#bank_name").change(function(){
+								var b = $('#bank_name option:selected').val();  
+								popup(b);
+						});
+					})
+					function adds(){
+						$('.selects').empty();  
+						$('.selectss').show();  
+					}
+				 </script>
+				<div id="dialog-overlay"></div>
+				<div id="dialog-box">
+				 <div class="dialog-content">
+				  <div id="dialog-message"> 
+				  </div>
+				     <div><a href="#" class="button">确定</a></div> 
+				 </div>
+				</div>
+                    <script>
+						$(".select-area .select-value").each(function(){
+							if( $(this).next("select").find("option:selected").length != 0 ){
+							$(this).text( $(this).next("select").find("option:selected").text() );
+						}
+						});
+						$(".select-area select").change(function(){
+							var value = $(this).find("option:selected").text();
+							$(this).parent(".select-area").find(".select-value").text(value);
+						});
+                    </script>
+                    <!--  ray end 弹出层-->
+                    <div class="lsu lsu-recharge">
+                        <span>银行名称：</span>
+                        <!--<input type="text" name="bank_name" id="bank_name" value="" placeholder="如：工商银行/支付宝">-->
+                        <!--  ray add -->	
+						<?php
+ if(empty($withdrawals)){
+ 	?>
+ 	<input type="text" class="tqw fle" name="bank_name" id="bank_name" value="{$user.bank_name}" placeholder="如：支付宝，农业银行，工商银行等...">
+ 	<?php
+ }else{
+ 	?>
+ 	  <div class="selects">
+	 	<div class="select-area">
+		    <span class="select-value"></span>
+		    <select  name="bank_name" id="bank_name">
+		       <option value="null">如：工商银行/支付宝</option>
+		      	<foreach name="withdrawals" item="vo" key="k">
+					 <option value = "{$k}">{$k}</option>
+				</foreach>
+		     </select>
+		     
+		   
+    	</div> 
+	 	  <div class="lsu-submit ass">
+                  <input type="button" onclick="adds()" class="adds" value="添加">
+			</div> 
+	</div>
+	<div class="selectss" style="display:none"><input type="text" name="bank_name" id="bank_name" value="" placeholder="如：工商银行/支付宝"></div>
+ 	<?php
+   }
+ ?>
+						
+						
+						<!--  ray end -->
+                    </div>
+					<div class="lsu lsu-recharge">
+						<span>收款账号：</span>
+						<input type="text" name="bank_card" id="bank_card" maxlength="25" placeholder="收款账号">
+                        <!-- onKeyUp="this.value=this.value.replace(/[^\d]/g,'')"-->
+					</div>
+					<div class="lsu lsu-recharge">
+						<span>开 户 名：</span>
+						<input type="text" name="realname" id="realname" value=""  placeholder="持卡人姓名">
+					</div>
+                    <div class="lsu lsu-recharge">
+                        <span>支付密码：</span>
+                        <input type="password" name="paypwd" id="paypwd" placeholder="支付密码">
+                    </div>
+                    <div class="lsu lsu-v-code">
+                        <span>验 证 码：</span>
+                        <input type="number" name="verify_code" id="verify_code" value="" placeholder="请输入验证码">
+                        <img  id="verify_code_img" src="{:U('User/verify',array('type'=>'withdrawals'))}" onClick="verify()" style=""/>
+                    </div>
+					<div class="lsu-submit">
+                        <input type="hidden" name="__token__" value="{$Request.token}" />
+						<input type="button" onclick="checkSubmit()" value="提交申请">
+					</div>
+				</div>
+			</form>
+		</div>
+<script type="text/javascript" charset="utf-8">
+    // 验证码切换
+    function verify(){
+        $('#verify_code_img').attr('src','/index.php?m=Mobile&c=User&a=verify&type=withdrawals&r='+Math.random());
+    }
+
+    /**
+     * 提交表单
+     * */
+    function checkSubmit(){
+    	var res = {$withdstr};
+    		if ( res != 0) {
+    			var bank_name=$('#bank_name option:selected').val();
+    			if (bank_name=='null') {
+    				showErrorMsg("请选择银行名称！")
+            		return false;
+    			};
+    		};
+        var bank_name = $.trim($('#bank_name').val());
+        var bank_card = $.trim($('#bank_card').val());
+        var realname = $.trim($('#realname').val());
+        var money = parseFloat($.trim($('#money').val()));
+        var usermoney = parseFloat({$user_money});  //用户余额
+        var verify_code = $.trim($('#verify_code').val());
+        var paypwd= $.trim($('#paypwd').val());
+        //验证码
+        if(verify_code == '' ){
+            showErrorMsg('验证码不能空')
+            return false;
+        }
+        if(bank_name == '' || bank_card == '' || realname=='' || money === ''){
+            showErrorMsg("所有信息为必填")
+            return false;
+        }
+        if(money > usermoney){
+            showErrorMsg("提现金额大于您的账户余额")
+            return false;
+        }
+        if(paypwd == ''){
+            showErrorMsg("请输入支付密码")
+            return false;
+        }
+        $.ajax({
+            type: "post",
+            url :"{:U('Mobile/User/withdrawals')}",
+            dataType:'json',
+            data:$('#returnform').serialize(),
+            success: function(data)
+            {
+                showErrorMsg(data.msg);
+                if(data.status == 1){
+				//	setTimeout("window.location.href="+data.url+";",2000);
+				setTimeout("window.location.href='/mobile/User/withdrawals_list/type/2.html';",2000);
+                } else {
+//                    window.location.reload();
+                    verify();
+                }
+            }
+        });
+    }
+
+    $(function(){
+    	$('input[name="atype"]').click(function(){
+    		var bankstr = $(this).val();
+    		if(bankstr =='微信'){
+    			if($('#openid').val() == ''){
+    				alert('请在用户中心账号绑定里先扫码绑定微信账号');
+    				return false;
+    			}
+    		}
+    		if(bankstr != '银行卡'){
+    			$('#bank_name').val(bankstr);
+    			$('#bank_name').attr('readonly','readonly');
+    			if(bankstr == '微信'){
+    				$('#bank_card').val($('#openid').val());
+    				$('#bank_card').attr('readonly','readonly');
+    			}else{
+    				$('#bank_card').val('');
+    				$('#bank_card').removeAttr('readonly');
+    			}
+    		}else{
+    			$('#bank_name').val('');
+    			$('#bank_name').removeAttr('readonly');
+    		}
+    	})
+    });
+    /**
+     * 提示弹窗
+     * @param msg
+     */
+    function showErrorMsg(msg){
+        layer.open({content:msg,time:3});
+    }
+</script>
+	</body>
+</html>

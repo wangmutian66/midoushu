@@ -1,0 +1,66 @@
+<include file="public/header" title="会员扫码选择" body=""/>
+<include file="public/header_nav" title="会员扫码选择" href="javascript:history.back(-1)"/>
+<link rel="stylesheet" href="/template/mobile/new2/static/css/tian.css?v={$vnum}">
+<if condition="$actions eq 'dopaid'">
+<div class="e-ztx clearfix">
+	<div class="z1">
+		收款人
+	</div>
+	<div class="z2">
+		{$staff_info.company_name}<span>{$staff_info.real_name}</span>
+	</div>
+	<div class="tx">
+		<img src="{$staff_info.head_pic|default='__STATIC__/images/headPic.jpg'}">
+	</div>
+</div>
+</if>
+<form action="" method="">
+<div class="e-zhi">
+	<p>本次消费金额</p>
+	<div class="shu clearfix">
+		<span>¥</span>
+		<input type="text" class="text fle" id="money" name="money" placeholder="请输入金额">
+	</div>
+	<p>实体店名称:<span>123132</span></p>
+</div>
+<input type="submit" class="e-tij" value="确认" onClick="return postsubmit()" />
+</form>
+<script>
+	function postsubmit(){
+		if($("#money").val() == ""){
+			showErrorMsg('请输入代付金额!');
+			return false;
+		}
+		$.ajax({
+		   type: "POST",
+		   url: "{:U('/Mobile/User/'.$actions,['staff_id'=>$staff_info.id])}",
+		   data: "money="+$("#money").val(),
+		   dataType:"json",
+		   success: function(r){
+			 	if(r.status == 1){
+					<if condition="$actions eq 'dopaid'">
+					showErrorMsg('请求代付成功,快点让店员付款吧!');
+					setTimeout("location.href = '{:U("/Mobile/User")}'",2000);
+					<elseif condition="$actions eq 'dopays'"/>
+					showErrorMsg('下单成功，跳转至确认页面!');
+					setTimeout("location.href = '/Mobile/User/mypays/id/"+r.id+"'",2000);
+					</if>
+
+				//	location.href = '{:U("/Mobile/User/")}';
+				}else{
+					showErrorMsg(r.info);
+				}
+		   },
+		   error:function (){
+			   showErrorMsg('系统忙，请稍后再试');
+		    }
+		});
+		return false;
+	}
+</script>
+
+
+
+
+</body>
+</html>

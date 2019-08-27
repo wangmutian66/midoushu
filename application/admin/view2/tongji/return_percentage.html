@@ -1,0 +1,387 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<script type='text/javascript'>
+    function loading(percent){
+        //$('.progress span').removeAttrs("style");
+        $('.progress > span').animate({"width":percent,"overflow":"inherit"},1000,function(){
+            $(this).children().html(percent);
+            if(percent=='100%'){
+                //$(this).children().html('Loading Complete, Redirect to Home Page...&nbsp;&nbsp;&nbsp;&nbsp;');
+                setTimeout(function(){
+                    $(".jindutiao").hide();
+                    $('.container').fadeOut();
+                    location.href="{:url('/admin/tongji/return_percetage_downExcel')}";
+                },1000);
+            }
+        })
+    }
+
+
+
+</script>
+<style>
+	.flexigrid .bDiv{
+		overflow-x: auto;
+		overflow-y: hidden;
+	}
+</style>
+<link rel="stylesheet" href="__ROOT__/public/progressbar/styles/progressbar.css">
+<div class="jindutiao">
+	<section class="container">
+		<div class="progress"> <span class="blue" style="width:0%;"><span>0%</span></span> </div>
+	</section>
+</div>
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+	<div class="fixed-bar">
+		<div class="item-title">
+			<div class="subject">
+				<h3> <if condition="$Request.param.is_red eq 1"> 红包商城 <else/> 现金商城 </if>  订单全返</h3>
+				<h5>百分比显示统计</h5>
+				
+
+			</div>
+			<ul class="tab-base nc-row">
+					<li><a href="{:U('/Admin/Tongji/return_percentage',['is_red'=>$Request.param.is_red])}" <if condition="$Request.param.rebate_status eq '' "> class="current" </if> ><span>正在进行</span></a></li>
+					<li><a  href="{:U('/Admin/Tongji/return_percentage/rebate_status/ok',['is_red'=>$Request.param.is_red])}" <if condition="$Request.param.rebate_status eq 'ok' "> class="current" </if> ><span>已完成</span></a></li>
+			</ul>
+			
+		</div>
+		
+	</div>
+	<!-- 操作说明 -->
+	<div class="explanation">
+		<div id="checkZoom" class="title"><i class="fa fa-lightbulb-o"></i>
+			<h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+			<span title="收起提示" id="explanationZoom" style="display: block;"></span>
+		</div>
+		<ul>
+			<li>可根据时间查询某个时间段的销售统计.</li>
+			<li>子公司返利，提现.</li>
+		</ul>
+	</div>
+	<script>
+		function company_change(obj){
+			var company_id = obj.val();
+			$.getJSON("{:U('/Admin/Company/ajax_get_store')}",{company_id:company_id},function (r){
+				var html = '<option value="">请选择</option>';
+				$("#level_id").html(html);
+				var s = 1;
+				if(r.status == 1){
+					$.each(r.list,function (i,k){
+						var selected = '';
+						if(k.cid == "{$Think.get.store_id}"){
+							selected = " selected"	;
+						}
+						html += "<option value='"+k.cid+"' "+selected+">"+k.cname+"</option>";
+					})
+				}
+				$("#store_id").html(html);
+			
+			})
+		
+		}
+		
+	
+		
+		
+	  </script>
+	<div class="flexigrid">
+		<div class="mDiv">
+			<div class="ftitle">
+				<h3>概况</h3>
+				<h5></h5>
+			</div>
+			<div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+			<form class="navbar-form form-inline" id="search-form" method="get" action="__URL__/return_percentage" onSubmit="return check_form();">
+				<div class="sDiv">
+					<div class="sDiv2" style="margin-right: 10px;">
+						<select name="limitpage" id="limitpage" class="select" >
+			              <option value="20"  <if condition="$Request.param.limitpage eq 20"> selected</if> >每页显示20条信息</option>
+						  <option value="50"  <if condition="$Request.param.limitpage eq 50"> selected</if>>每页显示50条信息</option>
+						  <option value="200"  <if condition="$Request.param.limitpage eq 200"> selected</if>>每页显示200条信息</option>
+						  <option value="200000"  <if condition="$Request.param.limitpage eq 200000"> selected</if>>显示20万信息</option>
+			            </select>
+					</div>
+			
+					<div class="sDiv2" style="margin-right: 10px;">
+						<input type="text" size="30" name="start_time" id="start_time" value="{$start_time}" placeholder="起始时间" class="qsbox">
+						<input type="button" class="btn" value="起始时间">
+					</div>
+					<div class="sDiv2" style="margin-right: 10px;">
+						<input type="text" size="30" name="end_time" id="end_time" value="{$end_time}" placeholder="截止时间" class="qsbox">
+						<input type="button" class="btn" value="截止时间">
+					</div>
+							
+					<div class="sDiv2">	                
+		          		<select  name="keytype" class="select">
+		            		<option value="consignee" <if condition="$Request.param.keytype eq 'consignee'"> selected</if> >收货人</option>
+		            		<option value="order_sn" <if condition="$Request.param.keytype eq 'order_sn'"> selected</if>>订单编号</option>
+		            		<option value="user_id" <if condition="$Request.param.keytype eq 'order_sn'"> selected</if>>用户ID</option>
+		          		</select>
+		         	</div>
+		         	<div class="sDiv2">	 
+		          		<input type="text" size="30" name="keywords" class="qsbox" value="{$Request.param.keywords}" placeholder="搜索相关数据...">
+		        	</div>
+					<div class="sDiv2">
+					 	<!--<input type="text" id="limit_size" size="30" class="qsbox" placeholder="请输入每页显示多少条信息">-->
+						<input type="hidden" id="is_red" name="is_red" value="{$Request.param.is_red}">
+						<input type="hidden" id="rebate_status" name="rebate_status" value="{$Request.param.rebate_status}">
+						<input class="btn" value="搜索" type="submit">
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<div class="tDiv">
+			<div class="tDiv2">
+				<div class="fbutton">
+					<a href="JavaScript:;" id="export_excel">
+						<div class="add" title="导出excel">
+							<span><i class="fa fa-plus"></i>导出excel</span>
+						</div>
+					</a>
+				</div>
+                <script>
+                	$("#export_excel").click(function (){
+						//var old_url = '__URL__/return_percentage';
+						//var new_url = '__URL__/return_percentage_export';
+						//$("#search-form").attr('action',new_url);
+						//$("#search-form").submit();
+						//$("#search-form").attr('action',old_url);
+
+
+						$(".jindutiao").show();
+                        progressbarText(1);
+					})
+
+
+					function progressbarText(p){
+
+                        if("{$ajaxdata}".indexOf("=&")>0){
+                            urlpage = "&p="+p;
+                        }else{
+                            urlpage = "/p/"+p;
+                        }
+                        $.ajax({
+                            url:"__URL__/return_percentage_fileput{$ajaxdata}"+urlpage,
+                            dataType:"json",
+                            success:function(data){
+                                loading(data+"%");
+                                if(data != 100){
+                                    progressbarText((p+1));
+								}
+
+                            }
+                        });
+					}
+
+                </script>
+				<div class="fbutton">
+
+
+				</div>
+			</div>
+			<div style="clear:both"></div>
+		</div>
+
+		<div class="hDiv">
+			<div class="hDivBox">
+				<table cellspacing="0" cellpadding="0">
+					<thead>
+						<tr>
+							<th class="sign" axis="col0">
+								<div style="width: 24px;"><i class="ico-check"></i></div>
+							</th>
+							
+							<th align="center" abbr="article_title" axis="col3" class="">
+								<div style="text-align: center; width:200px;" class="">订单编号</div>
+							</th>
+							<th align="center" abbr="article_title" axis="col3" class="">
+								<div style="text-align: center; width:50px;" class="">用户id</div>
+							</th>
+						<!--	<th align="center" abbr="article_title" axis="col3" class="">
+								<div style="text-align: center; width: 130px;" class="">收货人</div>
+							</th>
+							-->
+							<th align="center" abbr="article_title" axis="col3" class="">
+								<div style="text-align: center; width:200px;" class="">确认收货时间</div>
+							</th>
+                          	<th align="center" abbr="ac_id" axis="col4" class="">
+								<div style="text-align: center; width: 70px;" class="">是否福利</div>
+							</th>
+							<th align="center" abbr="ac_id" axis="col4" class="">
+								<div style="text-align: center; width: 70px;" class="">分红总额</div>
+							</th>
+							<if condition="$Request.param.is_red neq 1">
+							<th align="center" abbr="ac_id" axis="col4" class="">
+								<div style="text-align: center; width: 70px;" class="">已反金额</div>
+							</th>
+							</if>
+							<th align="center" abbr="article_title" axis="col3" class="">
+								<div style="text-align: center; width: 70px;" class="">推广金额</div>
+							</th>
+							<th align="center" abbr="article_title" axis="col3" class="">
+								<div style="text-align: center; width: 70px;" class="">员工金额</div>
+							</th>
+							<th align="center" abbr="article_title" axis="col3" class="">
+								<div style="text-align: center; width: 200px;" class="">实体店金额</div>
+							</th>
+							<th align="center" abbr="article_title" axis="col3" class="">
+								<div style="text-align: center; width: 200px;" class="">子公司金额</div>
+							</th>
+							<th align="center" abbr="article_title" axis="col3" class="">
+								<div style="text-align: center; width: 80px;" class="">资金池</div>
+							</th>
+							
+							<th align="center" abbr="ac_id" axis="col4" class="">
+								<div style="text-align: center; width: 100px;" class="">全返</div>
+							</th>
+							<if condition="$Request.param.is_red neq 1">
+							<th align="center" abbr="ac_id" axis="col4" class="">
+								<div style="text-align: center; width:80px;" class="">进度</div>
+							</th>
+							</if>
+							
+						<th align="center" axis="col1" class="handle">
+							<div style="text-align: center; width: 150px;">&nbsp;</div>
+						</th>
+						<th style="width:100%" axis="col7">
+							<div></div>
+						</th>
+					</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+		<div class="bDiv" style="height: auto;">
+			<div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+				<table>
+					<tbody>						
+						<foreach name="list" item="vo">
+							<tr>
+								<td class="sign">
+									<div style="width: 24px;"><i class="ico-check"></i></div>
+								</td>
+
+								<td>
+									<div style="text-align:center; width:200px;" > <a href="
+									<if condition="$Request.param.is_red eq 1">
+										{:U('/Admin/OrderRed/detail',['order_id'=>$vo.order_id])}
+									<else/>
+										{:U('/Admin/order/detail',['order_id'=>$vo.order_id])}
+									</if>
+									" target="_blank">{$vo.order_sn} <i class="fa fa-external-link " title="新窗口打开"></i></a></div>
+								</td>
+								<td>
+									<div style="text-align:center; width:50px;" > {$vo.user_id}</div>
+								</td>
+                              	<td>
+									<div style="text-align:center; width:200px;" > {$vo.confirm_time|date="Y-m-d H:i:s",###}</div>
+								</td>
+                              	<td>
+									<div style="text-align:center; width:70px;" > <if condition="$vo['is_allreturn'] eq 1"> 全返 <else /> 非全返 </if> </div>
+								</td>
+								<if condition="$Request.param.is_red neq 1">	
+								<td>
+									<div style="text-align:center; width:70px;" > {$vo.rebate_price|tk_money_format}</div>
+								</td>
+								</if>
+								<td>
+									<div style="text-align:center; width:70px;" > {$vo.already_rebate|tk_money_format} </div>
+								</td>
+								
+								<td>
+									<div style="text-align:center; width:70px;" > <a href="JavaScript:;" onClick="layer.alert('{$vo.tgy_name}')">{$vo.tj_money|tk_money_format}</a></div>
+								</td>
+								<td>
+									<div style="text-align:center; width:70px;" > <a target="_blank" href="{:U('/Admin/Tongji/get_staff_list',['order_sn'=>$vo.order_sn,'order_id'=>$vo.order_id])}">{$vo.staff_money|tk_money_format}</a></div>
+								</td>
+								<td>
+									<div style="text-align:center; width:200px;" > <a target="_blank" href="{:U('/Admin/Tongji/get_store_list',['order_sn'=>$vo.order_sn,'order_id'=>$vo.order_id])}"> {$vo.store_money|tk_money_format} : {$vo.store_name} </a></div>
+								</td>
+								<td>
+								<div style="text-align:center; width:200px;"> <a target="_blank" href="{:U('/Admin/Tongji/get_company_list',['order_sn'=>$vo.order_sn,'order_id'=>$vo.order_id])}">  {$vo.company_money|tk_money_format} : {$vo.company_name} </a> </div>
+								</td>
+								<td>
+								<div style="text-align:center; width:80px;"> {$vo.zjc_money|tk_money_format} </div>
+								</td>
+								
+								
+								<td>
+								<div style="text-align:center; width:100px;"> <a target="_blank" href="{:U('/Admin/Tongji/get_user_list',['order_sn'=>$vo.order_sn,'order_id'=>$vo.order_id])}"> {$vo.quanfan|tk_money_format} </a> </div>
+								</td>
+								<if condition="$Request.param.is_red neq 1">
+						<!--	<td>
+									<div style="text-align:center; width:180px;" > {$vo.add_time|date="Y-m-d H:i:s",###}</div>
+								</td>-->
+								
+								<td>
+									<div style="text-align:center; width:80px;" > 
+									{$vo.progress_bar}%</div>
+								</td>	
+								</if>
+								<td align="" class="" style="width:100%;">
+									<div>&nbsp;</div>
+								</td>
+							</tr>
+							<if condition="$Request.param.is_red neq 1">
+							<tr>
+								<td colspan="14">
+									<div style="max-width:{$vo.progress_bar}%;height:5px;border-radius:5px; background:#F00; padding:0px; margin-bottom:2px;"></div>
+									<div style="max-width:100%;height:2px;border-radius:5px; background:#F60; padding:0px;"></div>
+								</td>
+								<td align="" class="" style="width:100%;">
+									<div>&nbsp;</div>
+								</td>
+							</tr>
+							</if>
+						</foreach>
+					
+					</tbody>
+				</table>
+			</div>
+			<div class="row">
+    <div class="col-sm-6 text-left"></div>
+    <div class="col-sm-6 text-right">{$page}</div>
+</div>
+			<div class="iDiv" style="display: none;"></div>
+		</div>
+	 </div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		// 表格行点击选中切换
+		$('#flexigrid > table>tbody >tr').click(function(){
+			$(this).toggleClass('trSelected');
+		});
+
+		// 点击刷新数据
+		$('.fa-refresh').click(function(){
+			location.href = location.href;
+		});
+
+		$('#start_time').layDate();
+		$('#end_time').layDate();
+	});
+	
+
+	function check_form(){
+		var start_time = $.trim($('#start_time').val());
+		var end_time =  $.trim($('#end_time').val());
+		if(start_time == '' ^ end_time == ''){
+			layer.alert('请选择完整的时间间隔', {icon: 2});
+			return false;
+		}
+		return true;
+	}
+
+
+
+	
+	
+
+</script>
+</body>
+</html>

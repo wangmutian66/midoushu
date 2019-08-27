@@ -1,0 +1,443 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+
+<body style="background-color: #FFF; overflow: auto;">
+<div id="toolTipLayer" style="position: absolute; z-index: 9999; display: none; visibility: visible; left: 95px; top: 573px;"></div>
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title"><a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+            <div class="subject">
+                <h3>供货商管理 - 添加供货商</h3>
+                <h5>网站系统添加供货商</h5>
+            </div>
+        </div>
+    </div>
+    <form class="form-horizontal" method="post" id="add_form">
+        <div class="ncap-form-default">
+            <dl class="row">
+                <dt class="tit">
+                    <label for="suppliers_name"><em>*</em>供货商名称</label>
+                </dt>
+                <dd class="opt">
+                    {$supplier.suppliers_name}
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="suppliers_contacts"><em>*</em>供应商联系人</label>
+                </dt>
+                <dd class="opt">
+                    {$supplier.suppliers_contacts}
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="suppliers_phone"><em>*</em>供应商电话</label>
+                </dt>
+                <dd class="opt">
+                    {$supplier.suppliers_phone}
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="business_licence_number"><em>*</em>营业执照号</label>
+                </dt>
+                <dd class="opt">
+                    {$supplier.business_licence_number}
+                    <p class="notic">必须与营业执照一致</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>营业执照</label>
+                </dt>
+                <dd class="opt">
+                    <a id="img_a_zhizhao" target="_blank" class="nyroModal" rel="gal" href="{$supplier.zhizhao}">
+                        <img src="{$supplier.zhizhao|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                    <span class="err"></span>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>开户许可证</label>
+                </dt>
+                <dd class="opt">
+                    <a id="img_a_bank_licence_electronic" target="_blank" class="nyroModal" rel="gal" href="{$supplier.bank_licence_electronic}">
+                        <img src="{$supplier.bank_licence_electronic|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="organization_code"><em>*</em>组织机构代码</label>
+                </dt>
+                <dd class="opt">
+                    {$supplier.organization_code}
+                    <p class="notic">必须与组织机构代码证一致</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>组织机构代码证</label>
+                </dt>
+                <dd class="opt">
+                    <a id="img_a_organization_code_electronic" target="_blank" class="nyroModal" rel="gal" href="{$supplier.organization_code_electronic}">
+                        <img src="{$supplier.organization_code_electronic|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>正规授权书</label>
+                </dt>
+                <dd class="opt">
+                    <a id="img_a_formal_authorization" target="_blank" class="nyroModal" rel="gal" href="{$supplier.formal_authorization}">
+                        <img src="{$supplier.formal_authorization|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                    <p class="notic">非微商(若是代理的品牌必须有授权书)。</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>一般纳税人证明</label>
+                </dt>
+                <dd class="opt">
+                    <a id="img_a_general_taxpayer" target="_blank" class="nyroModal" rel="gal" href="{$supplier.general_taxpayer}">
+                        <img src="{$supplier.general_taxpayer|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="enterprise_credit_information_url">全国企业信用信息公示系统：链接网址</label>
+                </dt>
+                <dd class="opt">
+                    {$supplier.enterprise_credit_information_url}
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>全国企业信用信息公示系统：查询公司信息截图</label>
+                </dt>
+                <dd class="opt">
+                    <a id="img_a_enterprise_credit_information_img" target="_blank" class="nyroModal" rel="gal" href="{$supplier.enterprise_credit_information_img}">
+                        <img src="{$supplier.enterprise_credit_information_img|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="id_card"><em>*</em>法人身份证号码</label>
+                </dt>
+                <dd class="opt">
+                    {$supplier.id_card}
+                    <p class="notic">必须与法人身份证一致</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>法人身份证明</label>
+                </dt>
+                <dd class="opt">
+                    <a id="img_a_fr_idcard_front" target="_blank" class="nyroModal" rel="gal" href="{$supplier.fr_idcard_front}">
+                        <img src="{$supplier.fr_idcard_front|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                    <p class="notic">身份证正反面复印件加盖公章。</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="operator_id_card_no">运营者身份证号码</label>
+                </dt>
+                <dd class="opt">
+                    {$supplier.operator_id_card_no}
+                    <p class="notic">必须与运营者身份证一致</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>运营者身份证</label>
+                </dt>
+                <dd class="opt">
+                    <a id="img_a_operator_idcard_front" target="_blank" class="nyroModal" rel="gal" href="{$supplier.operator_idcard_front}">
+                        <img src="{$supplier.operator_idcard_front|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                    <p class="notic">身份证正反面联系方式复印版加盖公章。</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>相关的产品认证</label>
+                </dt>
+                <dd class="opt">
+                    <a id="img_a_related_product_certification" target="_blank" class="nyroModal" rel="gal" href="{$supplier.related_product_certification}">
+                        <img src="{$supplier.related_product_certification|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>报关证明</label>
+                </dt>
+                <dd class="opt">
+                    <a id="img_a_customs_declaration" target="_blank" class="nyroModal" rel="gal" href="{$supplier.customs_declaration}">
+                        <img src="{$supplier.customs_declaration|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                    <p class="notic">若是进出口的产品，必须有报关证明和检验检疫证明.</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>海关检疫证明</label>
+                </dt>
+                <dd class="opt">
+                    <a id="img_a_customs_quarantine_certificate" target="_blank" class="nyroModal" rel="gal" href="{$supplier.customs_quarantine_certificate}">
+                        <img src="{$supplier.customs_quarantine_certificate|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                    <p class="notic">若是进出口的产品，必须有报关证明和检验检疫证明</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>企业证书</label>
+                </dt>
+                <dd class="opt">
+                    <a id="img_a_enterprise_certificate" target="_blank" class="nyroModal" rel="gal" href="{$supplier.enterprise_certificate}">
+                        <img src="{$supplier.enterprise_certificate|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>国家级认证证书</label>
+                </dt>
+                <dd class="opt">
+                    <a id="img_a_national_certification_certificate" target="_blank" class="nyroModal" rel="gal" href="{$supplier.national_certification_certificate}">
+                        <img src="{$supplier.national_certification_certificate|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="suppliers_type">商户类型</label>
+                </dt>
+                <dd class="opt">
+                    <if condition="$supplier['suppliers_type'] eq 1">一般企业<else />食品企业</if>
+                </dd>
+            </dl>
+
+            <dl class="row suppliers_type0" style="display: none;">
+                <dt class="tit">
+                    <label for="tax_registration_certificate">税务登记证号</label>
+                </dt>
+                <dd class="opt">
+                    {$supplier.tax_registration_certificate}
+                    <span class="err"></span>
+                </dd>
+            </dl>
+
+            <dl class="row suppliers_type0" style="display: none;">
+                <dt class="tit">
+                    <label>税务登记证号电子版</label>
+                </dt>
+                <dd class="opt">
+                    <a id="img_a_tax_registration_certificate_electronic" target="_blank" class="nyroModal" rel="gal" href="{$supplier.tax_registration_certificate_electronic}">
+                        <img src="{$supplier.tax_registration_certificate_electronic|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                </dd>
+            </dl>
+
+            <dl class="row suppliers_type0" style="display: none;">
+                <dt class="tit">
+                    <label>工业产品生产许可证</label>
+                </dt>
+                <dd class="opt">
+                    <a id="img_a_manufacturing_industrial_products_license" target="_blank" class="nyroModal" rel="gal" href="{$supplier.manufacturing_industrial_products_license}">
+                        <img src="{$supplier.manufacturing_industrial_products_license|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                </dd>
+            </dl>
+
+            <dl class="row suppliers_type0" style="display: none;">
+                <dt class="tit">
+                    <label>卫生许可证</label>
+                </dt>
+                <dd class="opt">
+                    <a id="img_a_hygienic_license" target="_blank" class="nyroModal" rel="gal" href="{$supplier.hygienic_license}">
+                        <img src="{$supplier.hygienic_license|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                </dd>
+            </dl>
+
+            <dl class="row suppliers_type0" style="display: none;">
+                <dt class="tit">
+                    <label>消毒许可证</label>
+                </dt>
+                <dd class="opt">
+                    <a id="img_a_disinfection_license" target="_blank" class="nyroModal" rel="gal" href="{$supplier.disinfection_license}">
+                        <img src="{$supplier.disinfection_license|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                </dd>
+            </dl>
+
+            <dl class="row suppliers_type0" style="display: none;">
+                <dt class="tit">
+                    <label>化妆品行政（卫生）许可批件或备案凭证</label>
+                </dt>
+                <dd class="opt">
+                    <a id="img_a_cosmetics_instructions_permit" target="_blank" class="nyroModal" rel="gal" href="{$supplier.cosmetics_instructions_permit}">
+                        <img src="{$supplier.cosmetics_instructions_permit|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                </dd>
+            </dl>
+
+            <dl class="row suppliers_type0" style="display: none;">
+                <dt class="tit">
+                    <label>国产非特殊化妆品备案登记凭证</label>
+                </dt>
+                <dd class="opt">
+                    <a id="img_a_non_special_cosmetics_registration_vouchers" target="_blank" class="nyroModal" rel="gal" href="{$supplier.non_special_cosmetics_registration_vouchers}">
+                        <img src="{$supplier.non_special_cosmetics_registration_vouchers|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                </dd>
+            </dl>
+
+            <!--食品类-->
+            <dl class="row suppliers_type1" style="display: none;">
+                <dt class="tit">
+                    <label>食品生产许可证</label>
+                </dt>
+                <dd class="opt">
+                    <a id="img_a_food_production_license" target="_blank" class="nyroModal" rel="gal" href="{$supplier.food_production_license}">
+                        <img src="{$supplier.food_production_license|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                </dd>
+            </dl>
+
+            <dl class="row suppliers_type1" style="display: none;">
+                <dt class="tit">
+                    <label>食品流通许可证</label>
+                </dt>
+                <dd class="opt">
+                    <a id="img_a_food_circulation_permit" target="_blank" class="nyroModal" rel="gal" href="{$supplier.food_circulation_permit}">
+                        <img src="{$supplier.food_circulation_permit|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                </dd>
+            </dl>
+
+            <dl class="row suppliers_type1" style="display: none;">
+                <dt class="tit">
+                    <label>商标注册书</label>
+                </dt>
+                <dd class="opt">
+                    <a id="img_a_trademark_registration" target="_blank" class="nyroModal" rel="gal" href="{$supplier.trademark_registration}">
+                        <img src="{$supplier.trademark_registration|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                    <p class="notic">若是品牌，最好是R标。</p>
+                </dd>
+            </dl>
+
+            <dl class="row suppliers_type1" style="display: none;">
+                <dt class="tit">
+                    <label>保健食品卫生许可证</label>
+                </dt>
+                <dd class="opt">
+                    <a id="img_a_health_food_hygiene_license" target="_blank" class="nyroModal" rel="gal" href="{$supplier.health_food_hygiene_license}">
+                        <img src="{$supplier.health_food_hygiene_license|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                </dd>
+            </dl>
+
+            <dl class="row suppliers_type1" style="display: none;">
+                <dt class="tit">
+                    <label>食品经营许可证</label>
+                </dt>
+                <dd class="opt">
+                    <a id="img_a_food_business_license" target="_blank" class="nyroModal" rel="gal" href="{$supplier.food_business_license}">
+                        <img src="{$supplier.food_business_license|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                </dd>
+            </dl>
+
+            <dl class="row suppliers_type1" style="display: none;">
+                <dt class="tit">
+                    <label>酒类流通备案登记表或酒类批发许可证</label>
+                </dt>
+                <dd class="opt">
+                    <a id="img_a_liquor_circulation_registration" target="_blank" class="nyroModal" rel="gal" href="{$supplier.liquor_circulation_registration}">
+                        <img src="{$supplier.liquor_circulation_registration|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                </dd>
+            </dl>
+
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>其他补充资质</label>
+                </dt>
+                <dd class="opt">
+                    <foreach name="$supplier['buchongImages']" item="vo" key="k" >
+                    <a id="img_a_buchong_{k}" target="_blank" class="nyroModal" rel="gal" href="{$vo}">
+                        <img src="{$vo|default='__ROOT__/public/static/images/errors.jpg'}" width="70%" />
+                    </a>
+                    </foreach>
+                </dd>
+            </dl>
+
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="is_check">审核</label>
+                </dt>
+                <dd class="opt">
+                    <if condition="$supplier['is_check'] eq 0">未审核
+                    <elseif condition="$supplier['is_check'] eq 1">审核中
+                    <elseif condition="$supplier['is_check'] eq 2">审核未通过
+                    <elseif condition="$supplier['is_check'] eq 3">审核通过</if>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>冻结供货商</label>
+                </dt>
+                <dd class="opt">
+                    <if condition="$supplier[status] eq 1">是</if>
+                    <if condition="$supplier[status] eq 0">否</if>
+                    <p class="notic"></p>
+                </dd>
+            </dl>  
+            <div class="bot"><a href="JavaScript:void(0);" onClick="$('#add_form').submit();" class="ncap-btn-big ncap-btn-green" id="submitBtn">确认提交</a><a href="{:U('Admin/Suppliers/imagedown',array('id'=>$supplier['suppliers_id']))}"  class="imagedown" id="submitBtn">图片打包</a></div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    $(function(){
+        initIssuppliers_type();
+        $(document).on("click",'.suppliers_type',function(){
+            initIssuppliers_type();
+        })
+    })
+</script>
+
+
+
+</body>
+</html>

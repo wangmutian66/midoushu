@@ -1,0 +1,121 @@
+﻿<include file="public/layout" />
+<body>
+    <div class="mdk-drawer-layout js-mdk-drawer-layout" data-fullbleed data-push data-responsive-width="992px" data-has-scrolling-region>
+
+        <div class="mdk-drawer-layout__content">
+            <!-- header-layout -->
+            <div class="mdk-header-layout js-mdk-header-layout  mdk-header--fixed  mdk-header-layout__content--scrollable">
+                
+
+                <!-- content -->
+                <div class="mdk-header-layout__content ls-top-navbar mdk-header-layout__content--scrollable h-100">
+                    <!-- main content -->
+
+                    <div class="container-fluid">                      
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row align-items-center">
+                                    <div class="col-md-4">
+                                        <div class="card-title"><if condition="$Request.param.t eq 1 || $Request.param.t eq ''"> 成员流水 </if><if condition="$Request.param.t eq 2"> 员工流水 </if><span>等级列表/{$pager->totalRows}条记录</span></div>
+                                    </div>
+                                    <div class="col-md-8 d-flex justify-content-md-end">
+                                        <div class="dropdown mr-2">
+                                            <button class="btn btn-white dropdown-toggle" type="button" id="sortOrdersDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">请选择</button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="{:U('/Companymobile/Rebate/Index',['t'=>2])}">员工流水</a>
+                                                <a class="dropdown-item" href="{:U('/Companymobile/Rebate/Index')}">成员流水</a>
+                                                
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    <form class="form-inline" style="margin-top:1rem;width:100%" action="__URL__" method="get">
+                                        <div class="col-md-8 d-flex justify-content-md-end">
+                                            <select class="form-control ys" name="store_id" id="exampleFormControlSelect1">
+                                                <option value="">请选择</option>
+                                                <volist name="store_list" id='vo'>
+                            <option value="{$vo.cid}" <if condition="$vo.cid eq $Request.param.store_id"> selected </if>>{$vo.cname}</option>
+                        </volist>
+                                            </select>
+
+                                            <div class="form-group mx-sm-3" style="margin-bottom:0;width:60%;margin-right:5%;">
+                                                <input type="hidden" name="t" id="t" value="{$Request.param.t}"/>
+                                                <input type="text" name="key_words" class="form-control" placeholder="请输入真实姓名" style="float:right;width:100%;" >
+                                            </div>
+                                            <button type="submit" class="btn btn-primary" style="float:right;">搜索</button>
+                                         </div>
+                                    </form>
+
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="liebiao">
+                                <ul>
+                                     <foreach name="list" item="vo" key="k" >
+                                    <li>
+                                        <div class="hang">
+                                            <div class="l">ID</div>
+                                            <div class="r2">{$vo.id}</div>
+                                            <div class="l">成员姓名</div>
+                                            <div class="r2">{$vo.real_name}</div>
+                                            
+                                        </div>
+                                        <div class="panel">
+                                        <div class="hang">
+                                            <div class="l">流水金额</div>
+                                            <div class="r1">{$vo.money|tk_money_format}</div>
+                                        </div>
+
+
+                                        <div class="hang">
+                                            <div class="l">返利时间</div>
+                                            <div class="r1">{$vo.create_time|date="Y-m-d H:i:s",###}</div>
+                                        </div>
+
+                                        <div class="hang">
+                                            <div class="l">说明</div>
+                                            <div class="r1" style="line-height:1rem;">{$vo.info}</div>
+                                        </div>
+                                        </div>
+                                        <div class="flip">>>更多信息（查看/收起）</div>
+                                    </li>
+                                   </foreach>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12 col-md-7">
+                                <div class="dataTables_paginate paging_simple_numbers" id="data-table_paginate">
+                                    <ul class="pagination">
+                                        {$pager->show()}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- // END drawer-layout__content -->
+
+    </div>
+    <!-- // END drawer-layout -->
+
+
+   
+
+    <style type="text/css">
+        .panel{display: none;}
+        .flip{line-height:2rem;text-align:center;color:#3783b5;}
+    </style>
+    <script> 
+        $(document).ready(function(){
+            $(".flip").click(function(){
+                $(this).prev($(".panel")).slideToggle("slow");
+            });
+        });
+    </script>
+
+</body>
+
+</html>

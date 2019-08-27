@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="renderer" content="webkit">
+<title>订单支付-{$tpshop_config['shop_info_store_title']}</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/second.css?v={$vnum}" rel="stylesheet">
+<script src="__STATIC__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/js/global.js?v={$vnum}"></script>
+<script src="__PUBLIC__/js/pc_common.js?v={$vnum}"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script><!-- 弹窗js 参考文档 http://layer.layui.com/-->
+
+</head>
+
+<body>
+	<include file="public/top" />
+	<div class="pay-info">
+		<div class="l">订单信息</div>
+		<div class="m">
+			<foreach name="order" item="v" key="k">
+			<div class="m-nr">
+				<div class="m-k">
+					<div class="m-line">订单号：<span>{$v.order_sn}</span></div>
+					<!-- <div class="m-line">店铺：<span>{$v.suppliers_id|get_suppliers_name}</span></div> -->
+					<div class="m-line">订单金额（元）：<span>{$v.order_amount}元</span></div>
+					<div class="m-line">购买时间：<span>{$v.add_time|date='Y-m-d H:i:s',###}</span></div>
+				</div>
+				<div class="r">￥{$v.order_amount}</div>
+			</div>
+			</foreach>
+		</div>
+	</div>
+
+	<div class="pay-zf">
+		<form action="{:U('Home/Payment/getCode')}" method="post" name="cart4_form" id="cart4_form" onSubmit="return post_check();">
+			<ul>
+				
+				<foreach name="paymentList" item="v" key="k">
+				<li>
+					<input type="radio"  value="pay_code={$v['code']}" class="radio vam" name="pay_radio">
+					<label for="pay-01"><span><img src="/plugins/{$v['type']}/{$v['code']}/{$v['icon']}" style="width:21px;height:20px" onClick="change_pay(this);"></span>{$v['name']}</label>
+				</li>
+				</foreach>
+				<!--第三方网银支付 start-->
+                <foreach name="bankCodeList" item="v" key="k">
+                <li>
+					<input type="radio" value="pay_code={$k}&bank_code={$v2}" class="radio vam" name="pay_radio">
+					<label for="pay-02"><span><img src="__STATIC__/images/images-out/{$bank_img[$k2]}" onClick="change_pay(this);"></span>{$v['name']}</label>
+				</li>
+                </foreach>
+				<li>
+					<input type="radio" class="radio vam" name="pay_radio" value="balance">
+					<label for="pay-03"><span><img src="__STATIC__/images/logo-2.png"></span>余额支付</label>
+				</li>
+			</ul>
+			
+			<div id="payhtml" style="display:none; height:40px; line-height:40px;padding-left:40px">支付密码：<input type="password" autocomplete="new-password" name="paypsw" id="paypsw" style="width:150px;height:30px;line-height:30px;border:1px solid #eee;border-radius:5px;padding:0 10px">  <if condition="$paypwd eq null"><a href="{:U('Home/User/paypwded',array('order_sn'=>$order['0']['order_sn']))}" style="color:#f23030;border: 1px red solid;padding: 5px;border-radius: 6px;">点我设置支付密码</a></if></div>
+			<input type="button" name="" href="javascript:void(0);" onClick="$('#cart4_form').submit();" class="tijiao" value="确认付款">
+			<if condition="$order_num eq 1">
+				<input type="hidden" name="order_id" value="{$order[0]['order_id']}"/>
+			<else />
+				<input type="hidden" name="order_sn" value="{$order.0.order_sn}"/>
+				<input type="hidden" name="order_id" value="{$order[0]['order_id']}"/>
+			</if>
+			<input type="hidden" name="order_num" value="{$order_num}"/>
+		</form>
+	</div>
+	<script>
+	    $(document).ready(function () {
+	        $("input[name='pay_radio']").first().click();
+			
+			$(":radio[name='pay_radio']").click(function(){
+				var str = $(this).val();
+				if(str == "balance")
+					$("#payhtml").show();
+				else 
+					$("#payhtml").hide();
+			});
+	    });
+		
+		function post_check(){
+			var radio = $("input[name='pay_radio']:checked").val();
+			if(radio == 'balance'){
+				var paypsw = $.trim($("#paypsw").val());
+				if(paypsw == ''){
+					layer.msg('请输入支付密码', {icon: 2,time: 2000}); 
+					return false;
+				}
+				$.ajax({  
+					url: "{:U('/Home/Cart/balance')}",  
+					type: 'POST',  
+					data:$("#cart4_form").serialize(),  
+					dataType: 'json',  
+					error: function(){layer.msg('系统繁忙，请刷新后重试', {icon: 2,time: 2000}); },
+					beforeSend:function(){
+						layer.load('2',{shade: 0.6});
+					},
+					success: function(r){
+						console.log(r);
+						if(r.status == 1){
+							layer.msg('使用余额支付成功！', {icon: 1,time: 3000},function (){
+								location.href = '{:U("/Home/Order/order_list/type/WAITSEND")}';
+							}); 
+						}else{
+							layer.msg(r.info, {icon: 2,time: 2000});
+						}
+					},
+					complete:function(){
+						layer.closeAll('loading');
+					}
+				});
+				return false;
+			}
+		}
+		
+		
+	    // 切换支付方式
+	    function change_pay(obj) {
+	        $(obj).parent().siblings('input[name="pay_radio"]').trigger('click');
+	    }
+	</script>
+	<include file="public/footer" />
+<script src="__PUBLIC__/js/baidu.js"></script>
+</body>
+</html>

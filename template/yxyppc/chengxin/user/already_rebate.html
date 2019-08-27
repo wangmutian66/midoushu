@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="renderer" content="webkit">
+<title>我的福利</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/member.css" rel="stylesheet">
+<link href="__STATIC__/css/style.css" rel="stylesheet">
+<script src="__STATIC__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+<link type="text/css" rel="stylesheet" href="/public/plugins/daterangepicker/daterangepicker-bs3.css">
+<script type="text/javascript" src="/public/plugins/daterangepicker/moment.min.js"></script>
+<script type="text/javascript" src="/public/plugins/daterangepicker/daterangepicker.js"></script>
+<script src="__PUBLIC__/js/global.js" type="text/javascript"></script>
+<script src="__PUBLIC__/static/js/layer/layer.js" type="text/javascript"></script>
+<script type="text/javascript" src="__STATIC__/js/Progress.js"></script>
+<script src="__PUBLIC__/js/baidu.js"></script>
+<style>
+	.boldjh{font-size:12px; color:#999}
+</style>
+</head>
+<body class="bgg">
+	<include file="public/user_header" />
+	<div class="clear"></div>
+	
+	<div class="y-content">
+		<!--左侧菜单-->
+		<include file="public/user_lefter" />
+		
+		<!--右侧内容-->
+		
+		<div class="y-right y-borm fri">
+			<div class="y-title0">
+				<span></span>福利中心
+			</div>
+			<div class="y-fla clearfix">
+				<div class="qian fbow fle">
+					福利总额
+					<p><span>{$user.rebate_money_all|tk_money_format}</span>元</p>
+				</div>
+				<div class="qian fle">
+					可提金额
+					<p><span>{$user.rebate_money|tk_money_format}</span>元</p>
+				</div>
+				<div class="qian fle">
+					<a href="{:U('/Home/User/toCash')}">我要提到现金余额</a>
+				</div>
+			</div>
+			<div class="y-sm">
+                <p>福利说明：</p>
+                               福利是购买福利专区商品产生，商城将自己的利润回馈给消费者
+            </div>
+			<if condition="$Request.param.rebate_status neq ok">
+            <div class="y-zhti y-bg2">
+            	<a href="{:U('/Home/User/already_rebate')}"  class="jx">进行中</a>
+            	<a href="{:U('/Home/User/already_rebate/rebate_status/ok')}">已完成</a>
+            </div>
+			<else/>
+			<div class="y-zhti y-bg3">
+            	<a href="{:U('/Home/User/already_rebate')}">进行中</a>
+            	<a href="{:U('/Home/User/already_rebate/rebate_status/ok')}" class="jx">已完成</a>
+            </div>
+			</if>
+            <ul class="y-jind">
+				<volist name="list" id="vo">
+            	<li>
+            		<h4>建立福利时间：{$vo.add_time|date="Y-m-d H:i:s",###} <!--<a href="#">申请提现</a>--> </h4>
+            		<div class="jdt {$vo.order_id}">
+            			<h3 style="width:139px;">福利金额：{$vo.rebate_price|tk_money_format}</h3>
+            			<div class="ui fle">
+            				<span>进度：</span>
+            				<canvas id="canvas{$i}"></canvas>
+            			</div>
+            			<if condition="$Request.param.rebate_status neq 'ok'"><h2 style="margin-top:5px; ">进行中</h2></if>
+                        <if condition="$Request.param.rebate_status eq 'ok' && $vo.is_forward eq 0 && $vo.tx_rebate gt 0"><a href="JavaScript:;" data-url="{:U('/Home/user/order_do_cash',['order_id'=>$vo.order_id])}" class="forward"><h2 style="margin-top:5px;">申请提现</h2></a></if>
+                        <if condition="$vo.is_forward lt 0"><a href="JavaScript:;" data-url="{:U('/Home/user/cash_remark')}" order_id='{$vo.order_id}' class="forward_remake"><h2 style="margin-top:5px; width:130px">提现失败(查看原因)</h2></a></if>
+                        <if condition="$Request.param.rebate_status eq 'ok' && $vo.is_forward eq 1"><a href="JavaScript:;" ><h2 style="margin-top:5px;">正在申请</h2></a></if>
+                        <if condition="$Request.param.rebate_status eq 'ok' && $vo.is_forward eq 2"><a href="JavaScript:;" ><h2 style="margin-top:5px;">已提现</h2></a></if>
+            		</div>
+            	</li>
+            	</volist>
+            </ul>
+			<script type="text/javascript">
+				$(".forward").click(function (){
+					$.post($(this).attr('data-url'),function (r){
+						if(r.status == 0){
+							layer.alert(r.info, {icon: 2});	
+						}else{
+							layer.alert(r.info, {icon: 1},function (){
+								location.reload();
+							});	
+						}
+					},'json');
+					
+				});
+				$(".forward_remake").click(function (){
+					$.post($(this).attr('data-url'),{order_id:$(this).attr('order_id')},function (r){
+						if(r.status == 0){
+							layer.alert(r.info, {icon: 2});	
+						}else{
+							layer.alert(r.info, {icon: 1},function (){
+								location.reload();
+							});	
+						}
+					},'json');
+				});
+				window.onload = function(){
+					<volist name="list" id="vo">
+					new Progress().renderOne('canvas{$i}',60,5,{$vo.progress_bar});
+					</volist>
+				}
+            </script>
+            <style>
+				.pagination{}
+				.pagination li{float:left}
+			</style>
+			<!--分页-->
+            <div class="y-sxfy  tco" style="text-align:center">
+               {$page->show()}
+            </div>
+			
+		</div>
+		<div class="clear"></div>
+	</div>
+		
+		<!--右侧内容结束-->
+	<include file="public/user_footer" />
+	
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" />
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+    <title>地图显示</title>
+    <style>
+        html {
+            font-size: 46.875px
+        }
+        body {
+            width: 16rem;
+            max-width: 16rem;
+            margin: 0 auto;
+            font-family: Helvetica,PingFangSC-Regular,"Droid Sans",Arial,sans-serif;
+            font-size: .75rem;
+            line-height: 1;
+            color: #232326;
+            overflow-x: hidden
+        }
+
+        html,
+        body,
+        #container {
+          width: 100%;
+          height: 100%;
+        }
+    </style>
+    <!--<link rel="stylesheet" href="__STATIC__/css/style.css?v={$tpshop_config['shop_info_vnum']}">-->
+
+</head>
+<body>
+
+<input id="address" name="address" value="{$address}"  class="input-txt" type="text" />
+<input type="hidden" id="lat">
+<input type="hidden" id="lng">
+<div class="map container" id="container" tabindex="0"></div>
+<input id="cid" name="cid" value="{$cid}"  class="input-txt" type="hidden"/>
+<!-- 加载地图JSAPI脚本 -->
+<script src="__STATIC__/js/jquery-2.1.1.min.js"></script>
+<script src="https://webapi.amap.com/maps?v=1.4.0&key=34757d6f3a85d3ad5fac697a62f0204f&plugin=AMap.Geocoder" type="text/javascript"></script>
+<script src="https://webapi.amap.com/ui/1.0/main.js?v=1.0.10"></script>
+<script src="https://webapi.amap.com/demos/js/liteToolbar.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/amap.js" type="text/javascript"></script>
+<script>
+    mapsamp('{$lng}','{$lat}');
+  </script>
+</body>
+</html>

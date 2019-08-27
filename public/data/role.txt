@@ -1,0 +1,1 @@
+SELECT * FROM `tp_store_role` WHERE  `store_id` = 174 ORDER BY role_id desc

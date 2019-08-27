@@ -1,0 +1,112 @@
+html, body, div, p, ul, ol, li, dl, dt, dd, h1, h2, h3, h4, h5, h6, form, input, select, button, textarea, iframe, table, th, td { margin:0; padding:0; font-weight:normal; font-size:12px;}
+body{margin:0px; font-family:"宋体"; min-width:1000px; padding:0; font-size:12px; background:#fff; color:#000;}
+*{ margin: 0; padding: 0; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; -webkit-text-size-adjust: none; -webkit-tap-highlight-color: transparent}
+img{ border:0px}
+ul, ol, li{ list-style-type:none;}
+a{ font-family:"宋体"; font-size:12px; color:#000; font-weight:normal; text-decoration:none;}
+a:hover{ text-decoration:none;}
+input,textarea,select{ outline:none;}
+i ,em{ font-style:normal;}
+.fl{ float:left;}
+.fr{ float:right;}
+.clear{ clear:both}
+.clearfix{zoom:1;}
+.clearfix:after{content:"."; display:block; clear:both; height:0; font:0/0 sans-serif; visibility:hidden;}
+.m-bt a.an, .m-lb .sd li img, .m-lb .sd li a.kan, .h-bd .c_code_msg2, .h-bd .fsyz, .h-bd .text, .h-que, .h-bd .inputstyle, .h-bd .wenb, .h-bd a.hb, .h-que2
+{ -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;}
+body.h-box{ background: url(../img/h-bg0.jpg) center 0 no-repeat; background-size: cover;}
+.h-dl{ width: 414px; margin: 0 auto;}
+.h-dl .logo{ margin-top: 25%; display: block; text-align: center;}
+.h-dl .logo p{ color: #fff; font-size: 20px; font-family: "微软雅黑"; padding: 3% 0;}
+.h-dl .kou{ width: 100%; background: #fff; -webkit-border-radius: 15px -moz-border-radius: 15px; border-radius: 15px; overflow: hidden; margin-top: 6%;}
+.h-dl .kou .text{ width: 100%; height: 52px; font-size: 14px; padding-left: 10%; border: 0;}
+.h-dl .kou .bgr{ background: url(../img/e-ico1.png) 3% center no-repeat;}
+.h-dl .kou .bgs{ background: url(../img/e-ico2.png) 3% center no-repeat;}
+.h-dl .kou .bgt{ border-bottom: 1px solid #ddd;}
+.e-dx{ width:100%; color: #fff; font-size: 14px; margin: 4% 0;}
+.e-dx .checkbox{}
+.e-dx p{ float: left;}
+.e-dx a{ color: #fff; display: block; float: right;}
+.e-dan{ width: 100%; height: 54px; background: url(../img/an.png); border: 0; color: #fff; font-size: 18px; font-family: "微软雅黑"; cursor: pointer;}
+.h-foot{ position: absolute; bottom: 0; width: 100%; height: 60px; left: 0; text-align: center; color: #fff; margin-top: 30px;}
+/*商城后台首页*/
+body.qh{ width: 100%; height: 100%; position: relative; background: #f4f8fb;}
+.h-left{ width: 12%; height: 100%; background: #17283c; left: 0; position: fixed; top: 0;}
+.h-bt{ height: 60px; background: #db3b3b; color: #fff; font-family: "微软雅黑"; text-align: center; line-height: 60px; font-size: 18px;}
+.h-tx{}
+.h-tx .dbg{ background: url(../img/h-bg1.jpg) 0 0 no-repeat; background-size: cover; padding-top: 25px;}
+.h-tx .logo{ width: 110px; height: 110px; background: rgba(255, 255, 255, 0.15); -webkit-border-radius: 100%; -moz-border-radius: 100%; border-radius: 100%; overflow: hidden; margin: 0 auto;}
+.h-tx .logo img{ width: 102px; height: 102px; margin: 4px; -webkit-border-radius: 100%; -moz-border-radius: 100%; border-radius: 100%;}
+.h-tx .zi{ width: 80%; height: 27px; line-height: 27px; text-align: center; color: #fff; border: 1px solid #68727f; display: inline-block; -webkit-border-radius: 15px; -moz-border-radius: 15px; border-radius: 15px; margin: 15px 0 20px 10%;}
+.h-tx .menus{ display: block;}
+.h-tx .menus li{ border-bottom: 1px dashed #3a4859; display: inline-block; line-height: 30px; width: 100%; padding: 15px 0;}
+.h-tx .menus li a{ color: #fff; font-weight: bold; font-size: 14px;}
+.h-tx .menus li a img{ float: left; margin: 6px 10px 0 20%}
+.h-tx .menus li a:hover{ color: #db3b3b;}
+.h-foot{ position: static; bottom: 0; left: 0; line-height: 30px;}
+.h-right{ min-height: 100%; position: absolute; left: 12%; top: 0; width: 88%;}
+.h-xx{ height: 60px; background: #fff; position: fixed; top: 0; left: 12%; width: 88%; z-index: 1;}
+.h-xx .sj{ color: #f86b4f; line-height: 60px;}
+.h-xx .sj img{ float: left; margin: 20px 8px 0 50px;}
+.h-xx .cd li{ width: 140px; float: left; line-height: 60px;}
+.h-xx .cd li.bg1{ background: url(../img/h-ico7.png) 0 center no-repeat;}
+.h-xx .cd li.bg2{ background: url(../img/h-ico8.png) 0 center no-repeat; padding-left: 34px;}
+.h-xx .cd li.bg3{ background: url(../img/h-ico9.png) 0 center no-repeat; padding-left: 30px;}
+.h-xx .cd li span{ color: #fff; margin: -8px 13px 0 27px; float: left;}
+.h-main{ margin:80px 2rem 2rem 2rem; background: #fff; border: 1px solid #dbe0e3; height: 600px;min-height: 600px; position: relative; border-top-left-radius: 5px; -webkit-border-top-left-radius: 5px; -moz-border-radius-topleft: 5px;  border-top-right-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-radius-topright: 5px; min-height: 765px;}
+.m-bt{ width: 100%; border-bottom: 2px solid #5589c6; height: 53px; padding: 0 2rem;}
+.m-bt h2{ float: left; color: #434343; font-size: 20px; font-family: "微软雅黑"; line-height: 53px;}
+.m-bt h2 img{ float: left; margin: 15px 5px 0 0;}
+.m-bt .text, .m-bt .sub{ -moz-border-radius: 20px; -webkit-border-radius: 20px; border-radius: 20px; margin-top: 11px;}
+.m-bt .text{ width: 275px; height: 30px; border: 1px solid #c7cddb; margin-top: 11px; margin-left: 50px; padding-left: 18px;}
+.m-bt .sub{ width: 92px; height: 30px; border: 1px solid #eef1f7; background: #f86b4f; color: #fff; margin-left: 12px;}
+.m-bt a.an{ width: 150px; height: 32px; background: #db3b3b; display: block; margin-top: 10px; color: #fff; text-align: center; line-height: 32px; font-size: 15px; font-family: "微软雅黑";}
+.m-lb{ margin: 2rem;}
+.m-lb .sd{ width: 100%; display: block;}
+.m-lb .sd li{ width: 226px; margin: 15px 18px; float: left;}
+.m-lb .sd li img{ width: 226px; height: 165px; overflow: hidden;}
+.m-lb .sd li .zi{ width: 226px; border-bottom: 1px solid #dbe0e3; line-height: 20px;}
+.m-lb .sd li .zi h2{ color: #434343;}
+.m-lb .sd li .zi a{ height: 34px; line-height: 34px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #434343; font-size: 14px; font-weight: bold;}
+.m-lb .sd li a.kan{/* width: 112px; */height: 24px; background: #f4f8fb; border: 1px solid #dbdbdb; display: block; text-align: center; line-height: 24px; margin-top: 15px; padding:0px 20px;}
+/*@media only screen and (max-width: 1640px) {
+	.m-lb .sd li{ width: 200px; margin: 10px; float: left;}
+	.m-lb .sd li img{ width: 200px; height: 139px; overflow: hidden;}
+	.m-lb .sd li .zi{ width: 200px;}
+}*/
+@media only screen and (max-width: 1200px) {
+	.m-lb .sd li{ width: 226px; margin: 15px 30px; float: left;}
+	.m-lb .sd li img{ width: 226px; height: 165px; overflow: hidden;}
+	.m-lb .sd li .zi{ width: 226px;}
+}
+/*分页*/
+.y-sxfy{ padding-top: 20px; color: #979797; font-size: 14px; margin-top: 40px; margin-bottom: 50px; text-align: center;}
+.y-sxfy a{ color: #7f8281; text-transform: uppercase; padding: 5px 11px; margin: 0 1px; font-size: 14px; background: #fff; border: 1px solid #ddd; border-radius: 3px;}
+.y-sxfy a:hover ,.y-sxfy a.on{ background: #999; color: #fff; border: 1px solid #999;}
+/*绑定手机*/
+.h-pad{ padding: 3%;}
+.h-title{ font-size: 14px; font-weight: bold; margin-bottom: 15px;}
+.h-bd{ display: block;}
+.h-bd li{ border-bottom: 1px dashed #e8e8e8; padding: 15px 0; float: left; width: 100%;}
+.h-bd li h2, .h-bd li h6{ text-align: right; float: left;}
+.h-bd li h2{ width: 65px; line-height: 32px;}
+.h-bd .c_code_msg2, .h-bd .text{ width: 232px; height: 30px; padding-left: 10px; border: 1px solid #dcdcdc; float: left;}
+.h-bd .fsyz{ display: inline-block; width: 123px; color: #000; text-align: center; height: 30px; line-height: 30px; background: #edf5fd; cursor: pointer; border: 1px solid #bfddf9; margin-left: 10px;}
+.h-bd .fsyz1{background: #E6E6E6;color: #818080;border: 1px solid #CCCCCC;}
+.h-que, .h-que2{ width: 105px; height: 37px; background: #4fc0e8; border: 1px solid #3aa8cf; color: #fff; font-size: 15px; font-weight: bold; font-family: "微软雅黑"; margin-top: 43px;}
+.h-que{ margin-left: 65px;}
+.h-que2{ margin-left: 95px; cursor:pointer}
+/*个人信息*/
+.h-bd .line{ position:relative;}
+.h-bd .line span.span{ width: 292px; float:left; height: 34px;}
+.h-bd .file{ position:absolute; left:0; width:100%; top:0; height: 34px; filter:alpha(opacity=0); opacity:0; cursor: pointer }
+.h-bd .file1{ float:left; margin-left:10px; z-index:1; width: 125px; height: 34px; line-height: 34px; background:url(../img/liulan.gif) no-repeat 0 0; text-indent:-9999px; cursor: pointer }
+.h-bd .inputstyle{ border:1px solid #dcdcdc; width:100%; float:left; height: 34px; line-height: 34px; background:#FFF; z-index:9; padding-left: 10px;}
+.h-bd li h6{ width: 95px; line-height: 34px;}
+.h-bd .wenb{ width: 428px; height: 34px; border: 1px solid #dcdcdc; padding-left: 10px; /*color: #838383; */float: left;}
+.h-bd a.hb{ width: 123px; height: 32px; border: 1px solid #bfddf9; background: #edf5fd; float: left; text-align: center; line-height: 32px;}
+
+
+.center{text-align: center; margin: 0 auto}
+.fl{float: left;}
+.mr10{ margin-right: 10px; }

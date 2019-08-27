@@ -1,0 +1,125 @@
+﻿<include file="public/layout" />
+<body>
+    <script>
+    $(function (){
+        $(".hb").click(function (){
+            location.href="{:U('/Companymobile/System/setMobile')}";
+           
+        })  
+    })
+</script>
+    <div class="mdk-drawer-layout js-mdk-drawer-layout" data-fullbleed data-push data-responsive-width="992px" data-has-scrolling-region>
+
+        <div class="mdk-drawer-layout__content">
+            <!-- header-layout -->
+            <div class="mdk-header-layout js-mdk-header-layout  mdk-header--fixed  mdk-header-layout__content--scrollable">
+                
+
+                <!-- content -->
+                <div class="mdk-header-layout__content ls-top-navbar mdk-header-layout__content--scrollable h-100">
+                    <!-- main content -->
+                    <div class="py-4 mb-3 bg-white border-bottom" style="padding:.5rem 0 !important;">
+                        <div class="container-fluid container-account">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="media media-user-info align-items-center">
+                                        <img src="{$company_info.litpic|default='__PUBLIC__/static/images/errors.jpg'}" class="img-fluid rounded-circle mr-2" width="60" alt="">
+                                        <div class="media-body lh-1">
+                                            <p class="h4 m-0">{$company_info.cname|default='暂未设置公司名称'}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container-fluid">
+                        
+                        <div class="tab-content" id="accountTabsContent">
+                            <div class="fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+                                <div class="row">
+                                    <div class="col-lg-9">
+                                        <div class="card card-account">
+                                            <div class="card-body">
+                                                <form  method="post" enctype="multipart/form-data" action="{:U('/Companymobile/System/doModify')}">
+                                                    <div class="form-group">
+                                                        <label for="touxiang">上传头像</label>
+                                                        <div class="custom-file">
+                                                            <!-- <input type="file" class="custom-file-input" id="customFile" required=""  name="litpic">
+                                                            <label class="custom-file-label" for="customFile">选择头像上传</label> -->
+                                                            <input type="file" name="litpic" value="" class="custom-file-label">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-row">
+                                                        <div class="form-group col-lg-6">
+                                                            <label>公司/店面名称</label>
+                                                            <div class="input-group input-group--inline">
+                                                                <div class="input-group-addon">
+                                                                    <i class="material-icons">account_balance</i>
+                                                                </div>
+                                                                <input type="text" class="form-control" name="cname" placeholder="请输入名称" value="{$company_info.cname}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label>联系人</label>
+                                                            <div class="input-group input-group--inline">
+                                                                <div class="input-group-addon">
+                                                                    <i class="material-icons">person</i>
+                                                                </div>
+                                                                <input type="text" class="form-control" name="contact" placeholder="联系人姓名" value="{$company_info.contact}">
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="instant-phone">联系电话</label>
+                                                        <div class="input-group input-group--inline">
+                                                            <div class="input-group-addon">
+                                                                <i class="material-icons">phone</i>
+                                                            </div>
+                                                            <textarea class="form-control" style="height:2.2rem;resize:none;" disabled="disabled" name='mobile'>{$company_info.mobile|mobile_hide}</textarea>
+                                                            <a href="JavaScript:;" class="hb"><button type="button" class="btn btn-outline-primary" style="margin-left:.5rem;">换绑手机</button></a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>地址</label>
+                                                        <div class="input-group input-group--inline">
+                                                            <div class="input-group-addon">
+                                                                <i class="material-icons">business</i>
+                                                            </div>
+                                                            <input type="text" class="form-control" name="address" placeholder="请输入地址" value="{$company_info.address}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>分佣比例</label>
+                                                        <span style="margin-left:1rem">{$company_info.proportion|percentage}</span>
+                                                    </div>
+                                                    <button class="btn btn-success">保存修改</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            
+                            
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <!-- // END drawer-layout__content -->
+
+        
+
+    </div>
+    <!-- // END drawer-layout -->
+
+
+
+</body>
+
+</html>

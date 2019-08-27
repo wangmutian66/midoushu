@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>账户余额-{$tpshop_config['shop_info_store_title']}</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/member.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_logo']}" media="screen"  />
+<script src="__STATIC__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/js/baidu.js"></script>
+</head>
+
+<body class="bgg">
+	<include file="public/user_header" />
+	<div class="clear"></div>
+	
+	<div class="y-content">
+		<!--左侧菜单-->
+		<include file="public/user_lefter" />
+		
+		<!--右侧内容-->
+		<div class="right00 fri">
+			<div class="y-txje fle">
+				<div class="je fle bor">
+					返利余额
+					<p><span>600.00</span>元</p>
+				</div>
+				<div class="je fle">
+					可提金额
+					<p><span>400.00</span>元</p>
+				</div>
+				<div class="clear"></div>
+				<div class="tx">
+					<a href="#">我要提到现金余额</a>
+				</div>
+			</div>
+			<div class="y-txje fri">
+				<div class="je moc">
+					现金金额
+					<p><span>{$user.user_money|num_float}</span>元</p>
+				</div>
+				<div class="clear"></div>
+				<div class="tx1 hon fle">
+					<a href="{:U('Home/User/withdrawals')}">提现</a>
+				</div>
+				<div class="tx1 ju fle">
+					<a href="{:U('Home/User/recharge_pay')}">充值</a>
+				</div>
+			</div>
+			<div class="clear"></div>
+
+			<div class="time-sala">
+				<ul>
+                    <li <if condition="$Request.param.type eq ''">class="red"<else />class="mal-l"</if>><a href="{:U('Home/User/recharge',array(''))}">充值记录</a></li>
+                    <li <if condition="$Request.param.type eq 1">class="red"<else />class="mal-l"</if>><a href="{:U('Home/User/recharge',array('type'=>1))}">消费记录</a></li>
+				</ul>
+			</div>
+			<div class="he"></div>
+			<div class="card-list accbala">
+				<ul>
+					<li><a href="javascript:void(0);">日期</a></li>
+					<li><a href="javascript:void(0);">金额</a></li>
+					<if condition="$Think.get.type eq ''"><li><a href="javascript:void(0);">状态</a></li><else /><li><a href="javascript:void(0);">订单号</a></li></if>
+					<li><a href="javascript:void(0);">备注</a></li>
+				</ul>
+			</div>
+			<if condition="$Think.get.type eq ''">
+                <!--无记录时-s-->
+                <empty name="lists">
+                    <p class="ncyekjl">--暂无记录--</p>
+                </empty>
+                <!--无记录时-e-->
+				<foreach name="lists" item="vo">
+					<div class="card-list c_contan accbala-list">
+						<ul>
+							<li><a href="javascript:void(0);">{$vo.ctime|date='Y-m-d H:i:s',###}</a></li>
+							<li><a href="javascript:void(0);">{$vo.account}</a></li>
+							<li>
+								<a href="javascript:void(0);">
+									<if condition="$vo[pay_status] eq 0">待支付
+										<else/>
+										已支付
+									</if>
+								</a>
+							</li>
+							<li><a href="javascript:void(0);">{$vo.pay_name}</a></li>
+						</ul>
+					</div>
+				</foreach>
+			</if>
+        <!--消费记录-s-->
+			<if condition="$Think.get.type eq 1">
+
+                <!--无记录时-s-->
+                <empty name="lists">
+                    <p class="ncyekjl">--暂无记录--</p>
+                </empty>
+                <!--无记录时-e-->
+				<foreach name="lists" item="vv">
+					<div class="card-list c_contan accbala-list">
+						<ul>
+							<li><a href="javascript:void(0);">{$vv.change_time|date='Y-m-d H:i:s',###}</a></li>
+							<li><a href="javascript:void(0);">{$vv.user_money}</a></li>
+							<li><a href="javascript:void(0);">{$vv.order_sn|default="--"}</a></li>
+							<li><a href="javascript:void(0);">{$vv.desc}</a></li>
+						</ul>
+					</div>
+				</foreach>
+			</if>
+        <!--消费记录-e-->
+			<div class="clear"></div>
+			<div class="y-sm">
+                <p>返利提现说明：</p>
+                "返利"就是供货方将自己的部分利润返还给销售方，它不仅可以激励销售方提升销售业绩
+            </div>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<include file="public/user_footer" />
+	<script type="text/javascript">
+        //切换充值记录，消费记录
+		$(function(){
+			$('.time-sala ul li').click(function(){
+				$(this).addClass('red').siblings().removeClass('red');
+			})
+            //选择充值金额
+            $('.m-multi-tag a').click(function(){
+                $('#input_val').val($(this).attr('rel'));
+            })
+		})
+	</script>
+</body>
+</html>

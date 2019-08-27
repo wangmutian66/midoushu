@@ -1,0 +1,113 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+	<div class="fixed-bar">
+		<div class="item-title">
+			<div class="subject">
+				<h3>统计报表 - 详细</h3>
+			
+			</div>
+		</div>
+		
+	</div>
+	
+	<div class="flexigrid">
+		<div class="hDiv">
+			<div class="hDivBox">
+				<table cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+              <th class="sign" axis="col0">
+                <div style="width: 24px;"><i class="ico-check"></i></div>
+              </th>
+			  <th align="left" abbr="article_title" axis="col1" class="">
+                <div style="text-align: left; width: 60px;" class="">ID</div>
+              </th>
+            
+			  <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">真实姓名</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">流水金额</div>
+              </th>
+			 
+			  <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 200px;" class="">隶属上级</div>
+              </th>
+			  
+			   <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 280px;" class="">备注</div>
+              </th>
+			  
+			
+			  <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 120px;" class="">流水日期</div>
+              </th>
+             
+			  <th align="center" abbr="control" axis="col9" class="">
+                <div style="text-align: center; width: 80px;" class="">操作</div>
+              </th>
+              
+              
+              <th style="width:100%" axis="col7">
+                <div></div>
+              </th>
+            </tr>
+          </thead>
+        </table>
+			</div>
+		</div>
+		<div class="bDiv" style="height: auto;">
+			<div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+				<table>
+          <tbody>
+            <foreach name="list" item="vo" key="k" >
+              <tr>
+                <td class="sign">
+                  <div style="width: 24px;"> <input type="checkbox" name="ids[]" class="ids" value="{$vo.id}" ></div>
+                </td>
+				<td align="left" class="">
+                  <div style="text-align: left; width: 60px;">{$vo.id}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.real_name}</div>
+                </td>
+				<td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.money}</div>
+                </td>
+				<td align="left" class="">
+                  <div style="text-align: center; width: 200px;">{$vo.company_name}</div>
+                </td>
+				
+				<td align="left" class="">
+                  <div style="text-align: center; width:280px;">{$vo.info}</div>
+                </td>
+				
+				<td align="left" class="">
+                  <div style="text-align: center; width: 120px;">{$vo.create_time|date="Y-m-d H:i",###}</div>
+                </td>
+                <td align="center" class="">
+                  <div style="text-align: center; width:80px;">
+				  	<!--两个删除， 暂时先不做-->
+					<!--<a href="__URL__/del/id/{$vo.id}" onClick="if(confirm('确认删除吗?')){ return true;}else{return false;}">删除</a>-->
+				  </div>
+                </td>
+                <td align="" class="" style="width: 100%;">
+                  <div>&nbsp;</div>
+                </td>
+              </tr>
+            </foreach>
+		
+          </tbody>
+        </table>
+			</div>
+			<div class="iDiv" style="display: none;"></div>
+			 {$pager->show()} 
+		</div>
+	 </div>
+</div>
+</body>
+</html>

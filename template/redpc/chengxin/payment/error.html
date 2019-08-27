@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>支付失败-{$tpshop_config['shop_info_store_title']}</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<link href="__STATIC__/css/style.css" rel="stylesheet">
+<link href="__STATIC__/css/second.css" rel="stylesheet">
+<script src="__STATIC__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/js/global.js"></script>
+<script src="__PUBLIC__/js/pc_common.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script><!-- 弹窗js 参考文档 http://layer.layui.com/-->
+</head>
+
+<body>
+    <include file="public/top" />
+	<div class="pay-success">
+		<div class="l"><img src="__STATIC__/images/lose.png"></div>
+		<div class="r">
+			<h2><span>支付失败</span>请重新支付！</h2>
+			<div class="list">
+				<ul>
+					<li><a href="{:U('Order/order_list')}">订单列表</a></li>
+					<span>丨</span>
+					<li><a href="tencent://message/?uin={$tpshop_config['shop_info_qq2']}&amp;Site={$tpshop_config['shop_info_store_title']}&amp;Menu=yes" class="ys">联系卖家</a></li>
+				</ul>
+			</div>
+			<div class="an">
+				<a href="{:U('Homered/Index/index')}" class="btn-go">继续逛逛</a>
+				<a href="{:U('User/index')}" class="btn-center">会员中心</a>
+			</div>
+		</div>
+	</div>
+    <include file="public/footer" />
+</body>
+</html>

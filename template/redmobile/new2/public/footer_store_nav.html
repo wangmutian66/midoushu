@@ -1,0 +1,56 @@
+<div class="foohi">
+    <div class="footer">
+        <ul>
+            <li>
+                <a <if condition="ACTION_NAME eq 'index' and CONTROLLER_NAME eq 'StoreIndex'">class="yello" </if>  href="{:U('/Mobile/Index/index')}">
+                    <div class="icon">
+                        <i class="icon-shouye iconfont"></i>
+                        <p>首页</p>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a  <if condition="ACTION_NAME eq 'categoryList'">class="yello" </if>  href="{:U('/Mobilered/StoreIndex/categoryList')}">
+                    <div class="icon">
+                        <i class="icon-fenlei iconfont"></i>
+                        <p>分类</p>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a <if condition="CONTROLLER_NAME eq 'Order'">class="yello" </if> href="{:U('/Mobilered/Order/order_list/store_id/1')}">
+                    <div class="icon">
+                        <i class="iconfont icon-order">
+                            <!--<img src="__STATIC__/images/ordericon.png" style="width: 44px;"/>-->
+                        </i>
+                        <p>订单</p>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a <if condition="CONTROLLER_NAME eq 'User'">class="yello" </if> href="{:U('/mobilered/User/index')}">
+                    <div class="icon">
+                        <i class="icon-wode iconfont"></i>
+                        <p>我的</p>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	  var cart_cn = getCookie('cn');
+	  if(cart_cn == ''){
+		$.ajax({
+			type : "GET",
+			url:"/index.php?m=Homered&c=Cart&a=header_cart_list",//+tab,
+			success: function(data){								 
+				cart_cn = getCookie('cn');
+				$('#cart_quantity').html(cart_cn);						
+			}
+		});	
+	  }
+	  $('#cart_quantity').html(cart_cn);
+});
+</script>

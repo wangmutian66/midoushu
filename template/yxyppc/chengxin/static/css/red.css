@@ -1,0 +1,32 @@
+.fle{ float: left;}
+.fri{ float: right;}
+/*banner*/
+.flexslider{ width:100%; position:relative; overflow:hidden;}
+.slides{ position:relative; z-index:1;}
+.slides li, .flexslider, .slides li a{ height:500px;}
+.slides li{ text-align: right;}
+.slides li a{ display:block;}
+.slides li p{ width: 1200px; position: absolute; right: 50%; margin-right: -600px;}
+.slides li p img{ width: 1000px; height: 302px;}
+.flex-control-nav{ position:absolute; bottom:12px; z-index:2; width:100%; text-align:center;}
+.flex-control-nav li{ display:inline-block; width:14px; height:14px; margin:0 5px; *display:inline; zoom:1;}
+.flex-control-nav a{ display:inline-block; width:14px; height:14px; line-height:40px; overflow:hidden; cursor:pointer; background:url(../images/dot.png) right 0 no-repeat;}
+.flex-control-nav .flex-active{ background-position:0 0;}
+.y-box{ width: 1010px; height: 180px; margin-top: 320px;}
+.y-box img{ width: 322px; height: 180px; float: left; margin-left: 14.6px;}
+/*红包产品*/
+.y-show .pot p, .y-show .pot h2, .y-show .pot h3{ font-family: "微软雅黑";}
+.y-show{ width: 1200px; margin: 0 auto; overflow: hidden; padding-bottom: 20px;}
+.y-show .pot{ width: 283px; border: 1px solid #fff; background: #fff; float: left; margin-left: 20px; margin-top: 20px;}
+.y-show .mle{ margin-left: 0;}
+.y-show .pot img{ width: 283px; height: 283px;}
+.y-show .pot p, .y-show .pot h2{ color: #525252; font-size: 14px; line-height: 20px;}
+.y-show .pot p{ padding: 10px 13px; height: 40px; overflow: hidden;}
+.y-show .pot p:hover{ color: #ff4401;}
+.y-show .pot h2, .y-show .pot h3{ padding: 0 13px; font-weight: normal;}
+.y-show .pot h3{ color: #ff7232; font-size: 14px; padding-bottom: 10px;}
+.y-show .pot h3 span{ font-size: 18px; font-weight: bold;}
+.y-show .pot:hover{ border: 1px solid #e61414;}
+.adv0{ width: 100%; max-height: 90px; overflow: hidden;}
+.r-pad{ padding-bottom: 50px;}
+

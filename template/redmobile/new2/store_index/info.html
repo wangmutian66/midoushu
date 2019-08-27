@@ -1,0 +1,319 @@
+<include file="public/header" title="商家信息" body="f3"/>
+<include file="public/header_nav2" title="{$company.cname|default='商家信息'}" href="javascript:history.back(-1)" />
+<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<style type="text/css">
+	body{
+		background: #fff !important;
+	}
+    .tab{width:100%; }
+    .tab-menu ul{list-style:none;}
+    .tab-menu li{display:block;width:50%;float:left;text-align: center;margin:0; border:1px solid #e2231a;color:#e2231a;font-weight: normal;}
+    .tab-menu li:first-child{
+        border-radius: .5rem 0 0 .5rem;
+    }
+    .tab-menu li:last-child{
+        border-radius: 0 .5rem .5rem 0;
+    }
+    .tab-box div{}
+    .tab-box div:first-child{display:block;}
+	.shangjia{
+		padding: 0 10px;
+        width:100%;
+	}
+	.shangjia img{
+		width:100%;
+	}
+
+    .change{
+        background:#e2231a;
+        color:#fff  !important;
+        font-weight: bold  !important;
+    }
+
+    .zb-xjxx .b .tishi{
+        width:100%;
+        height:1rem;
+        font-size:.55rem;
+        color:#bbb;
+        float:left;
+        padding:0 .5rem;
+    }
+
+</style>
+
+	<div class="zb-xjxx">
+		<div class="l">{$company.cname}</div>
+		<div class="r">
+			<if condition="$company.litpic">
+				<img src="{$company.litpic}">
+				<else/>
+				<img src="__PUBLIC__/images/icon_goods_thumb_empty_300.png">
+			</if>
+
+		</div>
+		<div class="b">
+			<div class="dw">
+				<img src="__STATIC__/images/dwdw.png">
+			</div>
+			<div class="zuo">
+				<span class='navigation'>{$company.address}</span>
+				<span class="jl navigation">距您<span id="julicon"></span></span>
+			</div>
+			<div class="you">
+				<a href="tel:{$company.mobile}" tel="">
+					<img src="__STATIC__/images/teltel.png">
+				</a>
+			</div>
+            <div class="tishi navigation">点击查看地图导航</div>
+		</div>
+        
+	</div>
+
+<div class="tab">
+
+	<div class="tab-menu">
+		<ul>
+			<li class="change">店铺简介</li>
+			<li>店铺商品</li>
+		</ul>
+	</div>
+
+	<div class="tab-box">
+        <div class="shangjia">
+            {$company.strore_content|default="商家暂未上传相关资料"}
+        </div>
+		<div class="tabgoodslist" style="display:none;">
+			<!--商品详情s-->
+			<div id="goods_list" class="">
+				<empty name="goods_list">
+					<p class="goods_title" id="goods_title" style="line-height: 100px;text-align: center;margin-top: 30px;">抱歉暂时没有相关结果！</p>
+					<else />
+					<foreach name="goods_list" item="vo" key="k"  >
+						<div class="orderlistshpop p">
+							<div class="maleri30">
+								<a href="{:U('Mobilered/StoreGoods/goodsInfo',array('id'=>$vo[goods_id],'store_id'=>$Think.get.cid))}" class="item">
+
+									<div class="sc_list se_sclist">
+										<div class="shopimg fl">
+											<img src="{$vo.goods_id|goods_thum_images=400,400,'red'}">
+										</div>
+										<div class="deleshow fr">
+											<div class="deletes">
+												<span class="similar-product-text fl">{$vo.goods_name|getSubstr=0,20}</span>
+											</div>
+											<div class="prices">
+												<p class="sc_pri fl">{$vo[midou_index]} <span>米豆</span></p>
+
+											</div>
+
+										</div>
+									</div>
+								</a>
+							</div>
+						</div>
+					</foreach>
+				</empty>
+			</div >
+			<!--商品详情e-->
+			<!--加载更多S-->
+			<notempty name="goods_list">
+				<div class="loadbefore">
+					<img class="ajaxloading" src="__STATIC__/images/loading.gif" alt="loading...">
+				</div>
+			</notempty>
+			<!--加载更多E-->
+		</div>
+
+	    
+	</div>
+
+    
+</div>
+<script>
+
+var ShareLink = "{:U('Mobilered/StoreIndex/info',['cid'=>$company.cid,'invite_code'=>$staff_info['invite_code']],'',true)}"; //默认分享链接
+var ShareImgUrl = "https://{$Think.server.SERVER_NAME}{$company['litpic']|default=$tpshop_config['shop_info_store_logo']}"; //分享图标
+var ShareTitle = "{$company.cname|default='周边商家'} - {$tpshop_config['shop_info_store_title']}"; //分享标题
+<if condition="$company.strore_content">
+var ShareDesc = "{$company.strore_content|strip_tags|getSubstr=0,20}"; //分享描述
+<else/>
+var ShareDesc = "{$tpshop_config['shop_info_store_desc']}";
+</if>
+
+    $().ready(function(){
+        $(".tab-menu li").click(function(){
+            //通过 .index()方法获取元素下标，从0开始，赋值给某个变量
+            var _index = $(this).index();
+            //让内容框的第 _index 个显示出来，其他的被隐藏
+            $(".tab-box>div").eq(_index).show().siblings().hide();
+            //改变选中时候的选项框的样式，移除其他几个选项的样式
+            $(this).addClass("change").siblings().removeClass("change");
+        });
+    });
+
+
+    //滚动加载更多
+    $(window).scroll(
+        function() {
+            var scrollTop = $(this).scrollTop();
+            var scrollHeight = $(document).height();
+            var windowHeight = $(this).height();
+            if (scrollTop + windowHeight == scrollHeight) {
+                ajax_sourch_submit();//调用加载更多
+            }
+        }
+    );
+    var before_request = 1; // 上一次请求是否已经有返回来, 有才可以进行下一次请求
+    var  page = 1;
+    /**
+     * ajax加载更多商 品
+     */
+    function ajax_sourch_submit()
+    {
+        if(before_request == 0)// 上一次请求没回来 不进行下一次请求
+            return false;
+        before_request = 0;
+        page++;
+
+        $.ajax({
+            type : "POST",
+            url:"{:U('Mobilered/Goods/storegoodsList')}",//+tab,
+//			data : $('#filter_form').serialize(),// 你的formid 搜索表单 序列化提交
+            data:{store_id:'{$Request.param.cid}',sort:'{$Request.param.sort}',sort_asc:'{$Request.param.sort_asc}',sel:'{$Request.param.sel}',is_ajax:1,p:page},
+            success: function(data)
+            {
+                if($.trim(data) == ''){
+                    $('.loadbefore').hide();
+                    $('#getmore').hide();
+                }else{
+                    $("#goods_list").append(data);
+                	before_request = 1;
+                }
+                if( $("#goods_list").hasClass('addimgchan')){
+                    $('.orderlistshpop').addClass('addimgchan')
+                }else{
+                    $('.orderlistshpop').removeClass('addimgchan')
+                }
+            }
+        });
+    }
+
+    wx.config({
+        debug: false,
+        appId: '{$signPackage["appId"]}',
+        timestamp: '{$signPackage["timestamp"]}',
+        nonceStr: '{$signPackage["nonceStr"]}',
+        signature: '{$signPackage["signature"]}',
+        jsApiList: [
+            // 所有要调用的 API 都要加到这个列表中
+            'getLocation',
+            'openLocation',
+			'onMenuShareTimeline',
+			'onMenuShareAppMessage',
+			'onMenuShareQQ',
+			'onMenuShareQZone',
+			'hideOptionMenu'
+        ]
+    });
+    wx.ready(function () {
+        wx.checkJsApi({
+            jsApiList: [
+                'getLocation',
+                // 'openLocation',
+            ],
+            success: function (res) {
+                $(document.body).attr('lat',res['latitude']);
+                $(document.body).attr('lng',res['longitude']);
+                if (res.checkResult.getLocation == false) {
+                    alert('你的微信版本太低，不支持微信JS接口，请升级到最新的微信版本！');
+                    return;
+                }
+            }
+        });
+        wx.error(function(res){
+            console.log("接口调取失败")
+        });
+        wx.getLocation({
+            success: function (res) {
+                $(document.body).attr('lat',res['latitude']);
+                $(document.body).attr('lng',res['longitude']);
+                getjuli();
+            },
+            cancel: function (res) {
+                alert('用户拒绝授权获取地理位置');
+            }
+        });
+		 // 获取"分享到朋友圈"按钮点击状态及自定义分享内容接口
+		wx.onMenuShareTimeline({
+			title: ShareTitle, // 分享标题
+			link:ShareLink,
+			desc: ShareDesc,
+			imgUrl:ShareImgUrl // 分享图标
+		});
+
+		// 获取"分享给朋友"按钮点击状态及自定义分享内容接口
+		wx.onMenuShareAppMessage({
+			title:ShareTitle, // 分享标题
+			desc:ShareDesc, // 分享描述
+			link:ShareLink, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+			imgUrl:ShareImgUrl // 分享图标
+		});
+		// 分享到QQ
+		wx.onMenuShareQQ({
+			title: ShareTitle, // 分享标题
+			desc: ShareDesc, // 分享描述
+			link:ShareLink,
+			imgUrl:ShareImgUrl // 分享图标
+		});	
+		// 分享到QQ空间
+		wx.onMenuShareQZone({
+			title: ShareTitle, // 分享标题
+			desc: ShareDesc, // 分享描述
+			link:ShareLink,
+			imgUrl:ShareImgUrl // 分享图标
+		});
+    });
+
+
+    function getjuli(){
+        var param = new Object();
+        param["latitude"] = $(document.body).attr('lat');
+        param["longitude"] = $(document.body).attr('lng');
+		param["cid"] = "{$cid}";
+        $.ajax({
+			url:"__URL__/getjuli",
+			data:param,
+			dataType:"json",
+			type:"POST",
+			success:function(data){
+				$("#julicon").html(data.julicon);
+			}
+		});
+
+	}
+
+
+$('.navigation').click(function () {
+    var lat = '{$company.lat}';
+    var lng = '{$company.lng}';
+    var name ='{$company.cname}';
+    var address ='{$company.address}';
+    if (lat != null && lng != null) {
+        wx.openLocation({
+            latitude: parseFloat(lat), // 纬度，浮点数，范围为90 ~ -90
+            longitude: parseFloat(lng), // 经度，浮点数，范围为180 ~ -180。
+            name: name, // 位置名
+            address: address, // 地址详情说明
+            scale: 16, // 地图缩放级别,整形值,范围从1~28。默认为最大
+        });
+    }else{
+        alert('用户未获取地理位置！');
+    };
+        
+})
+
+</script>
+
+
+</body>
+</html>

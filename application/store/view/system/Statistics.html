@@ -1,0 +1,166 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="__PUBLIC__/static/css/index.css" rel="stylesheet" type="text/css">
+    <link href="__PUBLIC__/static/css/perfect-scrollbar.min.css" rel="stylesheet" type="text/css">
+    <link href="__PUBLIC__/static/css/purebox.css" rel="stylesheet" type="text/css">
+    <link href="__PUBLIC__/static/js/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="__PUBLIC__/static/js/jquery.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/static/js/jquery-ui/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/static/js/jquery.cookie.js"></script>
+    <style>
+    .contentWarp_item .section_select .item_comment{
+        padding: 83px 0 31px 38px;
+    }
+    .contentWarp_item .section_select .item {
+        padding: 83px 0 38px 38px;
+    }
+    .contentWarp_item .section_order_select li{
+        width: 23%;
+    }
+</style>
+</head>
+<body class="iframe_body">
+    <div class="warpper">
+        <div class="title">数据统计<span style="color: red;font-size: 14px;margin-left: 20px">(*所有统计均按照订单状态为已支付的订单进行统计~)</span></div>
+        <div class="content start_content" >
+            <div class="contentWarp">
+                <div class="contentWarp_item clearfix" style="width: 65%;margin-right:16px;">
+                    <div class="section_select">
+                        <div class="item item_price" style="cursor:pointer" onclick="location.href='/store/rebate/OrderStore'">
+                            <i class="icon"><img src="__PUBLIC__/static/images/2.png" width="71" height="74"></i>
+                            <div class="desc">
+                                <div class="tit">{$count.repurchase}</div>
+                                <span>今日换购订单数量</span>
+                            </div>
+                        </div>  
+                        <div class="item item_price" style="cursor:pointer" onclick="location.href='/store/rebate/sweep'">
+                            <i class="icon"><img src="__PUBLIC__/static/images/2.png" width="71" height="74"></i>
+                            <div class="desc">
+                                <div class="tit">{$count.staff_mypays}</div>
+                                <span>今日订单总数</span>
+                            </div>
+                        </div>
+                        <div class="item item_comment" style="cursor:pointer" onclick="location.href='/store/rebate/sweep'">
+                            <i class="icon"><img src="__PUBLIC__/static/images/1.png" width="71" height="74"></i>
+                            <div class="desc">
+                                <div class="tit">{$count.staff_mypays_store_money|default='暂无数据'}</div>
+                                <span>今日实体店结余</span>
+                            </div>
+                            <i class="icon"></i>
+                        </div>
+                        <div class="item item_comment" style="cursor:pointer" onclick="location.href='/store/rebate/sweep'">
+                            <i class="icon"><img src="__PUBLIC__/static/images/1.png" width="71" height="74"></i>
+                            <div class="desc">
+                                <div class="tit">{$count.staff_mypays_money|default='暂无数据'}</div>
+                                <span>今日订单总额</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="contentWarp_item clearfix" style="width: 33%;">
+                    <div class="section_select">
+
+                        <div class="item item_flow" style="width: 100%">
+                            <i class="icon"><img src="__PUBLIC__/static/images/4.png" width="71" height="74"></i>
+                            <div class="desc">
+                                <div class="tit">{$count.repurchase_person|default='暂无数据'}</div>
+                                <span>今日线下换购人数</span>
+                            </div>
+                            <i class="icon"></i>
+                        </div>
+                        <div class="item item_flow" style="width: 100%;margin-top:16px">
+                            <i class="icon"><img src="__PUBLIC__/static/images/4.png" width="71" height="74"></i>
+                            <div class="desc">
+                                <div class="tit">{$count.new_user|default='暂无数据'}</div>
+                                <span>今日新用户</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!--<div>打印</div>-->
+        <input type="submit" class="h-que2" value="打印" style="text-align: center;float: right;margin-right: 20px;cursor: pointer" onclick="storeorder()">
+    </div>
+    <script>
+        function storeorder() {
+            $.ajax({
+                type: 'post',
+                url: "{:U('/Store/System/storeorder')}",
+                dataType: 'json',
+
+                success: function (r) {
+
+                }
+
+            })
+        }
+    </script>
+<!-- <div id="footer" style="position: static; bottom: 0px; font-size:14px;">
+    <p><b>版权所有 © 2018 midoushu，并保留所有权利。</b></p>
+</div> -->
+<style type="text/css">
+    .h-que2 {
+        width: 105px;
+        height: 37px;
+        color: rgb(255, 255, 255);
+        font-size: 15px;
+        font-weight: bold;
+        font-family: 微软雅黑;
+        margin-top: 43px;
+        background: rgb(79, 192, 232);
+        border-width: 1px;
+        border-style: solid;
+        border-color: rgb(58, 168, 207);
+        border-image: initial;
+    }
+    .contentWarp_item .section_select .item {
+
+         margin-bottom: 0; 
+    }
+
+    .contentWarp_item .section_select .item {
+            margin-top: 16px;
+    }
+    
+    @media screen and (max-width: 1550px){
+        .contentWarp_item .section_select .item {
+            width: 49%;
+            margin-right: 2%;
+            margin-bottom: 0;
+        }
+
+        .contentWarp_item .section_select .item:nth-child(1) {
+            margin-right: 2%;
+        }
+
+        .contentWarp_item .section_select .item:nth-child(2) {
+            margin-right: 0;
+        }
+
+        .contentWarp_item .section_select .item:nth-child(3) {
+            margin-right: 2%;
+            margin-top: 16px;
+        }
+
+        .contentWarp_item .section_select .item:nth-child(4) {
+            margin-right: 0;
+            margin-top: 16px;
+        }
+    }
+
+    @media screen and (max-width: 1550px){
+        .contentWarp_item:nth-child(2) {
+            width: 100%;
+            margin-top: 0;
+        }
+    }
+</style>
+</body>
+
+</html>

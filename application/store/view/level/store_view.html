@@ -1,0 +1,116 @@
+<include file="public/layout" />
+<body style="background-color: #FFF; overflow: auto;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>查看实体详细信息</h3>
+              
+            </div>
+            
+        </div>
+    </div>
+
+   <style>
+   	#handlepost input{width:300px;}
+	#handlepost textarea{width:400px; height:150px;}
+   </style>
+    
+    <form method="post" id="handlepost" action="__URL__/{$acts}" name="form1" autocomplete="off" >
+        <div class="ncap-form-default">
+            
+            <input type="hidden" name="{$pk}" id="{$pk}" value="{$item[$pk]}" />
+            <dl class="row">
+                <dt class="tit">
+                    <label for="cname">公司名称:</label>
+                </dt>
+                <dd class="opt">
+                   {$item.cname}
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+            <dl class="row" style="display:none;">
+                <dt class="tit">
+                    <label for="password">登录密码</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="password" id="password" value="" class="input-txt">
+                    <span class="err"></span>
+                    <p class="notic">6-16位字母数字符号组合</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="mobile">手机号码:</label>
+                </dt>
+                <dd class="opt">
+                    {$item.mobile}
+                    <p class="notic"> </p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="tel">固定电话:</label>
+                </dt>
+                <dd class="opt">
+                    {$item.tel}
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="address">公司地址:</label>
+                </dt>
+                <dd class="opt">
+                    {$item.address}
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="contact">联系人:</label>
+                </dt>
+                <dd class="opt">
+                    {$item.contact}
+                    <p class="notic"> </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="proportion">分红比例:</label>
+                </dt>
+                <dd class="opt">
+                    {$item.proportion|percentage}
+                </dd>
+            </dl>
+            
+            <dl class="row">
+                <dt class="tit">
+                    <label for="cash_envelope">备注:</label>
+                </dt>
+                <dd class="opt">
+                    {$item.remark}
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+            <notempty name="item['update_date']">
+            <dl class="row">
+                <dt class="tit">
+                    <label for="update_time">更新时间</label>
+                </dt>
+                <dd class="opt">
+                    {$item.update_date|date="Y-m-d H:i:s",###}
+                </dd>
+            </dl>
+             </notempty>
+            <div class="bot" style="display:none;">
+                <a href="JavaScript:void(0);" class="ncap-btn-big ncap-btn-green" onClick="document.form1.submit()">确认提交</a>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="goTop"> <a href="JavaScript:void(0);" id="btntop"><i class="fa fa-angle-up"></i></a><a href="JavaScript:void(0);" id="btnbottom"><i class="fa fa-angle-down"></i></a></div>
+</body>
+</html>

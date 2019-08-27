@@ -1,0 +1,119 @@
+<include file="public/header" title="{$vstitle}" body=""/>
+<include file="public/header_nav" title="{$vstitle}" href="javascript:history.back(-1)"/>
+<link rel="stylesheet" href="/template/mobile/new2/static/css/tian.css">
+<form action="" method="">
+<div class="e-zhi">
+	<div class="shu clearfix">
+		<input type="text" class="text fle" id="contact" name="contact" placeholder="请输入姓名">
+	</div>
+    <div class="shu clearfix">
+    	<input type="password" class="text fle" name="password1" id="password1" placeholder="请设置密码">
+	</div>
+    <div class="shu clearfix">
+    	<input type="password" class="text fle" name="password2" id="password2" placeholder="请重复设置密码">
+	</div>
+	<div class="shu clearfix">
+		<input type="tel" class="text fle" id="mobile" name="mobile"  placeholder="请输入联系电话">
+	</div>
+	<notempty name="storeName">
+	<div class="shu clearfix">
+		实体店铺：{$storeName}
+	</div>
+	</notempty>
+</div>
+	<input type="hidden" name="vs" id="vs" value="{$vs}">
+<input type="submit" class="e-tij" value="确认" onClick="return postsubmit()" />
+</form>
+<script>
+
+
+/**
+ * 手机号码格式判断
+ * @param tel
+ * @returns {boolean}
+ */
+function checkMobile(tel) {
+    //var reg = /(^1[3|4|5|7|8][0-9]{9}$)/;
+    var reg = /^1[0-9]{10}$/;
+    if (reg.test(tel)) {
+        return true;
+    }else{
+        return false;
+    };
+}
+/*if(!checkMobile(mobile)){
+	showErrorMsg('手机格式不正确！');
+}	*/
+	function postsubmit(){
+		var contact = $("#contact").val();
+		var mobile = $("#mobile").val();
+		var psw1 = $("#password1").val();
+		var psw2 = $("#password2").val();
+		var vs = $("#vs").val();
+		if(contact == ""){
+			showErrorMsg('请输入联系人!');
+			return false;
+		}
+		
+		if(psw1.length <6){
+			showErrorMsg('登录密码必须大于6位!');
+			return false;
+		}
+		if(psw1.length > 15){
+			showErrorMsg('登录密码必须小于15位!');
+			return false;
+		}
+		if(psw1 == ''){
+			showErrorMsg('请输入登录密码!');
+			return false;
+		}
+		if(psw1 != psw2 ){
+			showErrorMsg('重复登录密码不同!');
+			return false;
+		}
+		if(mobile == ""){
+			showErrorMsg('请输入手机号码');
+			return false;
+		}else{
+			if(!checkMobile(mobile)){
+				showErrorMsg('手机格式不正确！');
+				return false;
+			}	
+		}
+		var index ;
+		$.ajax({
+		   type: "POST",
+		   url: "{:U('/Mobile/User/do_apply_promoters')}",
+		   data: "contact="+contact+"&staff_id={$staff_id}"+"&mobile="+mobile+"&psw1="+psw1+"&vs="+vs,
+		   dataType:"json",
+		   beforeSend:function(){
+				index = layer.open({type: 2,shadeClose: false,});
+		   },
+		   success: function(r){
+			   layer.close(index)
+			 	if(r.status == 1){
+			 	    if(r.vs == 3){
+                        showErrorMsg('申请提交成功，正在跳转至员工中心...');
+                        setTimeout("location.href = '{:U("/Staff/System/login")}'",2000);
+					}else{
+                        showErrorMsg('申请提交成功，正在跳转至商品选购页面...');
+                        setTimeout("location.href = '{:U("/Mobile/Activity/tgy_sale")}'",2000);
+					}
+
+				}else{
+					showErrorMsg(r.info);
+				}
+		   },
+		   error:function (){
+			   showErrorMsg('系统忙，请稍后再试');
+		    }
+		});
+		return false;
+	}
+</script>
+
+
+
+
+</body>
+</html>

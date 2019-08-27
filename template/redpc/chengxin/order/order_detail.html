@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>订单详情-{$tpshop_config['shop_info_store_title']}</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/member.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+<script src="__STATIC__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/js/global.js?v={$vnum}" type="text/javascript"></script>
+<script src="__PUBLIC__/js/layer/layer.js?v={$vnum}" type="text/javascript"></script>
+<script src="__PUBLIC__/js/baidu.js"></script>
+</head>
+<body class="bgg">
+	<include file="public/user_header" />
+	<div class="clear"></div>
+	
+	<div class="y-content">
+		<!--左侧菜单-->
+		<include file="public/user_lefter" />
+		
+		<!--右侧内容-->
+		<div class="y-right2 fri">
+			<div class="y-title2">
+				您的位置: <a href="{:U('User/index')}">首页</a> > <a href="{:U('Order/order_list')}">我的订单</a> > <a href="#">订单详情</a>
+			</div>
+            <div class="y-xx">
+                <h2>订单概况</h2>
+                <p><b>收货人：  </b>{$order_info.consignee}</p>
+                <p><b>手机号码：</b>{$order_info.mobile}</p>
+                <p><b>收货地址：</b>{$region_list[$order_info['province']]},{$region_list[$order_info['city']]},{$region_list[$order_info['district']]},{$order_info.address}</p>
+                <p><b>运送方式：</b>{$order_info.shipping_name}</p>
+                <!-- <p><b>商品应付总额：</b><em>￥</em>{$order_info.goods_price}</p> -->
+                <p><b>商品实付总额：</b>{$order_info.midou}米豆 + <em>￥</em>{$order_info.midou_money}</p>
+                <p><b>运费金额：</b><em>￥</em>{$order_info.shipping_price}</p>
+                <p>
+                   <b>订单信息：</b><br />
+                   <span>订单编号:{$order_info.order_sn}</span>
+                   <span>创建时间:{$order_info.add_time|date='Y-m-d H:i:s',###}</span>
+                   <span>付款时间:
+	                   <if condition="$order_info[pay_status] eq 1 or $order_info[pay_status] eq 2">
+	                   {$order_info.pay_time|date='Y-m-d H:i:s',###}
+	                   <else/>未支付</if>
+                   </span>
+                   <span>成交时间:
+                   		<if condition="$order_info[confirm_time] gt 0">
+                           {$order_info.confirm_time|date='Y-m-d H:i:s',###}
+                        <else/>未完成</if>
+                    </span>
+                </p>
+            </div>
+            <div class="y-xx clearfix">
+                <if condition="$order_info.refuse_btn eq 2">
+                    <h3 style="font: 700 24px/34px 'Microsoft YaHei';color: red; padding-top:20px;">供货商拒绝发货，有疑问请联系客服。</h3>
+                    <a class="ddn3" style="color:#666;" href="javascript:;" onclick="cancel_order({$order_info.order_id})">取消订单</a>
+                <else />
+                    <if condition="$order_info.pay_btn eq 1">
+                        <h3 style="font: 700 24px/34px 'Microsoft YaHei';color: #e4393c; padding-top:20px;">等待付款</h3>
+                        <a class="ddn3" href="{:U('Homered/Cart/cart4',array('order_id'=>$order_info[order_id]))}">立即付款</a>
+                        <else/>
+                        <h1 class="ddn2">{$order_info.order_status_desc}</h1>
+                    </if>
+                    <if condition="$order_info.receive_btn eq 1 ">
+                        <a class="ddn3" href="javascript:;" onclick="order_confirm({$order_info['order_id']})">确认收货</a>
+                    </if>
+                    <if condition="$order_info.cancel_btn eq 1">
+                        <if condition="$order_info[pay_status] eq 0">
+                            <a class="ddn3" style="color:#666;" href="javascript:;" onclick="cancel_order({$order_info.order_id})">取消订单</a>
+                        <else/>
+                            <a class="consoorder ddn3" href="javascript:void(0);" data-url="{:U('Homered/Order/refund_order',array('order_id'=>$order_info[order_id]))}" onClick="refund_order(this)" >取消订单</a>
+                    </if>
+                    </if>
+                    <if condition="$order_info.order_prom_type eq 4 AND $order_info.pay_status eq 2 AND $order_info.pre_sell_is_finished eq 1 AND (time() egt $order_info.pre_sell_retainage_start AND time() elt $order_info.pre_sell_retainage_end)">
+                        <a class="ddn3" href="{:U('/Homered/Cart/cart4',array('order_id'=>$order_info[order_id]))}'">支付尾款</a>
+                    </if>
+                </if>
+            </div>
+            <if condition="$order_info['shipping_status'] eq 1">
+            <div class="y-xx">
+                <h2>物流信息</h2>
+                <div class="wu">
+                    运单号：{$order_info['invoice_no']} <br />
+                    配送方式：{$order_info['shipping_name']}
+                </div>
+                <!-- <div class="wu" id="express_info"></div> -->
+            </div>
+            <script>
+                /*queryExpress();
+                function queryExpress()
+                {
+                    var shipping_code = "{$order_info['shipping_code']}";
+                    var invoice_no = "{$order_info['invoice_no']}";
+                    $.ajax({
+                        type : "GET",
+                        dataType: "json",
+                        url:"/index.php?m=Home&c=Api&a=queryExpress&shipping_code="+shipping_code+"&invoice_no="+invoice_no,//+tab,
+                        success: function(data){
+                            var html = '';
+                            if(data.status == 200){
+                                $.each(data.data, function(i,n){
+                                    html += "<h5>"+n.time+"</span><span class='txt'>"+n.context+"</h5>";
+                                });
+                            }else{
+                                html += "<h5>"+data.message+"</h5>";
+                            }
+                            $("#express_info").html(html);
+                        }
+                    });
+                }*/
+            </script>
+            </if>
+            <div class="y-sp">
+                <h2>商品详情</h2>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" class="bt">
+                    <tr>
+                        <td width="270" class="yan">商品</td>
+                        <td width="118" class="yan">商品编号</td>
+                        <td width="136" class="yan">商品属性</td>
+                        <td width="105" class="yan">单价(米豆)</td>
+                        <td width="105" class="yan">米豆</td>
+                        <td width="87" class="yan">数量</td>
+                        <td width="105" class="yan">商品总价</td>
+                        <td width="107" class="yan">操作</td>
+                    </tr>
+                    <volist name="order_info.goods_list" id="goods">
+                    <tr>
+                        <td width="250" class="nei"><a href="{:U('Homered/Goods/goodsInfo',array('id'=>$goods['goods_id']))}"><img src="{$goods.goods_id|goods_thum_images=50,50,'red'}"><p>{$goods.goods_name}</p></a></td>
+                        <td width="118" class="nei"><h4>{$goods.goods_sn}</h4></td>
+                        <td width="136" class="nei"><h3>{$goods.spec_key_name}</h3></td>
+                        <td width="105" class="nei"><h4>{$goods.midou_index}</h4></td>
+                        <td width="105" class="nei"><h4>{$goods.midou}<br /> +￥{$goods.midou_money}</h4></td>
+                        <td width="87" class="nei"><h4> {$goods.goods_num}</h4></td>
+                        <td width="105" class="nei"><h4>{$goods.goods_num*$goods.midou}<br /> +￥{$goods.goods_num*$goods.midou_money}</h4></td>
+                        <td width="107" class="nei sx6">
+							<div class="twrbac">
+                                <a class="songobuy" href="{:U('Homered/Goods/goodsInfo',array('id'=>$goods['goods_id']))}">再次购买</a>
+                                <if condition="($order_info.comment_btn eq 1) and ($goods['is_comment'] eq 0)">
+                                    <a href="{:U('Homered/Order/comment_list',array('order_id'=>$order_info['order_id'],'rec_id'=>$goods['rec_id']))}">评价</a><br />
+                                </if>
+                                <if condition="isset($goods[rstatus])">
+                                    <a>{$goods[rstatus_str]}</a>
+                                <else />
+                                    <a href="{:U('Homered/Order/return_goods',['rec_id'=>$goods['rec_id']])}">申请售后</a>
+                                </if>
+                                <if condition="$goods[order_status] gt 2">
+                                    <if condition="$goods[is_send] eq 0"><a>未发货</a><br /></if>
+                                    <if condition="$goods[is_send] eq 1"><a>已发货</a><br /></if>
+                                    <if condition="$goods[is_send] gt 1"><a>已申请售后</a></if>
+                                </if>
+                            </div>
+                        </td>
+                    </tr>
+					</volist>
+                </table>
+                <div class="jin">
+                    订单总金额：<span>{$order_info.order_amount}</span> 元
+                </div>
+            </div>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<include file="public/user_footer" />
+<script>
+    //未支付取消订单
+    function cancel_order(id){
+        layer.confirm("确定取消订单?",{
+            btn:['确定','取消']
+        },function(){
+            location.href = "/index.php?m=Homered&c=Order&a=cancel_order&id="+id;
+        }, function(tmp){
+            layer.close(tmp);
+        })
+    }
+    //已支付取消订单
+    function refund_order(obj){
+        layer.open({
+            type: 2,
+            title: '<b>订单取消申请</b>',
+            skin: 'layui-layer-rim',
+            shadeClose: true,
+            shade: 0.5,
+            area: ['600px', '500px'],
+            content: $(obj).attr('data-url'),
+        });
+    }
+    //确定收货
+    function order_confirm(order_id){
+        layer.confirm("你确定收到货了吗?",{
+            btn:['确定','取消']
+        },function(){
+            $.ajax({
+                type : 'post',
+                url : '/index.php?m=Homered&c=Order&a=order_confirm&order_id='+order_id,
+                dataType : 'json',
+                success : function(data){
+                    if(data.status == 1){
+                        showErrorMsg(data.msg);
+                        window.location.href = data.url;
+                    }else{
+                        showErrorMsg(data.msg);
+                    }
+                },
+                error : function(XMLHttpRequest, textStatus, errorThrown) {
+                    showErrorMsg('网络失败，请刷新页面后重试');
+                }
+            })
+        }, function(index){
+            layer.close(index);
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="renderer" content="webkit">
+	<title>我的账户-{$tpshop_config['shop_info_store_title']}</title>
+	<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+	<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+	<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+	<link href="__STATIC__/css/member2.css?v={$vnum}" rel="stylesheet">
+	<link href="__STATIC__/css/style2.css?v={$vnum}" rel="stylesheet">
+	<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_logo']}" media="screen"  />
+	<script src="__STATIC__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="__PUBLIC__/js/baidu.js"></script>
+</head>
+
+<body class="bgg">
+	<header class="header">
+		<div class="top">
+			<div class="left">
+				<a><div>欢迎来到米豆薯商城</div></a>
+				<!--<a href=""><div>请登录</div></a>-->
+				<!--<a href=""><div>立即注册</div></a>-->
+				<a href=""><div>{$user.nickname}</div></a>
+				<a href="{:U('Home/user/logout')}"><div>退出</div></a>
+			</div>
+			<div class="right" style="width: 450px;">
+				<ul>
+					<li><a href="{:U('Home/User/index')}">个人中心</a></li>
+					<li><a href="{:U('Home/Cart/index')}" class="ys2">购物车</a></li>
+					<li><a href="{:U('Home/User/goods_collect')}" class="ys3"> 我的收藏</a></li>
+					<li><a href="{:U('Goods/all_category')}">商品分类</a></li>
+					<li><a href="tencent://message/?uin={$tpshop_config['shop_info_qq2']}&amp;Site={$tpshop_config['shop_info_store_title']}&amp;Menu=yes" class="ys1">联系客服</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="y-dao">
+			<div class="y-content1">
+				<div class="logo2 fle">
+					<a href="{:U('Index/index')}"><div class="kyq_img1"><img src="{$tpshop_config['shop_info_store_user_logo']|default='__STATIC__/img/logo2.png'}"></div></a>
+					<span>会员中心</span>
+				</div>
+				<div class="y-nav fle">
+					<p><a href="{:U('Home/User/index')}" id="kyq_dang">首页</a></p>
+					<p><a href="{:U('Home/User/info')}">账户设置</a></p>
+					<p><a href="{:U('Home/User/message_notice')}">消息<span><if condition="$user_message_count gt 0">{$user_message_count}</if></span></a></p>
+				</div>
+				<div class="kyq_box1 fle1">
+					<p><img src="__STATIC__/images/kyq_user2/kyq_shou.png"><a href="{:U('Index/index')}">回到商城首页</a></p>
+					<p><img src="__STATIC__/images/kyq_user2/kyq_mi.png"><a href="{:U('Homered/User/index')}">米豆专区</a></p>
+				</div>
+				<!--<div class="y-sou fri">
+					<form action="">
+						<input type="text" class="y-text fle" />
+						<input type="submit" class="y-sub" value="搜 索" />
+					</form>
+				</div>-->
+			</div>
+		</div>
+	</header>
+	<div class="clear"></div>
+	<div class="y-content">
+		<!--左侧菜单-->
+		<div class="kyq_left fle">
+			<div class="kyq_left1">
+				<div class="kyq_font1">个人中心</div>
+				<ul class="y-left">
+					<li><a href="{:U('Home/User/info')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'User') and (ACTION_NAME eq 'info') ">class="on"</if> >个人资料</a></li>
+					<!--<li><a href="{:U('Home/Order/comment')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'Order') and ((ACTION_NAME eq 'comment') or (ACTION_NAME eq 'comment_list')) ">class="on"</if> >我的评价</a></li>-->
+					<li><a href="{:U('Home/User/safety_settings')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'User') and ( (ACTION_NAME eq 'safety_settings') or (ACTION_NAME eq 'password') or (ACTION_NAME eq 'paypwd_index') or (ACTION_NAME eq 'paypwd') ) ">class="on"</if> >安全设置</a></li>
+					<li><a href="{:U('Home/User/recharge')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'User') and ( (ACTION_NAME eq 'recharge') or (ACTION_NAME eq 'withdrawals') or (ACTION_NAME eq 'toCash') ) ">class="on"</if>>账户余额</a></li>
+					<li><a href="{:U('Home/User/red_envelope')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'User') and (ACTION_NAME eq 'red_envelope') ">class="on"</if> >我的米豆</a></li>
+					<li><a href="{:U('Home/User/already_rebate')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'User') and (ACTION_NAME eq 'already_rebate') ">class="on"</if> >我的福利</a></li>
+					<li><a href="{:U('Home/Cart/index')}" target="_blank">购物车</a></li>
+					<li><a href="{:U('Home/User/goods_collect')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'User') and (ACTION_NAME eq 'goods_collect') ">class="on"</if> >我的收藏</a></li>
+					<!--<li><a href="{:U('Home/Order/order_list')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'Order') and ((ACTION_NAME eq 'order_list') or (ACTION_NAME eq 'order_detail') or (ACTION_NAME eq 'return_goods')) ">class="on"</if> >我的订单</a></li>-->
+					<!--<li><a href="{:U('Home/User/address_list')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'User') and (ACTION_NAME eq 'address_list') ">class="on"</if> >收货地址</a></li>-->
+					<!--<li><a href="{:U('Home/Order/return_goods_list')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'Order') and ((ACTION_NAME eq 'return_goods_list') or (ACTION_NAME eq 'refund_order') or (ACTION_NAME eq 'return_goods') or (ACTION_NAME eq 'return_goods_info') or (ACTION_NAME eq 'return_goods_list')) ">class="on"</if> >退货退款</a></li>-->
+					<!--<li><a href="{:U('Home/User/pay_paid')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'User') and (ACTION_NAME eq 'pay_paid') ">class="on"</if> >线下消费记录</a></li>-->
+					<!--<li><a href="{:U('Home/User/apply_suppliers')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'User') and ((ACTION_NAME eq 'apply_suppliers') or (ACTION_NAME eq 'suppliers') or (ACTION_NAME eq 'suppliers_password')) ">class="on"</if> >供货商</a></li>-->
+				</ul>
+			</div>
+			<div class="kyq_left1">
+				<div class="kyq_font1">订单中心</div>
+				<ul class="y-left">
+					<li><a href="{:U('Home/Order/comment')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'Order') and ((ACTION_NAME eq 'comment') or (ACTION_NAME eq 'comment_list')) ">class="on"</if> >我的评价</a></li>
+					<li><a href="{:U('Home/Order/order_list')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'Order') and ((ACTION_NAME eq 'order_list') or (ACTION_NAME eq 'order_detail') or (ACTION_NAME eq 'return_goods')) ">class="on"</if> >我的订单</a></li>
+					<li><a href="{:U('Home/User/address_list')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'User') and (ACTION_NAME eq 'address_list') ">class="on"</if> >收货地址</a></li>
+					<li><a href="{:U('Home/Order/return_goods_list')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'Order') and ((ACTION_NAME eq 'return_goods_list') or (ACTION_NAME eq 'refund_order') or (ACTION_NAME eq 'return_goods') or (ACTION_NAME eq 'return_goods_info') or (ACTION_NAME eq 'return_goods_list')) ">class="on"</if> >退货退款</a></li>
+				</ul>
+			</div>
+			<div class="kyq_left1">
+				<div class="kyq_font1">订单中心</div>
+				<ul class="y-left">
+					<li><a href="{:U('Home/User/pay_paid')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'User') and (ACTION_NAME eq 'pay_paid') ">class="on"</if> >线下消费记录</a></li>
+					<li><a href="{:U('Home/User/apply_suppliers')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'User') and ((ACTION_NAME eq 'apply_suppliers') or (ACTION_NAME eq 'suppliers') or (ACTION_NAME eq 'suppliers_password')) ">class="on"</if> >供货商</a></li>
+				</ul>
+			</div>
+		</div>
+		<!--右侧内容-->
+		<div class="right00 fri">
+			<div class="kyq_box2">
+				<div class="kyq_box2_left">
+					<div class="kyq_lv">
+						<img src="__STATIC__/images/kyq_user2/kyq_bg.png" class="kyq_bg1">
+						<div class="kyq_img2"><img src="{$user.head_pic|default='__STATIC__/img/img5.jpg'}"></div>
+						<div class="kyq_box3">
+							<div class="kyq_ni" title="米豆薯用户昵称">{$user.nickname}</div>
+							<div class="kyq_zu">（注册会员）</div>
+							<table class="kyq_table1">
+								<tr>
+									<td><img src="__STATIC__/images/kyq_user2/kyq_xian.png"><span>{$user.user_money|tk_money_format}</span></td>
+									<td><img src="__STATIC__/images/kyq_user2/kyq_dou.png"><span>0.00</span></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div class="kyq_huang">
+						<img src="__STATIC__/images/kyq_user2/kyq_time.png">
+						<div>本次登录 : {$user.last_login|date='Y-m-d H:i',###}</div>
+					</div>
+				</div>
+				<div class="kyq_box2_right">
+					<div class="kyq_title">我的钱包</div>
+					<div class="kyq_fu">
+						<div class="kyq_box4">
+							<div class="kyq_box4_he1">
+								<div>{$user.rebate_money_all|tk_money_format}</div>
+								<div>福利总额</div>
+								<div class="kyq_box4_he1_font1"><a href="{:U('/Home/User/toCash')}">提到现金余额</a></div>
+							</div>
+							<div class="kyq_box4_he1">
+								<div>{$user.rebate_money|tk_money_format}</div>
+								<div>可提金额</div>
+								<div class="kyq_box4_he1_font2"><a href="#">提现记录</a></div>
+							</div>
+						</div>
+						<div class="kyq_box5">
+							<div class="kyq_box4_he1">
+								<div>{$user.user_money|tk_money_format}</div>
+								<div>现金金额</div>
+								<div class="kyq_bo">
+									<span><a href="{:U('Home/User/withdrawals')}">提现</a></span>
+									<span><a href="{:U('Home/User/recharge_pay')}">充值</a></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="kyq_box_box1">
+				<div class="kyq_box_box1_1">
+					<a href="#">
+						<div class="kyq_box_box1_1_box1">
+							<div>我的订单</div>
+							<div><a href="{:U('Home/Order/order_list')}">查看全部订单</a></div>
+						</div>
+					</a>
+					<div class="kyq_box_box1_nav1">
+						<ul>
+							<li>
+								<a href="{:U('Order/order_list',array('type'=>'WAITPAY'))}">
+									<div class="kyq_gao"><img src="__STATIC__/images/kyq_user2/kyq_fu.png"></div>
+									<p>待付款</p>
+								</a>
+							</li>
+							<li>
+								<a href="{:U('Order/order_list',array('type'=>'WAITSEND'))}">
+									<div class="kyq_gao"><img src="__STATIC__/images/kyq_user2/kyq_fa.png"></div>
+									<p>待发货</p>
+								</a>
+							</li>
+							<li>
+								<a href="{:U('Order/order_list',array('type'=>'WAITRECEIVE'))}">
+									<div class="kyq_gao"><img src="__STATIC__/images/kyq_user2/kyq_che.png"></div>
+									<p>待收货</p>
+								</a>
+							</li>
+							<li>
+								<a href="{:U('Order/comment',array('status'=>'0'))}">
+									<div class="kyq_gao"><img src="__STATIC__/images/kyq_user2/kyq_ping.png"><div class="kyq_yuan">{$com_num}</div></div>
+									<p>待评价</p>
+								</a>
+							</li>
+							<li>
+								<a href="{:U('Home/Order/return_goods_list')}">
+									<div class="kyq_gao"><img src="__STATIC__/images/kyq_user2/kyq_tui.png"></div>
+									<p>退换货</p>
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div class="kyq_box_box1_1_list">
+						<div class="kyq_list1">
+							<div class="kyq_list1_box1">
+								<div class="kyq_list1_box1_img1"><img src="__STATIC__/images/kyq_user2/kyq_list.png"></div>
+								<div class="kyq_list1_box1_1">
+									<div>您提交了订单，等待付款</div>
+									<div>￥100.00</div>
+								</div>
+							</div>
+							<div class="kyq_list1_box2">
+								<div><a href="#">订单详情</a></div>
+								<div><a href="#">查看物流</a></div>
+							</div>
+						</div>
+						<div class="kyq_list1">
+							<div class="kyq_list1_box1">
+								<div class="kyq_list1_box1_img1"><img src="__STATIC__/images/kyq_user2/kyq_list.png"></div>
+								<div class="kyq_list1_box1_1">
+									<div>您提交了订单，等待付款</div>
+									<div>￥100.00</div>
+								</div>
+							</div>
+							<div class="kyq_list1_box2">
+								<div><a href="#">订单详情</a></div>
+								<div><a href="#">查看物流</a></div>
+							</div>
+						</div>
+						<div class="kyq_list1">
+							<div class="kyq_list1_box1">
+								<div class="kyq_list1_box1_img1"><img src="__STATIC__/images/kyq_user2/kyq_list.png"></div>
+								<div class="kyq_list1_box1_1">
+									<div>您提交了订单，等待付款</div>
+									<div>￥100.00</div>
+								</div>
+							</div>
+							<div class="kyq_list1_box2">
+								<div><a href="#">订单详情</a></div>
+								<div><a href="#">查看物流</a></div>
+							</div>
+						</div>
+						<div class="kyq_list1">
+							<div class="kyq_list1_box1">
+								<div class="kyq_list1_box1_img1"><img src="__STATIC__/images/kyq_user2/kyq_list.png"></div>
+								<div class="kyq_list1_box1_1">
+									<div>您提交了订单，等待付款</div>
+									<div>￥100.00</div>
+								</div>
+							</div>
+							<div class="kyq_list1_box2">
+								<div><a href="#">订单详情</a></div>
+								<div><a href="#">查看物流</a></div>
+							</div>
+						</div>
+					</div>
+					<div class="kyq_zan">暂无更多信息~</div>
+				</div>
+				<div class="kyq_box_box2_2">
+					<div class="kyq_box_box2_box1">
+						<div class="kyq_box_box2_box2">购物车</div>
+						<div class="kyq_gou1">
+							<div class="kyq_gou1_title"><img src="__STATIC__/images/kyq_user2/kyq_list.png"></div>
+							<div class="kyq_gou2">
+								<div class="kyq_gou2_title">商品介绍商品介绍商品介绍商品介绍商品介绍</div>
+								<div class="kyq_gou3">
+									<div>￥1234</div>
+									<div>X1</div>
+								</div>
+							</div>
+						</div>
+						<div class="kyq_gou1">
+							<div class="kyq_gou1_title"><img src="__STATIC__/images/kyq_user2/kyq_list.png"></div>
+							<div class="kyq_gou2">
+								<div class="kyq_gou2_title">商品介绍商品介绍商品介绍商品介绍商品介绍</div>
+								<div class="kyq_gou3">
+									<div>￥1234</div>
+									<div>X1</div>
+								</div>
+							</div>
+						</div>
+						<div class="kyq_cha">查看购物车</div>
+					</div>
+					<div class="kyq_guang">
+						<img src="__STATIC__/images/kyq_user2/kyq_gang.png">
+					</div>
+
+				</div>
+			</div>
+			<!--<div class="y-hyt">-->
+				<!--<div class="tx fle">-->
+					<!--<a href="#"><img src="{$user.head_pic|default='__STATIC__/img/img5.jpg'}">{$user.nickname}（<span>{$level[$user['level']]['level_name']}</span>）</a>-->
+				<!--</div>-->
+				<!--<div class="time fri">-->
+					<!--<b>本次登录：</b>{$user.last_login|date='Y-m-d H:i',###}  <!-- /  <b></b>上次登录：{$user.pre_last_login|date='Y-m-d H:i',###} -->
+				<!--</div>-->
+			<!--</div>-->
+			<!--<ul class="y-zut">-->
+				<!--<li><a href="{:U('Order/order_list',array('type'=>'WAITPAY'))}">待付款</a></li>-->
+				<!--<li><a href="{:U('Order/order_list',array('type'=>'WAITSEND'))}">待发货</a></li>-->
+				<!--<li><a href="{:U('Order/order_list',array('type'=>'WAITRECEIVE'))}">待收货</a></li>-->
+				<!--<li><a href="{:U('Order/comment',array('status'=>'0'))}">待评价 <span>{$com_num}</span></a></li>-->
+				<!--<li><a href="{:U('Home/Order/return_goods_list')}">退款</a></li>-->
+			<!--</ul>-->
+			<!--<div class="y-txje fle">-->
+				<!--<div class="je fle bor">-->
+					<!--福利总额-->
+					<!--<p><span>{$user.rebate_money_all|tk_money_format}</span>元</p>-->
+				<!--</div>-->
+				<!--<div class="je fle">-->
+					<!--可提金额-->
+					<!--<p><span>{$user.rebate_money|tk_money_format}</span>元</p>-->
+				<!--</div>-->
+				<!--<div class="clear"></div>-->
+				<!--<div class="tx">-->
+					<!--<a href="{:U('/Home/User/toCash')}">我要提到现金余额</a>-->
+				<!--</div>-->
+			<!--</div>-->
+			<!--<div class="y-txje fri">-->
+				<!--<div class="je moc">-->
+					<!--现金金额-->
+					<!--<p><span>{$user.user_money|tk_money_format}</span>元</p>-->
+				<!--</div>-->
+				<!--<div class="clear"></div>-->
+				<!--<div class="tx1 hon fle">-->
+					<!--<a href="{:U('Home/User/withdrawals')}">提现</a>-->
+				<!--</div>-->
+				<!--<div class="tx1 ju fle">-->
+					<!--<a href="{:U('Home/User/recharge_pay')}">充值</a>-->
+				<!--</div>-->
+			<!--</div>-->
+
+			<div class="clear"></div>
+			<div class="y-sm">
+                <p><span>福利说明 : </span>福利是购买福利专区商品产生，商城将自己的利润回馈给消费者。</p>
+            </div>
+            <div class="y-zxdd">
+            	<div class="bt">
+            		<p>最新订单</p>
+            		<!--<a href="{:U('Home/Order/order_list')}">查看全部订单</a>-->
+            	</div>
+            	<!--订单-->
+            	<empty name="order_list">
+					<div class="car-none-pl">
+						<i class="account-acco1"></i>您最近没有待处理订单，<a href="/">快去逛逛吧~</a>
+					</div>
+				<else/>
+					<volist name="order_list" id="list">
+		            	<table width="930" border="0" cellspacing="0" cellpadding="0" class="y-dd">
+							<tr>
+							    <td>
+		                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="dbt">
+									    <tr>
+									        <td width="880" class="dh">{$list.add_time|date='Y-m-d H:i:s',###}      订单号: {$list.order_sn}</td>
+									        <td width="120" class="ljt">
+											<if condition="$list.pay_btn eq 1">
+												<a class="ps_lj" href="{:U('Home/Cart/cart4',array('order_id'=>$list[order_id]))}"  target="_blank">立即支付</a>
+											</if>
+											<if condition="$list.order_button[cancel_info] eq 1">
+												 <a class="consoorder" href="{:U('Order/cancel_order_info',array('order_id'=>$list[order_id]))}">取消详情</a>
+											</if>
+											<if condition="$list.receive_btn eq 1">
+												<a class="ps_lj" href="javascript:;" onclick="order_confirm({$list.order_id});">确认收货</a>
+											</if>
+											<if condition="$list.cancel_btn eq 1">
+												<if condition="$list[pay_status] eq 0">
+												<a class="consoorder" href="javascript:void(0);" onClick="cancel_order({$list.order_id})" >取消订单</a>
+												<else/>
+												<a class="consoorder" href="javascript:void(0);" data-url="{:U('Home/Order/refund_order',['order_id'=>$list.order_id])}" onClick="refund_order(this)" >取消订单</a>
+												</if>
+											<else/>
+												<!--<div class="dele" onclick="verConfirm('确认删除该订单?','{:U('Home/Order/del_order',array('order_id'=>$list['order_id'], 'type'=>$Request.param.type))}')"></div>-->
+											</if>
+											</td>
+									    </tr>
+		                            </table>
+
+							    </td>
+							</tr>
+							<tr>
+								<td>
+									<table width="100%" border="0" cellspacing="0" cellpadding="0" class="dxq">
+								    	<volist name="list.goods_list" id="goods" key="k">
+									    <tr>
+									        <td width="393" class="xni">
+									        	<a <if condition="$goods['is_allreturn'] eq '1'"> href="{:U('Home/ReturnGoods/goodsInfo',array('id'=>$goods['goods_id']))}" <else /> href="{:U('Home/Goods/goodsInfo',array('id'=>$goods['goods_id']))}" </if>><img src="{$goods.goods_id|goods_thum_images=80,80}"></a>
+									        	<div class="zi fle">
+									        		<h3><a <if condition="$goods['is_allreturn'] eq '1'"> href="{:U('Home/ReturnGoods/goodsInfo',array('id'=>$goods['goods_id']))}" <else /> href="{:U('Home/Goods/goodsInfo',array('id'=>$goods['goods_id']))}" </if> >{$goods.goods_name}</a></h3>
+									        		<!--<p>{$goods.spec_key_name}{$goods['is_allreturn']}</p>-->
+									        	</div>
+									        </td>
+									        <td width="93" class="xni1">￥{$goods.member_goods_price}</td>
+									        <td width="100" class="xni1">
+									        	{$goods.goods_num}
+									        	<if condition="isset($goods[rstatus])">
+	                                            	<br />
+		                                            <a class="applyafts">{$goods[rstatus_str]}</a>
+		                                        <else />
+		                                        	<br />
+		                                            <a href="{:U('Home/Order/return_goods',['rec_id'=>$goods['rec_id']])}" class="applyafts">申请售后</a>
+		                                        </if>
+									        </td>
+											<if condition="$key eq 0">
+									        <td width="112" class="xni1" rowspan="{$list.goods_list|count}">
+												<p class="d_pri"><span>￥</span><span>{$list.order_amount}</span></p>
+												<p class="d_yzo">
+													<span>含运费：</span>
+													<span>{$list.shipping_price}</span></p>
+												<!--<p class="d_yzo"><a href="javascript:void(0);">{$list.pay_name}</a></p>-->
+									        </td>
+									        <td width="126" class="xni1" rowspan="{$list.goods_list|count}">
+									        	<p class="d_yzo">
+													<if condition="$goods[is_comment] eq 1">
+														已完成
+													<elseif condition="$goods[is_comment] neq 1 and $list['shipping_status'] eq 2"/>
+														<if condition="$goods[is_send] eq 0">
+															待发货
+															<else/>
+															已发货
+														</if>
+													<else/>
+														{$list['order_status_desc']}
+													</if>
+                                                </p>
+                                                <p>
+													<if condition="$list.order_prom_type eq 5">
+														<a href="{:U('Order/virtual_order',array('order_id'=>$list['order_id']))}">查看详情</a>
+													<else/>
+														<a href="{:U('Home/Order/order_detail',array('id'=>$list['order_id']))}">查看详情</a>
+													</if>
+												</p>
+									        </td>
+									        <td width="106" class="xni1" rowspan="{$list.goods_list|count}">
+												<p class=""><a href="{:U('Home/Goods/goodsInfo',array('id'=>$goods['goods_id']))}">再次购买</a></p>
+												<if condition="($list[comment_btn] eq 1) and ($goods[is_comment] eq 0)">
+													<!--<p class="inspect"><a href="{:U('Home/Order/comment')}"><h6>评价</h6></a></p>-->
+												</if>
+									        </td>
+									        </if>
+									    </tr>
+		                            </volist>
+		                            </table>  
+								</td>
+							</tr>
+		            	</table>
+		            </volist>
+            	</empty>
+				<!--订单完成-->
+            </div>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<include file="public/user_footer" />
+</body>
+</html>

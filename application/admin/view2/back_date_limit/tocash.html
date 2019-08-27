@@ -1,0 +1,332 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>返利余额提现到用户余额</h3>
+                <h5></h5>
+            </div>
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    <div id="explanation" class="explanation" style="color: rgb(44, 188, 163); background-color: rgb(237, 251, 248); width: 99%; height: 100%;">
+        <div id="checkZoom" class="title"><i class="fa fa-lightbulb-o"></i>
+            <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+            <span title="收起提示" id="explanationZoom" style="display: block;"></span>
+        </div>
+        <ul>
+            <li> </li>
+        </ul>
+    </div>
+    <div class="flexigrid">
+        <div class="mDiv">
+            <div class="ftitle">
+                <h3>提现申请列表</h3>
+                <h5>(共{$pager->totalRows}条记录)</h5>
+            </div>
+            <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+            <form class="navbar-form form-inline" id="search-form" method="get" action="{:U('/admin/back_date_limit/tocash')}" onSubmit="return check_form();">
+                <input type="hidden" name="create_time" id="create_time" value="{$create_time}">
+                <div class="sDiv">
+                    <div class="sDiv2" style="margin-right: 10px;">
+                        <input type="text" size="30" id="start_time" name="start_time" value="{$start_time}" placeholder="起始时间" autocomplete="off" class="qsbox">
+                        <input type="button" class="btn" value="起始时间">
+                    </div>
+                    <div class="sDiv2" style="margin-right: 10px;">
+                        <input type="text" size="30" id="end_time" name="end_time" value="{$end_time}" placeholder="截止时间" autocomplete="off" class="qsbox">
+                        <input type="button" class="btn" value="截止时间">
+                    </div>
+                    <div class="sDiv2" style="margin-right: 10px;border: none;">
+                        <select id="status" name="status" class="form-control">
+                            <option value="-2">状态</option>
+                            <option value="0" <if condition="$_REQUEST['status'] eq 0">selected</if>>审核中</option>
+                            <option value="1" <if condition="$_REQUEST['status'] eq 1">selected</if>>审核通过</option>
+                            <option value="-1" <if condition="$_REQUEST['status'] eq -1">selected</if>>审核失败</option>
+                        </select>
+                    </div>
+                    <div class="sDiv2" style="margin-right: 10px;">
+                        <input size="30" id="user_id" name="user_id" value="{$_GET[user_id]}" placeholder="用户ID" class="qsbox" type="text">
+                        <input class="btn" value="搜索" type="submit">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="hDiv">
+            <div class="hDivBox">
+                <table cellspacing="0" cellpadding="0">
+                    <thead>
+                    <tr>
+                        <th align="center" abbr="article_title" axis="col3" class="">
+                            <div style="text-align: center; width: 50px;" class="">
+                                <input type="checkbox" onClick="$('input[name*=\'selected\']').prop('checked', this.checked);">
+                            </div>
+                        </th>
+                        <th align="center" abbr="article_title" axis="col3" class="">
+                            <div style="text-align: center; width: 50px;" class="">申请ID</div>
+                        </th>
+                        <th align="left" axis="col3" class="">
+                            <div style="text-align: center; width: 120px;" class="">申请人</div>
+                        </th>
+                        <th align="left" axis="col4" class="">
+                            <div style="text-align: center; width: 100px;" class="">手机</div>
+                        </th>
+                        <th align="center" axis="col5" class="">
+                            <div style="text-align: center; width: 100px;" class="">提现金额</div>
+                        </th>
+                        <th align="center" axis="col5" class="">
+                            <div style="text-align: center; width: 100px;" class="">现金</div>
+                        </th>
+                        <th align="center" axis="col5" class="">
+                            <div style="text-align: center; width: 100px;" class="">米豆</div>
+                        </th>
+                        <th align="center" axis="col6" class="" >
+                            <div style="text-align: center; width: 200px;" class="">下单时间</div>
+                        </th>
+                        <th align="center" axis="col6" class="" >
+                            <div style="text-align: center; width: 200px;" class="">申请时间</div>
+                        </th>
+                        <th align="center" axis="col6" class="">
+                            <div style="text-align: center; width: 100px;" class="">状态</div>
+                        </th>
+						
+						<th align="center" axis="col6" class="">
+                            <div style="text-align: center; width: 100px;" class="">操作</div>
+                        </th>
+                        <th style="width:100%" axis="col7">
+                            <div></div>
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class="tDiv">
+            <div class="tDiv2">
+                <div class="fbutton">
+                    <a onClick="act_submit(1)">
+                        <div class="add" title="审核通过">
+                            <span><i class="fa fa-check"></i>审核通过</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="fbutton">
+                    <a onClick="act_submit(-1)">
+                        <div class="add" title="拒绝提现">
+                            <span><i class="fa fa-ban"></i>审核失败</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+        <div class="bDiv" style="height: auto;">
+            <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+                <table>
+                    <tbody>
+                    <volist name="list" id="vo">
+                        <tr>
+                            <td align="center" class="">
+                                <label>
+                                <div style="text-align: center; width: 50px;">
+                                    <if condition="$v['status'] eq 0"><input type="checkbox" name="selected[]" value="{$vo['id']}"></if>
+                                </div></label>
+                            </td>
+                            <td align="center" class="">
+                                <div style="text-align: center; width: 50px;">
+                                    {$vo.id}
+                                </div>
+                            </td>
+                            <td align="left" class="">
+                                <div style="text-align: center; width: 120px;">{$vo.nickname}</div>
+                            </td>
+                            <td align="left" class="">
+                                <div style="text-align: center; width: 100px;">{$vo.mobile}</div>
+                            </td>
+                            <td align="center" class="">
+                                <div style="text-align: center; width: 100px;">
+                                   {$vo.money|tk_money_format}
+                                </div>
+                            </td>
+                            <td align="center" class="">
+                                <div style="text-align: center; width: 100px;">
+                                   {$vo.ready|tk_money_format}
+                                </div>
+                            </td>
+                            <td align="center" class="">
+                                <div style="text-align: center; width: 100px;">
+                                   {$vo.midou|num_float2}
+                                </div>
+                            </td>
+                            <td align="center" class="">
+                                <div style="text-align: center; width: 200px;">
+                                    {$vo.add_time|date="Y-m-d H:i:s",###}
+                                </div>
+                            </td>
+                            <td align="center" class="">
+                                <div style="text-align: center; width: 200px;">
+                                    {$vo.create_time|date="Y-m-d H:i:s",###}
+                                </div>
+                            </td>
+                            <td align="center" class="">
+                                <div style="text-align: center; width: 100px;">
+                                    {$vo.status|check_withdrawal}
+                                </div>
+                            </td>
+							
+							<td align="center" class="">
+                                <div style="text-align: left; width:100px; height:auto">
+									<if condition="$vo.status eq 0">
+										<a href="JavaScript:;" onClick="ac_status('{$vo.id}',1,{$vo.user_id})">通过</a>
+										<a href="JavaScript:;" onClick="ac_status('{$vo.id}',-1,{$vo.user_id})">拒绝</a>
+									</if>
+                                </div>
+                            </td>
+                            <td align="" class="" style="width: 100%;">
+                                <div>&nbsp;</div>
+                            </td>
+                        </tr>
+                    </volist>
+                    </tbody>
+                </table>
+            </div>
+            <div class="iDiv" style="display: none;"></div>
+        </div>
+        {$page}
+    </div>
+</div>
+<script>
+
+$(document).ready(function(){
+    // 表格行点击选中切换
+    $('#flexigrid > table>tbody >tr').click(function(){
+        $(this).toggleClass('trSelected');
+    });
+    // 点击刷新数据
+    $('.fa-refresh').click(function(){
+        location.href = location.href;
+    });
+
+    $('#start_time').layDate();
+    $('#end_time').layDate();
+});
+
+function check_form(){
+    var start_time = $.trim($('#start_time').val());
+    var end_time =  $.trim($('#end_time').val());
+    if(start_time == '' ^ end_time == ''){
+        layer.alert('请选择完整的时间间隔', {icon: 2});
+        return false;
+    }
+    if(start_time !== '' && end_time !== ''){
+        $('#create_time').val(start_time+" - "+end_time);
+    }
+    if(start_time == '' && end_time == ''){
+        $('#create_time').val('');
+    }
+    return true;
+}
+
+//批量操作提交
+function act_submit(wst) {
+    var chks = [];
+    $('input[name*=selected]').each(function(i,o){
+        if($(o).is(':checked')){
+            chks.push($(o).val());
+        }
+    })
+    if(chks.length == 0){
+        layer.alert('请至少选择一项', {icon: 2});return;
+    }
+    var can_post = false;
+    var remark = "审核通过";
+    if(wst != 1 ){
+        layer.prompt({title: '请填写备注', formType: 2}, function(text, index){
+            layer.close(index);
+            remark = text;
+            audit(chks, wst, remark);
+        });
+    }else{
+        audit(chks, wst, remark);
+    }
+}
+
+function audit(chks, wst, remark){
+    $.ajax({
+        type: "POST",
+        url: "/index.php?m=Admin&c=BackDateLimit&a=doCash",//+tab,
+        data: {id:chks,status:wst,remark:remark},
+        dataType: 'json',
+        success: function (data) {
+            if(data.status == 1){
+                layer.alert(data.msg, {
+                    icon: 1,
+                    closeBtn: 0
+                }, function(){
+                    window.location.reload();
+                });
+            }else{
+                layer.alert(data.msg, {icon: 2,time: 3000});
+            }
+        },
+        error:function(){
+            layer.alert('网络异常', {icon: 2,time: 3000});
+        }
+    });
+}
+
+
+// 单独操作
+function ac_status(id,status,user_id){
+	if(status == -1){
+		layer.prompt({title: '请输入拒绝原因', formType: 2}, function(text, index){
+			layer.close(index);
+			ajaxto(id,status,user_id,text);
+		});	
+	}else{
+		ajaxto(id,status,user_id,'');	
+	}
+		
+}
+
+function ajaxto(id,status,user_id,remark){
+	$.ajax({  
+		url: "{:U('/Admin/BackDateLimit/doCash')}",  
+		type: 'POST',
+		data:"id=" + id + '&status='+status+'&remark=' + remark + "&user_id=" + user_id,  
+		dataType: 'json',  
+		error: function(){alert('系统繁忙，请稍后再试！')},
+		beforeSend:function(){
+			parent.layer.load('2',{shade: 0.6});
+		},
+		success: function(r){
+			if(r.status == 1){
+				layer.msg('数据更新成功！', {icon: 1,time: 3000,shade: 0.6},function (){
+					location.reload();
+				}); 
+			}else{
+				parent.layer.msg(r.info, {icon: 2,time: 2000,shade: 0.6});
+			}
+		},
+		complete:function(){
+			parent.layer.closeAll('loading');
+		}
+	});  	
+}
+    $(document).ready(function(){
+        // 表格行点击选中切换
+        $('#flexigrid > table>tbody >tr').click(function(){
+            $(this).toggleClass('trSelected');
+        });
+        // 点击刷新数据
+        $('.fa-refresh').click(function(){
+            location.href = location.href;
+        });
+    });
+
+</script>
+</body>
+</html>

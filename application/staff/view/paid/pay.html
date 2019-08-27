@@ -1,0 +1,105 @@
+<include file="public/TK_top" />
+
+<div class="e-fu e-mot">
+<form action="{:U('/Mobile/Payment/paid_pay')}" method="post" id="payforms">
+<input type="hidden" id="id" name="paid_id" value="{$Request.param.id}" />
+	<div class="ni clearfix">
+		<p>订单时间：<span>{$item.create_time|date='Y-m-d H:i:s',###}</span></p>
+	</div>
+	<div class="ni clearfix">
+		<p class="bfw">手机号码：<span>{$item.mobile|hide_mobile}</span></p>
+		<p class="bfw">待付金额：<span class="yan">{$item.money|tk_money_format}</span></p>
+	</div>
+	<div class="ni clearfix">
+		<!--其他支付方式-s-->
+		<div class="pay-list-4 p">
+		    <div class="maleri30">
+			
+		        <ul>
+					
+					<foreach name="paymentList" item="v"  key="k">
+						<li onClick="changepay(this);">
+							<label>
+							<div class="radio fl">
+								<span class="che cod"  name="{$v[name]}">
+									<i>
+										<input type="radio"  value="pay_code={$v['code']}" class="c_checkbox_t" name="pay_radio" style="display:none;" <if condition="$k eq 'alipayMobile'">checked</if> />
+									</i>
+								</span>
+							</div>
+							<div class="pay-list-img fl">
+								<!--<img src="__PUBLIC__/staff/img/y-08.png"/>-->
+								<img src="/plugins/{$v['type']}/{$v['code']}/{$v['icon']}" style="width:auto" />
+							</div>
+							<div class="pay-list-font fl">
+													{$v[name]}                      
+							</div>
+							</label>
+						</li>
+					</foreach>
+				
+		        
+		       </ul>
+		    </div>
+		</div>
+		<!--其他支付方式-s-->
+	</div>
+</div>
+<div class="paiton y-mors">
+    <div class="maleri30">
+        <a class="soon" href="javascript:void(0);" onClick="pay()"><span>确认支付</span></a>
+    </div>
+</div>
+	</form>
+<script type="text/javascript">
+
+
+    $(function(){
+        //默认选中第一个
+        $('.pay-list-4 div ul li:first').find('.che').addClass('check_t')
+                .end().find(':radio').attr('checked',true);
+    })
+    //切换支付方式
+    function changepay(obj){
+        $(obj).find('.che').addClass('check_t').parents('li').siblings('li').find('.che').removeClass('check_t');
+        //改变中状态
+        if($(obj).find('.che').hasClass('check_t')){
+            //选中
+            $(obj).find(':radio').attr('checked',true);
+            $(obj).siblings('li').find(':radio').removeAttr('checked');
+        }else{
+            //取消选中
+            $(obj).find(':radio').removeAttr('checked');
+        }
+
+    }
+	
+	function ddd(){
+		layer.open({
+		content: '支付成功？'
+			,btn: ['是', '否']
+			,yes: function(index){
+				location.href = '{:U("/Staff/Paid/Index/pay_status/999")}';
+				/*location.reload();
+				layer.close(index);*/
+			}
+		});	
+	}
+
+    function pay(){
+		var radio = $("input[name='pay_radio']:checked").val();
+		 if(radio='pay_code=weixinH5'){
+			setTimeout(ddd, 2000);
+		}
+		$("#payforms").submit();
+	//	setTimeout("quesd()",3000);
+		return true;
+    }
+
+  
+</script>
+
+
+
+</body>
+</html>

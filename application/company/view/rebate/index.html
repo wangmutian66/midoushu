@@ -1,0 +1,195 @@
+<include file="public/layout" />
+<link rel="stylesheet" href="__ROOT__/public/progressbar/styles/progressbar.css">
+<div class="jindutiao">
+  <section class="container">
+      <div class="progress"> <span class="blue" style="width:0%;"><span>0%</span></span> </div>
+  </section>
+</div>
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title" style="margin-top:10px;">
+      <div class="subject">
+        <h3>返利流水管理</h3>
+      </div>
+	    <ul class="tab-base nc-row">
+        <li><a href="{:U('/Company/Rebate/Index')}" <if condition="!$Request.param.t"> class="current" </if>><span>成员流水</span></a></li>
+        <li><a href="{:U('/Company/Rebate/Index',['t'=>2])}"   <if condition="$Request.param.t eq 2"> class="current" </if>><span>员工流水</span></a></li>
+      </ul>
+
+    </div>
+  </div>
+  <!-- 操作说明 -->
+
+  <div class="flexigrid">
+    <div class="mDiv">
+      <div class="ftitle">
+        <h3>等级列表</h3>
+        <h5>(共{$pager->totalRows}条记录)</h5>
+      </div>
+      <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+      <form action="__URL__" id="search-form2" class="navbar-form form-inline" method="get" >
+        <div class="sDiv">
+    			<div class="sDiv2">                   
+    				<!--排序规则-->
+    				<select name="store_id">
+    					<option value="">请选择</option>
+    					<volist name="store_list" id='vo'>
+    						<option value="{$vo.cid}" <if condition="$vo.cid eq $Request.param.store_id"> selected </if>>{$vo.cname}</option>
+    					</volist>
+    				</select>
+    			</div>
+          <div class="sDiv2">           
+		        <input type="hidden" name="t" id="t" value="{$Request.param.t}"/>
+            <input type="text" size="30" name="key_words" class="qsbox" placeholder="请输入真实姓名..." value="{$Request.param.key_words}">
+            <input type="submit" class="btn" value="搜索">
+          </div>
+        </div>
+      </form>
+    </div>
+	<!--<div class="tDiv">
+		<div class="tDiv2">
+			<div class="fbutton">
+				<div class="add" title="新增数据">
+					<span onClick="AddData();"><i class="fa fa-plus"></i>新增数据</span>
+				</div>
+			</div>
+		</div>
+		<div style="clear:both"></div>
+	</div>-->
+	
+    <div class="hDiv">
+      <div class="hDivBox">
+        <table cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+              <th class="sign" axis="col0">
+                <div style="width: 24px;"><i class="ico-check"></i></div>
+              </th>
+			        <th align="left" abbr="article_title" axis="col1" class="">
+                <div style="text-align: left; width: 60px;" class="">ID</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">成员姓名</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">流水金额</div>
+              </th>
+			        <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:150px;" class="">分红时间</div>
+              </th>  
+			        <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:300px;" class="">说明</div>
+              </th>
+              <th style="width:100%" axis="col7">
+                <div></div>
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    <div class="tDiv">
+      <div class="tDiv2">
+        <div class="fbutton"> 
+          <a href="javascript:form_submit(1)">
+              <div class="add" title="">
+                <span><i class="fa fa-plus"></i>导出数据</span>
+              </div>
+            </a> 
+          </div>
+      </div>
+      <div style="clear:both"></div>
+    </div>
+    <div class="bDiv" style="height: auto;">
+      <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+	  	  <table>
+          <tbody>
+            <foreach name="list" item="vo" key="k" >
+              <tr>
+                <td class="sign">
+                  <div style="width: 24px;"><i class="ico-check"></i></div>
+                </td>
+				        <td align="left" class="">
+                  <div style="text-align: left; width: 60px;">{$vo.id}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.real_name}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.money|tk_money_format}</div>
+                </td>
+				        <td align="left" class="">
+                  <div style="text-align: center; width: 150px;">{$vo.create_time|date="Y-m-d H:i:s",###}</div>
+                </td>
+				        <td align="left" class="">
+                  <div style="text-align: center; width: 300px;">{$vo.info}</div>
+                </td>
+                <td align="" class="" style="width: 100%;">
+                  <div>&nbsp;</div>
+                </td>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+        <!--分页位置--> 
+        {$pager->show()}
+	  
+	  </div>
+      <div class="iDiv" style="display: none;"></div>
+    </div>
+  </div>
+</div>
+<script>
+    $(document).ready(function(){	
+  	    // 表格行点击选中切换
+  	    $('#flexigrid > table>tbody >tr').click(function(){
+  		    $(this).toggleClass('trSelected');
+  		  });
+  		
+    		// 点击刷新数据
+    		$('.fa-refresh').click(function(){
+    			location.href = location.href;
+    		});
+  		
+  	});
+  
+	 function form_submit(){
+  
+    $(".jindutiao").show();
+    progressbarText(1);
+  }
+
+  function progressbarText(p){
+    urlpage = "/p/"+p;
+    $.ajax({
+        type : "post",
+        url:"__URL__/return_flowingwater_fileput"+urlpage,
+        data : $('#search-form2').serialize(),// 你的formid
+        dataType:"json",
+        success:function(data){
+            loading(data+"%");
+            if(data != 100){
+                progressbarText((p+1));
+            }
+        }
+    });
+  }
+  function loading(percent){
+      $('.progress > span').animate({"width":percent,"overflow":"inherit"},1000,function(){
+          $(this).children().html(percent);
+          if(percent=='100%'){
+              setTimeout(function(){
+                  $(".jindutiao").hide();
+                  $('.progress > span > span').html("0%");
+                  $('.progress > span').css("width","0%");
+                  location.href="{:url('/Company/Rebate/export_flowingwater')}";
+              },1000);
+          }
+      })
+  }
+</script>
+</body>
+</html>

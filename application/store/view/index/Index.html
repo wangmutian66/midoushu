@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link href="__PUBLIC__/company/css/hou.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="__PUBLIC__/static/js/jquery.js"></script>
+		<script type="text/javascript" src="__PUBLIC__/static/js/layer/layer.js"></script>
+		<script>
+			if($(window).width() < 1400){
+				layer.alert('您的浏览器宽度过小，为了更好的体验，屏幕分辨率请调整到1440以上',{icon: 6});
+			}
+		</script>
+		<style>
+			.h-tx .menus > li{
+				padding: 10px 0;
+				border-bottom: 1px solid #57616c;
+			}
+			.h-tx .menus li.sideMenu{
+				display: none;
+				border-bottom: none;
+				padding: 8px 25px;
+			}
+			.h-tx .menus li.sideMenu ul li {
+				padding: 0;
+				font-size: 12px;
+				padding-left: 50px;
+				height: 40px;
+				line-height: 39px;
+				background: url(../images/dian.jpg) 32px 20px no-repeat;
+				border-bottom: 1px dashed #383838;
+			}
+			.sideMenu ul li a {
+				color: #FFF;
+			}
+			.h-tx .menus li.sideMenu ul li a{
+				font-size: 12px;
+				font-weight: 100;
+			}
+		</style>
+
+	</head>
+	<body class="qh">	
+		<div class="h-left">
+			<div class="h-bt">
+				米豆薯实体店管理系统
+			</div>
+			<div class="h-tx">
+				<div class="dbg">
+					<div class="logo">
+						<img src="{$store_info.litpic|default='__PUBLIC__/static/images/errors.jpg'}">
+					</div>
+					<div class="zi">
+						{$store_info.cname|default='暂未设置实体店名称'}
+					</div>
+				</div>
+				<ul class="menus">
+
+
+					<foreach name="menu" item="m">
+						<li><a href="{$m.url}" target="workspace"><img src="__PUBLIC__/company/img/{$m.icon}">{$m.name}     >>  </a></li>
+						<if condition="$m.child">
+						<li class="sideMenu">
+							<ul>
+								<foreach name="$m.child" item="c">
+									<li><a target="workspace" href="{$c.url}">{$c.name}</a></li>
+								</foreach>
+							</ul>
+						</li>
+						</if>
+					</foreach>
+					<!--
+					<li><a href="{:U('/Store/Level/Staff',['t'=>2])}" target="workspace"><img src="__PUBLIC__/company/img/h-ico3.png">后台首页     >>  </a></li>
+
+					<li><a href="{:U('/Store/System/Statistics')}" target="workspace"><img src="__PUBLIC__/company/img/h-ico3.png">后台首页     >>  </a></li>
+
+					<li><a href="{:U('/Store/System/statistics')}" target="workspace"><img src="__PUBLIC__/company/img/h-ico3.png">后台首页     >>  </a></li>
+
+					<li><a href="{:U('/Store/Level/Staff',['t'=>2])}" target="workspace"><img src="__PUBLIC__/company/img/h-ico4.png">成员管理     >>  </a></li>
+
+                    
+					<li><a href="{:U('/Store/System/Setpsw')}" target="workspace"><img src="__PUBLIC__/company/img/h-ico11.png">修改密码     >>  </a></li>
+                    <if condition="$store_info.is_auto_pay eq 2">
+                    <li><a href="{:U('/Store/OutstandingFunds')}" target="workspace"><img src="__PUBLIC__/company/img/h-ico5.png">对公账户管理     >>  </a></li>
+                    <else/>
+                    <li><a href="{:U('/Store/CapitalManage')}" target="workspace"><img src="__PUBLIC__/company/img/h-ico5.png">资金管理     >>  </a></li>
+                    </if>
+					<!--<li><a href="{:U('/Store/Level/')}" target="workspace"><img src="__PUBLIC__/company/img/h-ico4.png">下级管理     >>  </a></li>-->
+					<!--<li>
+                    <a href="{:U('/Store/Rebate/Index')}" target="workspace"><img src="__PUBLIC__/company/img/h-ico5.png">返利流水     >>  </a></li>
+
+					<li><a href="{:U('/Store/Rebate/Sweep')}" target="workspace"><img src="__PUBLIC__/company/img/h-ico5.png">线下消费     >>  </a></li>
+					<li><a href="{:U('/Store/Rebate/OrderStore')}" target="workspace"><img src="__PUBLIC__/company/img/h-ico5.png">线下换购订单     >>  </a></li>
+					-->
+				</ul>
+			</div>
+			<div class="h-foot">
+				Copyright © 2018<br />创赏科技开发有限公司
+			</div>
+		</div>
+		<div class="h-right">
+			<include file="public/TK_top"/>
+			<div class="h-main">
+				<iframe src="{:U('/Store/System/Statistics')}" id="workspace" name="workspace" style="overflow: visible;" frameborder="0" width="100%" height="100%" scrolling="yes"></iframe>
+			</div>
+		</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+		    $(".menus > li").click(function(){
+		        $('sideMenu').hide();
+		        if($(this).next('.sideMenu').is(":visible")){
+                    $(this).next('.sideMenu').slideUp();
+				}else{
+                    $(this).next('.sideMenu').slideDown();
+				}
+
+			});
+		});
+	</script>
+	</body>
+</html>

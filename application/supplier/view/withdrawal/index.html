@@ -1,0 +1,171 @@
+<include file="public/layout" />
+<script type="text/javascript" src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<link href="__STATIC__/css/ghs-style.css" rel="stylesheet" type="text/css" />
+<body>
+	<div class="ghs-tx">
+		<div class="top">
+			<div class="bt">提现管理<div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div></div>
+		</div>
+		<div class="yye">
+			<div class="main">
+				<div class="yue">
+					<div class="bt">
+						<span class="l">月供货额：</span>
+						<a href="{:U('/Supplier/Order/index',array('pay_status'=>1,'order_status'=>2))}" class="r">查看历史>></a>
+					</div>
+					<div class="num">{$salemoney|num_float}<span class="ys">元</span></div>
+				</div>
+				<div class="tx">
+					<div class="bt">
+						<span class="l">账户余额：</span>
+						<a href="{:U('Withdrawal/withdrawals_log')}" class="r">提现记录>></a>
+					</div>
+					<div class="num">{$supplier.suppliers_money|num_float}<span class="ys">元</span></div>
+				</div>
+			</div>
+		</div>
+		<div class="form">
+			<form action="" method="post" id="distribut_form">
+				<ul>
+					<li>
+						<div class="l"><span class="ys">*</span>提现金额：</div>
+						<div class="r">
+							<div class="k"><input type="text" name="money" id="money" onpaste="this.value=this.value.replace(/[^\d.]/g,'')" onKeyUp="this.value=this.value.replace(/[^\d.]/g,'')" class="inp"><span class="ys">元</span></div>
+							<div style="width: 100%; float: left; margin-top: 5px;">
+							提现手续费为提现金额的<em style="color: #000;">{$service_fee}%</em>，最低提现额度{$distribut_min}，当前账户金额：<em style="color: #e23435;">{$supplier.suppliers_money|num_float}</em>元，本次提现总额为：<em id="v" style="color: #000;">0</em>元
+						</div>
+						</div>
+					</li>
+					<script type="text/javascript">
+                            $('#money').keyup(function(){
+                                var m = parseFloat($(this).val());
+                                var l = parseFloat({$service_fee});
+                                var v = m + m*l/100;
+                                $('#v').text(v);
+                            });
+                    </script>
+
+					<li>
+						<div class="l"><span class="ys">*</span>收款银行：</div>
+						<div class="r">
+							<input type="text" name="bank_name" id="bank_name" value="{$supplier.bank_name}" class="inp-1" placeholder="如：支付宝，农业银行，工商银行等...">
+							<div class="tishi">建议填写4大银行（中国银行、中国建设银行、中国工商银行和中国农业银行）请填写详细的开户银行分行名称虚拟账户如支付宝填写“支付宝”即可。</div>
+						</div>
+					</li>
+					<li>
+						<div class="l"><span class="ys">*</span>收款账号：</div>
+						<div class="r">
+							<input type="text" name="bank_card" id="bank_card" class="inp-1">
+							<div class="tishi-1">银行账号或虚拟账号（支付宝等账号）</div>
+						</div>
+					</li>
+					<li>
+						<div class="l"><span class="ys">*</span>收款人姓名：</div>
+						<div class="r">
+							<input type="text" name="realname" id="realname" class="inp-2">
+							<div class="tishi-1">收款账号的开户人姓名</div>
+						</div>
+					</li>
+					<li>
+						<div class="l"><span class="ys">*</span>支付密码：</div>
+						<div class="r">
+							<input type="password" name="suppliers_paypwd" id="suppliers_paypwd" class="inp-2">
+							<div class="yzm">还未设置支付密码？  <a href="{:U('supplier/paypwd')}">马上设置</a></div>
+						</div>
+					</li>
+					<li>
+						<div class="l"><span class="ys">*</span>验证码：</div>
+						<div class="r">
+							<input type="text" name="verify_code" id="verify_code" class="inp-2">
+							<div class="yzm"><img src="{:U('Withdrawal/verify',array('type'=>'withdrawals'))}" id="verify_code_img"  onclick="verify()"></div>
+							<input type="button" onclick="checkSubmit()" class="btn" value="申请提现">
+						</div>
+					</li>
+				</ul>
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript">
+        function verify(){
+            $('#verify_code_img').attr('src','/index.php?m=Supplier&c=Withdrawal&a=verify&type=withdrawals&r='+Math.floor(Math.random()*100));
+        }
+		$(function(){
+			$('.paydegs span').click(function(){
+				if($(this).find('label').html()=='微信'){
+					if($('#openid').val() == ''){
+						layer.alert('请在用户中心账号绑定里先扫码绑定微信账号',{icon:2});
+						return false;
+					}else{
+						$('.paydegs span').find('i').removeClass('chek');
+						$('#bank_name').val($('#openid').val());
+						$(this).find('i').addClass('chek');
+					}
+				}else{
+					$('.paydegs span').find('i').removeClass('chek');
+					$('#bank_name').val($(this).find('label').html());
+					$(this).find('i').addClass('chek');
+				}
+			})
+		})
+		// 表单验证提交
+		function checkSubmit(){
+			var money       = $.trim($('#money').val());
+			var bank_name   = $.trim($('#bank_name').val());
+			var bank_card   = $.trim($('#bank_card').val());
+			var realname    = $.trim($('#realname').val());
+			var paypwd      = $.trim($('#suppliers_paypwd').val());
+			var verify_code = $.trim($('#verify_code').val());
+			
+			if(money == '')
+			{
+				layer.alert('提现金额必填',{icon:2});
+				return false;
+			}
+			if(bank_name == '')
+			{
+				layer.alert('银行名称必填',{icon:2});
+				return false;
+			}
+			if(bank_card == '')
+			{
+				layer.alert('收款账号必填',{icon:2});
+				return false;
+			}
+			if(realname == '')
+			{
+				layer.alert('开户名必填',{icon:2});
+				return false;
+			}
+			if(paypwd == '')
+			{
+				layer.alert('支付密码必填',{icon:2});
+				return false;
+			}
+			if(verify_code == '')
+			{
+				layer.alert('验证码必填',{icon:2});
+				return false;
+			}
+            $.ajax({
+                type: "post",
+                url :"{:U('Withdrawal/index')}",
+                dataType:'json',
+                data:$('#distribut_form').serialize(),
+                success: function(data)
+                {
+                    if(data.status == 1){
+                        layer.alert(data.msg,{icon:1}, function(index) {
+                            layer.close(index);
+                            location.reload();
+                        });
+                        //location.reload();
+                    } else {
+                        layer.alert(data.msg,{icon:2});
+                        verify();
+                    }
+                }
+            });
+		}
+	</script>
+</body>
+</html>

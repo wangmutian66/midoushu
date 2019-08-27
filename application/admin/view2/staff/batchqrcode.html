@@ -1,0 +1,315 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/js/company.js"></script>
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title">
+      <div class="subject">
+        <h3>二维码搜索</h3>
+      </div>
+    </div>
+  </div>
+  <!-- 操作说明 -->
+  <div class="flexigrid">
+    <div class="mDiv">
+      <div class="ftitle">
+        <h3>员工二维码列表</h3>
+        <h5>(共<span id="user_count">{$pager->totalRows}</span>条记录)</h5>
+      </div>
+      <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+	    <form action="__URL__/batchqrcode" id="search-form2" class="navbar-form form-inline" method="get">
+        <div class="sDiv">
+          <div class="sDiv2">           
+            <select name="company_id" id="company_id" class="select" onChange="company_change($(this))">
+              <option value="">请选择</option>
+			  <volist name='company_list' id='c_list'>
+			  <option value="{$c_list.cid}" <if condition="$c_list['cid'] eq $Request.param.company_id"> selected </if>>{$c_list.cname}</option>
+			  </volist>
+            </select>
+			
+			<select name="store_id" id="store_id" class="select">
+              <option value="">请选择</option>
+			  <volist name='store_list' id='s_list'>
+			  <option value="{$s_list.cid}" <if condition="$s_list['cid'] eq $Request.param.store_id"> selected </if>>{$s_list.cname}</option>
+			  </volist>
+            </select>
+			
+		
+			
+			<select name="t" id="t" class="select">
+				<option value="">请选择</option>
+				<option value="0" <if condition="$_GET['t'] eq 0 && $_GET['t']!=''"> selected </if>>员工</option>
+				<option value="1" <if condition="$_GET['t'] eq 1"> selected </if>>推广员</option>
+			</select>
+			
+            <input type="text" size="30" name="key_word" class="qsbox" style="width:200px;" placeholder="请输入手机号码或真实姓名..." value="{$Think.get.key_word|default=''}">
+            <input type="submit"  class="btn" value="搜索">
+          </div>
+        </div>
+      </form>
+    </div>
+    
+	<div class="hDiv">
+      <div class="hDivBox">
+        <table cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+			  <th align="center" abbr="article_title" axis="col1" class="">
+                <div style="text-align: center; width: 30px;" class="">ID</div>
+              </th>
+              <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">用户名</div>
+              </th>
+			        <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">真实姓名</div>
+              </th>
+			  <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">隶属子公司</div>
+              </th>
+			  <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">实体店</div>
+              </th>
+			   <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">手机号</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">邀请码</div>
+              </th>
+			  <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">二维码</div>
+              </th>
+            </tr>
+          </thead>
+
+		  <tbody class="bDiv">
+		  <form method="post" id="handlepost" name="form1" autocomplete="off" >
+            <foreach name="list" item="vo" key="k" >
+              <tr>
+                <td align="center" abbr="article_title" axis="col1" class="">
+                  <div style="text-align: center; width: 30px;">{$vo.id}</div>
+				  <input type='hidden' name='id' value='{$vo.id}'>
+                </td>
+                <td align="left" abbr="article_title" axis="col3" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.uname}</div>
+                </td>
+                <td align="left" abbr="article_title" axis="col3" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.real_name}</div>
+                </td>
+				<td align="left" abbr="article_title" axis="col3" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.company_name}</div>
+                </td>
+				<td align="left" abbr="article_title" axis="col3" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.story_name}</div>
+                </td>
+				<td align="left" abbr="article_title" axis="col3" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.phone}</div>
+                </td>
+                <td align="left" abbr="isadmin" axis="col4" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.invite_code}</div>
+                </td>
+				<td align="left" abbr="isadmin" axis="col4" class="">
+				  <a href="__PUBLIC__{$vo.qrcode}" target="_blank"><img src="__PUBLIC__{$vo.qrcode}" width="50"></a>&nbsp;&nbsp;
+				  <a href="/public/qrcode/{$vo.id}/bg.png" target="_blank"><img src="/public/qrcode/{$vo.id}/bg-small-thumb.png" width="50" id='mermberQcode'></a>
+				  <a href="/public/qrcode/{$vo.id}/bg_pay.png" target="_blank"><img src="/public/qrcode/{$vo.id}/bg-pay-small-thumb.png" width="50" id='mermberQcodePay' ></a>
+				  
+				  <!--背景图-->
+					<canvas id="{$vo.id}bgCanvas" width="150" height="150"></canvas>
+					<!--{二维码}-->
+					<span id='{$vo.id}code' style='index' style="position: absolute;width: 30px; height: 30px;"></span>
+					<img id='{$vo.id}mermberQcode'/>
+					<!--{实体店名字}-->
+					<canvas id="{$vo.id}imgCanvas" width="1748" height="2480" style=''></canvas>
+
+					<canvas id="{$vo.id}bgPayCanvas" width="150" height="150"></canvas>
+					<!--{二维码}-->
+					<span id='{$vo.id}codePay' style='index' style="position: absolute;width: 30px; height: 30px;"></span>
+					<img id='{$vo.id}mermberQcodePay'/>
+					<!--{实体店名字}-->
+					<canvas id="{$vo.id}imgPayCanvas" width="1480" height="2100" style=''></canvas>
+                </td>
+              </tr>
+            </foreach>
+          </tbody>
+
+        </table>
+      </div>
+    </div>
+
+    <div class="hDiv" style="height: auto;">
+      <div class="hDivBox">
+	     <table cellspacing="0" cellpadding="0">
+          
+        </table>
+        <!--分页位置-->
+        {$page}
+
+      
+	  <a href="JavaScript:void(0);" class="ncap-btn-big ncap-btn-green" onClick="toSub();">确认提交</a>
+	  </div>
+      <div class="iDiv" style="display: none;"></div>
+    </div>
+    <!--分页位置--> 
+  </div>
+</div>
+</form>
+<script src="__ROOT__/public/static/js/qrcode.js"></script>
+<img src='__ROOT__/public/static/images/qcode_bg.jpg' style='display:none;' id='gb_img'>
+<img src='__ROOT__/public/static/images/qrcode_bg_pay.jpg' style='display:none;' id='gb_pay_img'>
+<script type="text/javascript">
+//二维码生成
+	var idList = new Array();
+	<volist name='list' id='vo' key='k'>
+	idList[{$k}] = {$vo.id};
+	</volist>
+	
+	var inviteCode = new Array();
+	<volist name='list' id='vo' key='k'>
+	inviteCode[{$k}] = '{$vo.invite_code}';
+	</volist>
+
+	var text = new Array();
+	<volist name='list' id='vo' key='k'>
+	text[{$k}] = '{$vo.story_name}';
+	</volist>
+
+	function doQcode(idk) {
+		var id = idList[idk]
+		var invite_code = inviteCode[idk];
+
+		//默认使用Canvas画图
+		var qrcode = $('#'+id+'code').qrcode({
+			text: "https://www.midoushu.com/mobile/User/sweepCode/invite_code/"+invite_code,
+			width: 710,
+			height: 710
+		}).hide();
+
+		//添加文字__ROOT__/public/static/images/qcode_bg.jpg
+		var title = $.trim(text[idk]);//设置文字内容
+		var canvas = qrcode.find('canvas').get(0);
+
+		var oldCtx = canvas.getContext('2d');
+		var imgCanvas = document.getElementById(id+'imgCanvas');
+		var ctx = imgCanvas.getContext('2d');
+		ctx.fillStyle = 'white';
+		ctx.fillRect(0,0,imgCanvas.width,imgCanvas.height);
+		var img = new Image();
+		img.src = $('#gb_img').attr('src');
+		ctx.drawImage(img, 0, 0, 1748, 2480);
+		ctx.putImageData(oldCtx.getImageData(0, 0, canvas.width, canvas.height), 520, 855);
+		ctx.fillStyle = '#000';
+		ctx.strokStyle = 'rgb(1,1,0)';
+		//ctx.stroke = 3;
+		ctx.textBaseline = 'middle';
+		ctx.textAlign = 'center';
+		ctx.font = 'bolder 80px SimHei';
+		ctx.globalAlpha = 0.8;
+		ctx.fillText(title, imgCanvas.width / 2, 650);
+		//ctx.fillText(text, imgCanvas.width / 2, imgCanvas.height - 20);
+		ctx.strokeText(title, imgCanvas.width / 2, imgCanvas.height - 20);
+
+		imgCanvas.style.display = 'none';
+		$('#'+id+'mermberQcode').attr('src', imgCanvas.toDataURL('image/png')).css({
+			maxWidth:300
+		});
+	}
+
+	function doQcodePay(idk) {
+		var id = idList[idk]
+		var invite_code = inviteCode[idk];
+
+		//默认使用Canvas画图
+		var qrcode = $('#'+id+'codePay').qrcode({
+			text: "https://www.midoushu.com/mobile/User/sweepCode/invite_code/"+invite_code,
+			width: 720,
+			height: 720
+		}).hide();
+
+		//添加文字__ROOT__/public/static/images/qrcode_bg_pay.jpg
+		var title = $.trim(text[idk]);//设置文字内容
+		var canvas = qrcode.find('canvas').get(0);
+
+		var oldCtx = canvas.getContext('2d');
+		var imgCanvas = document.getElementById(id+'imgPayCanvas');
+		var ctx = imgCanvas.getContext('2d');
+		ctx.fillStyle = 'white';
+		ctx.fillRect(0,0,imgCanvas.width,imgCanvas.height);
+		var img = new Image();
+		img.src = $('#gb_pay_img').attr('src');
+		ctx.drawImage(img, 0, 0, imgCanvas.width, imgCanvas.height);
+		ctx.putImageData(oldCtx.getImageData(0, 0, canvas.width, canvas.height), 380, 750);
+		ctx.fillStyle = '#000';
+		ctx.strokStyle = 'rgb(1,1,0)';
+		//ctx.stroke = 3;
+		ctx.textBaseline = 'middle';
+		ctx.textAlign = 'center';
+		ctx.font = 'bolder 75px SimHei';
+		ctx.globalAlpha = 0.8;
+		ctx.fillText(title, imgCanvas.width / 2, 1750);
+		//ctx.fillText(text, imgCanvas.width / 2, imgCanvas.height - 20);
+		//ctx.strokeText(text, imgCanvas.width / 2, imgCanvas.height - 800);
+
+		imgCanvas.style.display = 'none';
+		$('#'+id+'mermberQcodePay').attr('src', imgCanvas.toDataURL('image/png')).css({
+			maxWidth:300
+		});
+	}
+
+	function handleSave (id) {
+        //导出base64格式的图片数据
+        var mycanvas = document.getElementById(id+"imgCanvas");
+        var base64Data = mycanvas.toDataURL("image/png", 1.0);
+        //封装blob对象
+        var blob = dataURItoBlob(base64Data);
+		//导出base64格式的图片数据
+        var imgPayCanvas = document.getElementById(id+"imgPayCanvas");
+        var base64DataPay = imgPayCanvas.toDataURL("image/png", 1.0);
+        //封装blob对象
+        var blobPay = dataURItoBlob(base64DataPay);
+        //组装formdata
+        var fd = new FormData();
+        fd.append("fileData", blob);//fileData为自定义
+		fd.append("blobPay", blobPay);
+        fd.append("qcode", "qcode");//fileName为自定义，名字随机生成或者写死，看需求
+		fd.append("id", id);
+        //ajax上传，ajax的形式随意，JQ的写法也没有问题
+        //需要注意的是服务端需要设定，允许跨域请求。数据接收的方式和<input type="file"/> 上传的文件没有区别
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("POST", "/index.php/admin/staff/toQcdoe");
+        xmlHttp.setRequestHeader("Authorization", 'Bearer ' + localStorage.token);//设置请求header,按需设定，非必须
+        xmlHttp.send(fd);
+    }
+
+	function dataURItoBlob (base64Data) {
+		var byteString;
+		if (base64Data.split(',')[0].indexOf('base64') >= 0)
+			byteString = atob(base64Data.split(',')[1]);
+		else
+			byteString = unescape(base64Data.split(',')[1]);
+		var mimeString = base64Data.split(',')[0].split(':')[1].split(';')[0];
+		var ia = new Uint8Array(byteString.length);
+		for (var i = 0; i < byteString.length; i++) {
+			ia[i] = byteString.charCodeAt(i);
+		}
+		return new Blob([ia], {type: mimeString});
+	}
+
+	$.each(idList, function(idx, val){
+		if (typeof(val) != "undefined") {
+			doQcode(idx);
+			doQcodePay(idx);
+			//handleSave(val);
+		}
+	});
+	function toSub() {
+		$.each(idList, function(idx, val){
+		if (typeof(val) != "undefined") {
+			//doQcode(idx);
+			handleSave(val);
+		}
+	});
+	}
+</script>
+</body>
+</html>

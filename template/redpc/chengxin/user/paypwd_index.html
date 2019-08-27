@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>支付密码设置</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/member.css?v={$vnum}" rel="stylesheet">
+<script src="__STATIC__/js/jquery-1.11.1.min.js" type="text/javascript" ></script>
+<script type="text/javascript" src="__STATIC__/js/jquery.min.js"></script>
+<script type="text/javascript" src="__STATIC__/js/style.js?v={$vnum}" ></script>
+<script src="__PUBLIC__/js/baidu.js"></script>
+</head>
+
+<body class="bgg">
+	<include file="public/user_header" />
+	<div class="clear"></div>
+	
+	<div class="y-content">
+		<!--左侧菜单-->
+		<include file="public/user_lefter" />
+		
+		<!--右侧内容-->
+		<div class="y-right y-borm fri">
+			<div class="y-title0">
+				<span></span>设置支付密码
+			</div>
+			<ul class="y-zf clearfix">
+				<if condition="$user['paypwd'] eq 0">
+				<li class="hi">
+					<img src="__STATIC__/img/ico11.png">
+					<h3>您还未设置支付密码</h3>
+					<a href="{:U('Home/User/paypwd')}">我要去设置</a>
+				</li>
+				<else />
+				<li class="hu">
+					<img src="__STATIC__/img/ico10.png">
+					<h3>您已经成功设置支付密码</h3>
+					<a href="{:U('Home/User/paypwd')}">修改支付密码</a>
+				</li>
+				</if>
+			</ul>
+		</div>
+		<div class="clear"></div>
+	</div>
+	
+	<include file="public/user_footer" />
+</body>
+</html>

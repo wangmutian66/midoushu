@@ -1,0 +1,239 @@
+<include file="public/layout" />
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title">
+      <div class="subject">
+        <h3>企业收款流水管理</h3>
+      </div>
+	  
+	  <ul class="tab-base nc-row">
+			<li><a <if condition="empty($Request.param.tz)"> class="current" </if> href="{:U('/Admin/Company/transfer_log')}"><span>代付流水</span></a></li>
+			<li><a <if condition="$Request.param.tz eq 2"> class="current" </if> href="{:U('/Admin/Company/transfer_log',['tz'=>2])}"><span>扫码自定义流水</span></a></li>
+		</ul>
+		
+    </div>
+  </div>
+  <!-- 操作说明 -->
+
+  <div class="flexigrid">
+    <div class="mDiv">
+      <div class="ftitle">
+        <h3>记录列表</h3>
+        <h5>(共{$pager->totalRows}条记录)</h5>
+      </div>
+      <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+	  <!--搜索开始-->
+	  <script>
+		function company_change(obj){
+			var company_id = obj.val();
+			$.getJSON("{:U('/Admin/Company/ajax_get_store')}",{company_id:company_id},function (r){
+				var html = '<option value="">请选择</option>';
+				$("#level_id").html(html);
+				var s = 1;
+				if(r.status == 1){
+					$.each(r.list,function (i,k){
+						var selected = '';
+						if(k.cid == "{$Think.get.store_id}"){
+							selected = " selected"	;
+						}
+						html += "<option value='"+k.cid+"' "+selected+">"+k.cname+"</option>";
+					})
+				}
+				$("#store_id").html(html);
+			
+			})
+		
+		}
+		
+	
+		
+		
+	  </script>
+	    <form action="__URL__/transfer_log/" id="search-form2" class="navbar-form form-inline" method="get" >
+        <div class="sDiv">
+          	<div class="sDiv2">           
+            <select name="company_id" id="company_id" class="select" onChange="company_change($(this))">
+              <option value="">请选择</option>
+			  <volist name='company_list' id='c_list'>
+			  <option value="{$c_list.cid}" <if condition="$c_list['cid'] eq $Request.param.company_id"> selected </if>>{$c_list.cname}</option>
+			  </volist>
+            </select>
+			</div><div class="sDiv2">  
+			<select name="store_id" id="store_id" class="select" onChange="store_change($(this))">
+              <option value="">请选择</option>
+			  <volist name='store_list' id='s_list'>
+			  <option value="{$s_list.cid}" <if condition="$s_list['cid'] eq $Request.param.store_id"> selected </if>>{$s_list.cname}</option>
+			  </volist>
+            </select>
+			</div><!--<div class="sDiv2">  
+			<select name="is_pay">
+				<option value="">请选择</option>
+				<option  value="1" <if condition="$Request.param.is_pay eq 1">selected</if> >已支付</option>
+				<option value="2" <if condition="$Request.param.is_pay eq 2">selected</if> >未支付</option>
+			</select>
+			</div>--><div class="sDiv2">  
+            <input type="text" size="30" name="key_word" class="qsbox" style="width:200px;" placeholder="请输入订单号码..." value="{$Think.get.key_word|default=''}">
+			<input type="hidden" name="tz" id="tz" value="{$Request.param.tz}">
+            <input type="submit" class="btn" value="搜索">
+          </div>
+        </div>
+      </form>
+	  
+		
+    <!--搜索结束-->
+    </div>
+	
+	
+    <div class="hDiv">
+      <div class="hDivBox">
+        <table cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+              <th class="sign" axis="col0">
+                <div style="width: 24px;"><i class="ico-check"></i></div>
+              </th>
+			        <th align="left" abbr="article_title" axis="col1" class="">
+                <div style="text-align: left; width: 60px;" class="">ID</div>
+              </th>
+			        
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">员工姓名</div>
+              </th>
+			  <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 80px;" class="">收款金额</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 200px;" class="">订单编码</div>
+              </th>
+             
+			       
+			        <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 200px;" class="">隶属公司</div>
+              </th>
+			   <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 130px;" class="">下单时间</div>
+              </th>
+			   <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 80px;" class="">是否支付</div>
+              </th>
+			        <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 130px;" class="">支付时间</div>
+              </th>
+			        <th align="center" abbr="control" axis="col9" class="">
+                <div style="text-align: center; width: 100px;" class="">操作</div>
+              </th>
+              <th style="width:100%" axis="col7">
+                <div></div>
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    
+    <div class="bDiv" style="height: auto;">
+      <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+        <table>
+          <tbody>
+            <foreach name="list" item="vo" key="k" >
+              <tr>
+                <td class="sign">
+                  <div style="width: 24px;"><i class="ico-check"></i></div>
+                </td>
+				        <td align="left" class="">
+                  <div style="text-align: left; width: 60px;">{$vo.id}</div>
+                </td>
+				      
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.staff_id}:{$vo.staff_name}</div>
+                </td>
+				<td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.money|tk_money_format}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 200px;">{$vo.paid_sn}</div>
+                </td>
+                
+			          
+				      
+				        <td align="left" class="">
+                  <div style="text-align: center; width: 200px;">{$vo.store_id}:{$vo.store_name}</div>
+                </td>
+				<td align="left" class="">
+                  <div style="text-align: center; width: 130px;">
+                      {$vo.create_time|date="Y-m-d H:i:s",###}
+                  </div>
+                </td>
+				<td align="left" class="">
+                  <div style="text-align: center; width: 80px;">
+                      <if condition="$vo.pay_status eq 1"> <font color="#FF0000">是</font> <else/>未支付</if>
+                  </div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 130px;">
+                     <if condition="$vo.pay_time"> {$vo.pay_time|date="Y-m-d H:i:s",###}</if>
+                  </div>
+                </td>
+                <td align="center" class="">
+                  <div style="text-align: center; width:100px;">
+				  	        <a class="btn blue" href="{:U('/Admin/Company/view_transfer_log',['id'=>$vo['id']])}"><i class="fa fa-pencil-square-o"></i>查看详细</a>
+					          
+				          </div>
+                </td>
+                <td align="" class="" style="width: 100%;">
+                  <div>&nbsp;</div>
+                </td>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+		 
+      </div>
+      <div class="iDiv" style="display: none;"></div>
+	  
+    </div>
+	{$pager->show()}
+  </div>
+</div>
+<script>
+    $(document).ready(function(){
+  	    // 表格行点击选中切换
+  	    $('#flexigrid > table>tbody >tr').click(function(){
+  		    $(this).toggleClass('trSelected');
+  		  });
+    		// 点击刷新数据
+    		$('.fa-refresh').click(function(){
+    			location.href = location.href;
+    		});
+		
+	  });
+	
+    /*function delfun(obj) {
+      // 删除按钮
+      layer.confirm('确认删除？', {
+        btn: ['确定', '取消'] //按钮
+      }, function () {
+        $.ajax({
+          type: 'post',
+          url: $(obj).attr('data-url'),
+          data: {act: 'del', article_id: $(obj).attr('data-id')},
+          dataType: 'json',
+          success: function (data) {
+            layer.closeAll();
+            if (data) {
+              $(obj).parent().parent().parent().remove();
+            } else {
+              layer.alert('删除失败', {icon: 2});  //alert('删除失败');
+            }
+          }
+        })
+      }, function () {
+        layer.closeAll();
+      });
+    }*/
+</script>
+</body>
+</html>

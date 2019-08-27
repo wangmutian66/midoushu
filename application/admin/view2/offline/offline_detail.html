@@ -1,0 +1,330 @@
+<include file="public/layout" />
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<script type="text/javascript" src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<script type='text/javascript'>
+    function loading(percent){
+        //$('.progress span').removeAttrs("style");
+        $('.progress > span').animate({"width":percent,"overflow":"inherit"},1000,function(){
+            $(this).children().html(percent);
+            if(percent=='100%'){
+                //$(this).children().html('Loading Complete, Redirect to Home Page...&nbsp;&nbsp;&nbsp;&nbsp;');15454881.308
+                setTimeout(function(){
+                    $(".jindutiao").hide();
+                    $('.container').fadeOut();
+                    location.href="{:url('/admin/company/return_percetage_downExcel')}";
+                },1000);
+            }
+        })
+    }
+
+
+
+</script>
+<style>
+    .flexigrid .bDiv{
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+</style>
+
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title">
+      <div class="subject">
+        <h3>新版本线下流水管理</h3>
+      </div>
+	  
+	  <ul class="tab-base nc-row">
+			<!--<li><a <if condition="empty($Request.param.tz)"> class="current" </if> href="{:U('/Admin/Company/offline_detail')}"><span>代付流水</span></a></li>
+			<li><a <if condition="$Request.param.tz eq 2"> class="current" </if> href="{:U('/Admin/Company/offline_detail',['tz'=>2])}"><span>扫码自定义流水</span></a></li>-->
+		</ul>
+		
+    </div>
+  </div>
+  <!-- 操作说明 -->
+
+  <div class="flexigrid">
+    <div class="mDiv">
+      <div class="ftitle">
+        <h3>记录列表</h3>
+        <h5>(共{$pager->totalRows}条记录)</h5>
+      </div>
+      <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+  	  <!--搜索开始-->
+  	  <script>
+  		function company_change(obj){
+    			var company_id = obj.val();
+    			$.getJSON("{:U('/Admin/Company/ajax_get_store')}",{company_id:company_id},function (r){
+      				var html = '<option value="">请选择</option>';
+      				if(r.status == 1){
+      					$.each(r.list,function (i,k){
+        					html += "<option value='"+k.cid+"'>"+k.cname+"</option>";
+      					})
+      				}
+      				$("#store_id").html(html);
+    			})
+  		}
+			function form_submit(v){
+				$('#export').val(v);
+				$('#search-form2').submit();
+				$('#export').val(0);
+			}
+			
+           
+
+			</script>
+	    <form action="__URL__/running_water/" id="search-form2" class="navbar-form form-inline" method="get" >
+        <div class="sDiv">
+          	<div class="sDiv2">     
+            <div class="sDiv2">
+          <input type="text" size="30" id="add_time_begin" name="add_time_begin" value="{$add_time_begin}" class="qsbox" autocomplete="off" placeholder="下单开始时间">
+        </div>
+        <div class="sDiv2">
+          <input type="text" size="30" id="add_time_end" name="add_time_end" value="{$add_time_end}" class="qsbox" autocomplete="off" placeholder="下单结束时间">
+        </div>      
+                <select name="company_id" id="company_id" class="select" onChange="company_change($(this))">
+                    <option value="">请选择</option>
+            			  <volist name='company_list' id='c_list'>
+            			  <option value="{$c_list.cid}" <if condition="$c_list['cid'] eq $Request.param.company_id"> selected </if>>{$c_list.cname}</option>
+            			  </volist>
+                </select>
+			      </div>
+            <div class="sDiv2">  
+          			<select name="store_id" id="store_id" class="select" onChange="store_change($(this))">
+                    <option value="">请选择</option>
+            			  <volist name='store_list' id='s_list'>
+            			  <option value="{$s_list.cid}" <if condition="$s_list['cid'] eq $Request.param.store_id"> selected </if>>{$s_list.cname}</option>
+            			  </volist>
+                </select>
+			      </div>
+			      <div class="sDiv2">  
+          			<select name="is_pay" class="select">
+            				<option value="">请选择</option>
+            				<option  value="1" <if condition="$Request.param.is_pay eq 1">selected</if> >已支付</option>
+            				<option value="2" <if condition="$Request.param.is_pay eq 2">selected</if> >未支付</option>
+          			</select>
+			      </div>
+			      <div class="sDiv2">  
+				<select name="key_word_type" class="select">
+                    <option value="">请选择</option>
+                    <option value="1" <if condition="$Request.param.key_word_type eq 1">selected</if> >订单号码</option>
+                    <option value="2" <if condition="$Request.param.key_word_type eq 2">selected</if> >用户ID</option>
+                    <option value="3" <if condition="$Request.param.key_word_type eq 3">selected</if> >员工ID</option>
+          		</select>
+                <input type="text" size="30" name="key_word" class="qsbox" style="width:200px;" placeholder="请输入订单号码..." value="{$Request.param.key_word|default=''}">
+               
+                	<input type="submit" class="btn" value="搜索">
+			        <input type="hidden" name="export" id="export" value="0">
+            </div>
+        </div>
+      </form>
+    <!--搜索结束-->
+    </div>
+	<div class="tDiv">
+		<div class="tDiv2">
+			<div class="fbutton"> 
+				<a href="javascript:;" onClick="form_submit(1)">
+					<div class="add" title="导出excel">
+						<span><i class="fa fa-plus"></i>导出excel</span>
+					</div>
+				</a> 
+			</div>
+		</div>
+	</div>
+	
+    <div class="hDiv">
+      <div class="hDivBox">
+        <table cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+              <th class="sign" axis="col0">
+                <div style="width: 24px;"><i class="ico-check"></i></div>
+              </th>
+			        <th align="left" abbr="article_title" axis="col1" class="">
+                <div style="text-align: center; width: 60px;" class="">ID</div>
+              </th>
+			        
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">员工姓名</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 140px;" class="">用户姓名</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 180px;" class="">订单号码</div>
+              </th>
+              
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width:70px;" class="">金额</div>
+              </th>
+			  
+			        <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width:90px;" class="">推广员</div>
+              </th>
+			        <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width:90px;" class="">员工</div>
+              </th>
+			        <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width:90px;" class="">实体店</div>
+              </th>
+			        <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width:90px;" class="">子公司</div>
+              </th>
+                <th align="left" abbr="isadmin" axis="col4" class="">
+                    <div style="text-align: center; width:90px;" class="">推荐子公司</div>
+                </th>
+			        <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width:90px;" class="">剩余</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width:70px;" class="">米豆返点</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width:80px;" class="">实体店金额</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width:80px;" class="">公司金额</div>
+              </th>
+			  <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 200px;" class="">所属实体店</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 200px;" class="">所属子公司</div>
+              </th>
+			        <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">下单时间</div>
+              </th>
+			        <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 80px;" class="">是否支付</div>
+              </th>
+			  <th align="center" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 80px;" class="">支付方式</div>
+              </th>
+			        
+			        <th align="center" abbr="control" axis="col9" class="">
+                <div style="text-align: center; width: 80px;" class="">操作</div>
+              </th>
+              <th style="width:100%" axis="col7">
+                <div></div>
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    
+    <div class="bDiv" style="height: auto;">
+      <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+        <table>
+          <tbody>
+            <foreach name="list" item="vo" key="k" >
+              <tr>
+                <td class="sign">
+                  <div style="width: 24px;"><i class="ico-check"></i></div>
+                </td>
+				   <td align="left" class="">
+                  <div style="text-align: center; width: 60px;">{$vo.id}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.staff_id}:{$vo.staff_name}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 140px;">{$vo.user_id}:{$vo.nickname}</div>
+                </td>
+                
+             <td align="left" class="">
+                  <div style="text-align: center; width: 180px;">{$vo.paid_sn}</div>
+                </td>
+               
+                <td align="left" class="">
+                  <div style="text-align: center; width:70px;">{$vo.money|num_float2}</div>
+                </td>
+				
+				        <td align="left" class="">
+                  <div style="text-align: center; width:90px;"><a href="JavaScript:;" onClick="layer.alert('{$vo.tgy_name}')">{$vo.tgy_money|num_float2}</a></div>
+                </td>
+				        <td align="left" class="">
+                  <div style="text-align: center; width:90px;"> <a target="_blank" href="{:U('/Admin/Company/get_staff_list',['paid_sn'=>$vo.paid_sn,'id'=>$vo.id])}">{$vo.staff_money|num_float2}</a></div>
+                </td>
+				        <td align="left" class="">
+                  <div style="text-align: center; width:90px;"> <a target="_blank" href="{:U('/Admin/Company/get_store_list',['paid_sn'=>$vo.paid_sn,'id'=>$vo.id])}">{$vo.store_money_sum|num_float2}</a></div>
+                </td>
+				        <td align="left" class="">
+                  <div style="text-align: center; width:90px;"><a target="_blank" href="{:U('/Admin/Company/get_company_list',['paid_sn'=>$vo.paid_sn,'id'=>$vo.id])}">{$vo.company_money|num_float2}</a></div>
+                </td>
+                  <td align="left" class="">
+                      <div style="text-align: center; width:90px;"><a target="_blank" href="{:U('/Admin/Company/get_elite_company_list',['paid_sn'=>$vo.paid_sn,'id'=>$vo.id])}">{$vo.referee_company_money|num_float2}</a></div>
+                  </td>
+				        <td align="left" class="">
+                  <div style="text-align: center; width:90px;">{$vo.surplus|num_float2}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width:70px;">{$vo.return_midou}</div>
+                </td>
+                 <td align="left" class="">
+                  <div style="text-align: center; width:80px;">{$vo.store_money|num_float2}</div>
+                </td>
+                 <td align="left" class="">
+                  <div style="text-align: center; width:80px;">{$vo.dby_money|num_float2}</div>
+                </td>
+                
+				<td align="left" class="">
+                  <div style="text-align: center; width: 200px;">{$vo.store_name}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 200px;">{$vo.company_name}</div>
+                </td>
+				        <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">
+                      {$vo.create_time|date="m-d H:i:s",###}
+                  </div>
+                </td>
+				<td align="left" class="">
+                  <div style="text-align: center; width: 80px;">
+                      <if condition="$vo.pay_status eq 1"> <font color="#FF0000">是</font> <else/>未支付</if>
+                  </div>
+                </td>
+				<td align="center" class="">
+					<div style="text-align: center; width: 80px;" class="">{$vo.pay_name}</div>
+                </td>
+				      
+				
+                <td align="center" class="">
+                  <div style="text-align: center; width:80px;">
+				  	        <a class="btn blue" href="{:U('/Admin/Company/view_offline_log',['id'=>$vo['id'],'tz'=>2])}"><i class="fa fa-pencil-square-o"></i>查看详细</a>
+				          </div>
+                </td>
+              <td style="width:100%" axis="col7">
+                  <div></div>
+              </td>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+		 
+      </div>
+      <div class="iDiv" style="display: none;"></div>
+	  
+    </div>
+	{$pager->show()}
+  </div>
+</div>
+<script>
+    $(document).ready(function(){
+        $('#add_time_begin').layDate(); 
+      $('#add_time_end').layDate();
+  	    // 表格行点击选中切换
+  	    $('#flexigrid > table>tbody >tr').click(function(){
+  		    $(this).toggleClass('trSelected');
+  		  });
+    		// 点击刷新数据
+    		$('.fa-refresh').click(function(){
+    			location.href = location.href;
+    		});
+		
+	  });
+	
+    
+</script>
+</body>
+</html>

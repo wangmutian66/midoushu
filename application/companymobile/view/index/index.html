@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>后台首页</title>
+
+
+	<link type="text/css" href="__PUBLIC__/companymobile/css/vendor-morris.css" rel="stylesheet">
+	<link type="text/css" href="__PUBLIC__/companymobile/css/vendor-bootstrap-datepicker.css" rel="stylesheet">
+
+	<meta name="robots" content="noindex">
+
+	<link type="text/css" href="__PUBLIC__/companymobile/css/app.css" rel="stylesheet">
+	<link type="text/css" href="__PUBLIC__/companymobile/css/app.rtl.css" rel="stylesheet">
+
+	<link type="text/css" href="__PUBLIC__/companymobile/css/simplebar.css" rel="stylesheet">
+
+	<link type="text/css" href="__PUBLIC__/companymobile/css/style.css" rel="stylesheet">
+
+</head>
+
+<body>
+<div class="mdk-drawer-layout js-mdk-drawer-layout" data-fullbleed data-push data-responsive-width="992px" data-has-scrolling-region>
+
+	<div class="mdk-drawer-layout__content">
+		<!-- header-layout -->
+		<div class="mdk-header-layout js-mdk-header-layout  mdk-header--fixed  mdk-header-layout__content--scrollable">
+			<!-- header -->
+			<div class="mdk-header js-mdk-header bg-primary" data-fixed>
+				<div class="mdk-header__content">
+
+					<nav class="navbar navbar-expand-md bg-primary navbar-dark d-flex-none">
+						<button class="btn btn-link text-white pl-0" type="button" data-toggle="sidebar">
+							<i class="material-icons align-middle md-36">short_text</i>
+						</button>
+						<div class="page-title m-0">后台首页</div>
+
+						<div class="collapse navbar-collapse" id="mainNavbar" style="width:50px">
+							<ul class="navbar-nav ml-auto align-items-center">
+
+								<li class="nav-item" style="float:right !important">
+									<a href="#" class="nav-link dropdown-toggle dropdown-clear-caret" data-toggle="sidebar" data-target="#user-drawer">
+										系统操作
+										<img src="{$company_info.litpic|default='__PUBLIC__/static/images/errors.jpg'}" class="img-fluid rounded-circle ml-1" width="35"
+											 alt="">
+									</a>
+								</li>
+							</ul>
+						</div>
+					</nav>
+				</div>
+			</div>
+
+			<!-- content -->
+
+			<div class="mdk-header-layout__content ls-top-navbar mdk-header-layout__content--scrollable h-100">
+
+				<iframe src="{:U('/companymobile/Index/welCome')}" id="workspace" name="workspace" style="overflow: visible;" frameborder="0" width="100%" height="100%" scrolling="yes"></iframe>
+			</div>
+		</div>
+	</div>
+	<!-- // END drawer-layout__content -->
+
+	<!-- drawer -->
+	<div class="mdk-drawer js-mdk-drawer" id="default-drawer">
+		<div class="mdk-drawer__content">
+			<div class="mdk-drawer__inner" data-simplebar data-simplebar-force-enabled="true">
+
+				<nav class="drawer  drawer--dark">
+					<div class="drawer-spacer">
+						<div class="media align-items-center">
+							<!-- <a href="index.html" class="drawer-brand-circle mr-2"></a> -->
+							<div class="media-body" style="text-align:center;">
+								<a href="index.html" class="h5 m-0 text-link">米豆薯子公司管理系统</a>
+							</div>
+						</div>
+					</div>
+					<!-- HEADING -->
+					<div class="yhtx">
+						<img src="{$company_info.litpic|default='__PUBLIC__/static/images/errors.jpg'}">
+					</div>
+
+					<div class="py-2 drawer-heading" style="text-align:center;margin:0">
+						{$company_info.cname|default='暂未设置公司名称'}
+					</div>
+					<!-- MENU -->
+					<ul class="drawer-menu" id="dasboardMenu" data-children=".drawer-submenu">
+						<li class="drawer-menu-item active ">
+							<a href="{:U('/companymobile/Index/welCome')}" target="workspace">
+								<i class="material-icons">home</i>
+								<span class="drawer-menu-text"> 后台首页</span>
+							</a>
+						</li>
+						<li class="drawer-menu-item active ">
+							<a href="{:U('/companymobile/System/Setpsw')}" target="workspace">
+								<i class="material-icons">lock_outline</i>
+								<span class="drawer-menu-text"> 修改密码</span>
+							</a>
+						</li>
+						<li class="drawer-menu-item active ">
+							<a href="{:U('/companymobile/Member/')}"  target="workspace">
+								<i class="material-icons">person</i>
+								<span class="drawer-menu-text"> 成员管理</span>
+							</a>
+						</li>
+						<li class="drawer-menu-item active ">
+							<a href="{:U('/companymobile/Rebate/member')}"  target="workspace">
+								<i class="material-icons">autorenew</i>
+								<span class="drawer-menu-text"> 成员分红流水</span>
+							</a>
+						</li>
+						<li class="drawer-menu-item active ">
+							<a href="{:U('/companymobile/Level/')}"  target="workspace">
+								<i class="material-icons">group</i>
+								<span class="drawer-menu-text"> 下级管理</span>
+							</a>
+						</li>
+						<li class="drawer-menu-item active ">
+							<a href="{:U('/companymobile/Rebate/Index')}"  target="workspace">
+								<i class="material-icons">autorenew</i>
+								<span class="drawer-menu-text"> 分红流水</span>
+							</a>
+						</li>
+						<li class="drawer-menu-item active ">
+							<a href="{:U('/companymobile/Rebate/Sweep')}"  target="workspace">
+								<i class="material-icons">payment</i>
+								<span class="drawer-menu-text"> 线下消费</span>
+							</a>
+						</li>
+						<li class="drawer-menu-item active ">
+							<a href="{:U('/companymobile/Rebate/repurchase')}"  target="workspace">
+								<i class="material-icons">payment</i>
+								<span class="drawer-menu-text"> 线下换购订单</span>
+							</a>
+						</li>
+
+					</ul>
+
+
+					<div class="banquan">Copyright © 2018<br>米豆薯商城版权所有</div>
+
+				</nav>
+			</div>
+		</div>
+	</div>
+	<!-- // END drawer -->
+
+	<!-- drawer -->
+	<include file="public/TK_top"/>
+	<!-- // END drawer -->
+
+</div>
+<!-- // END drawer-layout -->
+
+
+
+<!-- jQuery -->
+<script src="__PUBLIC__/companymobile/js/jquery.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="__PUBLIC__/companymobile/js/popper.js"></script>
+<script src="__PUBLIC__/companymobile/js/bootstrap.min.js"></script>
+
+<!-- Simplebar -->
+<!-- Used for adding a custom scrollbar to the drawer -->
+<script src="__PUBLIC__/companymobile/js/simplebar.js"></script>
+
+
+<!-- Vendor -->
+<script src="__PUBLIC__/companymobile/js/chart.min.js"></script>
+<script src="__PUBLIC__/companymobile/js/moment.min.js"></script>
+
+<!-- APP -->
+<script src="__PUBLIC__/companymobile/js/color_variables.js"></script>
+<script src="__PUBLIC__/companymobile/js/app.js"></script>
+
+
+<script src="__PUBLIC__/companymobile/js/dom-factory.js"></script>
+<!-- DOM Factory -->
+<script src="__PUBLIC__/companymobile/js/material-design-kit.js"></script>
+<!-- MDK -->
+
+
+
+<script>
+	//$(".mdk-drawer__scrim").click()
+	$("ul.drawer-menu .drawer-menu-item").click(function(){
+	    $(".mdk-drawer__scrim").click();
+	    var titlename = $(this).find(".drawer-menu-text").text();
+		$(".page-title.m-0").html(titlename);
+	});
+    (function() {
+        'use strict';
+        // Self Initialize DOM Factory Components
+        domFactory.handler.autoInit()
+
+
+        // Connect button(s) to drawer(s)
+        var sidebarToggle = document.querySelectorAll('[data-toggle="sidebar"]')
+
+        sidebarToggle.forEach(function(toggle) {
+            toggle.addEventListener('click', function(e) {
+                var selector = e.currentTarget.getAttribute('data-target') || '#default-drawer'
+                var drawer = document.querySelector(selector)
+                if (drawer) {
+                    if (selector == '#default-drawer') {
+                        $('.container-fluid').toggleClass('container--max');
+                    }
+                    drawer.mdkDrawer.toggle();
+                }
+            })
+        })
+    })()
+</script>
+
+
+<script src="__PUBLIC__/companymobile/js/morris.min.js"></script>
+<script src="__PUBLIC__/companymobile/js/raphael.min.js"></script>
+<script src="__PUBLIC__/companymobile/js/bootstrap-datepicker.min.js"></script>
+<script src="__PUBLIC__/companymobile/js/datepicker.js"></script>
+
+
+
+</body>
+
+</html>
+

@@ -1,0 +1,175 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>地址管理-{$tpshop_config['shop_info_store_title']}</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/member.css?v={$vnum}" rel="stylesheet">
+<script src="__STATIC__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="__STATIC__/js/slider.js?v={$vnum}"></script>
+<script src="__PUBLIC__/js/layer/layer-min.js"></script><!--弹窗js 参考文档 http://layer.layui.com/-->
+<script src="__PUBLIC__/js/baidu.js"></script>
+</head>
+
+<body class="bgg">
+	<include file="public/user_header" />
+	<div class="clear"></div>
+	
+	<div class="y-content">
+		<!--左侧菜单-->
+		<include file="public/user_lefter" />
+		
+		<!--右侧内容-->
+		<div class="right00 fri">
+			<div class="y-hbt">
+				收货地址
+			</div>
+
+			<form action="{:U('User/add_address2')}" method="post" onSubmit="return checkForm()">
+				<div class="y-sd">
+					<h6><span>新增收货地址</span>　*为必填项</h6>
+					<div class="shuo">
+						<p><span>*</span>所在地区：</p>
+						<select name="province" id="province" onChange="get_city(this,0)" style="width:150px;">
+                            <option value="0">请选择</option>
+                            <volist name="province" id="p">
+                                <option value="{$p.id}">{$p.name}</option>
+                            </volist>
+                        </select>
+                        <select name="city" id="city" onChange="get_area(this)" style="width:150px;">
+                            <option  value="0">请选择</option>
+                        </select>
+                        <select name="district" id="district" onChange="get_twon(this)" style="width:150px;">
+                            <option  value="0">请选择</option>
+                        </select>
+                        <select name="twon" id="twon" style="display:none;width:150px;"></select>
+					</div>
+					<div class="shuo">
+						<p><span>*</span>详细地址：</p>
+						<textarea name="address" id="address" placeholder="建议您如实填写详细收货地址，例如街道名称，门牌号码，楼层和房间号等信息"></textarea>
+					</div>
+					<div class="shuo">
+						<p>邮政编码：</p>
+						<input type="text" class="text" name="zipcode" placeholder="如您不清楚邮递区号，请填写000000" />
+					</div>
+					<div class="shuo">
+						<p><span>*</span>收货人姓名：</p>
+						<input type="text" class="text" name="consignee" placeholder="长度不超过25个字符" />
+					</div>
+					<div class="shuo">
+						<p>手机号码：</p>
+						<input type="text" class="text" name="mobile" placeholder="请输入手机号码" />
+					</div>
+					<div class="shuo">
+						<p>&nbsp;</p>
+						<input type="submit" class="que" value="保 存" />
+					</div>
+				</div>
+			</form>
+			<div class="y-yc">
+				已保存了{$lists|count}条地址，还能保存<php>echo 20-count($lists);</php>条地址
+			</div>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0" class="y-pp">
+				<volist name="lists" id="list">
+				<tr>
+				    <td width="92" class="y-wek">收货人</td>
+				    <td width="403" class="y-wek">收货地址</td>
+				    <td width="96" class="y-wek">邮编</td>
+				    <td width="170" class="y-wek">电话/手机</td>
+				    <td width="100" class="y-wek">操作</td>
+				    <td width="119" class="y-wek">&nbsp;</td>
+				</tr>
+				<volist name="lists" id="list">
+				<tr>
+				    <td width="92" class="y-wrt">{$list.consignee}</td>
+				    <td width="183" class="y-wrt">
+				    	{$region_list[$list['province']]}
+				    	{$region_list[$list['city']]}
+				    	{$region_list[$list['district']]}
+				    	{$region_list[$list['twon']]}
+				    	{$list.address}
+				    </td>
+				    <td width="96" class="y-wrt">{$list.zipcode}</td>
+				    <td width="170" class="y-wrt">{$list.mobile}</td>
+				    <td width="100" class="y-wrt"><a href="javascript:address_edit({$list['address_id']})" class="xio">修改</a>|<a href="{:U('Home/User/del_address',array('id'=>$list['address_id']))}" class="xio">删除</a></td>
+				    <td width="119" class="y-wrt">
+				    	<if condition="$list['is_default'] neq 1">
+                            <a href="{:U('Home/User/set_default',array('id'=>$list['address_id']))}" class="wei" >设为默认</a>
+                        <else/>
+                            <span>默认地址</span>
+                        </if>
+				    </td>
+				</tr>
+				</volist>
+			</table>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<include file="public/user_footer" />
+	<script src="__PUBLIC__/js/global.js?v={$vnum}"></script>
+	<script src="__PUBLIC__/js/pc_common.js?v={$vnum}"></script>
+	<script>
+		/**
+		 * 新增修改收货地址
+		 * id 为零 则为新增, 否则是修改
+		 *  使用 公共的 layer 弹窗插件  参考官方手册 http://layer.layui.com/
+		 */
+		function address_edit(id)
+		{
+			if(id > 0)
+				var url = "/index.php?m=Home&c=User&a=edit_address&scene=1&call_back=call_back_fun&id="+id; // 修改地址  '/index.php/Home/User/add_address/scene/1/call_back/call_back_fun/id/id' //iframe的url /index.php/Home/User/add_address
+			else
+				var url = "/index.php?m=Home&c=User&a=add_address&scene=1&call_back=call_back_fun";	// 新增地址
+			layer.open({
+				type: 2,
+				title: '添加收货地址',
+				shadeClose: true,
+				shade: 0.8,
+				area: ['880px', '580px'],
+				content: url,
+			});
+		}
+		// 添加修改收货地址回调函数
+		function call_back_fun(v){
+			layer.closeAll(); // 关闭窗口
+			location.href = location.href;
+		}
+	    function checkForm(){
+	        var consignee = $('input[name="consignee"]').val();
+	        var province  = $('select[name="province"]').find('option:selected').val();
+	        var city      = $('select[name="city"]').find('option:selected').val();
+	        var district  = $('select[name="district"]').find('option:selected').val();
+	        var address   = $('textarea[name="address"]').val();
+	        var mobile    = $('input[name="mobile"]').val();
+	        var error     = '';
+	        if(consignee == ''){
+	            error += '收货人不能为空 <br/>';
+	        }
+	        if(province==0){
+	            error += '请选择省份 <br/>';
+	        }
+	        if(city==0){
+	            error += '请选择城市 <br/>';
+	        }
+	        if(district==0){
+	            error += '请选择区域 <br/>';
+	        }
+	        if(address == ''){
+	            error += '请填写地址 <br/>';
+	        }
+	        if(!checkMobile(mobile) && !checkTelphone(mobile)){
+	        	error += '手机号码或固话号码格式有误 <br/>';
+	        }
+	        if(error){
+				layer.alert(error, {icon: 2});
+	            return false;
+	        }
+	        return true;
+	    }
+	</script>
+</body>
+</html>

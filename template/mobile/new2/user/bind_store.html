@@ -1,0 +1,74 @@
+<include file="public/header" title="实体店绑定微信" body=""/>
+<include file="public/header_nav" title="实体店绑定微信" href="javascript:history.back(-1)"/>
+<link rel="stylesheet" href="/template/mobile/new2/static/css/tian.css?v={$vnum}">
+<if condition="$cid gt 0">
+	<form action="{:U('Mobile/User/bind_store_ok')}" method="post">
+		<div class="e-zhi">
+			<p>您的手机号：{$mobile}</p>
+			<p>实体店名称：{$cname}</p><br>
+			<p>确定要将此实体店绑定到该微信？绑定后，如果有线下扫码支付，将会收到消息提醒！</p>
+		</div>
+		<input type="hidden" name="cid" id="cid" value="{$cid}">
+		<input type="hidden" name="mobile" id="mobile" value="{$mobile}">
+		<input type="button" class="e-tij" value="确认绑定" onclick="confirmBind()" />
+	</form>
+<else/>
+<form action="" method="post">
+<div class="e-zhi">
+	<p>手机号码</p>
+	<div class="shu clearfix">
+		<input type="text" class="text fle" id="mobile" name="mobile" placeholder="请输入您的手机号">
+	</div>
+</div>
+<input type="button" class="e-tij" value="提交" onClick="return postsubmit()" />
+</form>
+</if>
+<script>
+	function postsubmit(){
+		var mobile = $("#mobile").val();
+		if(mobile == ""){
+			showErrorMsg('请输入手机号码!');
+			return false;
+		}
+		$.ajax({
+		   type: "POST",
+		   url: "{:U('Mobile/User/do_bind_store')}",
+		   data: {mobile:mobile},
+		   dataType:"json",
+		   success: function(r){
+			 	if(r.status == 1){
+					setTimeout("location.href = '/mobile/User/bind_store/cid/"+r.cid+"/mobile/"+r.mobile+"'",2000);
+				}else{
+					showErrorMsg(r.info);
+				}
+		   },
+		   error:function (){
+			   showErrorMsg('系统忙，请稍后再试');
+		    }
+		});
+		return false;
+	}
+
+	function confirmBind(){
+        $.ajax({
+            type: "POST",
+            url: "{:U('Mobile/User/bind_store_ok')}",
+            data: {cid:$('#cid').val(),mobile:$('#mobile').val()},
+            dataType:"json",
+            success: function(r){
+                if(r.status == 1){
+                    showErrorMsg(r.info);
+                    setTimeout("location.href = '/mobile/'",3000);
+                }else{
+                    showErrorMsg(r.info);
+                }
+            },
+            error:function (){
+                showErrorMsg('系统忙，请稍后再试');
+            }
+        });
+	}
+
+</script>
+</body>
+</html>

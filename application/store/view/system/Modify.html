@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<include file="public/TK_public"/>
+<title>无标题文档</title>
+</head>
+
+<body>
+<link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+<script src="https://webapi.amap.com/maps?v=1.4.0&key=34757d6f3a85d3ad5fac697a62f0204f&plugin=AMap.Geocoder" type="text/javascript"></script>
+<script src="https://webapi.amap.com/ui/1.0/main.js?v=1.0.10"></script>
+<script src="https://webapi.amap.com/demos/js/liteToolbar.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/amap.js" type="text/javascript"></script>
+<!--以下是在线编辑器 代码 -->
+<load href="__ROOT__/public/plugins/Ueditor/ueditor.config.js"/>
+<load href="__ROOT__/public/plugins/Ueditor/ueditor.all.min.js"/>
+<script type="text/javascript" charset="utf-8" src="__ROOT__/public/plugins/Ueditor/lang/zh-cn/zh-cn.js"></script>
+<script>
+
+	function postdata(){
+		$.ajax({  
+			url: "{:U('/Store/System/doModify')}",  
+			type: 'POST',  
+			data:$("#formf").serialize(),  
+			dataType: 'json',  
+			error: function(){alert('请刷新重试')},
+			beforeSend:function(){
+				parent.layer.load('2',{shade: 0.6});
+			},
+			success: function(r){
+				if(r.status == 1){
+					layer.msg('数据更新成功！', {icon: 1,time: 3000},function (){
+					//	location.reload();
+					}); 
+				}else{
+					parent.layer.msg(r.info, {icon: 2,time: 2000});
+				}
+			},
+			complete:function(){
+				parent.layer.closeAll('loading');
+			}
+		});  
+		
+		
+		return false;
+	}
+	$(function (){
+		$(".hb").click(function (){
+			location.href="{:U('/Store/System/setMobile')}";
+			/*layer.confirm('是否换绑手机？', {
+			  btn: ['是','否'] //按钮
+			}, function(){
+				layer.closeAll();
+			}, function(){
+			  	//否
+			});	*/
+		})	
+	})
+
+
+	var url="{:url('Store/Ueditor/index',array('savePath'=>'goods'))}";
+    var ue = UE.getEditor('strore_content',{
+        serverUrl :url,
+		zIndex: 999,
+        initialFrameWidth: "80%", //初化宽度
+        initialFrameHeight: 300, //初化高度
+        focus: false, //初始化时，是否让编辑器获得焦点true或false
+        maximumWords: 99999, removeFormatAttributes: 'class,style,lang,width,height,align,hspace,valign',//允许的最大字符数 'fullscreen',
+        pasteplain:false, //是否默认为纯文本粘贴。false为不使用纯文本粘贴，true为使用纯文本粘贴
+        autoHeightEnabled: true
+    });
+    
+</script>
+<style>
+	.ml100{
+		margin-left: 100px;
+	}
+	.ditu{
+		width: 400px;
+		height: 400px;
+	}
+	.ckeditor{margin-left: 6%;}
+</style>
+<form onsubmit="return postdata()" id="formf">
+	<ul class="h-bd">
+		<li>
+			<h6>头像上传：</h6>
+			<div class="line">
+				<span class="span">
+					<input name="litpic" type="text" id="viewfile" value="{$store_info.litpic}"　 readonly="readonly" onmouseout="document.getElementById('upload').style.display='none';" class="inputstyle" placeholder="未选择任何文件" />
+				</span>
+				<label for="unload" onmouseover="document.getElementById('upload').style.display='block';" class="file1">上传图片</label>
+				<input type="button"  onClick="GetUploadify2(1,'viewfile','company','')" onchange="document.getElementById('viewfile').value=this.value;this.style.display='none';" class="file" id="upload" />
+		   </div>
+
+		</li>
+
+		<li>
+			<h6>公司/店面名称：</h6>
+			<input type="text" class="wenb" name="cname" id="cname" required value="{$store_info.cname}" >
+		</li>
+
+		<li>
+			<h6>联系电话：</h6>
+			<input type="text" class="wenb" name="mobile" readonly="readonly" value="{$store_info.mobile|mobile_hide}" readonly style="width: 100px; border: 0;">
+			<a href="JavaScript:;" class="hb">换绑电话</a>
+		</li>
+		<li>
+			<h6>联系人：</h6>
+			<input type="text" class="wenb" id="contact" name="contact" required value="{$store_info.contact}"  style="width: 284px;">
+		</li>
+		<li>
+			<h6>地址：</h6>
+			<input type="text" class="wenb" name="address" id="address" value="{$store_info.address}" >
+		</li>
+		<li>
+			<div class="ml100 ditu" id="ditu"></div>
+			<script>
+                mapsamp('{$store_info.lng}','{$store_info.lat}');
+
+			</script>
+		</li>
+
+		<li>
+			<h6>分佣比例：</h6>
+			<input type="text" class="wenb" value="{$store_info.proportion|percentage}" style="border: 0;">
+		</li>
+		<li>
+			<h6>实体商家介绍：</h6>
+			<textarea class="span12 ckeditor" id="strore_content" name="strore_content" title="">{$store_info.strore_content}</textarea>
+			<span class="err" id="err_goods_content" style="color:#F00; display:none;"></span>
+		</li>
+	</ul>
+	<input type="submit" class="h-que2" value="确认修改" />
+</form>
+</body>
+</html>

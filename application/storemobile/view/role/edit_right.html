@@ -1,0 +1,119 @@
+﻿<include file="public/layout" />
+<div class="mdk-header js-mdk-header bg-primary" data-fixed>
+                    <div class="mdk-header__content">
+
+                        <nav class="navbar navbar-expand-md bg-primary navbar-dark d-flex-none">
+                            <button class="btn btn-link text-white pl-0" type="button" data-toggle="sidebar">
+                                <i class="material-icons align-middle md-36">short_text</i>
+                            </button>
+                            <div class="page-title m-0">编辑管理员</div>
+
+                            <div class="collapse navbar-collapse" id="mainNavbar" style="width:50px">
+                                <ul class="navbar-nav ml-auto align-items-center">
+
+                                        <li class="nav-item" style="float:right !important">
+                                            <a href="#" class="nav-link dropdown-toggle dropdown-clear-caret" data-toggle="sidebar" data-target="#user-drawer">
+                                              系统操作
+
+                                              <img src="{$store_info.litpic|default='__PUBLIC__/storemobile/img/errors.jpg'}" class="img-fluid rounded-circle ml-1" width="35"
+                                                alt="">
+                                            </a>
+                                        </li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+                <!-- content -->
+                <div class="mdk-header-layout__content ls-top-navbar mdk-header-layout__content--scrollable h-100">
+                    <!-- main content -->
+                    <div class="py-4 mb-3 bg-white border-bottom" style="padding:.5rem 0 !important;">
+                        <div class="container-fluid container-account">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="media media-user-info align-items-center">
+                                        <img src="picture/person-3.jpg" class="img-fluid rounded-circle mr-2" width="60" alt="">
+                                        <div class="media-body lh-1">
+                                            <p class="h4 m-0"><!-- 肇州创赏实体店A --></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container-fluid">
+                        <script>
+
+parent.layer.closeAll('loading');
+    function postdata(){
+        if($("#newpsw").val() != $("#repsw").val()){
+                alert('重复密码不一致，请重新填写');
+            return false;
+        }
+        $.ajax({  
+            url: "{:U('/Storemobile/System/doSetpsw')}",  
+            type: 'POST',  
+            data:$("#formf").serialize(),  
+            dataType: 'json',  
+            error: function(){alert('请刷新重试')},
+           
+            success: function(r){
+                if(r.status == 1){
+                    alert('修改密码成功！');
+                    location.reload();
+                   
+                }else{
+                    alert(r.info);
+                }
+            },
+          
+        });  
+        return false;
+    }
+    
+</script>
+                        <div class="tab-content" id="accountTabsContent">
+                            <form onsubmit="return postdata()" id="formf">
+                            <div class="tab-pane fade show active" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+                                <div class="row">
+                                    <div class="col-lg-9">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="form-group">
+                                                    <label>管理员 - 编辑管理员</label>
+                                                  
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>用户名</label><br>
+                                                    <input autocomplete="off" id="oldpsw" class="form-control" type="text" name="oldpsw" required="required">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Email</label><br>
+                                                    <input autocomplete="off" id="newpsw" class="form-control" type="text" name="newpsw" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="user_password_confirmation">登录密码</label><br>
+                                                    <input class="form-control" id="repsw" type="password" name="repsw" required id="user_password_confirmation">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>所属角色</label><br>
+                                                    <select class="form-control" id="exampleFormControlSelect1" style="padding:.2rem .8rem;">
+                                                        <option>文秘</option>
+                                                        <option>总经理</option>
+                                                      </select>
+                                                </div>
+                                                <button type="submit" class="btn btn-success">确认修改</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+
+<include file="public/foot" />

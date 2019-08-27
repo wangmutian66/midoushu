@@ -1,0 +1,48 @@
+<include file="public/layout" />
+<script type="text/javascript" src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<link href="__STATIC__/css/ghs-style.css" rel="stylesheet" type="text/css" />
+</head>
+<body  style="background: #f2f5f8;">
+	<div class="ghs-message">
+		<div class="top">
+			<div class="bt">消息通知</div>
+			<div class="nr">
+				<a href="{:U('/Supplier/Supplier/message_notice')}" class="xttz">系统通知</a>
+				<a href="{:U('/Supplier/Article/index')}" class="ptgg ys">平台公告</a>
+				<div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+			</div>
+
+		</div>
+
+		<div class="bg">
+			<if condition="empty($list)">
+				<p class="norecode" style="font-size: 16px;color: #999999;padding:100px 0;text-align: center;">抱歉，您暂时没有要处理的消息！</p>
+			<else/>
+			<table id="msg">
+				<tr>
+					<th> </th>
+					<th>文章标题</th>
+					<th>类型</th>
+					<th>发布时间</th>
+					<th>操作</th>
+				</tr>
+				<foreach name="list" item="vo" key="k" >
+				        <tr class="trys">   
+				            <td><img src="__STATIC__/images/ico-001.png"></td>
+				            <td class="kuan"><a href="{:U('/Supplier/Article/detail',array('article_id'=>$vo['article_id']))}">{$vo.title|getSubstr=0,33}</a></td>
+				            <td class="kuan">{$vo.article_type}</td>
+				            <td class="kuan">{$vo.add_time}</td>
+				            <td class="kuan"><a href="" class="ck"><img src="__STATIC__/images/ck.png"></a></td>
+				        </tr>
+				</foreach>
+				<tr class="trys2">
+					<td colspan="7" class="fenye">
+						{$page}
+					</td>
+				</tr>
+			</table>
+		    </if>
+		</div>
+	</div>
+</body>
+</html>

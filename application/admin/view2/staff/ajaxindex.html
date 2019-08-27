@@ -1,0 +1,74 @@
+        <table>
+          <tbody>
+            <foreach name="list" item="vo" key="k" >
+              <tr>
+                <td class="sign">
+                  <div style="width: 24px;"><i class="ico-check"></i></div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: left; width: 60px;">{$vo.id}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.uname}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.real_name}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.invite_code}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 150px;">
+                    <eq name="$Request.param.t" value="0">
+                      {$vo.lv_name}
+                    <else />  
+                      {$vo.parent_id|get_staff_username}
+                    </eq>
+                  </div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.money|tk_money_format}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.frozen|tk_money_format}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 200px;">{$vo.company_name}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.phone}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.tel}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">
+                    <a href="JavaScript:;" class="is_lock" class="is_lock_{$vo.id}" rid="{$vo.id}" rstatus='{$vo.is_lock}'> <eq name='vo[is_lock]' value='1'> 正常 <else/> 锁定状态 </eq></a>
+                  </div>
+                </td>
+                <td align="center" class="">
+                  <div style="text-align: center; width:180px;">
+                    <a class="btn blue" href="{:U('Staff/edit',array('id'=>$vo['id'],'t'=>$Request.param.t))}"><i class="fa fa-pencil-square-o"></i>编辑</a>
+                     |
+                    <a class="btn blue" href="__URL__/del/id/{$vo.id}" onClick="if(confirm('确认删除吗?')){ return true;}else{return false;}"><i class="fa fa-trash-o"></i>删除</a>
+                  </div>
+                </td>
+                <td align="" class="" style="width: 100%;">
+                  <div>&nbsp;</div>
+                </td>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+        <!--分页位置-->
+        {$page}
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $('#user_count').empty().html("{$pager->totalRows}");
+            });
+            $(".pagination  a").click(function(){
+                var page = $(this).data('p');
+                ajax_get_table('search-form2',page);
+            });
+        </script>

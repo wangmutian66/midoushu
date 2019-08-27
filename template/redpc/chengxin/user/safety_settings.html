@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>个人信息</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/member.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+<script src="__STATIC__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+<link type="text/css" rel="stylesheet" href="/public/plugins/daterangepicker/daterangepicker-bs3.css">
+<script type="text/javascript" src="/public/plugins/daterangepicker/moment.min.js"></script>
+<script type="text/javascript" src="/public/plugins/daterangepicker/daterangepicker.js"></script>
+<script src="__PUBLIC__/js/global.js?v={$vnum}" type="text/javascript"></script>
+<script src="__PUBLIC__/static/js/layer/layer.js?v={$vnum}" type="text/javascript"></script>
+<script src="__PUBLIC__/js/baidu.js"></script>
+</head>
+
+<body class="bgg">
+	<include file="public/user_header" />
+	<div class="clear"></div>
+	
+	<div class="y-content">
+		<!--左侧菜单-->
+		<include file="public/user_lefter" />
+		
+		<!--右侧内容-->
+		<div class="right00 fri">
+			<div class="y-hbt">
+				安全设置
+			</div>
+			<div class="y-grxx">
+				<div class="menu-ri-t setsafe p">
+	    			<div class="mu-head">
+	    				<img src="__STATIC__/images/pers.png"/>
+	    			</div>
+	    			<div class="mu-midd">
+	    				<a class="mu-m-phone" href="">{$user['nickname']}</a>
+						<a class="dmht <if condition="($user['mobile_validated'] eq 0) or ($user['email_validated'] eq 0)">dark</if>" >低</a>
+						<a class="dmht <if condition="($user['mobile_validated'] eq 1) and ($user['email_validated'] eq 1) and ($user[paypwd] eq null)">dark</if>" >中</a>
+					    <a class="dmht <if condition="($user['mobile_validated'] eq 1) and ($user['email_validated'] eq 1) and ($user[paypwd] neq null)">dark</if>" >高</a>
+	    				<p class="advice">建议你启动全部安全设置，以保障账户及资金安全</p>
+	    			</div>
+	    		</div>
+	    		<div class="safe_list_set">
+	    			<ul>
+	    				<li class="sx2"><span>登录密码</span></li>
+	    				<li class="sx1"><span>互联网账号存在被盗风险，建议您定期更改密码以及保护账户安全。</span></li>
+	    				<li class="sx3"><a class="co_blue" href="{:U('Home/User/password')}">修改</a></li>
+	    			</ul>
+	    			<ul>
+	    				<li class="sx2"><span>支付密码</span></li>
+	    				<li class="sx1"><span>申请提现或余额支付时，均须支付密码进行身份验证。</span></li>
+	    				<li class="sx3"><a class="co_blue" href="{:U('Home/User/paypwd_index')}"><empty name="user[paypwd]">设置<else/>修改</empty></a></li>
+	    			</ul>
+	    			<ul>
+	    				<li class="sx2"><span>手机验证</span></li>
+	    				<li class="sx1"><span><if condition="$user['mobile_validated'] eq 0">您没有绑定手机。互联网账号存在被盗风险，建议您立即绑定一保护账户安全。<else/>您验证的手机：<em>{$user['mobile']}</em>若已丢失或停用，请立即更换，避免账户被盗。</if></span></li>
+	    				<li class="sx3"><a class="co_blue <if condition='$user[email_validated] eq 1'>lock</if>" href="{:U('Home/User/mobile_validate',array('type'=>'mobile','step'=>1))}"><if condition="$user['mobile_validated'] eq 0">未验证(点击验证)<else/>已验证(点击修改)</if></a></li>
+	    			</ul>
+	    			<!-- <ul>
+	    				<li class="sx2"><span>邮箱验证</span></li>
+	    				<li class="sx1"><span><if condition="$user['email_validated'] eq 0">您没有绑定邮箱。互联网账号存在被盗风险，建议您立即绑定一保护账户安全。<else/>您验证的邮箱：<em>{$user['email']}</em>若已丢失或停用，请立即更换，避免账户被盗。</if></span><br /></li>
+	    				<li class="sx3"><a class="co_blue <if condition='$user[mobile_validated] eq 1'>lock</if>" href="{:U('Home/User/email_validate',array('type'=>'email','step'=>1))}"><if condition="$user['email_validated'] eq 0">未验证(点击验证)<else/>已验证(点击修改)</if></a></li>
+	    			</ul> -->
+	    		</div>
+			</div>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<include file="public/user_footer" />
+	<script type="text/javascript">
+		$(document).ready(function() {
+			// 生日时间
+			$('#birthday').daterangepicker({
+				singleDatePicker: true,
+				showDropdowns: true,
+				minDate: '1900-01-01',
+				maxDate: moment(),
+				startDate: moment(),
+				format: 'YYYY-MM-DD', //控件中from和to 显示的日期格式
+				locale: {
+					applyLabel: '确定',
+					cancelLabel: '取消',
+					fromLabel: '起始时间',
+					toLabel: '结束时间',
+					customRangeLabel: '自定义',
+					daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
+					monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
+						'七月', '八月', '九月', '十月', '十一月', '十二月'],
+					firstDay: 1
+				}
+			});
+			$('.daterangepicker').hide();
+		});
+		$(function(){
+			$('.choice_hobby').click(function(){
+				$(this).toggleClass('red');
+			})
+		})
+		function delimg(file,t){
+			$.get(
+					"/index.php?m=Admin&c=Uploadify&a=delupload",{action:"del", filename:file},function(){}
+			);
+			$('#head_pic').val('');
+			$('#preview').attr('src','');
+			$(t).remove();
+		}
+		function add_img(str){
+			var head_pic = $('#head_pic').val();
+			$('#head_pic').val(str);
+			$('#preview').attr('src',str);
+			$('img[class="headpic"]').attr('src',str);
+
+		}
+	</script>
+</body>
+</html>

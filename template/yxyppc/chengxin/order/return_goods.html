@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="renderer" content="webkit">
+<title>退换货</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/member.css?v={$vnum}" rel="stylesheet">
+<script src="__STATIC__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+<link type="text/css" rel="stylesheet" href="/public/plugins/daterangepicker/daterangepicker-bs3.css">
+<script type="text/javascript" src="/public/plugins/daterangepicker/moment.min.js"></script>
+<script type="text/javascript" src="/public/plugins/daterangepicker/daterangepicker.js"></script>
+<script src="__PUBLIC__/js/global.js?v={$vnum}" type="text/javascript"></script>
+<script src="__PUBLIC__/static/js/layer/layer.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/baidu.js"></script>
+</head>
+
+<body class="bgg">
+	<include file="public/user_header" />
+	<div class="clear"></div>
+	
+	<div class="y-content">
+		<!--左侧菜单-->
+		<include file="public/user_lefter" />
+		
+		<!--右侧内容-->
+		<form name="return_form" id="return_form" autocomplete="off" method="post">
+		<div class="y-right-t fri">
+			<div class="y-dsp">
+				<div class="bt">
+					<p class="w1">商品</p>
+					<p class="w2">购买数量</p>
+				</div>
+				<div class="nei">
+					<div class="sp fle">
+						<a <if condition="$goods['is_allreturn'] eq '1'"> href="{:U('Homeyxyp/ReturnGoods/goodsInfo',array('id'=>$goods['goods_id']))}" <else /> href="{:U('Homeyxyp/Goods/goodsInfo',array('id'=>$goods['goods_id']))}" </if> target="_blank"><img title="{$goods['goods_name']}" src="{$goods[goods_id]|goods_thum_images=70,70}"><p style="width: 600px;">{$goods['goods_name']}</p></a>
+					</div>
+					<div class="shu fle">
+						{$goods['goods_num']}
+					</div>
+				</div>
+			</div>
+			<div class="y-wt">
+				<span>* 温馨提示：仅退款：</span>未收到货/未签收，或与卖家协商同意前提下  <span>退货退款：</span>已收到或，需要退换已收到的货物
+			</div>
+			<div class="y-biao">
+				<div class="bt fle">
+					<span>*</span> 服务类型：
+				</div>
+				<div class="clr fle">
+                    <ul class="list-type list-type-new">
+                        <li tvalue="0" class="selected">
+                            <a href="javascript:void(0);">仅退款<b></b> </a>
+                            <input type="radio" name="type" value="0"  style="display:none"/>
+                        </li>
+                        <li tvalue="1" class="">
+                            <a href="javascript:void(0);">退货退款<b></b> </a>
+                            <input type="radio" name="type" value="1"  style="display:none"/>
+                        </li>
+
+                        <li tvalue="2" class="">
+                            <a href="javascript:void(0);">换货<b></b> </a>
+                            <input type="radio" name="type" value="2" style="display:none"/>
+                        </li> 
+                    </ul>
+                </div>
+				<input type="hidden" name="t" id="t" value="0">
+			</div>	
+			<script type="text/javascript" src="js/custominput.js"></script>	
+			<div class="y-biao">
+				<div class="bt fle">
+					<span>*</span> 提交数量：
+				</div>
+				<div class="spinner">
+					<a href="javascript:void(0);" class="decrease" disabled="disabled">-</a>
+					<input type="text" class="spinnerExample value passive" name="goods_num" id="goods_num" value="1" data-max="{$goods['goods_num']}">
+					<a href="javascript:void(0);" class="increase">+</a>
+				</div>
+			</div>	
+			<div class="y-biao">
+				<div class="bt fle">
+					<span>*</span> 货物状态：
+				</div>
+				<div class="clr fle">
+        			<label class="clr_unfinished"><input style="width:20px;" type="radio" name="is_receive" value="0">未收到货</label>
+        			<label class="clr_achieve"><input style="width:20px;" type="radio" name="is_receive" value="1" checked>已收到货</label>
+        		</div>
+                <div class="clr fle"></div>
+			</div>
+			<div class="y-biao">
+				<div class="bt fle">
+					<span>*</span> 提交原因：
+				</div>
+				<div class="xxi fle">
+					<select class="select fle" id="reason" name="reason">
+						<option value="">请选择</option>
+						<option value="不想买了">不想买了</option>
+						<option value="快递物流一直未送到">快递物流一直未送到</option>
+						<option value="质量问题">质量问题</option>
+						<option value="商品与描述不符">商品与描述不符</option>
+						<option value="误购（不喜欢/大小不合适）">误购（不喜欢/大小不合适）</option>
+						<option value="卖家发错货">卖家发错货</option>
+						<option value="发票问题">发票问题</option>
+						<option value="其他">其他</option>
+					</select>
+					请注意保持商品的完好，建议您先与卖家沟通
+				</div>
+			</div>
+			<div class="y-biao">
+				<div class="bt fle">
+					<span>*</span> 问题描述：
+				</div>
+				<div class="xxi fle">
+					<textarea name="describe" id="describe" class="area"></textarea>请您如实填写申请原因及商品情况，字数在10-500以内
+				</div>
+			</div>
+			<div class="y-biao">
+				<div class="bt fle">
+					图片信息：
+				</div>
+				<div class="xxi fle">
+					<!-- 图片信息 -->
+                    <div class="fl" >
+                        <div class="i-btns" style="text-align: left;">
+                            <input type="button" value="上传照片" onclick="GetUploadify2(5,'return_imgs','return_goods','return_imgs');">
+                            <input type="hidden" name="imgs" id="return_img" value="" >
+                            <div id="i-btns"></div>
+                        </div>
+                        <span id="uploadImgLoading" class="fl"></span> <span id="img_des" class="fl">为了帮助我们更好的解决问题，请您上传图片</span>
+                        <div class="clr"></div>
+                        <span class="msg-text">最多可上传5张图片，每张图片大小不超过5M，支持bmp,gif,jpg,png,jpeg格式文件</span>
+                        <div class="clr"></div>
+                        <div name="mscolluploadImg-info" style="display:none"></div>
+                    </div>
+                    <div class="clr">建议您描述问题并上传收到商品的图片</div>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+			<div class="y-xing">
+				<h2>信息确认：</h2>
+				<p><span>*</span> 客服电话：{$tpshop_config['shop_info_phone']}</p>
+				<p><span>*</span> 收货地址：{$order.address}</p>
+				<p><span>*</span> 顾客姓名：<input type="text" name="consignee" value="{$order.consignee}"></p>
+				<p><span>*</span> 手机号码：<input type="text" name="mobile" maxlength="11" value="{$order.mobile}">
+				<span class="ju">提交服务单后，售后专员可能与您电话沟通，请保持电话畅通</span></p>
+			</div>
+			<div name="submitTips" style="display:none"></div>
+			<input type="button" onclick="submit_form();" class="y-tio" value="提交" />
+		</div>
+		<input type="hidden" name="order_id" value="{$order.order_id}" />
+        <input type="hidden" name="order_sn" value="{$order.order_sn}" />
+        <input type="hidden" name="goods_id" value="{$goods.goods_id}" />
+        <input type="hidden" name="spec_key" value="{$goods.spec_key}" />
+        <input type="hidden" name="rec_id"   value="{$goods.rec_id}" />
+		</form>
+		<div class="clear"></div>
+	</div>
+
+	<include file="public/user_footer" />
+<script type="text/javascript">
+    $(function(){
+        $('.time-sala ul li').click(function(){
+            $(this).addClass('red').siblings().removeClass('red');
+        })
+        $('.searc_sx a').click(function(){
+            $(this).addClass('red').siblings('a').removeClass('red');
+        })
+        
+      	//初始化 - 仅退款
+    	$('.clr_unfinished').show();
+    	$('.clr_unfinished').children('input').prop('checked',true);
+        $('.clr_achieve').hide();
+    })
+    
+    function submit_form()
+    {
+		/*alert($("input[name='t']").val());
+		return false;*/
+        var imgs = $('.return_img');
+        var img_str = '';
+        for (var i = 0; i < imgs.length; i++) {
+            img_str += imgs.attr('data-img')+',';
+        }
+        $('#return_imgs').val(img_str.substring(0,img_str.length-1));
+        var describe = $.trim($('#describe').val());
+        var reason = $.trim($('#reason').val());
+        var mobile = $.trim($("input[name='mobile']").val());
+        if(reason == ''){
+            layer.alert('请选择原因!', {icon: 2});// alert('请输入退换货原因!');
+            return false;
+        }
+        if(describe == '')
+        {
+            layer.alert('请输入问题描述!', {icon: 2});// alert('请输入退换货原因!');
+            return false;
+        }
+        if(!checkMobile(mobile)){
+            layer.alert('请输入正确的手机号码!', {icon: 2});
+            return false;
+        }
+        $('#return_form').submit();
+    }
+
+    // 上传退货拍照图片
+    function return_imgs(img) {
+        $('#return_img').val();
+        $('#i-btns').find('span').each(function(i,o){
+            var imgurl = $(this).data('img');
+            delimg(imgurl,o)
+        })
+        $('#i-btns').html('');
+        var tpl_list = String(img).split(',');
+        for (var i = 0; i < tpl_list.length; i++) {
+                var tpl = '<span class="msg-text return_img" onclick="delimg(\'$IMG\',this)" data-img="$IMG">' +
+                        '<img src="$IMG" border="0" alt="" style="width: 100px;height: 100px;">' +
+                        '</span>';
+                var str_do = tpl.replace(/\$IMG/g, tpl_list[i]);
+                $('#i-btns').append(str_do);
+                $('#return_img').val(tpl_list);
+        }
+    }
+
+    function delimg(file,t){
+        $.get(
+            "/index.php?m=Homeyxyp&c=Uploadify&a=delupload",{action:"del", filename:file},function(){}
+        );
+        $(t).remove();
+        var return_imgs = '';
+        $('.return_img').each(function (i,o) {
+            return_imgs += $(o).data('img')+',';
+        })
+        $('#return_img').val(return_imgs.substring(0,return_imgs.length-1));
+    }
+    
+    //服务类型切换
+    $(document).ready(function(){
+        $("ul.list-type-new li").click(function(){
+        	
+        	var  typeval = $(this).attr('tvalue');
+       //     alert(typeval);
+            if(typeval == 0){ 	
+            	//仅退款
+            	$('.clr_unfinished').show();
+            	$('.clr_unfinished').children('input').prop('checked',true); 
+                $('.clr_achieve').hide();
+            }else if(typeval == 2){
+            	//换货
+                $('.clr_unfinished').show();
+                $('.clr_achieve').show();
+                $('.clr_achieve').children('input').prop('checked',true);
+            }else{
+            	//退款退货
+                $('.clr_unfinished').hide();
+                $('.clr_achieve').show();
+                $('.clr_achieve').children('input').prop('checked',true);
+            }
+         	
+            $(this).addClass('selected').siblings().removeClass('selected');
+        //  $(this).children('input').trigger('click');
+		//	alert(typeval);
+		//	return false;
+			$("#t").val(typeval);
+        });
+    });
+    
+	//退货数量+1
+	$('.increase').click(function(){
+		var goods_num = parseInt($('#goods_num').val());
+		if(goods_num>1){
+			$('#goods_num').val(goods_num-1);
+		}
+		return false;
+	});
+	//退货数量-1
+	$('.decrease').click(function(){
+		var goods_num = parseInt($('#goods_num').val());
+		var buynum = parseInt($('#buynum').html());
+		if(goods_num<buynum){
+			$('#goods_num').val(goods_num+1);
+		}
+		return false;
+	});
+    $(document).on('blur','#goods_num',function(){
+        var goods_num = parseInt($('#goods_num').val());
+        var buynum = parseInt($('#buynum').html());
+        if(goods_num>buynum){
+            $('#goods_num').val(buynum);
+        }
+    })
+</script>
+</body>
+</html>

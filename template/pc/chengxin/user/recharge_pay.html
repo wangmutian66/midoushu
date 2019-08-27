@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="renderer" content="webkit">
+<title>账户充值-{$tpshop_config['shop_info_store_title']}</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/member.css?v={$vnum}" rel="stylesheet">
+<script src="__STATIC__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/js/global.js?v={$vnum}" type="text/javascript"></script>
+<script src="__PUBLIC__/js/layer/layer.js?v={$vnum}" type="text/javascript"></script>
+<script src="__PUBLIC__/js/baidu.js"></script>
+</head>
+
+<body class="bgg">
+	<include file="public/user_header" />
+	<div class="clear"></div>
+	
+	<div class="y-content">
+		<!--左侧菜单-->
+		<include file="public/user_lefter" />
+		
+		<!--右侧内容-->
+		<div class="y-right y-borm fri">
+			<div class="y-title0 y-bott">
+				<span></span>我的充值
+			</div>
+			<div class="yue">
+				账户余额：<span>{$user.user_money|tk_money_format}</span>元
+			</div>
+
+			<form method="post"  id="recharge_form" action="">
+				<ul class="y-money clearfix">
+					<php>$ks = 0;</php>
+					<foreach name="list" item="vo" key="k" >
+					<php>$ks++;</php>
+					<li rel="{$vo.account}" class="tag-item <if condition='$ks eq 1'>on</if>" >
+						<h2 class="lan"><img src="__STATIC__/img/ico{$ks}.png"></h2>
+						<h3 class="lzi">充值金额</h3>
+						<h4 class="lzi">{$vo.account}元</h4>
+					</li>
+					<php>if($ks == 3)$ks=0;</php>
+					</foreach>
+				</ul>
+				<div class="y-title1">
+					<span>请选择支付方式</span>
+				</div>
+				<div class="y-ka clearfix">
+					<foreach name="paymentList" item="v"  key="k">
+					<p>
+						<input type="radio" name="pay_radio" value="pay_code={$v['code']}" class="xz fle" <if condition="$k eq 'alipay'">checked</if> >
+						<label for=""><img src="/plugins/{$v['type']}/{$v['code']}/{$v['icon']}" onClick="change_pay(this);" style="width: 21px; height: 20px;"></label>
+					</p>
+					</foreach>
+				</div>
+				<div class="y-tj">
+					<input type="hidden" name="account" id="add_money" value="0">
+					<p>充值金额：<span id="str_money">00.00</span>元</p>
+					<button id="barBtn" class="que" onclick="return recharge_submit();">确认充值</button>
+				</div>
+			</form>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<include file="public/user_footer" />
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#str_money').html($('li.on').attr('rel'));
+	$('#add_money').val($('li.on').attr('rel'));
+	$(document).on('click','.tag-item',function(){
+		$(this).addClass('on').siblings().removeClass('on');
+		$('#str_money').html($(this).attr('rel'));
+		$('#add_money').val($(this).attr('rel'));
+	});
+});
+
+function recharge_submit(){
+	var account = $('#add_money').val();
+	if(isNaN(account) || parseInt(account)<=0 || account==''){
+		layer.alert('请输入正确的充值金额',{icon:2});
+		return false;
+	}
+	$('#recharge_form').submit();
+}
+//选择支付方式
+function change_pay(obj)
+{
+    $(obj).parent().siblings('input[name="pay_radio"]').trigger('click');
+}
+</script>
+</body>
+</html>

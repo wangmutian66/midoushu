@@ -1,0 +1,186 @@
+
+<include file="public/header" title="向商家付款" />
+<include file="public/header_sweep1" title="向商家付款" href="javascript:history.back(-1)"  store_id="$staff_info.store_id"/>
+
+<link rel="stylesheet" href="/template/mobile/new2/static/css/tian.css?v={$tpshop_config['shop_info_vnum']}">
+<form action="__URL__/dosweepCode" method="post" id="form1" style="padding-top:1.877333rem;" onsubmit="return postsubmit();">
+<input type="hidden" value="{$staff_info.id}" name="staff_id" />
+	<style>
+		.btn-box{
+			text-align: center;
+			margin-bottom:.7rem;
+		}
+		.e-tij{
+			margin: 0;
+		}
+	</style>
+<div class="smbg">
+	<div class="y-zxz">
+			<if condition="$actions eq 'dopaid'">
+				<div class="e-ztx clearfix">
+					<div class="z1">
+						收款人
+					</div>
+					<div class="z2">
+						{$staff_info.company_name}<span>{$staff_info.real_name}</span>
+					</div>
+					<div class="tx">
+						<img src="{$staff_info.head_pic|default='__STATIC__/images/headPic.jpg'}">
+					</div>
+				</div>
+			</if>
+			<div class="e-zhi">
+				<p>本次消费金额</p>
+				<div class="shu ys clearfix" id="tickt">
+					<span>¥</span>
+					<input type="number"  class="text fle ys" id="money" name="money" placeholder="请输入金额" autofocus="autofocus">
+				</div>
+				<div style="margin-top: 2%"><p>实体店名称:<span>{$staff_info.store_name}</span></p></div>
+			</div>
+
+	</div>	
+	<div class="y-zxz">
+	<textarea style="border:1px solid #ff4400;border-radius:.3rem;font-size:.68rem;overflow:hidden;box-sizing:border-box;padding:0.2rem;outline:none;width:100%;height:3rem;" name="remark" id="remark" placeholder="请输入备注内容"></textarea>
+	</div>
+	<div class="btn-box">
+		<input type="submit" class="e-tij" value="确认提交"/>
+	</div>
+	<!-- <div class="guanzhu"><img src="__STATIC__/images/djgzwx.gif?v=20181128"></div>
+	<div class="guanzhu_ewm"><img src="__STATIC__/images/mdsewm.jpg"></div> -->
+</div>
+
+</form>
+<script>
+
+	
+	$(document).ready(function(){
+		$('#tickt').on('click', function() {
+	    	$('#money').focus();
+	    });
+	    $('#tickt').trigger('click');
+	});
+
+	
+	function postsubmit(){
+		if($("#money").val() == ""){
+			showErrorMsg('请输入金额!');
+			return false;
+		}
+		$.ajax({
+		type: "POST",
+		url: "{:U('/Mobile/User/'.$actions,['staff_id'=>$staff_info.id])}",
+		data: "money="+$("#money").val()+"&remark="+$("#remark").val(),
+		dataType:"json",
+		success: function(r){
+				if(r.status == 1){
+					<if condition="$actions eq 'dopaid'">
+					showErrorMsg('请求代付成功,快点让店员付款吧!');
+					setTimeout("location.href = '{:U("/Mobile/User")}'",2000);
+					<elseif condition="$actions eq 'dopays'"/>
+					showErrorMsg('下单成功，跳转至确认页面!');
+					setTimeout("location.href = '/Mobile/User/mypays/id/"+r.id+"'",2000);
+					</if>
+
+				//	location.href = '{:U("/Mobile/User/")}';
+				}else{
+					showErrorMsg(r.info);
+				}
+		},
+		error:function (){
+			showErrorMsg('系统忙，请稍后再试');
+			}
+		});
+		return false;
+	}
+</script>
+
+
+
+
+<style>
+.xan{display:none}
+.demo--radioInput{box-sizing:border-box;background-color:#dfdfdf;border-radius:100%;display:inline-block;height:.8rem;margin-top:.5rem;vertical-align:middle;width:.8rem;line-height:1;}
+.xan:checked + .demo--radioInput:after{background-color:#ff4400;border-radius:100%;content:"";display:inline-block;height:.4rem;width:.4rem;margin-top:.2rem;margin-left:.2rem;}
+.demo--checkbox.demo--radioInput,.xan:checked + .demo--checkbox.demo--radioInput:after{border-radius:0}
+/*.xan:checked + .demo--radioInput{border:2px solid #00A1E9;}*/
+</style>
+
+<style type="text/css">
+	
+
+	.smbg{
+		overflow: hidden;
+		background: #f7f7f7;
+	}
+
+	.y-zxz{
+		margin:.7rem .5rem;
+		padding-bottom: 4%;
+		padding-top: 4%;
+	}
+
+	.y-zxz label:last-child {
+	    border:none;
+	}
+
+	.n-lxkf{
+		width:100%;
+		height:1.8rem;
+		line-height: 1.5rem;
+		text-align: center;
+		margin:2rem auto 0;
+		font-size:.65rem;
+		color:#666;
+		border-top:1px solid #eee;
+		position: fixed;
+		left:0;
+		bottom:0;
+		background: #fff;
+	}
+
+	.n-lxkf span{
+		display: inline-block;
+	}
+
+	.n-lxkf .tp{
+		width:1rem;
+		height:2rem;
+		display: inline-block;
+		/*line-height: 2rem;*/
+		position: relative;
+	}
+
+	.n-lxkf .tp img{
+		width:100%;
+	}
+
+	body{
+		padding-bottom:.5rem;
+	}
+
+	.guanzhu{
+		width:100%;
+		height:3.392rem;
+		margin-top:1rem;
+	}
+
+	.guanzhu img{
+		width:100%;
+	}
+
+	.guanzhu_ewm{
+		width:16rem;
+		height:5.5rem;
+		margin:0 auto;
+		background:#fff;
+		text-align: center;
+		padding-top:.5rem;
+	}
+
+	.guanzhu_ewm img{
+		width:5rem;
+	}
+
+</style>
+</body>
+</html>

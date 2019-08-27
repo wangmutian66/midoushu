@@ -1,0 +1,101 @@
+﻿<include file="public/layout" />
+ <!-- content -->
+                <div class="mdk-header js-mdk-header bg-primary" data-fixed>
+                    <div class="mdk-header__content">
+
+                        <nav class="navbar navbar-expand-md bg-primary navbar-dark d-flex-none">
+                            <button class="btn btn-link text-white pl-0" type="button" data-toggle="sidebar">
+                                <i class="material-icons align-middle md-36">short_text</i>
+                            </button>
+                            <div class="page-title m-0">后台首页</div>
+
+                            <div class="collapse navbar-collapse" id="mainNavbar" style="width:50px">
+                                <ul class="navbar-nav ml-auto align-items-center">
+
+                                        <li class="nav-item" style="float:right !important">
+                                            <a href="#" class="nav-link dropdown-toggle dropdown-clear-caret" data-toggle="sidebar" data-target="#user-drawer">
+                                              系统操作
+
+                                              <img src="{$store_info.litpic|default='__PUBLIC__/storemobile/img/errors.jpg'}" class="img-fluid rounded-circle ml-1" width="35"
+                                                alt="">
+                                            </a>
+                                        </li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+                <div class="mdk-header-layout__content ls-top-navbar mdk-header-layout__content--scrollable h-100">
+                    <!-- main content -->
+
+                    <div class="container-fluid">                      
+                        <div class="card">
+                            
+                            <div class="card-header">
+                                <div class="row align-items-center">
+                                    <div class="col-md-4">
+                                        <div class="card-title">成员详细</div>
+                                    </div>
+                                 
+
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="liebiao">
+                                <ul>
+                                    <li style="background:#fff;">
+                                        <div class="hang ys">
+                                            <div class="l">用户名</div>
+                                            <div class="r1">{$item.uname}</div>
+                                        </div>
+                                       
+                                        
+                                        
+                                        <div class="hang ys">
+                                            <div class="l">真实姓名</div>
+                                            <div class="r1">{$item.real_name}</div>
+                                        </div>
+
+                                        <div class="hang ys">
+                                            <div class="l">成员等级</div>
+                                            <div class="r1">{$item.lv_name}</div>
+                                        </div>
+
+                                        <div class="hang ys">
+                                            <div class="l">手机</div>
+                                            <div class="r1">{$item.phone}</div>
+                                        </div>
+
+                                        <div class="hang ys">
+                                            <div class="l">固定电话</div>
+                                            <div class="r1">{$item.tel}</div>
+                                        </div>
+
+                                       
+
+                                        <div class="hang ys">
+                                            <div class="l">用户余额</div>
+                                            <div class="r1">{$item.money}</div>
+                                        </div>
+
+                                        <div class="hang ys">
+                                            <div class="l">冻结金额</div>
+                                            <div class="r1"> {$item.frozen}</div>
+                                        </div>
+
+                                        <div class="hang ys">
+                                            <div class="l">是否冻结</div>
+                                            <div class="r1">  <if condition="$item['is_lock'] == 1">正常<else/>冻结</if></div>
+                                        </div>
+
+                                        
+                                    </li>
+                                    
+                                </ul>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+<include file="public/foot" />

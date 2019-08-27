@@ -1,0 +1,189 @@
+﻿<include file="public/layout" />
+                <!-- header -->
+                
+                <div class="mdk-header js-mdk-header bg-primary" data-fixed>
+                    <div class="mdk-header__content">
+
+                        <nav class="navbar navbar-expand-md bg-primary navbar-dark d-flex-none">
+                            <button class="btn btn-link text-white pl-0" type="button" data-toggle="sidebar">
+                                <i class="material-icons align-middle md-36">short_text</i>
+                            </button>
+                            <div class="page-title m-0">后台首页</div>
+
+                            <div class="collapse navbar-collapse" id="mainNavbar" style="width:50px">
+                                <ul class="navbar-nav ml-auto align-items-center">
+
+                                        <li class="nav-item" style="float:right !important">
+                                            <a href="#" class="nav-link dropdown-toggle dropdown-clear-caret" data-toggle="sidebar" data-target="#user-drawer">
+                                              系统操作
+                                              <img src="{$store_info.litpic|default='__PUBLIC__/storemobile/img/errors.jpg'}" class="img-fluid rounded-circle ml-1" width="35"
+                                                alt="">
+                                            </a>
+                                        </li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- content -->
+                <div class="mdk-header-layout__content ls-top-navbar mdk-header-layout__content--scrollable h-100">
+                    <!-- main content -->
+                    <!-- <div class="py-4 mb-3 bg-white border-bottom" style="padding:.5rem 0 !important;">
+                        <div class="container-fluid container-account">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="media media-user-info align-items-center">
+                                        <img src="picture/person-3.jpg" class="img-fluid rounded-circle mr-2" width="60" alt="">
+                                        <div class="media-body lh-1">
+                                            <p class="h4 m-0">肇州创赏实体店A</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="container-fluid">
+                        
+                        <div class="tab-content" id="accountTabsContent">
+                            <div class="fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+                                <div class="row">
+                                    <div class="col-lg-9">
+                                        <div class="card card-account">
+                                            <div class="card-body">
+                                                <form>
+                                                    
+                                                    <div class="form-group">
+                                                        <label for="instant-phone">数据统计</label>
+                                                    </div>
+                                                    <div class="c" onclick="location.href='/storemobile/rebate/OrderStore'">
+                                                        <div class="httj ys1">
+                                                            <div class="l"><img src="__PUBLIC__/storemobile/img/2.png"></div>
+                                                            <div class="r">
+                                                                <div class="top">{$count.repurchase}</div>
+                                                                <div class="bottom">今日换购订单数量</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group" onclick="location.href='/storemobile/rebate/sweep'">
+                                                        <div class="httj ys1">
+                                                            <div class="l"><img src="__PUBLIC__/storemobile/img/2.png"></div>
+                                                            <div class="r">
+                                                                <div class="top">{$count.staff_mypays}</div>
+                                                                <div class="bottom">今日订单总数</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group" onclick="location.href='/storemobile/rebate/sweep'">
+                                                        <div class="httj ys2">
+                                                            <div class="l"><img src="__PUBLIC__/storemobile/img/1.png"></div>
+                                                            <div class="r colo">
+                                                                <div class="top">{$count.staff_mypays_store_money|default='暂无数据'}</div>
+                                                                <div class="bottom">今日实体店结余</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group" onclick="location.href='/storemobile/rebate/sweep'">
+                                                        <div class="httj ys2">
+                                                            <div class="l"><img src="__PUBLIC__/storemobile/img/1.png"></div>
+                                                            <div class="r colo">
+                                                                <div class="top">{$count.staff_mypays_money|default='暂无数据'}</div>
+                                                                <div class="bottom">今日订单总额</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <div class="httj ys3">
+                                                            <div class="l"><img src="__PUBLIC__/storemobile/img/4.png"></div>
+                                                            <div class="r">
+                                                                <div class="top">{$count.repurchase_person|default='暂无数据'}</div>
+                                                                <div class="bottom">今日线下换购人数</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <div class="httj ys3">
+                                                            <div class="l"><img src="__PUBLIC__/storemobile/img/4.png"></div>
+                                                            <div class="r">
+                                                                <div class="top">{$count.new_user|default='暂无数据'}</div>
+                                                                <div class="bottom">今日新用户</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            
+                            
+                        </div>
+                    </div>
+
+                </div>
+                <style type="text/css">
+                    .httj{
+                        width:100%;
+                        height:5rem;
+                        border-radius:.5rem;
+                        margin-bottom:1rem;
+                    }
+
+                    .httj .l{
+                        width:3rem;
+                        height:3rem;
+                        margin:1rem;
+                        float:left;
+                    }
+
+                    .httj .l img{
+                        width:100%;
+                    }
+
+                    .httj .r{
+                        width:8rem;
+                        height:3rem;
+                        float:right;
+                        margin:1rem;
+                        color:#fff;
+                    }
+
+                    .httj .r.colo{
+                        color:#6c6fbf;
+                    }
+
+                    .httj .r .top{
+                        width:8rem;
+                        height:2rem;
+                        font-size:1.5rem;
+                        line-height: 2rem;
+                    }
+
+                    .httj .r .bottom{
+                        width:8rem;
+                        height:1rem;
+                        font-size:.75rem;
+                        line-height: 1rem;
+                    }
+
+                    .httj.ys1{
+                        background: #32cc7f;
+                    }
+
+                    .httj.ys2{
+                        background: #e4eaec;
+                    }
+
+                    .httj.ys3{
+                        background: #6c6fbf;
+                    }
+                </style>
+      <include file="public/foot" />

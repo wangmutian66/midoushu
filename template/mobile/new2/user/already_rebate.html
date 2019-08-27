@@ -1,0 +1,79 @@
+<include file="public/header" title="福利提现" body="g4"/>
+<include file="public/header_nav" title="福利提现"  href="javascript:history.back(-1);"/>
+<link rel="stylesheet" href="__STATIC__/css/tian.css?v={$vnum}">
+<style>
+.shiduo{position:relative;width:100%;height:20px;margin-top: 3%;float: left; border:1px solid #666;overflow:hidden;border-radius:10px;}
+.shiduo .shi-2{ position:absolute;top:0;left:0;height:20px;background:#09F;}
+.shiduo .shi-3{ position:absolute;top:0;left:0;height:20px;width:100%;font-size:12px;line-height:20px;text-align:center;color:#333}
+</style>
+  
+<div class="floor ma-to-20 y-padd">
+   
+   <div class="y-xuan">
+   	    <a href="{:U('/mobile/user/already_rebate')}" <if condition="$Request.param.rebate_status neq ok"> class="on" </if>>进行中</a>
+   	    <a href="{:U('/mobile/user/already_rebate/rebate_status/ok')}" <if condition="$Request.param.rebate_status eq ok"> class="on" </if>>已完成</a>
+   </div>
+   
+   <ul class="y-jind">
+   		<volist name="list" id='vo'>
+   	    <li>
+    		<h4>建立福利时间：{$vo.add_time|date="Y-m-d",###}</h4>
+    		<div class="jdt clearfix">
+    			<h3>福利金额：{$vo.rebate_price|tk_money_format}</h3>
+    			<if condition="$Request.param.rebate_status neq ok"><h2>进行中</h2><else/>
+                <if condition="$Request.param.rebate_status eq 'ok' && $vo.is_forward eq 0 && $vo.tx_rebate gt 0"><a href="JavaScript:;" data-url="{:U('/Home/user/order_do_cash',['order_id'=>$vo.order_id])}" class="forward"><h5 style="margin-top:5px;">申请提现</h5></a></if>
+                <if condition="$vo.is_forward lt 0"><a href="JavaScript:;" data-url="{:U('/Home/user/cash_remark')}" order_id='{$vo.order_id}' class="forward_remake"><h5>提现失败(查看原因)</h5></a></if>
+                <if condition="$Request.param.rebate_status eq 'ok' && $vo.is_forward eq 1"><a href="JavaScript:;" ><h2>正在申请</h2></a></if>
+                <if condition="$Request.param.rebate_status eq 'ok' && $vo.is_forward eq 2"><a href="JavaScript:;" ><h2>已提现</h2></a></if>
+            <!--    <h5>已完成</h5>-->
+                
+                </if>
+				<div style="clear: both;"></div>
+    			<div class="shiduo">
+					<div class="shi-2" style="width:{$vo.progress_bar}%"></div> 
+					<div class="shi-3">{$vo.progress_bar}%</div> 
+				</div>
+    		</div>
+    	</li>
+	
+    	</volist>
+   </ul>
+   <style>
+   	.pagination{}
+				.pagination li{float:left}
+   </style>
+   <!--分页-->
+	<div class="y-sxfy y-tco">
+	    {$page->show()}
+	</div>
+</div>
+
+<script>
+	$(".forward").click(function (){
+		$.post($(this).attr('data-url'),function (r){
+			if(r.status == 0){
+				 layer.open({content:r.info, time:3});
+			}else{
+				layer.open({content:r.info, time:3});
+				setTimeout(function(){window.location.reload();},3000);
+			}
+		},'json');
+		
+	});
+	$(".forward_remake").click(function (){
+		$.post($(this).attr('data-url'),{order_id:$(this).attr('order_id')},function (r){
+			console.log(r.status);
+			if(r.status == 0){
+				layer.open({content:r.info, time:3000});
+			}else{
+				layer.open({content:r.info, time:3});
+				setTimeout(function(){window.location.reload();},3000);
+			}
+		},'json');
+	});
+</script>
+
+<!--底部导航-start-->
+    <include file="public/footer_nav"/>
+	</body>
+</html>

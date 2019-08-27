@@ -1,0 +1,222 @@
+<include file="public/layout" />
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title">
+      <div class="subject">
+        <h3>实体店员工管理</h3>
+      </div>
+    </div>
+  </div>
+  <!-- 操作说明 -->
+
+  <div class="flexigrid">
+    <div class="mDiv">
+      <div class="ftitle">
+        <h3>员工列表</h3>
+        <h5>(共<span id="user_count"></span>条记录)</h5>
+      </div>
+      <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+	    <form action="" id="search-form2" class="navbar-form form-inline" method="post" onSubmit="return false">
+        <div class="sDiv">
+          <div class="sDiv2">           
+            <select name="company_id" id="company_id" class="select">
+              <option value="">所属子公司</option>
+              <foreach name="companyList" item="v" key="k" >
+                  <option value="{$v['cid']}"> {$v['cname']}</option>
+              </foreach>
+            </select>
+            <select name="store_id" id="store_id" onChange="<eq name='$Request.param.t' value='0'>get_company_level($(this).val(),'company_level','0','1');<else />get_company_staff($(this).val(),'parent_id','0');</eq>" class="select">
+              <option value="">所属子公司</option>
+            </select>
+            <eq name="$Request.param.t" value="1">
+              <select name="parent_id" id="parent_id">
+                  <option value="">请选择员工</option>
+              </select>
+            <else /> 
+              <select name="company_level" id="company_level" class="select">
+                <option value="">所属员工等级</option>
+              </select> 
+            </eq>
+            <!--排序规则-->
+            <input type="hidden" name="orderby1" value="cid" />
+            <input type="hidden" name="orderby2" value="desc" />
+            <input type="hidden" name="company_id2" value="{$Request.param.company_id}" />
+            <input type="hidden" name="store_id2" value="{$Request.param.store_id}" />
+            <input type="hidden" name="parent_id2" value="{$Request.param.parent_id}" />
+            <input type="hidden" name="sp" value="{$Request.param.sp}" />
+            <input type="hidden" name="t" value="{$Request.param.t}" />
+            <input type="text" size="30" name="key_word" class="qsbox" placeholder="搜索词...">
+            <input type="button" onClick="ajax_get_table('search-form2',1)" class="btn" value="搜索">
+          </div>
+        </div>
+      </form>
+    </div>
+	<div class="tDiv">
+		<div class="tDiv2">
+			<div class="fbutton">
+				<a href="{$add_data.add_url}">
+          <div class="add" title="添加成员">
+            <span><i class="fa fa-plus"></i>添加{$add_data.titstr}</span>
+          </div>
+        </a>
+			</div>
+		</div>
+		<div style="clear:both"></div>
+	</div>
+	
+    <div class="hDiv">
+      <div class="hDivBox">
+        <table cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+              <th class="sign" axis="col0">
+                <div style="width: 24px;"><i class="ico-check"></i></div>
+              </th>
+			        <th align="left" abbr="article_title" axis="col1" class="">
+                <div style="text-align: left; width: 60px;" class="">ID</div>
+              </th>
+              <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">用户名</div>
+              </th>
+			        <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">真实姓名</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">邀请码</div>
+              </th>
+              <eq name="$Request.param.t" value="1">
+                <th align="left" abbr="isadmin" axis="col4" class="">
+                  <div style="text-align: center; width: 150px;" class="">推荐员工</div>
+                </th>
+              <else />
+                <th align="left" abbr="isadmin" axis="col4" class="">
+                  <div style="text-align: center; width: 150px;" class="">员工等级</div>
+                </th>
+              </eq>
+			        <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">用户金额</div>
+              </th>
+			        <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">冻结金额</div>
+              </th>
+			        <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 200px;" class="">隶属公司</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">手机号码</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">联系电话</div>
+              </th>
+			        <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">状态</div>
+              </th>
+			        <th align="center" abbr="control" axis="col9" class="">
+                <div style="text-align: center; width: 180px;" class="">操作</div>
+              </th>
+              <th style="width:100%" axis="col7">
+                <div></div>
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    
+    <div class="bDiv" style="height: auto;">
+      <div id="flexigrid" cellpadding="0" cellspacing="0" border="0"></div>
+      <div class="iDiv" style="display: none;"></div>
+    </div>
+    <!--分页位置--> 
+  </div>
+</div>
+<script>
+    $(document).ready(function(){
+	  // 表格行点击选中切换
+	  $('#flexigrid > table>tbody >tr').click(function(){
+		    $(this).toggleClass('trSelected');
+		});
+		// 点击刷新数据
+		$('.fa-refresh').click(function(){
+			location.href = location.href;
+		});
+		
+		$(".is_lock").click(function (){
+			var obj = $(this);
+			var id = obj.attr('rid');
+			
+			$.getJSON("{:U('Admin/staff/is_lock')}",{id:id,rstatus:$(this).attr('rstatus')},function (r){
+				if(r.status == 1){
+					obj.attr('rstatus',r.save_status);
+					if(r.save_status == 0){
+						$("#is_lock_"+id).html('正常');
+						obj.text('锁定状态');
+					}else{
+						$("#is_lock_"+id).html('锁定状态');	
+						obj.text('正常');
+					}
+				}else{
+					alert(r.msg);
+				}
+			})
+		})
+	});
+
+  //选择分类
+  $(function(){
+    $(document).on("change",'#company_id',function(){
+      get_company($(this).val(),'store_id','0');
+    })
+  })
+
+  $(document).ready(function () {
+    // ajax 加载商品列表
+    ajax_get_table('search-form2', 1);
+  });
+
+  // ajax 抓取页面 form 为表单id  page 为当前第几页
+  function ajax_get_table(form, page) {
+    cur_page = page; //当前页面 保存为全局变量
+    $.ajax({
+        type: "POST",
+        url: "/index.php?m=Admin&c=staff&a=ajaxindex&p=" + page,//+tab,
+        data: $('#' + form).serialize(),// 你的formid
+        success: function (data) {
+            $("#flexigrid").html('');
+            $("#flexigrid").append(data);
+        }
+    });
+  }
+	
+	function AddData(){
+		location.href	=	"{:U('Admin/Staff/add')}";	
+	}
+    /*function delfun(obj) {
+      // 删除按钮
+      layer.confirm('确认删除？', {
+        btn: ['确定', '取消'] //按钮
+      }, function () {
+        $.ajax({
+          type: 'post',
+          url: $(obj).attr('data-url'),
+          data: {act: 'del', article_id: $(obj).attr('data-id')},
+          dataType: 'json',
+          success: function (data) {
+            layer.closeAll();
+            if (data) {
+              $(obj).parent().parent().parent().remove();
+            } else {
+              layer.alert('删除失败', {icon: 2});  //alert('删除失败');
+            }
+          }
+        })
+      }, function () {
+        layer.closeAll();
+      });
+    }*/
+</script>
+</body>
+</html>

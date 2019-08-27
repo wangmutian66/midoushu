@@ -1,0 +1,68 @@
+<include file="public/layout" />
+ 
+<style type="text/css">
+html, body {
+	overflow: visible;
+}
+</style>  
+<body style="background-color: #FFF; overflow: auto;">
+<div id="toolTipLayer" style="position: absolute; z-index: 9999; display: none; visibility: visible; left: 95px; top: 573px;"></div>
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title">
+      <!--<a class="back" href="javascript:history.back();" title="微信公众号配置"><i class="fa fa-arrow-circle-o-left"></i></a>-->
+      <div class="subject">
+        <h3>自动回复</h3>
+
+      </div>
+    </div>
+  </div>
+  <form class="form-horizontal" method="post" id="handlepost" action="">    
+    <div class="ncap-form-default">
+      <dl class="row">
+        <dt class="tit">
+          <label>上线自动回复</label>
+        </dt>
+        <dd class="opt">
+          <input type="text"  name="onlineReply" placeholder="" value="{$autoreply.onlineReply}" class="input-txt">
+          <span class="err"></span>
+          <p class="notic"></p>
+        </dd>
+      </dl>
+      <dl class="row">
+        <dt class="tit">
+          <label>离开自动回复</label>
+        </dt>
+        <dd class="opt">
+          <input type="text" name="leaveReply"  placeholder="" value="{$autoreply.leaveReply}" class="input-txt">
+          <span class="err"></span>
+          <p class="notic"></p>
+        </dd>
+      </dl>
+      <dl class="row">
+        <dt class="tit">
+          <label>离开时间</label>
+        </dt>
+        <dd class="opt">
+          <input type="text"  name="leaveTimeReply" placeholder="" value="{$autoreply.leaveTimeReply}" class="input-txt">
+          <span class="err"></span>
+          <p class="notic">单位 秒</p>
+        </dd>
+      </dl>
+      <div class="bot"><a href="JavaScript:void(0);" onClick="formSubmit()" class="ncap-btn-big ncap-btn-green" id="submitBtn">确认提交</a></div>
+    </div>
+  </form>
+</div>
+<script type="text/javascript">
+  
+
+
+function formSubmit(){
+	$("#handlepost").submit();
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<include file="public/header" title="申请服务详情" body="g4"/>
+<include file="public/header_nav" title="申请服务详情" href="javascript:history.back(-1);"/>
+<!--进度查询-s-->
+<div class="attention-shoppay" id="returninfo" >
+    <if condition="empty($return_goods)">
+        <!--没有进度-s-->
+        <div class="comment_con p">
+            <div class="none"><img src="__STATIC__/images/none.png"><br><br>亲，此处还没有进度哦~</div>
+        </div>
+        <!--没有进度-e-->
+    <else/>
+        <div class="dindboxt p">
+            <div class="maleri30">
+                <div class="fl_addextra fl">
+                    <p><span class="gray">订单编号：</span><span>{$return_goods.order_sn}</span></p>
+                    <p><span class="gray">申请时间：</span><span>{:date('Y-m-d H:i:s',$return_goods.addtime)}</span></p>
+                </div>
+                <div class="fr_extra fr">
+                    <if condition="$return_goods[status] eq 2 and $return_goods.type eq 1">
+                        <a class="tuid sueye" href="{:U('Order/receiveConfirm',array('return_id'=>$return_goods[id]))}">确认收货</a>
+                    </if>
+                    <if condition="$return_goods[status] neq -2 and $return_goods[status] lt 1">
+                        <a class="tuid sueye" href="{:U('Order/return_goods_cancel',array('id'=>$return_goods[id]))}">取消服务</a>
+                    </if>
+                </div>
+            </div>
+        </div>
+        <!--  供货商收货信息  -->
+        <if condition="$return_goods['suppliers_id'] neq 0">
+            <div class="dindboxt p">
+                <div class="maleri30">
+                    <div class="fl_addextra fl" style="width: 14rem;">
+                        <p><span class="gray">寄回地址：</span><span>{$region_list[$suppliers_info['post_province']]}
+                                        {$region_list[$suppliers_info['post_city']]}
+                                        {$suppliers_info.post_address}</span></p>
+                        <p><span class="gray">收货人：</span><span>{$suppliers_info['post_consignee']}</span></p>
+                        <p><span class="gray">联系电话：</span><span>{$suppliers_info['post_mobile']}</span></p>
+                    </div>
+                </div>
+            </div>
+        <else />
+            <div class="dindboxt p">
+                <div class="maleri30">
+                    <div class="fl_addextra fl" style="width: 14rem;">
+                        <p><span class="gray">寄回地址：</span><span>{$tpshop_config['shop_info_address']}</span></p>
+                        <p><span class="gray">联系电话：</span><span>{$tpshop_config['shop_info_phone']}</span></p>
+                    </div>
+                </div>
+            </div>
+        </if>
+        <div class="orderlistshpop mabo20 p">
+            <div class="maleri30">
+                <!--商品信息-s-->
+                <div class="sc_list se_sclist paycloseto">
+                    <div class="shopimg fl">
+                        <img src="{$goods.goods_id|goods_thum_images=200,200,'red'}">
+                    </div>
+                    <div class="deleshow fr">
+                        <div class="deletes">
+                            <span class="similar-product-text">{$goods[goods_name]}</span>
+                        </div>
+                        <div class="prices">
+                            <p class="sc_pri">最新价格：<span>{$goods[midou_index]}</span>米豆</p>
+                        </div>
+                        <!--<div class="qxatten">
+                            <p class="weight"><span>数量</span>&nbsp;<span>x{$goods[goods_num]}</span></p>
+                        </div>-->
+                    </div>
+                </div>
+                <!--商品信息-e-->
+                <div class="thirsy">
+                    <div class="sww">
+                        <ul>
+                            <li class="sw_question">售后信息</li>
+                            <li class="sw_answer">
+                                {$state[$return_goods[status]]}
+                            </li>
+                        </ul>
+                        <ul>
+                            <li class="sw_question">处理方式</li>
+                            <li class="sw_answer">期望处理方式“<if condition="$return_goods[type] eq 0">退款<elseif condition="$return_goods[type] eq 1"/>退货退款<else/>换货</if>”</li>
+                        </ul>
+                        <ul>
+                            <li class="sw_question">问题描述</li>
+                            <li class="sw_answer">{$return_goods[reason]}</li>
+                        </ul>
+                        <ul>
+                            <li class="sw_question">服务备注</li>
+                            <li class="sw_answer">{$return_goods[remark]}</li>
+                        </ul>
+                    </div>
+                    <notempty name="return_goods[imgs]">
+                        <div class="thirdlogin badimg">
+                            <h4>问题图片</h4>
+                            <ul>
+                                <volist name="return_goods[imgs]" id="item">
+                                    <li style="margin-left: 5%;"><img src="{$item}"/></li>
+                                </volist>
+                            </ul>
+                        </div>
+                    </notempty>
+                </div>
+                <div style="clear: both;"></div>
+				<form action="" onSubmit="return false;" id="postshipping" style=" margin-top: 5%;">
+				<if condition="!$return_goods['shipping_post_code'] and $return_goods['status'] egt 0  and $return_goods['status'] != 3">
+				<div class="newship" style="margin-left: 5%;">
+					<input type="text" name="shipping_code" id="shipping_code" placeholder="请输入您的物流名称" style="width: 80%; height: 50px; border: 1px solid #999; font-size: 0.58rem; margin-bottom: 3%; padding-left: 3%;" />
+					<input type="text" name="shipping_post_code" id="shipping_post_code" placeholder="请输入您的运单号码" style="width: 80%; height: 50px; margin-bottom: 3%; border: 1px solid #999; font-size: 0.58rem; padding-left: 3%;" />
+					<textarea name="shipping_post_remark" id="shipping_post_remark" placeholder="请输入您的备注" style="width: 80%; min-height: 120px; margin-bottom: 3%; height: auto; border: 1px solid #999; font-size: 0.58rem; padding: 3%;"></textarea>
+				</div>
+				<elseif condition="$return_goods['status'] egt 0 and $return_goods['shipping_code']"/>
+				<li style="padding-left: 5%; margin-bottom: 5%;">
+					<h3 style="font-size: 0.58rem; margin-bottom: 2%;">买家选择物流</h3>
+					<div class="zi fle" style="font-size: 0.58rem; margin-bottom: 2%;">{$return_goods.shipping_code}</div>
+				</li>
+				<li style="padding-left: 5%; margin-bottom: 5%;">
+					<h3 style="font-size: 0.58rem; margin-bottom: 2%;">买家运单号</h3>
+					<div class="zi fle" style="font-size: 0.58rem; margin-bottom: 2%;">{$return_goods['shipping_post_code']}</div>
+				</li>
+				<li style="padding-left: 5%; padding-bottom: 3%;">
+					<h3 style="font-size: 0.58rem; margin-bottom: 2%;">买家说明</h3>
+					<div class="zi fle" style="font-size: 0.58rem; margin-bottom: 2%;">{$return_goods['shipping_post_remark']}</div>
+				</li>
+				</if>
+				<if condition="!$return_goods['shipping_post_code'] and $return_goods['status'] egt 0 and $return_goods['status'] != 3">
+					<input type="submit" class="que" style="width: 30%; height: 50px; background: #ff4401; color: #fff; border: 0; font-size: 0.58rem; float: left; margin-left: 5%; margin-top: 5%; margin-bottom: 5%;" />
+					<input type="reset" class="xiao" style="width: 30%; height: 50px; background: #505050; color: #fff; border: 0; font-size: 0.58rem; float: left; margin-left: 5%; margin-top: 5%; margin-bottom: 5%;" /> 
+				</if>
+				<input type="hidden" name="return_id" id="return_id" value="{$return_goods.id}">
+				</form>
+				<script>
+					$("#postshipping").submit(function(){
+						var shipping_code = $("#shipping_code").val();
+						var shipping_post_code = $.trim($("#shipping_post_code").val());
+						if(shipping_code == ''){
+							showErrorMsg('请填写物流公司!');
+							return false;
+						}
+						if(shipping_post_code == ''){
+							
+							showErrorMsg('请选择填写运单号码!');
+							return false;
+						}
+						
+						$.ajax({  
+							url: "{:U('/Mobilered/Order/buy_post_shipping')}",  
+							type: 'POST',  
+							data:$("#postshipping").serialize(),  
+							dataType: 'json',  
+							error: function(){showErrorMsg('系统繁忙，请稍后再试!');},
+							success: function(r){
+								if(r.status == 1){
+									showErrorMsg(r.info);
+									setTimeout("location.reload();", 2000);
+								}else{
+									showErrorMsg(r.info);
+								}
+							}
+						});  
+						return false;
+					});
+					
+				</script>
+            </div>
+        </div>
+        <div class="listschdule ma-to-20">
+            <div class="tittimlord red-around">
+                <h2>您的服务单已申请成功，等待售后审核中</h2>
+                <p>{$return_goods.addtime|date='Y-m-d H:i:s',###}</p>
+                <p  style="height:30px; line-height:30px;"><span>操作人：</span><span class="store_dd">系统</span></p>
+            </div>
+            <if condition="$return_goods.status gt 0">
+                <div class="tittimlord red-around">
+                    <h2>亲爱的客户，您的服务单已通过审核</h2>
+                    <!--<p>2017-01-02&nbsp;&nbsp;11:12:29</p>-->
+                    <p  style="height:30px; line-height:30px;"><span>操作人：</span><span class="store_dd">卖家</span></p>
+                </div>
+            </if>
+            <if condition="$return_goods.status eq -1">
+                <div class="tittimlord red-around">
+                    <h2>亲爱的客户，很抱歉！您的服务单未通过审核</h2>
+                    <!--<p>2017-01-02&nbsp;&nbsp;11:12:29</p>-->
+                    <p  style="height:30px; line-height:30px;"><span>操作人：</span><span class="store_dd">卖家</span></p>
+                </div>
+            </if>
+            <if condition="$return_goods.status gt 1 and $return_goods.type eq 1">
+                <div class="tittimlord red-around">
+                    <h2>亲爱的客户，卖家已收到您寄回的物品</h2>
+                    <!--<p>2017-01-02&nbsp;&nbsp;11:12:29</p>-->
+                    <p  style="height:30px; line-height:30px;"><span>操作人：</span><span class="store_dd">卖家</span></p>
+                </div>
+                <div class="tittimlord red-around">
+                    <h2>亲爱的客户，卖家已重新发货,
+                        <p  style="height:30px; line-height:30px;">快递公司：{$return_goods[seller_delivery][express_name]},</p>
+                        <p  style="height:30px; line-height:30px;">快递单号：{$return_goods[seller_delivery][express_sn]}</p>
+                    </h2>
+                    <p>{$return_goods[seller_delivery][express_time]}</p>
+                    <p  style="height:30px; line-height:30px;"><span>操作人：</span><span class="store_dd">卖家</span></p>
+                </div>
+            </if>
+
+            <if condition="$return_goods.status eq 3">
+                <div class="tittimlord red-around">
+                    <h2>亲爱的客户，您的服务单完成</h2>
+                    <!--<p>2017-01-02&nbsp;&nbsp;11:12:29</p>-->
+                    <p  style="height:30px; line-height:30px;"><span>操作人：</span><span class="store_dd">卖家</span></p>
+                </div>
+            </if>
+            <if condition="$return_goods.status eq -2">
+                <div class="tittimlord red-around">
+                    <h2>亲爱的客户，您的服务单已经取消</h2>
+                    <!--<p>2017-01-02&nbsp;&nbsp;11:12:29</p>-->
+                    <p  style="height:30px; line-height:30px;"><span>操作人：</span><span class="store_dd">卖家</span></p>
+                </div>
+            </if>
+        </div>
+    </if>
+</div>
+<!--进度查询-e-->
+</body>
+</html>

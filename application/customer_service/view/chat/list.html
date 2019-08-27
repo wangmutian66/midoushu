@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no">-->
+    <meta name="format-detection" content="telephone=no" />
+    <title>沟通中</title>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/css/themes.css?v=2017129">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/css/h5app.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/fonts/iconfont.css?v=2016070717">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/css/chat_list.css">
+    <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script src="__STATIC__/js/jquery.min.js"></script>
+    <script src="__STATIC__/js/dist/flexible/flexible_css.debug.js"></script>
+    <script src="__STATIC__/js/dist/flexible/flexible.debug.js"></script>
+    <!--PC端layer 用于显示聊天窗口-->
+    <script src="/public/static/js/layer/layer.js" type="text/javascript"></script>
+
+</head>
+<body>
+<div class='fui-page-group'>
+    <div class="fui-statusbar"></div>
+<div class='fui-page chat-page'>
+	<div class="fui-header">
+	    <div class="title">消息列表</div>
+	    <div class="fui-header-right"></div>
+	</div>
+
+	<div class="fui-content navbar chat-fui-content" style="padding-bottom: 2rem;">
+		<div class="chat-list flex" >
+			<!--<div class="chat-img"  style="background-image: url('http://www.hwqugou.cn/img/555.jpg')">
+                <span class="badge" style="top: -0.1rem;left: 80%;">1</span>
+            </div>
+			<div class="chat-info">
+				<p class="chat-merch flex">
+					<span class="title t-28">魔力克</span>
+					<span class="time">2017-12-14</span>
+				</p>
+				<p class="chat-text singleflow-ellipsis">你好</p>
+			</div>-->
+		</div>
+	</div>
+</div>
+</div>
+ <audio id="chatAudio"><source src="__STATIC__/images/1.mp3" type="audio/mpeg"></audio>
+
+
+</body>
+<script>
+//xiangling();
+  //  var API_URL = "http://chat.com/index.php/api/chat/";
+  	function xiangling(){
+		window.onload = function() {
+			 // alert(typeof WeixinJSBridge);
+			 WeixinJSBridge.invoke('getNetworkType', {}, function(e) {
+				// 在这里拿到 e.err_msg, 这里面就包含了所有的网络类型
+				document.getElementById('chatAudio').play();
+			 });
+		  };
+	}
+	var API_URL = "{:U('/customer_service/Api/','','')}";
+    var fromid = '{$fromid}';
+	var html = '';
+	
+	
+	ws =  new WebSocket("{$socket_url}");
+	
+    ws.onmessage=function(e){
+        var message = eval("("+ e.data+")");
+        switch (message.type){
+            case  "init":
+                var bild = '{"type":"bind","fromid":"'+fromid+'"}';
+                ws.send(bild);
+                list();
+                return;
+            case "text":
+				xiangling();
+                window.setTimeout(list,1000);
+                return;
+            case "say_img":
+				xiangling();
+                window.setTimeout(list,1000);
+                return;
+			case "send_goods":
+				 xiangling();
+			  	 window.setTimeout(list,1000);
+				 break;
+			case 'ping':
+                ws.send('{"type":"ping"},"fromid":"'+fromid+'"}');
+                break;
+        }
+    }
+	
+    function list(){
+		$(".chat-fui-content").html("");
+        $.post(
+                API_URL+"get_list_mobile",
+                {id:fromid},
+                function(res){
+					$.each(res,function(index,content){
+						var redcount= '';
+						if(content.countNoread > 0){
+							redcount	=	'<span class="badge" style="top:-0.1rem;left: 80%;">'+content.countNoread+'</span>'
+						}
+						if(content.last_message.type == 3){
+							content.last_message.content = '新商品';
+						}
+						if(content.last_message.type == 2){
+							content.last_message.content = '新图片';
+						}
+						$(".chat-fui-content").append( '<div onclick=redi("'+content.chat_page+'") class="chat-list flex" ><div class="chat-img"  style="background-image: url('+content.head_url+')"> ' + redcount + '</div> <div class="chat-info"> <p class="chat-merch flex"> <span class="title t-28">'+content.username+'</span> <span class="time">'+mydate(content.last_message.time)+'</span> </p> <p class="chat-text singleflow-ellipsis">'+content.last_message.content+'</p> </div></div>');
+                    })
+					
+                },'json'
+        )
+
+
+	}
+
+
+    /**
+     *根据时间戳格式化为日期形式
+     */
+    function mydate(nS){
+        return new Date(parseInt(nS) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
+    }
+	
+	function redi(url){
+        window.location.href=url;
+	//	window.open(url);
+    }
+	
+	
+</script>
+
+</html>

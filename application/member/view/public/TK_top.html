@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+    <title>{$web_title|default='网站登录'}</title>
+	<link rel="stylesheet" href="__PUBLIC__/staff/css/Employee.css">
+	<script src="__PUBLIC__/staff/js/mobile-util.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" src="__PUBLIC__/static/js/jquery.js"></script>
+	<script type="text/javascript" src="/template/mobile/new2/static/js/layer.js"></script>
+    <script>
+    	function showErrorMsg(msg){
+			layer.open({content:msg,time:2000});
+		}
+    </script>
+</head>
+<body class="bgh">
+<div class="e-top">
+	<div class="content">
+		<div class="e-jian">
+			<a href="javascript:history.back(-1)"><img src="__PUBLIC__/staff/img/return.png"></a>
+		</div>
+		<div class="e-wen">
+			{$crumbs|default='米豆薯成员中心'}
+		</div>
+		<a href="{:U('/Member/')}" class="e-huis"><img src="__PUBLIC__/staff/img/e-ico12.png" /></a>
+	</div>
+</div>
+
+<div class="e-main">
+	<div class="content">
+		<div class="wdx">
+			<div class="tx fl">
+				<a href="{:U('/Member')}"> <!--{:U('/Member/Profile')}--><img src="{$member_info.head_pic|default='__STATIC__/images/headPic.jpg'}"></a>
+			</div>
+			<div class="xxi fl">
+				<div class="fm">
+					<if condition="$member_info.real_name">{$member_info.real_name}<else/>{$member_info.uname}</if>
+					
+					<if condition="$member_info.level_name"><span>等级：{$member_info.level_name}</span></if>
+					
+				</div>
+				<div class="dm">
+					<!--所属：{$member_info.company_name} -->
+				</div>
+			</div>
+		</div>
+		
+	</div>
+</div>

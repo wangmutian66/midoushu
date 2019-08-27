@@ -1,0 +1,69 @@
+﻿<include file="public/layout" />
+
+<body>
+    <div class="mdk-drawer-layout js-mdk-drawer-layout" data-fullbleed data-push data-responsive-width="992px" data-has-scrolling-region>
+
+        <div class="mdk-drawer-layout__content">
+            <!-- header-layout -->
+            <div class="mdk-header-layout js-mdk-header-layout  mdk-header--fixed  mdk-header-layout__content--scrollable">
+                
+                <!-- content -->
+                
+                <div class="mdk-header-layout__content ls-top-navbar mdk-header-layout__content--scrollable h-100">
+                    <!-- main content -->
+
+                    <div class="container-fluid">                      
+                        <div class="card">
+                            
+                            <div class="card-header">
+                                <div class="row align-items-center">
+                                    <div class="col-md-4">
+                                        <div class="card-title">详细内容</div>
+                                    </div>
+                                
+
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="liebiao">
+                                <ul>
+                                    <li style="background:#fff;">
+                                        <div class="hang">
+                                            <div class="l">消息类型</div>
+                                            <div class="r1">{$item.info}</div>
+                                        </div>
+                                       
+                                        <div class="hang">
+                                            <div class="l">发起时间</div>
+                                            <div class="r1">{$item.create_time|date="Y-m-d H:i:s",###}</div>
+                                        </div>
+                                        
+                                        <div class="hang ys">
+                                            <div class="l">消息内容</div>
+                                            <div class="r1">{$item.message|nl2br}</div>
+                                        </div>
+                                    </li>
+                                    
+                                </ul>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- // END drawer-layout__content -->
+
+      
+       
+    </div>
+    <!-- // END drawer-layout -->
+
+
+
+
+</body>
+
+</html>

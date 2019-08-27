@@ -1,0 +1,207 @@
+<include file="public/header" title="会员支付" body=""/>
+<include file="public/header_nav" title="会员支付" href="javascript:history.back(-1)"/>
+<style>
+.e-df{ background: #fff; height: 1.4rem; line-height: 1.4rem; text-align: center; margin: 0.5rem 0;}
+.e-df a{ width: 50%; float: left; font-size: 0.55rem; color: #08ad71;}
+.e-df a.on{ background: #0ac78c; color: #fff;}
+.e-fu{ background: #fff; border-top: 1px solid #e3e3e3; border-bottom: 1px solid #e3e3e3; padding: 0 0.5rem; margin-bottom: 0.3rem;}
+.e-fu .ni{ border-bottom: 1px dashed #f0f0f0; line-height: 1rem; color: #363636; font-size: 0.56rem; padding: 0.7rem 0;}
+.e-fu .ni span{ color: #9a9a9a;}
+.e-fu .ni p{ float: left;}
+.e-fu .ni p.bfw{ width: 50%;}
+.e-fu .ni span.yan{ color: #ffbc1a; font-size: 0.64rem;}
+.e-fu .zf{ width: 40%; height: 1.6rem; background: #dd2727; text-align: center; margin: 1rem 0; margin-left: 30%; border: 0; color: #fff; font-size: 0.64rem;}
+.e-fu .ni h3{ float: right; color: #0ac78c; border: 1px solid #e9e9e9; font-size: 0.48rem; font-weight: normal; padding: 0.1rem 0.4rem;}
+.e-mot{ margin-top: 0.5rem;}
+</style>
+<div class="e-fu e-mot">
+<form action="{:U('/Mobile/Payment/mypays_pay')}" method="post" id="payforms">
+<input type="hidden" id="pays_id" name="pays_id" value="{$Request.param.id}" />
+	<div class="ni clearfix">
+		<p>订单时间：<span>{$item.create_time|date='Y-m-d H:i:s',###}</span></p>
+		<p style="display:none">订单号码：<span>{$item.paid_sn}</span></p>
+	</div>
+	<div class="ni clearfix">
+		<p class="bfw">手机号码：<span>{$item.mobile|hide_mobile}</span></p>
+		<p class="bfw">支付金额：<span class="yan">{$item.money|tk_money_format}</span></p>
+	</div>
+	<div class="ni clearfix">
+		<!--其他支付方式-s-->
+		<div class="pay-list-4 p">
+		    <div class="maleri30">
+			
+		        <ul>
+					
+					<foreach name="paymentList" item="v"  key="k">
+						<li onClick="changepay(this);">
+							<label>
+							<div class="radio fl">
+								<span class="che cod"  name="{$v[name]}">
+									<i>
+										<input type="radio"  value="pay_code={$v['code']}" class="c_checkbox_t" name="pay_radio" style="display:none;" <if condition="$k eq 'alipayMobile'">checked</if> />
+									</i>
+								</span>
+							</div>
+							<div class="pay-list-img fl">
+								<!--<img src="__PUBLIC__/staff/img/y-08.png"/>-->
+								<img src="/plugins/{$v['type']}/{$v['code']}/{$v['icon']}" style="width:auto" />
+							</div>
+							<div class="pay-list-font fl">
+													{$v[name]}                     
+							</div>
+							</label>
+						</li>
+						
+					</foreach>
+					<li onClick="changepay(this);">
+							<label>
+								<div class="radio fl">
+									<span class="che 4">
+										<i>
+										<input type="radio" class="c_checkbox_t" name="pay_radio" value="balance" style="display:none;">
+										</i>
+									</span>
+								</div>
+								<div class="pay-list-img fl">
+									<!--<img src="__STATIC__/images/logo-2.png"/>-->
+									<img src="/template/mobile/new2/static/images/logo-2.png"/>
+								</div>
+								<div class="pay-list-font fl">
+									余额支付
+								</div>
+							</label>
+						</li>
+		       </ul>
+			   <div id="payhtml" style="display:none; height:1.5rem; line-height:1.5rem;padding-left:10%; margin-top:0.5rem;"><input type="password" autocomplete="new-password" name="paypsw" id="paypsw" placeholder="请输入支付密码" style="width:70%;height:1.5rem;line-height:1.5rem;border:1px solid #eee;border-radius:5px;padding:0 10px; font-size:.68rem"></div>
+		    </div>
+		</div>
+		<!--其他支付方式-s-->
+	</div>
+</div>
+<div class="paiton y-mors">
+    <div class="maleri30">
+        <a class="soon" href="javascript:void(0);" onClick="pay()"><span>确认支付</span></a>
+    </div>
+</div>
+<input type="hidden" name="is_xxpay" id="is_xxpay" value="1" />
+	</form>
+<script type="text/javascript">
+    $(function(){
+        //默认选中第一个
+        $('.pay-list-4 div ul li:first').find('.che').addClass('check_t')
+                .end().find(':radio').attr('checked',true);		
+    })
+    //切换支付方式
+    function changepay(obj){
+        $(obj).find('.che').addClass('check_t').parents('li').siblings('li').find('.che').removeClass('check_t');
+        //改变中状态
+        if($(obj).find('.che').hasClass('check_t')){
+            //选中
+            $(obj).find(':radio').attr('checked',true);
+            $(obj).siblings('li').find(':radio').removeAttr('checked');
+        }else{
+            //取消选中
+            $(obj).find(':radio').removeAttr('checked');
+        }
+		var radio = $("input[name='pay_radio']:checked").val();
+		if(radio == "balance")
+			$("#payhtml").show();
+		else 
+			$("#payhtml").hide();
+		
+    }
+	/*function quesd(){
+		layer.open({
+		content: '支付成功？'
+			,btn: ['是', '否']
+			,yes: function(index){
+				location.href = '{:U("/Mobile/User/pay_paid/t/999")}';
+			}
+		});	
+	}*/
+
+    function pay(){
+		var radio = $("input[name='pay_radio']:checked").val();
+		if(radio == 'balance'){
+			var paypsw = $.trim($("#paypsw").val());
+			if(paypsw == ''){
+				showErrorMsg('请输入支付密码!');
+				return false;
+			}
+			var index;
+			$.ajax({  
+				url: "{:U('/Mobile/Cart/balance')}",  
+				type: 'POST',  
+				data:$("#payforms").serialize(),  
+				dataType: 'json',  
+				error: function(){ showErrorMsg('系统繁忙，请刷新后重试!');},
+				beforeSend:function(){
+					index = layer.open({type: 2,shadeClose: false});
+				},
+				success: function(r){
+					layer.closeAll(index);
+					if(r.status == 1){
+						showErrorMsg('使用余额支付成功!');
+						window.setTimeout("location.href = '{:U("mobile/user/pay_status",['paid_sn'=>$item.paid_sn])}';", 1000); 
+					}else{
+						showErrorMsg(r.info);
+					}
+				},
+				complete:function(){
+				//	layer.closeAll('loading');
+				}
+			});
+			return false;
+		}
+		$("#payforms").submit();
+//询问框
+	//	setTimeout("quesd()",3000);
+		
+		return false;
+        //微信JS支付
+    }
+
+    $(function(){
+        //使用银行卡
+        $('.usedeb').click(function(){
+            cover();
+            $('.chooseebitcard').show();
+        })
+        $('.gb-close').click(function(){
+            undercover();
+            $('.chooseebitcard').hide();
+        })
+
+//        // 其他支付方式
+//        $('.pay-list-4 ul li').click(function(){
+//            $(this).find('.che').toggleClass('check_t').parents('li').siblings('li').find('.che').removeClass('check_t');
+//        })
+
+        //选择银行卡
+        $('.card').click(function(){
+            $(this).find('.che').toggleClass('check_t').parents('.card').siblings().find('.che').removeClass('check_t');
+        })
+//        $('.che').click(function(){
+//            $(this).toggleClass('check_t')
+//        })
+
+        //支付失败弹窗
+        $('.lossbq').click(function(){
+            cover();
+            $('.losepay').show();
+        })
+        $('.qx-rebd .ax').click(function(){
+            undercover();
+            $('.losepay').hide();
+        })
+        $('.are').click(function(){
+            $('.losepay').hide();
+            $('.chooseebitcard').show();
+        })
+    })
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+    <title>{$web_title|default='网站登录'}</title>
+	<link rel="stylesheet" href="__PUBLIC__/staff/css/Employee.css">
+	<link href="/template/mobile/new2/static/css/style.css" rel="stylesheet" />
+	<script src="__PUBLIC__/staff/js/mobile-util.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" src="__PUBLIC__/static/js/jquery.js"></script>
+	<script src="/template/mobile/new2/static/js/layer.js"  type="text/javascript" ></script>
+
+    <script type="text/javascript">
+        function showErrorMsg(msg){
+            layer.open({content:msg,time:2});
+        }
+    </script>
+</head>
+
+<body class="bgh">
+<div class="e-top">
+	<div class="content">
+		<div class="e-jian">
+			<a href="javascript:history.back(-1)"><img src="__PUBLIC__/staff/img/return.png"></a>
+		</div>
+		<div class="e-wen">
+			{$crumbs|default='米豆薯员工中心绑定手机'}
+		</div>
+		<a href="{:U('/Staff/')}" class="e-huis"><img src="__PUBLIC__/staff/img/e-ico12.png" /></a>
+
+	</div>
+</div>
+
+<div class="loginsingup-input ma-to-20">
+    <form action="" method="post" id="handlepost" onsubmit="return submitverify()">
+        <div class="lsu">
+            <span class="ico ico-telephone"></span>
+            <input type="text" name="mobile" id="mobile" value=""  placeholder="请输入手机号码">
+        </div>
+        <div class="lsu">
+            <span class="ico ico-password"></span>
+            <input type="password" name="password" id="password" value=""  placeholder="请输入密码(确认密码)">
+        </div>
+
+        <div class="lsu-submit">
+            <input type="submit" name="" id="sub" value="确认">
+        </div>
+    </form>
+</div>
+<script type="text/javascript" charset="utf-8">
+    //验证表单
+    function submitverify(){
+        var mobile = $.trim($('#mobile').val());
+        var password = $.trim($('#password').val());
+        if(mobile ==''){
+            showErrorMsg('手机号码不能为空!');
+            return false;
+        }
+        if(password ==''){
+            showErrorMsg('密码不能为空!');
+            return false;
+        }
+        if(password.length < 6 || password.length < 6){
+            showErrorMsg('密码长度不能少于6位!');
+            return false;
+        }
+        $.ajax({  
+            url: "{:U('/Staff/System/do_bind_staff')}",  
+            type: 'POST',  
+            data:$("#handlepost").serialize(),  
+            dataType: 'json',  
+            error: function(){showErrorMsg('系统繁忙，请稍后再试!')},
+            success: function(r){
+                showErrorMsg(r.info);
+                if(r.status == 1){
+                    window.setTimeout("location.href = '{:U("/Staff/Index")}';", 2000); 
+                }
+            }
+        });  
+
+        return false;
+    }
+</script>
+</body>
+</html>

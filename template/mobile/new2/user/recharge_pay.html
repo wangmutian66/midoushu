@@ -1,0 +1,150 @@
+<include file="public/header" title="我的充值"/>
+<include file="public/header_nav" title="我的充值"  href="javascript:history.back(-1);"/>
+<link rel="stylesheet" href="__STATIC__/css/tian.css?v={$vnum}">  
+
+<form method="post"  id="recharge_form" action="{:U('Mobile/Payment/getPay')}">
+<div class="y-qia">
+	账户余额：{$user.user_money|tk_money_format}元
+</div>
+<fieldset id="view" class="toggle fle">
+    <php>$ks = 0;</php>
+    <foreach name="list" item="vo" key="k" >
+    <php>$ks++;</php>
+	<input type="radio" name="view" id="view-list-{$vo.rec_id}" value="list" class="pd" rel="{$vo.account}" />
+	<label for="view-list-{$vo.rec_id}" class="zi">
+		<div class="se fle">
+			充值金额
+			<p><span>{$vo.account}</span>元</p>
+		</div>
+		<h2 class="ju{$ks} hitsf" rel='{$vo.account}'><a href="JavaScript:;" class="ju{$ks}">点<br />击<br />充<br />值</a></h2>
+	</label>
+    <php>if($ks == 3)$ks=0;</php>
+    </foreach>
+</fieldset>
+<div class="clear"></div>
+<!--其他支付方式-s-->
+<div class="paylist">
+    <div class="myorder debit otherpay p">
+        <div class="content30">
+            <a href="javascript:void(0);">
+                <div class="order">
+                    <div class="fl">
+                        <span>支付方式</span>
+                    </div>
+                    <div class="fr">
+                        <!--<i class="Mright xjt"></i>-->
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="pay-list-4 p">
+    <div class="maleri30">
+        <ul>
+            <foreach name="paymentList" item="v"  key="k">
+            <li  onClick="changepay(this);">
+                <label>
+                <div class="radio fl">
+					<span class="che cod">
+						<i>
+                            <input type="radio" name="pay_radio" value="pay_code={$v['code']}" <if condition="$k eq 'alipay'">checked</if> class="c_checkbox_t" style="display:none;"/>
+                        </i>
+					</span>
+                </div>
+                <div class="pay-list-img fl">
+                    <img src="/plugins/{$v['type']}/{$v['code']}/{$v['icon']}"/>
+                </div>
+                <div class="pay-list-font fl">
+                    {$v['name']}
+                </div>
+                </label>
+            </li>
+            </foreach>
+        </ul>
+        <div class="y-chong">
+        	充值金额：<span id="str_money">0</span>元
+            <input type="hidden" name="account" id="add_money" value="0">
+        </div>
+    </div>
+</div>
+<!--其他支付方式-s-->
+<div class="paiton y-mors">
+    <div class="maleri30">
+        <a class="soon" href="javascript:void(0);" onclick="recharge_submit()"><span>立即支付</span></a>
+    </div>
+</div>
+</form>
+
+<script type="text/javascript" src="__STATIC__/js/custominput.js?v={$vnum}"></script> 
+<script type="text/javascript">
+    $(function(){
+        $('input').customInput();
+        $('.toggle').each(function(){
+            $('div:first',this).addClass('first');
+            $('div:last',this).addClass('last');    
+        }); 
+		$(".hitsf").click(function (){
+			$('#str_money').html($(this).attr('rel'));
+			$('#add_money').val($(this).attr('rel'));	
+		})
+    });
+
+    $(document).on('click','input[name=view]',function(){
+        $('#str_money').html($(this).attr('rel'));
+        $('#add_money').val($(this).attr('rel'));
+    });
+	
+	
+</script>
+
+<script type="text/javascript">
+    $(function(){
+        //默认选中第一个
+        $('.pay-list-4 div ul li:first').find('.che').addClass('check_t')
+                .end().find(':radio').attr('checked',true);
+    })
+    //切换支付方式
+    function changepay(obj){
+        $(obj).find('.che').addClass('check_t').parents('li').siblings('li').find('.che').removeClass('check_t');
+        //改变中状态
+        if($(obj).find('.che').hasClass('check_t')){
+            //选中
+            $(obj).find(':radio').attr('checked',true);
+            $(obj).siblings('li').find(':radio').removeAttr('checked');
+        }else{
+            //取消选中
+            $(obj).find(':radio').removeAttr('checked');
+        }
+
+    }
+	function ddd(){
+		 layer.open({
+			content: '支付是否成功？'
+			,btn: ['成功', '失败']
+			,yes: function(index){
+				location.href = '{:U("/Mobile/User/recharge_list")}';
+				layer.close(index);
+			}
+		  });	
+	}
+    //提交表单
+    function recharge_submit(){
+        var account = $('#add_money').val();
+        if(isNaN(account) || parseInt(account)<=0 || account==''){
+            layer.open({content:'请输入正确的充值金额',time:2});
+            return false;
+        }
+		var radio = $("input[name='pay_radio']:checked").val();
+		if(radio == 'pay_code=weixinH5'){
+			 //询问框
+			 window.setTimeout(ddd,2000);
+		//	 return false;
+		}
+		
+        $('#recharge_form').submit();
+    }
+</script>
+
+</body>
+</html>

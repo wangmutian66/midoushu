@@ -1,0 +1,33 @@
+<include file="public/header" title="充值记录" body=""/>
+<include file="public/header_nav" title="充值记录" href="javascript:history.back(-1)"/>
+<link rel="stylesheet" href="/public/static/css/page.css?v={$vnum}">
+<div class="application-record">
+    <div class="maleri30">
+        <ul class="re_tit">
+            <li class="li3"><span>支付方式</span></li>
+            <li class="li2"><span>日期</span></li>
+            <li class="li1"><span>金额</span></li>
+            <li class="li4"><span>状态</span></li>
+        </ul>
+        <foreach name="lists" item="v">
+            <ul>
+                <li class="li3"><span>{$v[pay_name]}</span></li>
+                <li class="li2"><span>{:date('Y-m-d', $v[ctime])}</span></li>
+                <li class="li1"><span>{$v[account]}</span></li>
+                <li class="li4"><span class="red">
+                    <if condition="$v[pay_status] eq 0">待支付</if>
+                    <if condition="$v[pay_status] eq 1">已支付</if>
+                    <if condition="$v[pay_status] eq 2">支付失败</if>
+                </span></li>
+            </ul>
+        </foreach>
+    </div>
+   
+</div>
+
+<div style="text-align:center">
+	{$page}
+</div>
+
+</body>
+</html>

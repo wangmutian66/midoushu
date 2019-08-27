@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-CN" id="index">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="format-detection" content="telephone=no, email=no" />
+<meta name="keywords" content="">
+<meta name="description" content="">
+<title>图片裁剪</title>
+<style>
+body {
+	margin: 0;
+	text-align: center;
+}
+/*#clipArea {
+	margin: 0.43rem;
+	height: 6.52rem;
+}*/
+#clipArea {
+	margin: 20px;
+	height:160px;
+}
+#file,
+#clipBtn {
+	margin: 0.315rem;
+}
+	#thubm{
+		max-width: 100%;
+	}
+	
+#getPhoto{
+	margin: 0 auto;
+}
+.btn-goto-login {
+	width: 100%;
+	font-size: 0.64rem;
+	height: 1.87733rem;
+	line-height: 1.87733rem;
+	color: #fff;
+	background-color: #e12c20;
+	border-radius: .938667rem;
+	-webkit-box-shadow: 0 0px 10px rgba(225,44,32,1);
+	box-shadow: 0 0px 10px rgba(225,44,32,1);
+	margin: 20px;
+	border: 0;
+	width: 80%;
+}
+
+	.btn-goto-login-color {
+		width: 100%;
+		font-size: 0.64rem;
+		height: 1.87733rem;
+		line-height: 1.87733rem;
+		color: #fff;
+		background-color: #999999;
+		border-radius: .938667rem;
+		-webkit-box-shadow: 0 0px 10px #999999;
+		box-shadow: 0 0px 10px #999999;
+
+		margin: 20px;
+		border: 0;
+		width: 80%;
+	}
+</style>
+
+</head>
+
+<body>
+<div id='getPhoto' >
+	<div id="clipArea" ></div>
+	<input type="file" id="file" style="display: none;">
+	<button onclick="$('#file').click()" class="btn-goto-login-color">选择图片</button>
+	<button id="clipBtn" class="btn-goto-login">截取</button>
+</div>
+<script src="__STATIC__/js/jquery-2.1.1.min.js"></script>
+<script src="__STATIC__/js/iscroll-zoom.js"></script>
+<script src="__STATIC__/js/hammer.js"></script>
+<script src="__STATIC__/js/lrz.all.bundle.js"></script>
+
+<script src="__STATIC__/js/jquery.photoClip.js"></script>
+<script>
+//document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+var clipArea = new bjj.PhotoClip("#clipArea", {
+	size: [160, 160],
+	outputSize: [640, 640],
+	file: "#file",
+	view: "#view",
+	ok: "#clipBtn",
+	loadStart: function() {
+		console.log("照片读取中");
+	},
+	loadComplete: function() {
+		console.log("照片读取完成");
+	},
+	clipFinish: function(dataURL) {
+	//	parent.$("#thubm").attr('src', dataURL);
+		handleSave(dataURL);
+	}
+});
+//clipArea.destroy();
+
+function handleSave (base64Data) {
+	//导出base64格式的图片数据
+	//var mycanvas = document.getElementById("doneHeadimg");
+	//var base64Data = mycanvas.toDataURL("image/png", 1.0);
+	//var base64Data = $("#thubm").attr("src");console.log(base64Data);
+	//封装blob对象
+	var blob = dataURItoBlob(base64Data);
+	//组装formdata
+	var formdata = new FormData();
+	formdata.append("fileData", blob);//fileData为自定义
+	formdata.append("cid", "{$cid}");
+	//ajax上传，ajax的形式随意，JQ的写法也没有问题
+	//需要注意的是服务端需要设定，允许跨域请求。数据接收的方式和<input type="file"/> 上传的文件没有区别
+	$.ajax({
+        url:"/index.php/mobile/admin/addThumb",
+        type:'POST',
+        cache:false,
+        data:formdata,
+        dataType:'json',
+        processData:false,
+        contentType:false,
+        success:function(data,status,xhr){
+			if(data.status == 1){
+			//	console.log(data.info);
+				parent.$("#thubm").attr('src', data.info + "?v="+Math.random());
+				parent.cloaselayer();
+			}else{
+				alert(data.info)
+			}
+        //    
+        }
+    });
+}
+
+function dataURItoBlob (base64Data) {
+	var byteString;
+	if (base64Data.split(',')[0].indexOf('base64') >= 0)
+		byteString = atob(base64Data.split(',')[1]);
+	else
+		byteString = unescape(base64Data.split(',')[1]);
+	var mimeString = base64Data.split(',')[0].split(':')[1].split(';')[0];
+	var ia = new Uint8Array(byteString.length);
+	for (var i = 0; i < byteString.length; i++) {
+		ia[i] = byteString.charCodeAt(i);
+	}
+	return new Blob([ia], {type: mimeString});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<include file="public/TK_top" />
+<style type="text/css">
+	.qh{
+		width:100%;
+		padding:0 .2rem;
+		font-size:.5rem;
+		line-height:1rem;
+	}
+	
+	.qh span{
+		vertical-align:top;	
+	}
+	
+	.qh select{
+		width:8rem;
+		height:1rem;
+		border:1px solid #ccc;
+		border-radius:.5rem;
+		padding:.2rem .5rem;
+		outline:none;
+		font-size:.5rem;
+	}
+</style>
+
+<foreach name="member_list" item="v" key="k" >
+<div class="e-fu e-pad e-mot1 clearfix">
+	<div class="e-lei e-bg-md fl">
+		<span>门店：</span>{$v.store_name}
+		<p><sapn>余额：</sapn><span id="money{$v.id}">{$v.money|tk_money_format}</span></p>
+	</div>
+	<div style="overflow:hidden;width:100%">
+		<a href="{:U('/Member/system/store_log',array('member_id'=>$v.id,'store_id'=>$v.store_id))}" class="e-ck e-bg2 fr">转到余额记录</a>
+		<a href="javascript:;" onclick="zyue({$v.id})" class="e-ck e-bg4 fr" style="margin-right:.2rem">转到可提余额</a>
+	</div>
+</div>
+</foreach>
+
+
+<script type="text/javascript">
+
+	function zyue(member_id){
+        var money = $("#money"+member_id).text();
+        if(money == 0){
+            layer.open({
+                time:1,
+                content: '转到可提现余额不能为0'
+            });
+            return false;
+        }
+        layer.open({
+            content: '您确定要转到可提余额吗？'
+            ,btn: ['确定', '取消']
+            ,yes: function(index){
+                $.ajax({
+					url:"{:url('/Member/system/transferbalance')}",
+					type:"POST",
+					dataType:"json",
+					data:{member_id:member_id},
+					success:function(data){
+
+						if(data.code == 200){
+                            //信息框
+                            layer.open({
+                                content: '已经转至余额，请在余额中查看'
+                                ,btn: ""
+                            });
+
+                            setTimeout(function(){
+                                location.reload();
+							},300);
+
+						}
+
+					}
+				});
+
+
+                layer.close(index);
+            }
+        });
+	}
+
+
+
+
+</script>
+
+</body>
+</html>

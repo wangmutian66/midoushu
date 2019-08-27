@@ -1,0 +1,103 @@
+<include file="public/layout" />
+<script type="text/javascript" src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<link href="__STATIC__/css/ghs-style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body style="background: #f2f5f8;">
+	<div class="ghs-index">
+		<!-- <div class="top">
+			<div class="bt">平台首页</div>
+			<div class="nr">
+				<div class="left">
+					<form>
+						<span>订单查询：</span>
+						<input type="radio" name="ddck" id="ddck-1">
+						<label for="ddck-1">按订单</label>
+						<input type="radio" name="ddck" id="ddck-2">
+						<label for="ddck-2">按商品</label>
+						<input type="text" name="">
+						<input type="submit" name="" value="立即搜索">
+					</form>
+				</div>
+				<div class="right">
+					<form>
+						<span>商品查询：</span>
+						<input type="radio" name="ddck" id="ddck-3">
+						<label for="ddck-3">红包换购</label>
+						<input type="radio" name="ddck" id="ddck-4">
+						<label for="ddck-4">现金消费</label>
+						<input type="text" name="">
+						<input type="submit" name="" value="立即搜索">
+					</form>
+				</div>
+			</div>
+		</div> -->
+		<div class="service">
+			<div class="main">
+				<div class="t">
+					<span>服务信息</span>
+				</div>
+				<div class="b">
+					<ul>
+						<li>
+							<span>现金区商品：<a href="{:U('Supplier/Goods/goodsList')}" class="ys">{$count.goods}</a></span>
+						</li>
+						<li>
+							<span>现金区已经上架商品：<a href="{:U('Supplier/Goods/goodsList')}" class="ys">{$count.goods_is_sale}</a></span>
+						</li>
+						<li>
+							<span>现金区已完成订单：<a href="{:U('Supplier/Order/index',array('order_status'=>4))}" class="ys">{$count.over_order}</a></span>
+						</li>
+						<li>
+							<span>现金区待确认订单：<a href="{:U('Supplier/Order/index',array('order_status'=>0))}" class="ys">{$count.handle_order}</a></span>
+						</li>
+						<li>
+							<span>现金区我的总评论：<a href="{:U('Supplier/Comment/index')}" class="ys">{$count.comment_z}</a></span>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="data">
+			<div class="main">
+				<div class="t">
+					<span>交易数据</span>
+				</div>
+				<div class="b">
+					<div class="l">
+						<div class="bk-1">
+							<a href="{:U('Supplier/Order/index')}" class="wz">
+								<span>{$count.new_order}</span>
+								<p>今日现金区订单总数</p>
+							</a>
+						</div>
+						<div class="bk-2">
+							<a href="{:U('Supplier/Comment/index')}" class="wz">
+								<span>{$count.comment}</span>
+								<p>今日现金区待审评论</p>
+							</a>
+						</div>
+					</div>
+					<div class="r">
+						<div class="nr">
+							<div class="t">
+								<span>今日公告</span>
+								<span class="ys"><a href="{:U('/Supplier/Article/index')}">查看到更多>></a></span>
+							</div>
+							<foreach name="noticeList" item="vo" key="k" >
+							<div class="a">
+								<span>[更新时间：{$vo.add_time|date='Y-m-d',###}]</span>   
+								<span><a href="{:U('Supplier/Article/detail',array('article_id'=>$vo['article_id']))}">·{$vo.title|getSubstr=0,33}</a></span>
+							</div>
+							</foreach>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="gg">
+			
+		</div>
+	</div>
+</body>
+</html>

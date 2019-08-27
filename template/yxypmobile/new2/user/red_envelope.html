@@ -1,0 +1,50 @@
+<include file="public/header" title="米豆明细记录" body=""/>
+<include file="public/header_nav" title="米豆明细记录" href="javascript:history.back(-1)"/>
+<link rel="stylesheet" href="/public/static/css/page.css?v={$vnum}">
+<div class="allaccounted">
+    <div class="maleri30">
+        <div class="head_acc ma-to-20">
+            <ul>
+                <li <if condition="$Request.param.type eq 'all' || empty($Request.param.type)">class="red"</if>">
+                    <a href="{:U('User/red_envelope',array('type'=>'all'))}"  data-list="1">全部</a>
+                </li>
+                <li <if condition="$Request.param.type eq 'plus'">class="red"</if>>
+                    <a href="{:U('User/red_envelope',array('type'=>'plus'))}"   data-list="2">赚取</a>
+                </li>
+                <li  <if condition="$Request.param.type eq 'minus'">class="red"</if>>
+                    <a href="{:U('User/red_envelope',array('type'=>'minus'))}"  data-list="3">消费</a>
+                </li>
+            </ul>
+        </div>
+        <div class="allpion">
+	         <div class="fll_acc fll_acc-h">
+	         	<ul><li class="orderid-h">订单</li><li class="price-h">米豆</li><li class="time-h">时间</li></ul>
+	         </div>
+             <foreach name="list" item="v">
+                 <div class="fll_acc">
+                     <ul>
+                         <li class="orderid-h">{$v[red_name]}</li>
+                         <li class="price-h">{$v[money]|tk_money_format}</li>
+                         <li class="time-h">{:date('Y-m-d H:i:s',$v[create_time])}</li>
+                     </ul>
+                    <!-- <div class="des-h">描述:{$v[source]}</div>-->
+                 </div>
+             </foreach>
+         </div>
+        <div id="getmore"  style="font-size:.32rem;text-align: center;color:#888;padding:.25rem .24rem .4rem; clear:both;display: none">
+            <a >已显示完所有记录</a>
+        </div>
+    </div>
+</div>
+
+<div style="text-align:center">
+	{$page}
+</div>
+<empty name="list">
+	<div style="font-size:.24rem;text-align: center;color:#888;padding:.25rem .24rem .4rem; clear:both">
+		<span style="font-size:1rem">暂无数据</span>
+	</div>
+</empty>
+
+</body>
+</html>

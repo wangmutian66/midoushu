@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+    <title>成欣网</title>
+	<link rel="stylesheet" href="../static/css/style.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/iconfont.css"/>
+	<script src="../static/js/jquery-3.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../static/js/style.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../static/js/mobile-util.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/public/js/global.js"></script>
+	<script src="../static/js/layer.js"  type="text/javascript" ></script>
+	<script src="../static/js/swipeSlide.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" src="../static/js/prototype.js"></script>
+	<script type="text/javascript" src="../static/js/jsProgressBarHandler.js"></script>
+</head>
+
+<body>
+<link rel="stylesheet" href="../static/css/tian.css">
+<div class="classreturn loginsignup ">
+    <div class="content">
+        <div class="ds-in-bl return">
+            <a href="[href]"><img src="../static/images/return.png" alt="返回"></a>
+        </div>
+        <div class="ds-in-bl search center">
+            <span>返利中心</span>
+        </div>
+        <div class="ds-in-bl menu">
+            <a href="javascript:void(0);"><img src="../static/images/class1.png" alt="菜单"></a>
+        </div>
+    </div>
+</div>
+<div class="flool tpnavf">
+    <div class="footer">
+        <ul>
+            <li>
+                <a class="yello" href="{:U('Index/index')}">
+                    <div class="icon">
+                        <i class="icon-shouye iconfont"></i>
+                        <p>首页</p>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="{:U('Goods/categoryList')}">
+                    <div class="icon">
+                        <i class="icon-fenlei iconfont"></i>
+                        <p>分类</p>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <!--<a href="shopcar.html">-->
+                <a href="{:U('Cart/index')}">
+                    <div class="icon">
+                        <i class="icon-gouwuche iconfont"></i>
+                        <p>购物车</p>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="{:U('User/index')}">
+                    <div class="icon">
+                        <i class="icon-wode iconfont"></i>
+                        <p>我的</p>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+    
+<div class="floor ma-to-20 y-padd">
+   <div class="y-xuan">
+   	    <a href="#" class="on">进行中</a>
+   	    <a href="#">已完成</a>
+   </div>
+   <ul class="y-jind">
+   	    <li>
+    		<h4>建立返利时间：2018-04-13</h4>
+    		<div class="jdt clearfix">
+    			<h3>返利金额：500</h3>
+    			<h2>进行中</h2>
+    			<div style="clear: both;"></div>
+    			<span class="progressBar" id="element1">15%</span>
+    		</div>
+    	</li>
+    	<li>
+    		<h4>建立返利时间：2018-04-13</h4>
+    		<div class="jdt clearfix">
+    			<h3>返利金额：500</h3>
+    			<h2>进行中</h2>
+    			<div style="clear: both;"></div>
+    			
+    		</div>
+    	</li>
+    	<li>
+    		<h4>建立返利时间：2018-04-13</h4>
+    		<div class="jdt clearfix">
+    			<h3>返利金额：500</h3>
+    			<h2>进行中</h2>
+    		</div>
+    	</li>
+    	<li>
+    		<h4>建立返利时间：2018-04-13</h4>
+    		<div class="jdt clearfix">
+    			<h3>返利金额：500</h3>
+    			<h2>进行中</h2>
+    		</div>
+    	</li>
+    	<li>
+    		<h4>建立返利时间：2018-04-13</h4>
+    		<div class="jdt clearfix">
+    			<h3>返利金额：500</h3>
+    			<h2>进行中</h2>
+    		</div>
+    	</li>
+    	<li>
+    		<h4>建立返利时间：2018-04-13</h4>
+    		<div class="jdt clearfix">
+    			<h3>返利金额：500</h3>
+    			<h2>进行中</h2>
+    		</div>
+    	</li>
+   </ul>
+   <script type="text/javascript">
+		document.observe('dom:loaded', function() {
+
+			// first manuale progressbar : different bar (width, height, images) and no animation
+			manualPB = new JS_BRAMUS.jsProgressBar(
+						$('element5'),
+						75,
+						{
+							showText	: false,
+							animate		: false,
+							width		: 154,
+							height		: 11,
+							boxImage	: 'images/bramus/custom1_box.gif',
+							barImage	: 'images/bramus/custom1_bar.gif'
+						}
+					);
+
+			// second manual example : multicolor (and take all other default paramters)
+			manualPB2 = new JS_BRAMUS.jsProgressBar(
+						$('element6'),
+						52,
+						{
+
+							barImage	: Array(
+								'images/bramus/percentImage_back4.png',
+								'images/bramus/percentImage_back3.png',
+								'images/bramus/percentImage_back2.png',
+								'images/bramus/percentImage_back1.png'
+							),
+
+							onTick : function(pbObj) {
+
+								switch(pbObj.getPercentage()) {
+
+									case 98:
+										alert('Hey, we\'re at 98!');
+									break;
+
+									case 100:
+										alert('Progressbar full at 100% ... maybe do a redirect or sth like that here?');
+									break;
+
+								}
+
+								return true;
+							}
+						}
+					);
+		}, false);
+	</script>
+   <!--分页-->
+	<div class="y-sxfy y-tco">
+	    <a href="#" class="on">上一页</a>
+	    <a href="#">下一页</a>
+	</div>
+</div>
+
+</body>
+</html>

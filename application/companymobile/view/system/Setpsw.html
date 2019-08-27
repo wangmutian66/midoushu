@@ -1,0 +1,107 @@
+<include file="public/layout" />
+
+<body>
+
+
+
+				<!-- main content -->
+				<div class="py-4 mb-3 bg-white border-bottom" style="padding:.5rem 0 !important;">
+					<div class="container-fluid container-account">
+						<div class="row">
+							<div class="col-lg-6">
+								<div class="media media-user-info align-items-center">
+									<!-- <img src="picture/person-3.jpg" class="img-fluid rounded-circle mr-2" width="60" alt=""> -->
+									<div class="media-body lh-1">
+										<p class="h4 m-0">{$company_info.cname|default='暂未设置公司名称'}</p>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+				<div class="container-fluid">
+
+					<div class="tab-content" id="accountTabsContent">
+
+						<div class="tab-pane fade show active" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+							<div class="row">
+								<div class="col-lg-9">
+									<div class="card">
+										<div class="card-body">
+											<form onsubmit="return postdata()" id="formf">
+											<div class="form-group">
+												<label>修改密码</label>
+
+											</div>
+											<div class="form-group">
+												<label>原密码</label><br>
+												<input autocomplete="off" class="form-control" type="password"  id="oldpsw" name="oldpsw" required="required">
+											</div>
+											<div class="form-group">
+												<label>新密码</label><br>
+												<input autocomplete="off" class="form-control" type="password" id="newpsw" name="newpsw" required>
+											</div>
+											<div class="form-group">
+												<label for="repsw">确认密码</label><br>
+												<input class="form-control" type="password" id="repsw" name="repsw">
+											</div>
+											<button type="submit" class="btn btn-success">确认修改</button>
+											</form>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+
+
+
+<!-- // END drawer-layout -->
+
+
+
+<!-- jQuery -->
+<script src="__PUBLIC__/companymobile/js/jquery.min.js"></script>
+
+
+<script>
+
+	parent.layer.closeAll('loading');
+	function postdata(){
+		if($("#newpsw").val() != $("#repsw").val()){
+			alert('重复密码不一致，请重新填写');
+			$("#newpsw").val('').focus();
+			return false;
+		}
+
+		$.ajax({
+			url: "{:U('/companymobile/System/doSetpsw')}",
+			type: 'POST',
+			data:$("#formf").serialize(),
+			dataType: 'json',
+			error: function(){alert('请刷新重试')},
+			
+			success: function(r){
+				if(r.status == 1){
+					alert('修改密码成功！');
+					location.reload();
+				}else{
+					alert(r.info);
+				}
+			},
+			
+		});
+		return false;
+	}
+
+</script>
+
+
+</body>
+
+</html>

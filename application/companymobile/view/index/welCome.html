@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>后台首页</title>
+<link type="text/css" href="__PUBLIC__/companymobile/css/app.css" rel="stylesheet">
+</head>
+<body>
+<!-- main content -->
+
+<div class="container-fluid">
+	<div class="card">
+		<div class="card-header">
+			<div class="row align-items-center">
+				<div class="col-md-4">
+					<div class="card-title">实体店铺</div>
+				</div>
+				<div class="col-md-8 d-flex justify-content-md-end">
+
+					<form class="form-inline" style="margin-top:1rem;width:100%">
+						<div class="form-group mx-sm-3" style="margin-bottom:0;width:60%;margin-right:5%;">
+							<input type="text" class="form-control" name="key_word" id="key_word" value="{$Think.get.key_word}" placeholder="搜索相关实体店铺名称" style="float:right;width:100%;">
+						</div>
+						<button type="submit" class="btn btn-primary" style="float:right;">搜索</button>
+					</form>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<volist name="list" id="vo">
+	<div class="row">
+		<div class="col-md-3" style="float:left;">
+			<div class="card">
+				<a href="{:U('/companymobile/level/store_view',['store_id'=>$vo.cid])}"><img src="{$vo.litpic|default='__PUBLIC__/static/images/errors.jpg'}" class="card-img cover-photo" ></a>
+				<div class="card-body">
+					<div class="d-flex align-items-center mb-3">
+
+						<div class="author-info">
+							<p class="lead mb-0"><a href="{:U('/companymobile/level/store_view',['store_id'=>$vo.cid])}">{$vo.cname}</a></p>
+						</div>
+					</div>
+					<p class="card-text">建立时间：{$vo.create_time|date="Y-m-d",###}</p>
+				</div>
+				<div class="card-footer d-flex justify-content-between">
+					<a href="{:U('/companymobile/Member/Index',['store_id'=>$vo.cid])}" class="social">查看成员</a>
+					<a href="{:U('/companymobile/level/staff',['store_id'=>$vo.cid])}" class="social">查看员工</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	</volist>
+</div>
+</body>
+</html>

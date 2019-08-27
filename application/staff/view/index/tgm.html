@@ -1,0 +1,39 @@
+<include file="public/TK_top" />
+<style type="text/css">
+	.qh{
+		width:100%;
+		padding:0 .2rem;
+		font-size:.5rem;
+		line-height:1rem;
+	}
+	
+	.qh span{
+		vertical-align:top;	
+	}
+	
+	.qh select{
+		width:8rem;
+		height:1rem;
+		border:1px solid #ccc;
+		border-radius:.5rem;
+		padding:.2rem .5rem;
+		outline:none;
+		font-size:.5rem;
+	}
+</style>
+
+
+<foreach name="staff_list" key="k" item="v">
+<div class="e-fu e-pad e-mot1 clearfix">
+	<div class="e-lei  fl">
+		{$v.store_name}
+	</div>
+	<a href="{:url('/Staff/Profile/qrcode',array('staff_id'=>$v.id))}" style="float: right;"><img src="__PUBLIC__/staff/img/tgm1.png"></a>
+</div>
+</foreach>
+
+
+
+                        
+</body>
+</html>

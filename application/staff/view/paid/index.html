@@ -1,0 +1,39 @@
+<include file="public/TK_top" />
+
+<div class="e-df clearfix">
+	<a href="{:U('/Staff/Paid/Index')}" <if condition="empty($Request.param.pay_status)"> class="on" </if>>我的代付</a>
+	<a href="{:U('/Staff/Paid/Index',['pay_status'=>999])}"  <if condition="$Request.param.pay_status eq 999">  class="on" </if>>代付记录</a>
+</div>
+<script>
+	function pay(id){
+		location.href = '__URL__/Pay/id/'+id;
+	}
+</script>
+<volist name="list" id="vo">
+	<div class="e-fu">
+		<div class="ni clearfix">
+			<if condition="$vo.pay_status eq 0">
+				订单时间：<span>{$vo.create_time|date='Y-m-d H:i:s',###}</span>
+			<else/>
+				<p>订单时间：<span>{$vo.create_time|date='Y-m-d H:i:s',###}</span></p>
+				<h3>{$vo.pay_status|pay_status}</h3>
+				
+				<if condition="$vo.pay_status eq 1 and $vo.pay_time"><p>支付时间：<span>{$vo.pay_time|date='Y-m-d H:i:s',###}</span></p></if>
+			
+			</if>
+		</div>
+		<div class="ni clearfix">
+			<p class="bfw">手机号码：<span>{$vo.mobile|hide_mobile}</span></p>
+			<p class="bfw">待付金额：<span class="yan">{$vo.money}</span></p>
+		</div>
+		<if condition="$vo.pay_status eq 0">
+<!--		<input type="botton" class="zf" onclick="pay({$vo.id})" value="确认支付"/>-->
+		<button class="zf"  onclick="pay({$vo.id})">确认支付</button>
+		</if>
+	</div>
+</volist>
+<div style="text-align:center">
+	{$page}
+</div>
+</body>
+</html>

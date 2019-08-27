@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="renderer" content="webkit">
+<title>我的评价-{$tpshop_config['shop_info_store_title']}</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/member.css?v={$vnum}" rel="stylesheet">
+<script src="__STATIC__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/js/baidu.js"></script>
+</head>
+
+<body class="bgg">
+	<include file="public/user_header" />
+	<div class="clear"></div>
+	
+	<div class="y-content">
+		<!--左侧菜单-->
+		<include file="public/user_lefter" />
+		
+		<!--右侧内容-->
+		<div class="y-right1 fri">
+			<div class="bt0">
+				<i></i>我的评价
+			</div>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0" class="y-ping">
+				<tr>
+				    <td width="385" class="top pad">评价内容</td>
+				    <td width="427" class="top">宝贝信息</td>
+				    <td width="138" class="top tco">操作</td>
+				</tr>
+				<volist name="comment_list" id="list">
+				<tr>
+				    <td width="415" class="tnr pad"><p><notempty name="list.content">{$list.content}<else />此用户没有填写评价。</notempty></p><h2>[{$list.add_time|date='Y-m-d H:i:s',###}]</h2></td>
+				    <td width="427" class="tnr"><a href="{:U('Home/Goods/goodsInfo',array('id'=>$list['goods_id']))}">{$list.goods_name}</a><h3><span>{$list.member_goods_price}</span>元</h3></td>
+				    <td width="138" class="tnr tcz tco">
+				    <if condition="$list['is_comment'] eq 1">
+						<a href="{:U('Home/Goods/goodsInfo',array('id'=>$list['goods_id']))}">查看</a>
+					<else/>
+						<a href="{:U('Home/Order/comment_list',array('order_id'=>$list['order_id'],'rec_id'=>$list['rec_id']))}">评价</a>
+					</if>
+				    </td>
+				</tr>
+				</volist>
+			</table>
+			<!--分页-->
+            {$page}
+		</div>
+		<div class="clear"></div>
+	</div>
+	<include file="public/user_footer" />
+</body>
+</html>

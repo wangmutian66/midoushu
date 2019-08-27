@@ -1,0 +1,39 @@
+<div class="mdk-drawer js-mdk-drawer" id="user-drawer" data-position="right" data-align="end">
+	<div class="mdk-drawer__content">
+		<div class="mdk-drawer__inner" data-simplebar data-simplebar-force-enabled="true">
+			<nav class="drawer drawer--light">
+				<div class="drawer-spacer drawer-spacer-border">
+					<div class="media align-items-center">
+						<i class="material-icons" style="width:2rem;">phonelink_setup</i>
+						<div class="media-body">
+							<a  class="h5 m-0">系统</a>
+							<div>设置操作</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- MENU -->
+				<ul class="drawer-menu" id="userMenu" data-children=".drawer-submenu">
+					<li class="drawer-menu-item">
+						<a href="{:U('/Companymobile/System/Modify')}" target="workspace">
+							<i class="material-icons">lock</i>
+							<span class="drawer-menu-text"> 修改信息</span>
+						</a>
+					</li>
+					<li class="drawer-menu-item">
+						<a href="{:U('/Companymobile/System/Sms')}" target="workspace">
+							<i class="material-icons">notifications</i>
+							<span class="drawer-menu-text"> 消息</span>
+						</a>
+					</li>
+					<li class="drawer-menu-item">
+						<a href="{:U('/Companymobile/System/Logout')}">
+							<i class="material-icons">exit_to_app</i>
+							<span class="drawer-menu-text"> 退出登录</span>
+						</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>

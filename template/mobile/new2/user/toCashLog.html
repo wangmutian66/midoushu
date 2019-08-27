@@ -1,0 +1,50 @@
+<include file="public/header" title="福利提现" body="g4"/>
+<include file="public/header_nav" title="福利提现"  href="javascript:history.back(-1);"/>
+<link rel="stylesheet" href="__STATIC__/css/tian.css?v={$vnum}">
+<div class="allpion">
+<volist name="list" id='vo'>
+<div class="y-xinl">
+	<p>{$vo.create_time|date="Y-m-d",###}</p>
+	<div class="qi y-tco clearfix">
+		<h2><span>{$vo.total|tk_money_format}</span>元</h2>
+		<h2>{$vo.status|check_withdrawal} <if condition="$vo.status eq -1"> <a href="JavaScript:;" onClick="als_msg('{$vo.id}')">详情</a>
+					<input type="hidden" id="msg_{$vo.id}" value="{$vo.remark|nl2br}">
+					 </if></h2>
+	</div>
+</div>
+</volist>
+</div>
+ <div id="getmore"  style="font-size:.32rem;text-align: center;color:#888;padding:.25rem .24rem .4rem; clear:both;display: none">
+	<a>已显示完所有记录</a>
+</div>
+<script type="text/javascript" src="__STATIC__/js/sourch_submit.js?v={$vnum}"></script>
+
+<!--底部导航-start-->
+    <include file="public/footer_nav"/>
+	<script>
+	//加载更多记录
+		var page = 0;
+		function ajax_sourch_submit()
+		{
+			page ++;
+			$.ajax({
+				type : "GET",
+				url:"/index.php?m=mobile&c=User&a=toCashLog&is_ajax=1&p="+page,//+tab,
+				success: function(data)
+				{
+					if($.trim(data) == '') {
+						$('#getmore').show();
+						return false;
+					}else{
+						$(".allpion").append(data);
+					}
+				}
+			});
+		}
+		function als_msg(id){
+			showErrorMsg($("#msg_"+id).val());
+		}
+</script>
+
+	</body>
+</html>

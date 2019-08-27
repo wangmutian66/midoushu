@@ -1,0 +1,52 @@
+<include file="public/TK_top" />
+<div class="e-bex">
+	<div class="shai clearfix">
+	<script>
+		function check_post(){
+			var company_level = $("#company_level").val();
+			var real_name = $("#real_name").val();
+			if(company_level == '' && real_name==''){
+				return false;	
+			}
+		}
+	</script>
+		<form action="__URL__/Index" method="get" onsubmit="return check_post">
+			<select class="sele" name="company_level" id="company_level">
+				<option value="">等级：全部</option>
+				<volist name="level_list" id='vo'>
+					<option value="{$vo.id}" <if condition="$vo.id eq $Request.param.company_level"> selected </if>>{$vo.lv_name}</option>
+				</volist>
+			</select>
+			<div class="ss fr">
+				<input type="text" class="text fl" placeholder="姓名：" name="real_name" id="real_name" value="{$Request.param.real_name}" />
+				<input type="submit" class="submit fl" value="搜索" />
+			</div>
+		</form>
+		
+	</div>
+	<ul class="lin clearfix">
+		<volist name='list' id='vo'>
+		<li>
+			<div class="de">
+				<h2><img src="{$vo.head_pic|default='__STATIC__/images/headPic.jpg'}"></h2>
+				<h3>真实姓名：<if condition="$vo.real_name">{$vo.real_name}<else/>{$vo.uname}</if></h3>
+				<div class="ran fr">
+					<a href="{:U('/Staff/Team/view_staff',['id'=>$vo['id']])}" class="ck">查看详细</a>
+					<if condition="$vo.type eq 0"><a href="{:U('/Staff/Team/next_promote',['id'=>$vo['id']])}" class="xj">查看所属推广员</a></if>
+					<if condition="$vo.next_user"><a href="{:U('/Staff/Team/next_user',['id'=>$vo['id']])}" class="xj">查看所属会员</a></if>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="qi">
+				<p class="conet">等级：<if condition="$vo.type neq 1">{$vo.lv_name}<else/>推广员</if></p>
+				<p>累计佣金：<span>{$vo.cumulative_money|tk_money_format}</span></p>
+			</div>
+		</li>
+		</volist>
+	</ul>
+	<div class="clear"></div>
+</div>
+<div style="text-align:center">{$page}</div>
+
+</body>
+</html>

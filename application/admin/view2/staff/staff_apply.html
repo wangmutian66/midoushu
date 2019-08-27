@@ -1,0 +1,262 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/js/company.js"></script>
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title">
+      <div class="subject">
+        <h3>实体店员工申请</h3>
+      </div>
+    </div>
+  </div>
+  <!-- 操作说明 -->
+
+  <div class="flexigrid">
+    <div class="mDiv">
+      <div class="ftitle">
+        <h3>申请列表</h3>
+        <h5>(共<span id="user_count"></span>条记录)</h5>
+      </div>
+      <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+	   
+    </div>
+
+	
+    <div class="hDiv">
+      <div class="hDivBox">
+        <table cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+              <th class="sign" axis="col0">
+                <div style="width: 24px;"><i class="ico-check"></i></div>
+              </th>
+			       
+              <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:150px;" class="">用户</div>
+              </th>
+			        <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">服务人员</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">联系人</div>
+              </th>
+          
+                <th align="left" abbr="isadmin" axis="col4" class="">
+                  <div style="text-align: center; width: 100px;" class="">联系电话</div>
+                </th>
+             
+			        <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 120px;" class="">申请时间</div>
+              </th>
+			 
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 60px;" class="">状态</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 120px;" class="">备注</div>
+              </th>
+			        <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 120px;" class="">操作时间</div>
+              </th>
+			        <th align="center" abbr="control" axis="col9" class="">
+                <div style="text-align: center; width: 180px;" class="">操作</div>
+              </th>
+              <th style="width:100%" axis="col7">
+                <div></div>
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    
+    <div class="bDiv" style="height: auto;">
+      <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+	  
+	          <table>
+          <tbody>
+            <foreach name="list" item="vo" key="k" >
+              <tr>
+                <td class="sign">
+                  <div style="width: 24px;"><i class="ico-check"></i></div>
+                </td>
+               
+                <td align="left" class="">
+                  <div style="text-align: center; width: 150px;">{$vo.user_id}：{$vo.user_mobile}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.staff_name}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.contact}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">
+                    {$vo.mobile}
+                  </div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 120px;">{$vo.create_time|date="Y-m-d H:i:s",###}</div>
+                </td>
+                
+                <td align="left" class="">
+                  <div style="text-align: center; width: 60px;">{$vo.status|tk_status}</div>
+                </td>
+              
+                <td align="left" class="">
+                  <div style="text-align: center; width: 120px; height:auto">
+				  {$vo.remark}
+                  </div>
+                </td>
+                <td align="center" class="">
+                  <div style="text-align: center; width:120px;">
+                   <if condition="$vo.update_time"> {$vo.update_time|date="Y-m-d H:i:s",###}</if>
+                  </div>
+                </td>
+				<td align="center" class="">
+                  <div style="text-align: center; width:180px;">
+				  	<if condition="$vo.status eq 0">
+                   		<a href="JavaScript:;" onClick="tkset_status($(this))" status='1' rel="{$vo.id}" style="color:#00F">设为已审核</a> | 
+					</if>
+					<if condition="$vo.status eq 1">
+						<a href="JavaScript:;" onClick="tkset_status($(this))" status='2' rel="{$vo.id}" style="color:#F00" >设为已联系</a> | 
+					</if>
+                    <if condition="$vo.status eq 2">
+						<a href="JavaScript:;" onClick="tkset_status($(this))" status='3' rel="{$vo.id}" style="color:#F00" >自动生成员工</a> |
+					</if>
+					<if condition="$vo.status neq 3 && $vo.status neq -1">
+					<a href="JavaScript:;" onClick="tkset_status($(this))" status='-1' rel="{$vo.id}" style="color:#999">无效作废</a>
+					</if>
+                  </div>
+                </td>
+                <td align="" class="" style="width: 100%;">
+                  <div>&nbsp;</div>
+                </td>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+        <!--分页位置-->
+        {$page}
+
+      
+	  
+	  </div>
+      <div class="iDiv" style="display: none;"></div>
+    </div>
+    <!--分页位置--> 
+  </div>
+</div>
+<script>
+    $(document).ready(function(){
+	  // 表格行点击选中切换
+	  $('#flexigrid > table>tbody >tr').click(function(){
+		    $(this).toggleClass('trSelected');
+		});
+		// 点击刷新数据
+		$('.fa-refresh').click(function(){
+			location.href = location.href;
+		});
+		
+		
+	});
+	
+	function tkset_status(obj){
+        if(obj.attr('status') == 3) {
+            $.ajax({
+                url: "{:U('/Admin/Staff/getlevellist')}",
+                data: {id: $(obj).attr('rel')},
+                type: "POST",
+                dataType: "json",
+                success: function (data) {
+                    var html = "<select id='level_list'>";
+                    html += "<option value='0'>请选择员工等级</option>";
+                    for (var i in data) {
+                        html += "<option value='" + data[i]['id'] + "'>" + data[i]['lv_name'] + "</option>";
+                    }
+                    html += "</select>";
+                    //询问框
+                    layer.confirm('选择员工等级', {
+                        title: '操作',
+                        content: "<div style='text-align: center'>员工等级：" + html + "</div>"
+                    }, function () {
+                        //layer.msg($("#level_list").val()+"--------------------", {icon: 1});
+                        $(document.body).attr('level_list', $("#level_list").val());
+                        var text = '';
+                        go_ajax(obj.attr('status'), text, obj.attr('rel'));
+                    }, function () {
+                        // layer.msg('也可以这样', {
+                        //     time: 20000, //20s后自动关闭
+                        //     btn: ['明白了', '知道了']
+                        // });
+                    });
+                }
+            });
+        }else if (obj.attr('status') == -1) {
+            layer.prompt({title: '请输入备注！', formType: 2}, function (text, index) {
+                layer.close(index);
+                go_ajax(obj.attr('status'), text, obj.attr('rel'));
+            });
+        }else{
+            var text = '';
+            go_ajax(obj.attr('status'), text, obj.attr('rel'));
+        }
+
+
+	}
+	
+	function go_ajax(status,text,id){
+        var level_list = $(document.body).attr('level_list');
+
+		$.ajax({  
+			url: "{:U('/Admin/Staff/do_staff_apply')}",
+			type: 'GET',  
+			data:{status:status,text:text,id:id,level_list:level_list},
+			dataType: 'json',  
+			error: function(){layer.msg('系统忙，请稍后再试', {icon: 2,time: 1000,shade: 0.6});},
+			beforeSend:function(){
+				parent.layer.load('2',{shade: 0.6});
+			},
+			success: function(r){
+				if(r.status == 1){
+					layer.msg('数据更新成功！', {icon: 1,time: 1000,shade: 0.6},function (){
+						location.reload();
+					}); 
+				}else{
+					parent.layer.msg(r.info, {icon: 2,time: 1000,shade: 0.6});
+				}
+			},
+			complete:function(){
+				parent.layer.closeAll('loading');
+			}
+		});  
+	}
+	
+    /*function delfun(obj) {
+      // 删除按钮
+      layer.confirm('确认删除？', {
+        btn: ['确定', '取消'] //按钮
+      }, function () {
+        $.ajax({
+          type: 'post',
+          url: $(obj).attr('data-url'),
+          data: {act: 'del', article_id: $(obj).attr('data-id')},
+          dataType: 'json',
+          success: function (data) {
+            layer.closeAll();
+            if (data) {
+              $(obj).parent().parent().parent().remove();
+            } else {
+              layer.alert('删除失败', {icon: 2});  //alert('删除失败');
+            }
+          }
+        })
+      }, function () {
+        layer.closeAll();
+      });
+    }*/
+</script>
+</body>
+</html>

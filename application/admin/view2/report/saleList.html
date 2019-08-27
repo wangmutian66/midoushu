@@ -1,0 +1,288 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+	<div class="fixed-bar">
+		<div class="item-title">
+			<div class="subject">
+				<h3>销售明细</h3>
+				<h5>网站系统销售明细</h5>
+			</div>
+			<ul class="tab-base nc-row">
+		        <li><a href="{:U('Report/saleList',array('sp'=>0))}" <if condition="$Request.param.sp eq 0">class="current"</if>><span>全部</span></a></li>
+		        <li><a href="{:U('Report/saleList',array('sp'=>2))}" <if condition="$Request.param.sp eq 2">class="current"</if>><span>自营</span></a></li>
+		        <li><a href="{:U('Report/saleList',array('sp'=>1))}" <if condition="$Request.param.sp eq 1">class="current"</if>><span>供货商</span></a></li>
+		    </ul>
+		</div>
+	</div>
+	<!-- 操作说明 -->
+	<div id="explanation" class="explanation" style="color: rgb(44, 188, 163); background-color: rgb(237, 251, 248); width: 99%; height: 100%;">
+		<div id="checkZoom" class="title"><i class="fa fa-lightbulb-o"></i>
+			<h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+			<span title="收起提示" id="explanationZoom" style="display: block;"></span>
+		</div>
+		<ul>
+			<li>商品销量统计排行</li>
+		</ul>
+	</div>
+	<div class="flexigrid">
+		<div class="mDiv">
+			<div class="ftitle">
+				<h3>明细列表</h3>
+				<h5>(共{$pager->totalRows}条记录)</h5>
+			</div>
+			<div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+			<form class="navbar-form form-inline" id="search-form" method="get" action="{:U('Report/saleList')}" onSubmit="return check_form();">
+				<div class="sDiv">
+					<div class="sDiv2" style="margin-right: 10px;">
+						<input type="text" size="30" name="key_word" class="qsbox" placeholder="搜索词...">
+					</div>
+					<div class="sDiv2" style="margin-right: 10px;">
+						<input type="text" size="30" name="start_time" id="start_time" value="{$start_time}" placeholder="起始时间" autocomplete="off" class="qsbox">
+						<input type="button" class="btn" value="起始时间">
+					</div>
+					<div class="sDiv2" style="margin-right: 10px;">
+						<input type="text" size="30" name="end_time" id="end_time" value="{$end_time}" placeholder="截止时间" autocomplete="off" class="qsbox">
+						<input type="button" class="btn" value="截止时间">
+					</div>
+					<div class="sDiv2" style="margin-right: 10px;border: none;">
+						<select  name="cat_id" id="cat_id" class="form-control">
+							<option value="0">所有分类</option>
+							<foreach name="categoryList" item="v" key="k" >
+								<option value="{$v['id']}" <if condition="$cat_id eq $v[id]">selected</if>> {$v['name']}</option>
+							</foreach>
+						</select>
+					</div>
+					<div class="sDiv2" style="margin-right: 1px;border: none;">
+						<select name="brand_id" id="brand_id" class="">
+							<option value="0">所有品牌</option>
+							<foreach name="brandList" item="v" key="k" >
+								<option value="{$v['id']}" <if condition="$brand_id eq $v[id]">selected</if>>{$v['name']}</option>
+							</foreach>
+						</select>
+					</div>
+					<div class="sDiv2">
+						<input type="hidden" name="sp" value="{$Request.param.sp}" />
+						<input type="hidden" name="order_ids" value="">
+						<input class="btn" value="搜索" type="submit" onclick="search();">
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="hDiv">
+			<div class="hDivBox">
+				<table cellspacing="0" cellpadding="0">
+					<thead>
+					<tr>
+						<th class="sign" axis="col0">
+							<div style="width: 24px;"><i class="ico-check"></i></div>
+						</th>
+						<th align="center" abbr="article_title" axis="col3" class="">
+							<div style="text-align: center; width: 50px;" class="">ID</div>
+						</th>
+						<th align="left" abbr="article_title" axis="col3" class="">
+							<div style="text-align: left; width: 500px;" class="">商品名称</div>
+						</th>、
+						<th align="center" abbr="ac_id" axis="col4" class="">
+							<div style="text-align: center; width: 200px;" class="">供货商</div>
+						</th>
+						<th align="center" abbr="ac_id" axis="col4" class="">
+							<div style="text-align: center; width: 100px;" class="">商品货号</div>
+						</th>
+						<th align="center" abbr="article_show" axis="col5" class="">
+							<div style="text-align: center; width: 50px;" class="">数量</div>
+						</th>
+						<th align="center" abbr="article_time" axis="col6" class="">
+							<div style="text-align: center; width: 100px;" class="">售价</div>
+						</th>
+						<th align="center" abbr="article_time" axis="col6" class="">
+							<div style="text-align: center; width: 100px;" class="">总售价</div>
+						</th>
+						<th align="center" abbr="article_time" axis="col6" class="">
+							<div style="text-align: center; width: 100px;" class="">商品成本价</div>
+						</th>
+						<th align="center" abbr="article_time" axis="col6" class="">
+							<div style="text-align: center; width: 100px;" class="">运营成本价</div>
+						</th>
+						<th align="center" abbr="article_time" axis="col6" class="">
+							<div style="text-align: center; width: 100px;" class="">总利润</div>
+						</th>
+						<th align="center" abbr="article_time" axis="col6" class="">
+							<div style="text-align: center; width: 120px;" class="">出售日期</div>
+						</th>
+						<th style="width:100%" axis="col7">
+							<div></div>
+						</th>
+					</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+		<div class="tDiv">
+	      	<div class="tDiv2">
+	        	<div class="fbutton"> 
+		        	<a href="javascript:exportReport()">
+			          	<div class="add" title="选定行数据导出excel文件,如果不选中行，将导出列表所有数据">
+			            	<span><i class="fa fa-plus"></i>导出数据</span>
+			          	</div>
+		          	</a> 
+	          	</div>
+	      	</div>
+			<div class="tDiv2">
+	        	<div class="fbutton"> 
+		        	<a href="javascript:exportGoodsReport()">
+			          	<div class="add" title="选定行数据导出excel文件,如果不选中行，将导出列表所有数据">
+			            	<span><i class="fa fa-plus"></i>导出物料表</span>
+			          	</div>
+		          	</a> 
+	          	</div>
+	      	</div>
+	      	<div style="clear:both"></div>
+	    </div>
+		<div class="bDiv" style="height: auto;">
+			<div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+				<table>
+					<tbody>
+					<foreach name="list" item="vo" key="k" >
+						<tr data-order-id="{$vo.order_id}" id="{$vo.order_id}">
+							<td class="sign">
+								<div style="width: 24px;"><i class="ico-check"></i></div>
+							</td>
+							<td align="center" class="">
+								<div style="text-align: center; width: 50px;">{$vo.order_id}</div>
+							</td>
+							<td align="left" class="">
+								<div style="text-align: left; width: 500px;">{$vo.goods_name}</div>
+							</td>
+							<td align="center" class="">
+								<div style="text-align: center; width: 200px;">{$vo.suppliers_id|get_suppliers_name}</div>
+							</td>
+							<td align="center" class="">
+								<div style="text-align: center; width: 100px;">{$vo.goods_sn}</div>
+							</td>
+							<td align="center" class="">
+								<div style="text-align: center; width: 50px;">{$vo.goods_num}</div>
+							</td>
+							<td align="center" class="">
+								<if condition="$vo.price">
+								<div style="text-align: center; width: 100px;"><span style="color: red;">{$vo.price}</span> &nbsp;<span style="text-decoration: line-through;">{$vo.goods_price}</span></div>
+									<else/>
+									<div style="text-align: center; width: 100px;">{$vo.goods_price}</div>
+								</if>
+							</td>
+							<td align="center" class="">
+								<if condition="$vo.price">
+									<div style="text-align: center; width: 100px;">{$vo.price*$vo.goods_num}</div>
+								<else/>
+									<div style="text-align: center; width: 100px;">{$vo.goods_price*$vo.goods_num}</div>
+								</if>
+							</td>
+							<td align="center" class="">
+								<div style="text-align: center; width: 100px;">{$vo.cost_price}</div>
+							</td>
+							<td align="center" class="">
+								<div style="text-align: center; width: 100px;">{$vo.cost_operating}</div>
+							</td>
+							<td align="center" class="">
+								<if condition="$vo.price">
+									<div style="text-align: center; width: 100px;">{$vo.price*$vo.goods_num-$vo.cost_price*$vo.goods_num-$vo.cost_operating*$vo.goods_num}</div>
+								<else/>
+									<div style="text-align: center; width: 100px;">{$vo.goods_price*$vo.goods_num-$vo.cost_price*$vo.goods_num-$vo.cost_operating*$vo.goods_num}</div>
+								</if>
+							</td>
+							<td align="center" class="">
+								<div style="text-align: center; width: 120px;">{$vo.add_time|date="Y-m-d H:i:s",###}</div>
+							</td>
+							<td align="" class="" style="width: 100%;">
+								<div>&nbsp;</div>
+							</td>
+						</tr>
+					</foreach>
+					</tbody>
+				</table>
+			</div>
+			<div class="iDiv" style="display: none;"></div>
+		</div>
+		<!--分页位置-->
+		{$page} </div>
+</div>
+<script>
+	$(document).ready(function(){
+		// 表格行点击选中切换
+		$('#flexigrid > table>tbody >tr').click(function(){
+			$(this).toggleClass('trSelected');
+		});
+
+		// 点击刷新数据
+		$('.fa-refresh').click(function(){
+			location.href = location.href;
+		});
+
+  
+            // 起始位置日历控件
+               laydate.skin('molv');//选择肤色
+               laydate({
+                 elem: '#start_time',
+                 format: 'YYYY-MM-DD', // 分隔符可以任意定义，该例子表示只显示年月
+                 festival: true, //显示节日
+                 istime: false,
+                 choose: function(datas){ //选择日期完毕的回调
+                        
+                 }
+               });
+
+                // 结束位置日历控件
+               laydate({
+                 elem: '#end_time',
+                 format: 'YYYY-MM-DD', // 分隔符可以任意定义，该例子表示只显示年月
+                 festival: true, //显示节日
+                 istime: false,
+                 choose: function(datas){ //选择日期完毕的回调
+                          
+                 }
+               });	
+  
+  
+	});
+
+	function check_form(){
+		var start_time = $.trim($('#start_time').val());
+		var end_time =  $.trim($('#end_time').val());
+		if(start_time == '' ^ end_time == ''){
+			layer.alert('请选择完整的时间间隔', {icon: 2});
+			return false;
+		}		 
+		return true;
+	}
+
+	function search(){
+		$('#search-form').attr('action','{:U("Report/saleList")}');
+	}
+
+	function exportReport(){
+        var selected_ids = '';
+        $('.trSelected' , '#flexigrid').each(function(i){
+            selected_ids += $(this).data('order-id')+',';
+        });
+        if(selected_ids != ''){
+            $('input[name="order_ids"]').val(selected_ids.substring(0,selected_ids.length-1));
+        }
+        $('#search-form').attr('action','{:U("Report/export_saleList")}');
+		$('#search-form').submit();
+	}
+	function exportGoodsReport(){
+        var selected_ids = '';
+        $('.trSelected' , '#flexigrid').each(function(i){
+            selected_ids += $(this).data('order-id')+',';
+        });
+        if(selected_ids != ''){
+            $('input[name="order_ids"]').val(selected_ids.substring(0,selected_ids.length-1));
+        }
+        $('#search-form').attr('action','{:U("Report/export_goodsList")}');
+		$('#search-form').submit();
+	}
+</script>
+</body>
+</html>

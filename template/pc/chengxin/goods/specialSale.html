@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="renderer" content="webkit">
+    <title>特卖专区-{$tpshop_config['shop_info_store_title']}</title>
+    <meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+    <meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+    <link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+    <link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+    <link href="__STATIC__/css/second.css?v={$vnum}" rel="stylesheet">
+    <script src="__STATIC__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="__STATIC__/js/style.js?v={$vnum}" ></script>
+    <script src="__PUBLIC__/js/global.js?v={$vnum}"></script>
+    <script src="__PUBLIC__/js/pc_common.js?v={$vnum}"></script>
+    <script src="__PUBLIC__/static/js/layer/layer.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        function timer(opj){
+            $(opj).find('ul').animate({
+                marginTop : "-3.5rem"
+            },500,function(){
+                $(this).css({marginTop : "0.7rem"}).find("li:first").appendTo(this);
+            })
+        }
+        $(function(){
+            var num = $('.notice_active').find('li').length;
+            if(num > 1){
+                var time=setInterval('timer(".notice_active")',3500);
+                $('.gg_more a').mousemove(function(){
+                    clearInterval(time);
+                }).mouseout(function(){
+                    time = setInterval('timer(".notice_active")',3500);
+                });
+            }
+
+            $(".news_ck").click(function(){
+                location.href = $(".notice_active .notice_active_ch").children(":input").val();
+            })
+
+            //改变导航状态
+            $('.menu li>a').removeClass('ys1').eq(3).addClass('ys1');
+        });
+    </script>
+    <script src="__PUBLIC__/js/baidu.js"></script>
+</head>
+
+<body>
+<include file="public/top1_special"/>
+
+
+<!--新增加新品推荐板块 新增加新品推荐板块 新增加新品推荐板块 新增加新品推荐板块  -->
+<div class="n-promotion">
+    <div class="bt">
+        <div class="num">特卖专区</div>
+    </div>
+    <div class="main">
+        <ul>
+            <foreach name="$goodsList" item="v" key="k">
+                <li>
+                    <div class="pic"><a href="{:U('Home/Goods/goodsInfo',array('id'=>$v[goods_id]))}" target="_blank"><img src="{$v[goods_id]|goods_thum_images=270,270}"></a></div>
+                    <div class="wz">
+                        <a href="{:U('Home/Goods/goodsInfo',array('id'=>$v[goods_id]))}" target="_blank" class="name">{$v[goods_name]|getSubstr=0,20}</a>
+                        <div class="price">
+                            <div class="l">￥{$v[shop_price]}</div>
+                            <div class="r">{$v[sales_sum]}人付款</div>
+                        </div>
+                        <div style="color:#999;font-size:14px;">赠送<span id="back_midou" style="color:red;">{$v.back_midou}</span>米豆</div>
+                    </div>
+                </li>
+            </foreach>
+        </ul>
+    </div>
+    {$page}
+</div>
+
+
+
+<include file="public/footer"/>
+
+</body>
+</html>

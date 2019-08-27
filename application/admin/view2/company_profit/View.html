@@ -1,0 +1,266 @@
+<include file="public/layout" />
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title">
+      <div class="subject">
+        <h3>子公司视图查询</h3>
+      </div>
+    </div>
+  </div>
+  <!-- 操作说明 -->
+
+  <div class="flexigrid">
+    <div class="mDiv">
+      <div class="ftitle">
+        <h3>员工列表</h3>
+        <h5>(共{$pager->totalRows}条记录)</h5>
+      </div>
+      <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+	  
+    </div>
+	<div class="tDiv">
+		<div class="tDiv2">
+			<div class="fbutton">
+				<div class="add" title="新增数据">
+					<span onClick="AddData();"><i class="fa fa-plus"></i>新增数据</span>
+				</div>
+			</div>
+		
+			
+		</div>
+		<div style="clear:both"></div>
+	</div>
+	
+    <div class="hDiv">
+      <div class="hDivBox">
+        <table cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+              <th class="sign" axis="col0">
+                <div style="width: 24px;"><i class="ico-check"></i></div>
+              </th>
+			  <th align="left" abbr="article_title" axis="col1" class="">
+                <div style="text-align: center; width: 30px;" class="">ID</div>
+              </th>
+			  <th align="left" abbr="article_title" axis="col1" class="">
+                <div style="text-align: right; width: 30px;" class=""> ┣&nbsp;&nbsp; </div>
+              </th>
+              <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">用户名</div>
+              </th>
+			  <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">真实姓名</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">所属层级</div>
+              </th>
+			  
+			   <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">用户金额</div>
+              </th>
+			  
+			   <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">冻结金额</div>
+              </th>
+			  
+			   <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 200px;" class="">隶属公司</div>
+              </th>
+			  
+			  <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">状态</div>
+              </th>
+			  <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">联系电话</div>
+              </th>
+             <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">手机号码</div>
+              </th>
+			  <th align="center" abbr="control" axis="col9" class="">
+                <div style="text-align: center; width: 80px;" class="">操作</div>
+              </th>
+              
+              
+              <th style="width:100%" axis="col7">
+                <div></div>
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    
+    <div class="bDiv" style="height: auto;">
+      <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+        <table>
+          <tbody>
+            <foreach name="list" item="vo" key="k" >
+              <tr id="tr_{$vo.id}" class="tr" rel='{$vo.id}'>
+                <td class="sign">
+                  <div style="width: 24px;"><i class="ico-check"></i></div>
+                </td>
+				<td align="left" class="">
+                  <div style="text-align: center; width: 30px;">{$vo.id}</div>
+                </td>
+				<td align="left" class="">
+                  <div style="text-align: right; width: 30px;"> ┣━&nbsp; </div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.uname}</div>
+                </td>
+				<td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.real_name}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.lv_name}</div>
+                </td>
+			   <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.money|tk_money_format}</div>
+                </td>
+				<td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.frozen|tk_money_format}</div>
+                </td>
+				<td align="left" class="">
+                  <div style="text-align: center; width: 200px;">{$vo.company_name}</div>
+                </td>
+				<td align="left" class="">
+                  <div style="text-align: center; width: 100px;">
+				  	<a href="JavaScript:;" class="is_lock" class="is_lock_{$vo.id}" rid="{$vo.id}" rstatus='{$vo.is_lock}'> <eq name='vo[is_lock]' value='1'> 正常 <else/> 锁定状态 </eq></a>
+				  </div>
+                </td>
+				<td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.tel}</div>
+                </td>
+				<td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.phone}</div>
+                </td>
+			   
+			   
+                <td align="center" class="">
+                  <div style="text-align: center; width:80px;">
+				  	<a href="__URL__/modify/id/{$vo.id}">编辑</a>
+					|
+					
+					<a href="__URL__/del/id/{$vo.id}" onClick="if(confirm('确认删除吗?')){ return true;}else{return false;}">删除</a>
+				  </div>
+                </td>
+                <td align="" class="" style="width: 100%;">
+                  <div>&nbsp;</div>
+                </td>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+      </div>
+      <div class="iDiv" style="display: none;"></div>
+    </div>
+    <!--分页位置--> 
+    {$pager->show()} </div>
+</div>
+<script>
+    $(document).ready(function(){	
+	    // 表格行点击选中切换
+	    $('#flexigrid > table>tbody >tr').click(function(){
+		    $(this).toggleClass('trSelected');
+		});
+		
+		// 点击刷新数据
+		$('.fa-refresh').click(function(){
+			location.href = location.href;
+		});
+		
+		function lock_click(obj){
+			//var obj = $(this);
+			var id = obj.attr('rid');
+			$.getJSON("{:U('Admin/staff/is_lock')}",{id:id,rstatus:obj.attr('rstatus')},function (r){
+				if(r.status == 1){
+					obj.attr('rstatus',r.save_status);
+					if(r.save_status == 0){
+						$("#is_lock_"+id).html('正常');
+						obj.html('锁定状态');
+					}else{
+						$("#is_lock_"+id).html('锁定状态');	
+						obj.html('正常');
+					}
+				}else{
+					alert(r.msg);
+				}
+			})
+			
+		}
+		
+		$(".is_lock").live('click',function (){
+			lock_click($(this));
+		})
+		
+		/*查询下属*/
+		var tr_ids = '';
+		$('.tr').each(function (){
+			var tr_obj = $(this);
+			$.getJSON("{:U('Admin/Staff/view_son')}",{id:tr_obj.attr('rel'),top_id:'{$Think.get.top_id}'},function (r){
+				var html = '';
+				if(r.status == 1){
+					$.each(r.list,function (i,k){
+						if(k.is_lock==1){str="正常"}else{str="锁定状态"};
+						html += '<tr >';	
+						html += '<td class="sign"><div style="width: 24px;"><i class="ico-check"></i></div></td>';
+						html += '<td align="left" class=""><div style="text-align: center; width: 30px;">'+k.id+'</div></td>';
+						html += '<td align="left" class=""><div style="text-align: right; width: 30px;"> ┗ </div></td>';
+						html += '<td align="left" class=""><div style="text-align: center; width: 100px;">'+k.uname+'</div></td>';
+						html += '<td align="left" class=""><div style="text-align: center; width: 100px;">'+k.real_name+'</div></td>';
+						html +='<td align="left" class=""><div style="text-align: center; width: 100px;">'+k.lv_name+'</div></td>';
+						html += '<td align="left" class=""><div style="text-align: center; width: 100px;">'+k.money+'</div></td>';
+						html += '<td align="left" class=""><div style="text-align: center; width: 100px;">'+k.frozen+'</div></td>';
+						html += '<td align="left" class=""><div style="text-align: center; width: 200px;">'+k.company_name+'</div></td>';
+						html += '<td align="left" class=""><div style="text-align: center; width: 100px;"><a href="JavaScript:;" class="is_lock" class="is_lock_{$vo.id}" rid="'+k.id+'" rstatus="'+k.is_lock+'"> '+ str +'</a></div></td>';
+						html += '<td align="left" class=""><div style="text-align: center; width: 100px;">'+k.tel+'</div></td>';
+						html += '<td align="left" class=""><div style="text-align: center; width: 100px;">'+k.phone+'</div></td>';
+						html += '<td align="center" class=""><div style="text-align: center; width:80px;"><a href="__URL__/modify/id/'+k.id+'">编辑</a> | <a href="__URL__/del/id/'+k.id+'" onClick="if(confirm(\'确认删除吗?\')){ return true;}else{return false;}">删除</a></div></td>';
+						html += '<td align="" class="" style="width: 100%;"><div>&nbsp;</div></td></tr>';
+					})
+					tr_obj.after(html);
+					$(".is_lock").unlive('click')
+					$(".is_lock").live('click',function (){
+						lock_click(tr_obj);
+					})
+				}
+			});
+		})
+		
+		
+		
+		
+	});
+	
+	function AddData(){
+		location.href	=	"{:U('Admin/Staff/add')}";	
+	}
+    function delfun(obj) {
+      // 删除按钮
+      layer.confirm('确认删除？', {
+        btn: ['确定', '取消'] //按钮
+      }, function () {
+        $.ajax({
+          type: 'post',
+          url: $(obj).attr('data-url'),
+          data: {act: 'del', article_id: $(obj).attr('data-id')},
+          dataType: 'json',
+          success: function (data) {
+            layer.closeAll();
+            if (data) {
+              $(obj).parent().parent().parent().remove();
+            } else {
+              layer.alert('删除失败', {icon: 2});  //alert('删除失败');
+            }
+          }
+        })
+      }, function () {
+        layer.closeAll();
+      });
+    }
+</script>
+</body>
+</html>

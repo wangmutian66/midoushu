@@ -1,0 +1,112 @@
+﻿<include file="public/layout" />
+                <!-- header -->
+                <div class="mdk-header js-mdk-header bg-primary" data-fixed>
+                    <div class="mdk-header__content">
+
+                        <nav class="navbar navbar-expand-md bg-primary navbar-dark d-flex-none">
+                            <button class="btn btn-link text-white pl-0" type="button" data-toggle="sidebar">
+                                <i class="material-icons align-middle md-36">short_text</i>
+                            </button>
+                            <div class="page-title m-0">消息管理</div>
+
+                            <div class="collapse navbar-collapse" id="mainNavbar" style="width:50px">
+                                <ul class="navbar-nav ml-auto align-items-center">
+
+                                        <li class="nav-item" style="float:right !important">
+                                            <a href="#" class="nav-link dropdown-toggle dropdown-clear-caret" data-toggle="sidebar" data-target="#user-drawer">
+                                              系统操作
+                                              <img src="{$store_info.litpic|default='__PUBLIC__/storemobile/img/errors.jpg'}" class="img-fluid rounded-circle ml-1" width="35"
+                                                alt="">
+                                            </a>
+                                        </li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- content -->
+                
+                <div class="mdk-header-layout__content ls-top-navbar mdk-header-layout__content--scrollable h-100">
+                    <!-- main content -->
+
+                    <div class="container-fluid">                      
+                        <div class="card">
+                            
+                            <div class="card-header">
+                                <div class="row align-items-center">
+                                    <div class="col-md-4">
+                                        <div class="card-title">消息列表</div>
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="liebiao">
+                                <ul>
+                                    <foreach name="list" item="vo" key="k" >
+                                    <li>
+                                        <div class="hang">
+                                            <div class="l">消息内容</div>
+                                            <div class="r1">{$vo.message}</div>
+                                        </div>
+                                        <div class="hang">
+                                            <div class="l">消息类型</div>
+                                            <div class="r2">{$vo.info}</div>
+                                            <div class="l">状态</div>
+                                            <div class="r2"><if condition='$vo[status] == 1'>已读<else/><font color="#FF0000" id="f_{$vo.id}">未读</font></if></div>
+                                        </div>
+                                        <div class="hang">
+                                            <div class="l">更新时间</div>
+                                            <div class="r1">{$vo.create_time|date="Y-m-d H:i:s",###}</div>
+                                        </div>
+                                        
+                                        <div class="hang">
+                                            <div class="l">操作</div>
+                                            <div class="r1"><a href="{:U('/Store/System/View',array('id'=>$vo['id']))}" style="margin-right:1rem;">查看详细</a><a href="JavaScript:setStauts('{$vo.id}');">设为已读</a></div>
+                                        </div>
+                                    </li>
+                                   </foreach> 
+                                    
+                                    
+                                </ul>
+                            </div>
+                            <div class="col-sm-12 col-md-7">
+                                <div class="dataTables_paginate paging_simple_numbers" id="data-table_paginate">
+                                    <ul class="pagination">
+                                       {$pager->show()}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script>
+  
+    
+    function setStauts(id) {
+        var obj = $(this);
+        $.ajax({
+              type: 'post',
+              url: "{:U('/Store/System/setMsgStatus')}",
+              data: {id: id},
+              dataType: 'json',
+              beforeSend:function(){
+                parent.layer.load('2',{shade: 0.6});
+            },
+              success: function (r) {
+                if (r.status == 1) {
+                  $("#f_"+id).css('color','#555').html('已读');
+                } else {
+                  layer.alert(r.info, {icon: 2});  //alert('删除失败');
+                }
+              }
+              ,
+            complete:function(){
+                parent.layer.closeAll('loading');
+            }
+        })
+    }
+</script>
+<include file="public/foot" />

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="renderer" content="webkit">
+<title>评价订单-{$tpshop_config['shop_info_store_title']}</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/member.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/saved_resource(2).css?v={$vnum}" type="text/css" rel="stylesheet" source="widget">
+<script src="__STATIC__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/js/global.js?v={$vnum}"></script>
+<script src="__PUBLIC__/static/js/layer/layer.js" type="text/javascript"></script>
+<script src="__STATIC__/js/common.js?v={$vnum}"></script>
+<script src="__PUBLIC__/js/baidu.js"></script>
+<style type="text/css">
+    .ev-img img {
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        z-index: 2;
+        border-width: 0;
+    }
+</style>
+</head>
+
+<body class="bgg">
+	<include file="public/user_header" />
+	<div class="clear"></div>
+	
+	<div class="y-content">
+		<!--左侧菜单-->
+		<include file="public/user_lefter" />
+		
+		<!--右侧内容-->
+		<div class="y-right y-borm fri">
+			<div class="y-title0">
+				<span></span>我的评价
+			</div>
+			
+			<if condition="$order_info['is_comment'] eq 0">
+				<form method="post" id="add_comment" onsubmit="return false">
+				<input type="hidden" id="order_id" name="order_id" value="{$order_info.order_id}">
+                <input type="hidden" id="goods_id" name="goods_id" value="{$order_info.goods_id}">
+                <input type="hidden" id="suppliers_id" name="suppliers_id" value="{$order_info.suppliers_id}">
+                <input type="hidden" name="order_prom_type"  value="{$order_info['order_prom_type']}">
+				<div class="y-xsp fle">
+					<a href="{:U('Home/Goods/goodsInfo',array('id'=>$order_info['goods_id']))}" target="_blank"><h2><img src="{$order_info.goods_id|goods_thum_images=112,112}"></h2>
+					<p>{$order_info.goods_name}</p></a>
+					<h3><span>{$order_info.goods_price}</span>/元</h3>
+				</div>
+				<!--写评论-->
+				<div id="wrapper">
+			        <div class="pj-box jz clearfix">
+				        <ul class="pj-panel">
+					        <li class="clearfix">
+					            <div class="lr">  
+					                <form>
+					                <table id="div_{$order_info.goods_id}">
+					                    <tr>
+					                        <td align="right" style="width: 100px; float: left;">商品描述相符：</td>
+					                        <td>
+					                            <div id="goods_rank" class="block clearfix" >
+					                                <div class="star_score"></div>
+					                                <div class="attitude"></div>
+					                                <input type="hidden" id="goods_rank_hidden" class="fenshu" name="goods_rank">
+					                            </div>
+					                        </td>
+					                    </tr>
+					                    <tr>
+					                        <td align="right" style="width: 100px; float: left;">客服服务质量：</td>
+					                        <td>
+					                            <div id="service_rank" class="block clearfix" >
+					                                <div class="star_score"></div>
+					                                <div class="attitude"></div>
+					                                <input type="hidden" id="goods_rank_hidden" class="fenshu" name="service_rank">
+					                            </div>
+					                        </td>
+					                    </tr>
+					                    <if condition="$order_info['order_prom_type'] neq 5">
+					                    <tr>
+					                        <td align="right" style="width: 100px; float: left;">物流服务质量：</td>
+					                        <td>
+					                            <div id="deliver_rank" class="block clearfix" >
+					                                <div class="star_score"></div>
+					                                <div class="attitude"></div>
+					                                <input type="hidden" id="goods_rank_hidden" class="fenshu" name="deliver_rank">
+					                            </div>
+					                        </td>
+					                    </tr>
+					                    </if>
+					                    <tr>
+					                        <td align="right" valign="top" style="padding-top:25px; width: 100px; float: left;">评价晒单：</td>
+					                        <td>
+					                            <textarea name="content" data-id="{$order_info.goods_id}" onkeyup="setval(this,'200')" id="comment_content" placeholder="商品是否给力？快分享你的购买新的吧~" maxlength="200"></textarea>
+					                            <div class="textarea-ext"><em class="textarea-num">
+                                                    <b id="textarea_{$order_info.goods_id}">200</b> / 200</em>
+                                                    <span class="tips">（评价多于<span class="ftc1">10</span>个字）</span>
+                                                </div>
+
+
+						                        <!--上传图片-s-->
+                                                <div class="m-imgshow f-imgshow" >
+                                                    <div class="thumbnail-list" id="img_container" style="position: relative;">
+                                                        <div class="ev-img po-re fl" id="add_img">
+                                                            <span id="image-upload-741538" class="btn-upload img_span" onClick="uploadimg('#div_{$order_info.goods_id}')" style="position: relative; z-index: 0; "></span>
+                                                        </div>
+                                                        <span class="upload-num">最多只能上传5张图片</span>
+                                                        <!--<div id="p1ap78atrc2drqrn1eee13k21unp0_html5_container" class="plupload html5" style="position: absolute; width: 50px; height: 50px; overflow: hidden; z-index: -1; opacity: 0; top: 0px; left: 0px; background: transparent;">-->
+                                                        <!--<input id="p1ap78atrc2drqrn1eee13k21unp0_html5" style="font-size: 999px; position: absolute; width: 100%; height: 100%;" type="file" accept="image/jpeg,image/gif,image/png,image/bmp" multiple>-->
+                                                        <!--</div>-->
+                                                    </div>
+                                                    <div class="bigimg-switch hide">
+                                                        <div class="bigimg-operate">
+                                                            <a href="#" class="op-rotate1"><i></i><em>左转</em></a>
+                                                            <a href="#" class="op-rotate2"><i></i><em>右转</em></a>
+                                                            <a href="#" class="op-delete"><i></i><em>删除</em></a>
+                                                        </div>
+                                                        <div class="switch-inner"> <img src="" alt="" class="bigimg">
+                                                            <div class="cursor-small"></div>
+                                                            <div class="cursor-prev"></div>
+                                                            <div class="cursor-next"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!--上传图片-e-->
+
+					                            <div class="submit"><a href="javascript:void(0);" onClick="comment_submit(this);">确认发布</a></div>
+					                        </td>
+					                    </tr>
+					                </table>          
+					                </form>
+					            </div>
+					        </li>
+				        </ul>
+			        </div> 
+				</div>
+				</form>
+			<else />
+                <div class="mycomment-detail">
+                    <div class="detail-hd">
+                        <div class="m-success-tip">
+                            <div class="tip-inner">
+                                <i class="tip-icon"></i>
+                                <h3 class="tip-title">该商品已评价过啦~</h3>
+                                <div class="tip-hint"><a clstag="pageclick|keycount|pingjiachenggong_201605192|1" href="{:U('Home/User/comment',array('status'=>0))}" class="ftc3 ml10">返回待评价列表 &gt;</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+			</if>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<include file="public/user_footer" />
+	<script type="text/javascript" src="__STATIC__/js/startScore.js"></script>
+	<script>
+		scoreFun($("#goods_rank"));
+		scoreFun($("#service_rank"));
+		scoreFun($("#deliver_rank"));
+
+	    //判断内容填写和评分
+	    function setval(obj,sum){
+	        var len = $(obj).val().length;
+	        var textarea = $('#textarea_'+$(obj).attr('data-id'));
+	        if(len > sum){
+	            $(obj).val($(obj).val().substring(0,sum));  //截取规定长度字符串
+	        }
+	        var num = sum - len;
+	        num <= 0 ? textarea.text(0): textarea.text(num);//防止出现负数
+	    }
+
+	    function comment_submit(){
+	        var flag = false;
+	        $('.rank').each(function(i,o){
+	            if($(o).attr('rel')==1){
+	                flag = true;
+	            }
+	        })
+	        var order_prom_type = $('input[name="order_prom_type"]').val();
+	        var comment_content = $('#comment_content').val()
+	        if($('#goods_rank_hidden').val()==''){
+	            showErrorMsg('请给描述相符打分');
+	            return false;
+	        }
+	        if($('#sever_brank_hidden').val()==''){
+	            showErrorMsg('请给卖家服务打分');
+	            return false;
+	        }
+	        if($('#deliver_rank_hidden').val()=='' && order_prom_type != 5){
+	            showErrorMsg('请给物流服务打分');
+	            return false;
+	        }
+	        if(comment_content == ''){
+	            showErrorMsg('请输入评论内容');
+	            return false;
+	        }
+	        if(comment_content.length < 10){
+	            showErrorMsg('评论内容最少10个字符');
+	            return false;
+	        }
+	        //判断是否超过五个图片
+	        if($('.btn-upload').length > 6){
+	            showErrorMsg('最多只能上传5张图片');
+	            return false;
+	        }
+	        $.ajax({
+	            type: "POST",
+	            url: "{:U('Home/Order/add_comment')}",
+	            data: $('#add_comment').serialize(),
+	            success: function (data) {
+	                data = jQuery.parseJSON(data);
+	                if (data.status == 1) {
+	                    window.location.href="{:U('Home/Order/comment')}";
+	                } else {
+	                    showErrorMsg(data.msg);
+	                    window.location.reload();
+	                }
+	            }
+	        });
+	    }
+
+	    //图片上传
+	    var now_access;
+	    function uploadimg(div){
+	        now_access = $(div);
+	        //检查是否超过限制数量
+	        GetUploadify2(5,'','comment','add_img')
+	    }
+	    function delimg(file,t){
+	        $.get(
+	                "/index.php?m=Admin&c=Uploadify&a=delupload",{action:"del", filename:file},function(){}
+	        );
+	        $(t).siblings('.img_span').show();
+	        $(t).remove();
+	    }
+	    function add_img(str){
+	        var div_id =  now_access.selector;
+	        var goods_id = div_id.substr(5);
+	        var tpl_list = String(str).split(',');
+	        for (var i=0;i<tpl_list.length;i++)
+	        {
+	            var tpl = '<span class="btn-upload" onclick="delimg(\'$IMG\',this)" ><input type="hidden" name="comment_img[]" value="$IMG"><img src="$IMG" border="0" alt=""></span>';
+	            var str_do = tpl.replace(/\$IMG/g,tpl_list[i]);
+	            $(now_access).find('#img_container').find('#add_img').append(str_do);
+	        }
+	        //判断是否超过五个图片
+	        var obj = now_access.find('.btn-upload');
+	        if(obj.length >= 6){
+	            now_access.find('.img_span').hide();
+	        }
+	    }
+
+	    /**
+	     * 提示弹窗
+	     * */
+	    function showErrorMsg(msg){
+	        layer.alert(msg,{icon:3});
+	    }
+	</script>
+</body>
+</html>

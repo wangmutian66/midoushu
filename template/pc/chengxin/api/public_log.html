@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<link rel="stylesheet" href="__PUBLIC__/cs_box/style/cs_box.css" type="text/css"/>
+<link rel="stylesheet" href="__PUBLIC__/cs_box/style/cs_message.css" type="text/css"/>
+<script type="text/javascript" src="__PUBLIC__/cs_box/js/cs_box.js"></script>
+<script type="text/javascript">
+    myEvent(window,'load',function(){
+        cs_box.set({
+            img_path : '__PUBLIC__/cs_box/images/01.jpg',		//设置图片路径
+            qq : '123456789',		//设置QQ号码
+        });
+
+        //document.getElementsByClassName('cs_img')[0].click=function(){  console.log('222');}
+    });
+
+</script>
+
+<div id='cs_box'>
+    <div class='cs_img 11'  <if condition='$isHaveGroup eq 1'>onclick="window.open('{:url('/customer_service/Chat/randkf',['chat_group_id'=>$chat_group_id,'fromid'=>$from_id,'toid'=>$to_id])}', '_blank')"<else/> onclick="window.show_message();" </if>><img src="__PUBLIC__/cs_box/images/isHaveGroup{$isHaveGroup}.png" style="height: 100px;"></div>
+    <!--<span class='cs_info'>有什么可以帮到你</span>-->
+    <!--<div class='cs_btn'  <if condition='$isHaveGroup eq 1'>onclick='window.location.href="{:url('/customer_service/Chat/randkf')}"'</if>>点击咨询</div>-->
+</div>
+
+
+
+<div class="message" >
+    <div class="from">
+        <form>
+            <div class="bt">在线留言</div>
+            <div class="line">
+                <div class="l">姓名</div>
+                <input type="text" name="lyname" id="lyname" class="inp">
+            </div>
+            <div class="line">
+                <div class="l">电话</div>
+                <input type="text" name="mobile" id="mobile" class="inp">
+            </div>
+            <div class="wz">
+                <textarea name="content" id="content" placeholder="请输入留言内容..."></textarea>
+            </div>
+            <input type="button" onclick="sendChatMessage()" name="" value="发送留言" class="btn">
+        </form>
+    </div>
+</div>
+
+
+
+
+
+</body>
+</html>

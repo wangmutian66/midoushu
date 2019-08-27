@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="refresh" content="3;URL={$data.url|default='/Staff/System/login'}">
+<link href="__PUBLIC__/supplier/css/TKlogin.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="__PUBLIC__/static/js/jquery.js"></script>
+<script type="text/javascript" src="__PUBLIC__/static/js/layer/layer.js"></script>
+<title>{$data.title|default='成欣网提醒您~'}</title>
+</head>
+
+<body class="error_body">
+	<img src="__PUBLIC__/supplier/images/duanxian.jpg" class="duanxian" />
+	<div class="error_msg">
+		{$data.info}
+	</div>
+	<p>如有问题请联系客服</p>
+	<p>0541-99953365</p>
+	<div class="error_footer">
+		<a href="{:U('/Member/System/login')}"><img src="__PUBLIC__/supplier/images/relogin.png" /></a>
+		<a href="{:U('/Home')}"><img src="__PUBLIC__/supplier/images/backshop.png" /></a>
+	</div>
+</body>
+</html>

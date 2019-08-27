@@ -1,0 +1,154 @@
+<include file="public/layout" />
+<link rel="stylesheet" href="__PUBLIC__/hou_group/css/amazeui.min.css" />
+<link rel="stylesheet" href="__PUBLIC__/hou_group/css/main.css" />
+<style>
+    #chatbox li em{
+        color:#999;
+    }
+    .windows_body{
+        height: 606px;
+        overflow-y: auto;
+    }
+    #myModalhistory iframe{
+        border:none;
+    }
+    .talk_window{
+        margin-left: 310px;
+    }
+
+    .item-title h3{
+        display: block;
+        margin-top: -14px;
+    }
+    .cleft{float: left;}
+    .cright{ margin-left: 38px;}
+</style>
+
+    <div class="fixed-bar">
+        <div class="item-title">
+
+            <a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+            <div class="subject">
+                <h3>客服系统聊天记录</h3>
+                <h5></h5>
+            </div>
+        </div>
+    </div>
+    <!-- 操作说明 -->
+
+
+    <div class="box">
+<div class="wechat">
+
+    <div class="sidestrip">
+        <div class="am-dropdown" data-am-dropdown>
+            <!--头像插件-->
+            <div class="own_head am-dropdown-toggle" style="background: url('{$tousers.head_pic}') no-repeat; background-size: 100%;"></div>
+        </div>
+    </div>
+
+
+
+    <div class="middle on">
+        <div class="wx_search">
+            <!--<input type="text" placeholder="搜索">-->
+            <!--<button>+</button>-->
+        </div>
+        <div class="office_text" style="overflow-y:auto;">
+            <ul class="user_list" style="top: 0px; position: absolute;">
+                <foreach  name="users" item="val" >
+                <li class="user_active" onclick="chatlist({$formid},{$val.user_id},this)">
+                    <div class="user_head"><img src="{$val.head_pic}"></div>
+                    <div class="user_text">
+                        <p class="user_name">{$val.nickname}</p>
+                        <p class="user_message"><if condition="$val.type eq 1">{$val.content}<elseif condition="$val.type eq 2">[图片]<elseif condition="$val.type eq 3">[商品]</if></p>
+                    </div>
+                    <div class="user_time"></div>
+                </li>
+                </foreach>
+            </ul>
+            <div style="position: absolute; display: none; line-height: 0; height: 610px;" class="zUIpanelScrollBox"></div><div style="position: absolute; display: none; line-height: 0; height: 491px; top: 4px;" class="zUIpanelScrollBar"></div></div>
+    </div>
+
+
+
+    <!--聊天窗口-->
+    <div class="talk_window">
+        <div class="windows_top">
+            <div class="windows_top_box">
+                <span></span>
+            </div>
+        </div>
+
+        <!--聊天内容-->
+        <div class="windows_body">
+            <div class="office_text" style="height: 100%;">
+                <ul class="content" id="chatbox">
+                    <foreach  name="communication" item="val" >
+                        <li class="{$val.classname}"><img src="{$val.head_pic}" title="{$val.nickname}">
+                            <span>
+                                <if condition="$val.type eq 1">{$val.content}<else/><a href="{$val.content}" target="_blank"><img src="{$val.content}"/></a></if>
+                             </span>
+                        </li>
+                    </foreach>
+
+                </ul>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+</div>
+
+<script>
+
+
+    function chatlist($formid,$toid,element){
+        var user_name = $(element).find(".user_name").html();
+        $(".windows_top_box span").html(user_name);
+        $.ajax({
+            url:"{:url('admin/Chat/chatlist')}",
+            data:{formid:$formid,toid:$toid},
+            dataType:"json",
+            type:"post",
+            success:function(data){
+                var html1 = "";
+                for(var i in data){
+                    html1+='<li class="'+data[i]['classname']+'"><img src="'+data[i]['head_pic']+'" title="'+data[i]['nickname']+'"><span>';
+                    html1+='<em>'+data[i]['time']+'</em><br/>';
+                    if(data[i]['type'] == 1){
+                        html1+= data[i]['content'];
+                    }else if(data[i]['type'] == 2){
+                        html1+= "<a href='"+data[i]['content']+"' target='_blank'><img src='"+data[i]['content']+"'></a>";
+                    }else if(data[i]['type'] == 3) {
+                        // console.log(data[i]['goodsinfo']);
+                        if(data[i]['goodsinfo'] != null){
+                            html1+="<div class='imgcontent'><div class='cleft'><img src='"+data[i]['goodsinfo']['original_img']+"'></div>";
+                            html1+="<div class='cright'><div>"+data[i]['goodsinfo']['goods_name']+"</div>￥";
+                            html1+=data[i]['goodsinfo']['shop_price']+"</div>";
+                            html1+="</div>";
+                        }
+                    }
+
+
+                    html1+='</span></li>';
+                }
+
+
+
+
+                $("#chatbox").html(html1);
+                // var scrollHeight = $('.windows_body').prop("scrollHeight");
+                // $('.windows_body').scrollTop(scrollHeight,200);
+            }
+        });
+    }
+
+
+</script>
+</body>
+
+
+
+</html>

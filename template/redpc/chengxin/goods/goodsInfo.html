@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>商品详情</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/element.min.css?v={$tpshop_config['shop_info_vnum']}" rel="stylesheet">
+<link href="__STATIC__/css/style.css?v={$tpshop_config['shop_info_vnum']}" rel="stylesheet">
+<link href="__STATIC__/css/shaixuan.css?v={$tpshop_config['shop_info_vnum']}" rel="stylesheet">
+<script src="__STATIC__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="__STATIC__/js/pshow2.js?v={$tpshop_config['shop_info_vnum']}"></script><!--放大镜-->
+<script type="text/javascript" src="__STATIC__/js/jquery.spinner.js"></script>
+<script src="__PUBLIC__/js/layer/layer-min.js"></script>
+<script type="text/javascript" src="__STATIC__/js/jquery.jqzoom.js"></script>
+<script src="__PUBLIC__/js/global.js?v={$tpshop_config['shop_info_vnum']}"></script>
+<script src="__PUBLIC__/js/redpc_common.js?v={$tpshop_config['shop_info_vnum']}"></script>
+<link rel="stylesheet" href="__STATIC__/css/location.css?v={$tpshop_config['shop_info_vnum']}" type="text/css"><!-- 收货地址，物流运费 -->
+<script src="__PUBLIC__/js/baidu.js"></script>
+</head>
+
+<body style="background:#fff;">
+	<include file="public/top" />
+    <div class="search-box p">
+        <div class="w1224">
+            <div class="search-path fl">
+                <foreach name="navigate_goods" key="k" item="v">
+                    <a href="{:U('/Home/Goods/goodsList',array('id'=>$k))}">{$v}</a>
+                    <i class="litt-xyb"></i>
+                </foreach>
+                <div class="havedox">
+                    <span>{$goods.goods_name}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+	<!-- banner -->
+	<div class="fdcp">
+     	<div class="fdj">
+		    <div class="proviewbox">
+			    <div class="probigshow">
+				 <a class="a_probigshow" href="#" id="daimg" ref="{$goods.goods_id|goods_thum_images=400,400,'red'}">
+				 	<img src="{$goods.goods_id|goods_thum_images=400,400,'red'}" width="400" height="400" alt="" class="js_goods_image_url" id="daimgok" />
+				 </a>
+			    </div>
+			    <div class="div_prothumb">
+				<div class="thumbporbox">
+				        <ul class="ul_prothumb">
+				  	<foreach name="goods_images_list" item="v" key="k" >
+						<li><a href="{$v['image_url']|get_qiniu_imgsurl=400,400}" target="_blank"><img longdesc="{$v['image_url']|get_qiniu_imgsurl=400,400}" src="{$v['image_url']|get_qiniu_imgsurl=60,60}"/></a></li>
+					</foreach>
+				        </ul>
+			        </div>			 
+			    </div>
+			    <if condition="$iscollect eq 1">
+			    <a href="javascript:;" class="sc hover">已收藏宝贝</a><!-- <span>(1200人气)</span> -->
+			    <else />
+			    <a href="javascript:;" id="collectLink" class="sc">收藏宝贝</a><!-- <span>(1200人气)</span> -->
+			    </if>
+		    </div>
+
+			<form id="buy_goods_form" name="buy_goods_form" method="post" action="">
+			   	<input type="hidden" name="goods_id" value="{$goods.goods_id}">                    <!-- 商品id -->
+			   	<!-- <input type="hidden" name="item_id" value="{$goods.item_id}">                      规格id -->
+			   	<input type="hidden" name="suppliers_id" value="{$goods.suppliers_id}">            <!-- 供货商id -->
+	            <input type="hidden" name="goods_prom_type" value="{$goods.prom_type}"/>           <!-- 活动类型 -->
+	            <input type="hidden" name="shop_price" value="{$goods.shop_price}"/>               <!-- 活动价格 -->
+	            <input type="hidden" name="midou_index" value="{$goods.midou_index}"/>             <!-- 显示米豆 -->
+	            <input type="hidden" name="midou" value="{$goods.midou}"/>                         <!-- 米豆 -->
+	            <input type="hidden" name="midou_money" value="{$goods.midou_money}"/>             <!-- 现金部分 -->
+	            <input type="hidden" name="store_count" value="{$goods.store_count}"/>             <!-- 活动库存 -->
+	            <input type="hidden" name="market_price" value="{$goods.market_price}"/>           <!-- 商品原价 -->
+	            <input type="hidden" name="start_time" value="{$goods.start_time}"/>               <!-- 活动开始时间 -->
+	            <input type="hidden" name="end_time" value="{$goods.end_time}"/>                   <!-- 活动结束时间 -->
+	            <input type="hidden" name="activity_title" value="{$goods.activity_title}"/>       <!-- 活动标题 -->
+	            <input type="hidden" name="prom_detail" value="{$goods.prom_detail}"/>             <!-- 促销活动的促销类型 -->
+	            <input type="hidden" name="activity_is_on" value=""/>                              <!-- 活动是否正在进行中 -->
+	            <input type="hidden" name="item_id" value="{$Request.param.item_id}"/>             <!-- 商品规格id -->
+	            <input type="hidden" name="exchange_integral" value="{$goods.exchange_integral}"/> <!-- 积分 -->
+	            <input type="hidden" name="point_rate" value="{$point_rate}"/>                     <!-- 积分兑换比 -->
+	            <input type="hidden" name="is_virtual" value="{$goods.is_virtual}"/>               <!-- 是否是虚拟商品 -->
+                <input type="hidden" name="purchase" value="{$goods.purchase|default=0}"/>               <!-- 商品限购数量 -->
+                
+			   	<div class="right">
+				   <div class="div_prothumb">
+						<div class="thumbporbox ys">
+							<div class="name">
+								{$goods.goods_name}
+							</div>
+							<div class="des">
+								{$goods.goods_remark}
+							</div>
+							<div class="presale-time clearfix" style="display: none">
+			                    <div class="pre-icon fl">
+			                        <span class="ys"><i class="detai-ico"></i><span id="activity_type">抢购活动</span></span>
+			                    </div>
+			                    <div class="pre-icon fr">
+			                        <span class="per" style="display: none"><i class="detai-ico"></i><em id="order_user_num">0</em>人预定</span>
+			                        <span class="ti" id="activity_time"><i class="detai-ico"></i>剩余时间：<span id="overTime"></span></span>
+			                        <span class="ti" id="prom_detail"></span>
+			                    </div>
+			                </div>
+							<div class="jiage">
+								<div class="left">
+									<!-- <div class="t">
+										<div class="l">原价</div>
+										<div class="r" id="market_price">￥{$goods.market_price}  </div>
+									</div> -->
+									<div class="b" style="margin-top:0;">
+										<div class="l">单价</div>
+										<div class="r" id="midou_index">{$goods.midou_index} 米豆 </div>
+									</div>
+									<div class="t">
+										<div class="l">市场价</div>
+										<div class="r" id="market_price">￥{$goods.market_price}</div>
+									</div>
+									<!-- <div class="b">
+										<div class="l">米豆</div>
+										<div class="r" id="goods_midou">{$goods.midou}  </div>
+									</div>
+									<div class="b">
+										<div class="l">现金</div>
+										<div class="r" id="goods_midou_money">￥{$goods.midou_money}  </div>
+									</div> -->
+								</div>
+								<div class="right">
+									<div class="l">
+										<div class="t">{$goods['comment_count']}</div>
+										<div class="b">累计评论</div>
+									</div>
+									<div class="r">
+										<div class="t">{$goods['sales_sum']}</div>
+										<div class="b">交易成功</div>
+									</div>
+								</div>
+							</div>
+							<div class="dianpu" id="activity_title_div" style="display: none">
+	                            <div class="l jaj"><span id="activity_label"></span></div>
+	                            <div class="r"><span id="activity_title" style="color: #df3033;background: 0 0;border: 1px solid #df3033;padding: 2px 3px;"></span></div>
+	                        </div>
+							
+			                <if condition="$goods[is_virtual] eq 0">
+			                    <div class="ps">
+			                        <!-- 收货地址，物流运费 -start-->
+			                        <ul class="list1 clearfix">
+			                            <li class="jaj"><span>配送</span></li>
+			                            <li class="summary-stock though-line">
+			                                <div class="dd shd_address">
+			                                    <!--<div class="addrID"><div></div><b></b></div>-->
+			                                    <div class="store-selector add_cj_p">
+			                                        <div class="text" style="width: 150px;"><div></div><b></b></div>
+			                                        <div onclick="$(this).parent().removeClass('hover')" class="close"></div>
+			                                    </div>
+			                                    <span id="dispatching_msg" <if condition="$dispatching[status] neq 1">style="display: none;"</if>>可发货</span>
+			                                    <select id="dispatching_select" <empty name="$dispatching[result]">style="display: none;"</empty>>
+			                                    <volist name="$dispatching[result]" id="patching">
+			                                        <option>{$patching.shipping_name} ￥{$patching.freight}</option>
+			                                    </volist>
+			                                    </select>
+			                                </div>
+			                            </li>
+			                        </ul>
+			                        <script src="__STATIC__/js/location.js"></script>
+			                        <!-- 收货地址，物流运费 -end-->
+			                    </div>
+			                </if>
+							<foreach name="filter_spec" item="v" key="k">
+								<div class="size spec_goods_price_div clearfix">
+									<div class="l">{$k}</div>
+									<div class="r">
+										<ul>
+											<foreach name="v" item="v2" key="k2" >
+												<input type="radio" hidden id="goods_spec_{$v2[item_id]}" name="goods_spec[{$k}]" value="{$v2[item_id]}"/>
+												<if condition="$v2[src] neq ''">
+			                                        <a id="goods_spec_a_{$v2[item_id]}" onclick="switch_zooming('{$v2[src]}');select_filter(this); $('#daimgok').attr('src','{$v2[src]}')">
+			                                            <img src="{$v2[src]}" style="width: 40px;height: 40px;"/>
+			                                            <span class="dis_alintro">{$v2[item]}</span>
+			                                        </a>
+			                                    <else/>
+			                                        <a id="goods_spec_a_{$v2[item_id]}" onclick="switch_zooming('{$v2[src]}'); select_filter(this);">{$v2[item]}</a>
+			                                    </if>
+											</foreach>
+										</ul>
+									</div>
+								</div>
+							</foreach>
+
+						 	<div class="center">
+								<div class="l">数量</div>
+						        <div class="minus-plus">
+	                                <a class="mins" href="javascript:void(0);" onclick="altergoodsnum(-1)">-</a>
+	                                <input class="buyNum" id="number" type="text" name="goods_num" value="<if condition="$goods['store_count'] eq 0">0<else />1</if>" onblur="altergoodsnum(0)" max=""/>
+	                                <a class="add" href="javascript:void(0);" onclick="altergoodsnum(1)">+</a>
+	                            </div>
+	                            <div class="kc" id="store_count">(库存{$goods['store_count']}件)</div>
+						    </div>
+						    <!-- 操作 -->
+						    <div class="anniu">
+						    	<if condition="$goods['is_check'] eq 1">
+									<a id="join_cart" href="javascript:;" onclick="buy_now();" class="btn-1">立即购买</a>
+									<a id="join_cart_now" href="javascript:;" onclick="AjaxAddCart({$goods.goods_id},1);" class="btn-2">
+										<div class="tu"><img src="__STATIC__/images/car-3.png"></div>
+										<span>加入购物车</span>
+									</a>
+								</if>
+								<a href="<if condition="$is_default_chat eq 1">{:url('/customer_service/Chat/randkf',array('chat_group_id'=>$chat_group_id))}<else/>JavaScript:window.show_message();</if>" class="btn-3">
+									<div class="tu"><img src="__STATIC__/images/car-4.png"></div>
+									<span><if condition="$is_default_chat eq 1">咨询客服<else/>在线留言</if></span>
+								</a>
+
+						    </div>
+					   </div>
+					   		 
+					 </div>
+				</div>
+			</form>
+    	</div>
+  	</div>
+
+	<div class="xq-nr">
+		<div class="rec">
+			<div class="bt"><span>商品推荐</span></div>
+			<div class="sp">
+				<ul>
+					<tpshop sql="select goods_id,goods_name,shop_price,market_price from __PREFIX__goods_red where is_recommend=1 and is_on_sale = 1 and is_check = 1 order by goods_id desc limit 10" item="vo" key="k">
+					<php>
+						// 米豆换算
+				        $midouInfo = getMidou($vo[goods_id]);
+				        $vo['midou']       = $midouInfo['midou'];
+				        $vo['midou_money'] = $midouInfo['midou_money'];
+				        $vo['midou_index'] = $midouInfo['midou_index'];
+					</php>
+					<li>
+						<div class="tu"><a href="{:U('Homered/Goods/goodsInfo',array('id'=>$vo[goods_id]))}"><img src="{$vo.goods_id|goods_thum_images=230,230,'red'}"></a></div>
+						<a href="{:U('Homered/Goods/goodsInfo',array('id'=>$vo[goods_id]))}" class="mc">{$vo.goods_name|getSubstr=0,30}</a>
+						<div class="price"><span>{$vo.midou_index}</span>米豆  <span style="text-decoration:line-through;color:#999;margin-left:5px;">￥{$vo.market_price}</span></div>
+						<!-- <div class="price"><span>{$vo.midou}</span>米豆 + ￥<span>{$vo.midou_money}</span></div> -->
+					</li>
+					</tpshop>
+				</ul>
+			</div>
+	  	</div>
+
+		<div id="myVue" class="xq-select">
+			<el-tabs type="border-card">
+				<el-tab-pane label="宝贝详情">
+					<div class="xx">
+						<ul>
+							<li>货号：{$goods.goods_sn}</li>
+                            <foreach name="goods_attr_list" item="v" key="k" >
+                                <li>{$goods_attribute[$v[attr_id]]}：{$v[attr_value]}</li>
+                            </foreach>
+						</ul>
+					</div>
+					<div class="pic">
+						{$goods.goods_content|htmlspecialchars_decode}
+					</div>
+				</el-tab-pane>
+				<el-tab-pane label="累计评论">
+					<div class="shop-describe p">
+	                    <div class="comm_stsh ma-to-20">
+	                        <div class="deta-descri">
+	                            <h2>商品评价</h2>
+	                        </div>
+	                    </div>
+	                    <div class="deta-descri p">
+	                        <ul class="tebj">
+	                            <li class="percen"><span>{$commentStatistics['rate1']}%</span></li>
+	                            <li class="co-cen">
+	                                <div class="comm_gooba">
+	                                    <div class="gg_c">
+	                                        <span class="hps">好评</span>
+	                                        <span class="hp">（{$commentStatistics['rate1']}%）</span>
+	                                        <span class="zz_rg"><i style="width: {$commentStatistics['rate1']}%;"></i></span>
+	                                    </div>
+	                                    <div class="gg_c">
+	                                        <span class="hps">中评</span>
+	                                        <span class="hp">（{$commentStatistics['rate2']}%）</span>
+	                                        <span class="zz_rg"><i style="width: {$commentStatistics['rate2']}%;"></i></span>
+	                                    </div>
+	                                    <div class="gg_c">
+	                                        <span class="hps">差评</span>
+	                                        <span class="hp">（{$commentStatistics['rate3']}%）</span>
+	                                        <span class="zz_rg"><i style="width: {$commentStatistics['rate3']}%;"></i></span>
+	                                    </div>
+	                                </div>
+	                            </li>
+	                            <li class="tjd-sum">
+	                                <!--<p class="tjd">推荐点：</p>-->
+	                                <div class="tjd-a">
+	                                    买家评论事项：购买后有什么问题, 满意, 或者不不满, 都可以在这里评论出来, 这里评论全部源于真实的评论.
+	                                </div>
+	                            </li>
+	                            <li class="te-cen">
+	                                <div class="nchx_com">
+	                                    <p>您可以对已购的商品进行评价</p>
+	                                    <a class="jfnuv" href="{:U('Homered/Order/comment')}">发表评论</a>
+	                                    <!--<p class="xja"><span>详见</span><a class="de_cb" href="">积分规则</a></p>-->
+	                                </div>
+	                            </li>
+	                        </ul>
+	                    </div>
+	                    <div class="deta-descri p">
+	                        <div class="cte-deta">
+	                            <ul id="fy-comment-list">
+	                                <li data-t="1" class="red">
+	                                    <a href="javascript:void(0);" class="selected">全部评论（{$commentStatistics['c0']}）</a>
+	                                </li>
+	                                <li data-t="2">
+	                                    <a href="javascript:void(0);">好评（{$commentStatistics['c1']}）</a>
+	                                </li>
+	                                <li data-t="3">
+	                                    <a href="javascript:void(0);">中评（{$commentStatistics['c2']}）</a>
+	                                </li>
+	                                <li data-t="4">
+	                                    <a href="javascript:void(0);">差评（{$commentStatistics['c3']}）</a>
+	                                </li>
+	                                <li data-t="5">
+	                                    <a href="javascript:void(0);">有图（{$commentStatistics['c4']}）</a>
+	                                </li>
+	                            </ul>
+	                        </div>
+	                    </div>
+	                    <div class="line-co-sunall"  id="ajax_comment_return">
+	                    </div>
+	                </div>
+				</el-tab-pane>
+			</el-tabs>
+		</div>
+	</div>
+	
+	<script type="text/javascript" src="__STATIC__/js/vue.min.js"></script>
+	<script src="__STATIC__/js/element.min.js"></script>
+	<script type="text/javascript">
+		new Vue({
+			el: '#myVue',
+			data() {
+				return {
+					activeName: 'second',
+					activeName2: 'first',
+					tabPosition: 'top',
+					editableTabsValue2: '2',
+					editableTabs2: [{
+						title: 'Tab 1',
+						name: '1',
+						content: 'Tab 1 content'
+					}, {
+						title: 'Tab 2',
+						name: '2',
+						content: 'Tab 2 content'
+					}],
+					tabIndex: 2
+				}
+			},
+			methods: {
+				handleClick(tab, event) {
+					console.log(tab, event);
+				},
+				addTab(targetName) {
+					let newTabName = ++this.tabIndex + '';
+					this.editableTabs2.push({
+						title: 'New Tab',
+						name: newTabName,
+						content: 'New Tab content'
+					});
+					this.editableTabsValue2 = newTabName;
+				},
+				removeTab(targetName) {
+					let tabs = this.editableTabs2;
+					let activeName = this.editableTabsValue2;
+					if(activeName === targetName) {
+						tabs.forEach((tab, index) => {
+							if(tab.name === targetName) {
+								let nextTab = tabs[index + 1] || tabs[index - 1];
+								if(nextTab) {
+									activeName = nextTab.name;
+								}
+							}
+						});
+					}
+
+					this.editableTabsValue2 = activeName;
+					this.editableTabs2 = tabs.filter(tab => tab.name !== targetName);
+				}
+			}
+		})
+
+	</script>
+	<include file="public/footer" />
+
+<script src="__STATIC__/js/lazyload.min.js?v={$tpshop_config['shop_info_vnum']}" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="__STATIC__/js/headerfooter.js?v={$tpshop_config['shop_info_vnum']}" ></script>
+<script type="text/javascript">
+    var commentType = 1;// 默认评论类型
+    var spec_goods_price = {$spec_goods_price|default='null'};//规格库存价格
+    $(document).ready(function () {
+        initBuy();
+        initSpec();
+        initGoodsPrice();
+    });
+    /**
+     * 购买初始化
+     */
+    function initBuy(){
+        var is_virtual = $("input[name='is_virtual']").val();
+        var buy_url;
+        if(is_virtual == 1){
+            buy_url = "{:U('Homered/Virtual/buy_virtual')}";
+        }else{
+            buy_url = "{:U('Homered/Cart/cart2',['action'=>'buy_now'])}";
+        }
+        $('#buy_goods_form').attr('action',buy_url);
+    }
+
+    //有规格id的时候，解析规格id选中规格
+    function initSpec(){
+        var item_id = $("input[name='item_id']").val();
+        $.each(spec_goods_price,function(i, o){
+            if(o.item_id == item_id){
+                var spec_key_arr = o.key.split("_");
+                $.each(spec_key_arr,function(index,item){
+                    var spec_radio = $("#goods_spec_"+item);
+                    var goods_spec_a = $("#goods_spec_a_"+item);
+                    spec_radio.attr("checked","checked");
+                    goods_spec_a.addClass('red');
+                })
+            }
+        })
+        if(item_id > 0 && !$.isEmptyObject(spec_goods_price)){
+            var item_arr = [];
+            $.each(spec_goods_price,function(i, o){
+                item_arr.push(o.item_id);
+            })
+            //规格id不存在商品里
+            if($.inArray(parseInt(item_id), item_arr) < 0){
+                initFirstSpec();
+            }else{
+                $.each(spec_goods_price,function(i, o){
+                    if(o.item_id == item_id){
+                        var spec_key_arr = o.key.split("_");
+                        $.each(spec_key_arr,function(index,item){
+                            var spec_radio = $("#goods_spec_"+item);
+                            var goods_spec_a = $("#goods_spec_a_"+item);
+                            spec_radio.attr("checked","checked");
+                            goods_spec_a.addClass('red');
+                        })
+                    }
+                })
+            }
+        }else{
+            initFirstSpec();
+        }
+    }
+
+    //默认让每种规格第一个选中
+    function initFirstSpec(){
+        $('.spec_goods_price_div').each(function (i, o) {
+            var firstSpecRadio = $(this).find("input[type='radio']").eq(0);
+            firstSpecRadio.attr('checked','checked').prop('checked','checked');
+            firstSpecRadio.parent().find('a').eq(0).addClass('red');
+        })
+    }
+
+    /**
+     * 切换规格
+     */
+    function select_filter(obj)
+    {
+        $(obj).addClass('red').siblings('a').removeClass('red');
+        $(obj).siblings('input').removeAttr('checked');
+        $(obj).prev('input').attr('checked','checked').prop('checked','checked');
+        // 更新商品价格
+        initGoodsPrice();
+    }
+
+    //缩略图切换
+    $('.small-pic-li').each(function (i, o) {
+        var lilength = $('.small-pic-li').length;
+        $(o).hover(function () {
+            $(o).siblings().removeClass('active');
+            $(o).addClass('active');
+            $('#daimgok').attr('src', $(o).find('img').attr('data-img'));
+            $('#daimgok').attr('jqimg', $(o).find('img').attr('data-big'));
+
+            $('.next-btn').removeClass('disabled');
+            if (i == 0) {
+                $('.next-left').addClass('disabled');
+            }
+            if (i + 1 == lilength) {
+                $('.next-right').addClass('disabled');
+            }
+        });
+    })
+
+    //前一张缩略图
+    $('.next-left').click(function () {
+        var newselect = $('.small-pic>.active').prev();
+        $('.small-pic>.active').removeClass('active');
+        $(newselect).addClass('active');
+        $('#daimgok').attr('src', $(newselect).find('img').attr('data-img'));
+        $('#daimgok').attr('jqimg', $(newselect).find('img').attr('data-big'));
+        var index = $('.small-pic>li').index(newselect);
+        if (index == 0) {
+            $('.next-left').addClass('disabled');
+        }
+        $('.next-right').removeClass('disabled');
+    })
+
+    //后前一张缩略图
+    $('.next-right').click(function () {
+        var newselect = $('.small-pic>.active').next();
+        $('.small-pic>.active').removeClass('active');
+        $(newselect).addClass('active');
+        $('#daimgok').attr('src', $(newselect).find('img').attr('data-img'));
+        $('#daimgok').attr('jqimg', $(newselect).find('img').attr('data-big'));
+        var index = $('.small-pic>li').index(newselect);
+        if (index + 1 == $('.small-pic>li').length) {
+            $('.next-right').addClass('disabled');
+        }
+        $('.next-left').removeClass('disabled');
+    })
+    $(function(){
+        $("#area").click(function (e) {
+            SelCity(this,e);
+        });
+    })
+
+    $(function() {
+        ajaxComment(1,1);
+        // 好评差评 切换
+        $('.cte-deta ul li').click(function(){
+            $(this).addClass('red').siblings().removeClass('red');
+            commentType = $(this).data('t');// 评价类型   好评 中评  差评
+            ajaxComment(commentType,1);
+        })
+    });
+    $(function(){
+        $('.datail-nav-top ul li').click(function(){
+            $(this).addClass('red').siblings().removeClass('red');
+            var er = $('.datail-nav-top ul li').index(this);
+            $('.shop-con-describe').eq(er).show().siblings('.shop-con-describe').hide();
+        })
+    })
+
+    /**
+     * 加减数量
+     * n 点击一次要改变多少
+     * maxnum 允许的最大数量(库存)
+     * number ，input的id
+     */
+    function altergoodsnum(n){
+		var purchase = parseInt($("input[name='purchase'").val());		//限购数量
+        var num = parseInt($('#number').val());
+        var maxnum = parseInt($('#number').attr('max'));
+        if(maxnum > 200){
+            maxnum = 200;
+        }
+        num += n;
+        num <= 0 ? num = 1 :  num;
+        if(num >= maxnum){
+            $(this).addClass('no-mins');
+            num = maxnum;
+        }
+        //$('#store_count').text(maxnum-num); //更新库存数量
+		
+		if(purchase != 0 &&  num >= purchase ){
+			num =	purchase;
+		}
+        $('#number').val(num);
+        initGoodsPrice();
+    }
+
+    //初始化商品价格库存
+    function initGoodsPrice() {
+        var goods_id = $('input[name="goods_id"]').val();
+        var goods_num = parseInt($('#number').val());
+        if (!$.isEmptyObject(spec_goods_price)) {
+            var goods_spec_arr = [];
+            $("input[name^='goods_spec']").each(function () {
+                if($(this).attr('checked') == 'checked'){
+                    goods_spec_arr.push($(this).val());
+                }
+            });
+            var spec_key = goods_spec_arr.sort(sortNumber).join('_');  //排序后组合成 key
+            var item_id  = spec_goods_price[spec_key]['item_id'];
+            $('input[name=item_id]').val(item_id);
+        }
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            data: {goods_id: goods_id, item_id: item_id, goods_num : goods_num},
+            url: "{:U('Homered/Goods/activity')}",
+            success: function (data) {
+                if (data.status == 1) {
+                	//console.log(data);  
+                	$('input[name="item_id"]').attr('value', item_id);//商品规格
+                    $('input[name="goods_prom_type"]').attr('value', data.result.goods.prom_type);  //商品活动类型
+                    $('input[name="shop_price"]').attr('value', data.result.goods.shop_price);      //商品价格
+                    $('input[name="midou_index"]').attr('value', data.result.goods.midou_index);    //显示米豆
+                    $('input[name="midou"]').attr('value', data.result.goods.midou);                //米豆
+                    $('input[name="midou_money"]').attr('value', data.result.goods.midou_money);    //现金部分
+                    $('input[name="store_count"]').attr('value', data.result.goods.store_count);    //商品库存
+                    $('input[name="market_price"]').attr('value', data.result.goods.market_price);  //商品原价
+                    $('input[name="start_time"]').attr('value', data.result.goods.start_time);      //活动开始时间
+                    $('input[name="end_time"]').attr('value', data.result.goods.end_time);          //活动结束时间
+                    $('input[name="activity_title"]').attr('value', data.result.goods.activity_title); //活动标题
+                    $('input[name="prom_detail"]').attr('value', data.result.goods.prom_detail);       //促销详情
+                    $('input[name="activity_is_on"]').attr('value', data.result.goods.activity_is_on); //活动是否正在进行中
+                    goods_activity_theme();
+                }
+            }
+        });
+    }
+
+    //商品价格库存显示
+    function goods_activity_theme(){
+        var goods_prom_type = $('input[name="goods_prom_type"]').attr('value');
+        var activity_is_on = $('input[name="activity_is_on"]').attr('value');
+        if(activity_is_on == 0){
+            setNormalGoodsPrice();
+        }else{
+            if(goods_prom_type == 0){
+                //普通商品
+                setNormalGoodsPrice();
+            }else if(goods_prom_type == 1){
+                //抢购
+                setFlashSaleGoodsPrice();
+            }else if(goods_prom_type == 2){
+                //团购
+                setGroupByGoodsPrice();
+            }else if(goods_prom_type == 3){
+                //优惠促销
+                setPromGoodsPrice();
+            }else{
+
+            }
+        }
+        var buy_num  = parseInt($('#number').val());//购买数
+        var store = parseInt($('input[name="store_count"]').val());//实际库存数量
+        if(store<= 0){
+            joinCart(false);
+        }else{
+            joinCart(true);
+        }
+        if(buy_num > store){
+            $('.buyNum').val(store);
+        }
+    }
+
+    //普通商品库存和价格
+    function setNormalGoodsPrice(){
+        var goods_price,store_count;                                                // 商品价,商品库存
+        var midou             = $("input[name='midou']").attr('value');             // 商品市场价
+        var midou_money       = $("input[name='midou_money']").attr('value');       // 商品市场价
+        var market_price      = $("input[name='market_price']").attr('value');      // 商品市场价
+        var exchange_integral = $("input[name='exchange_integral']").attr('value'); // 兑换积分
+        var point_rate        = $("input[name='point_rate']").attr('value');        // 积分金额比
+        // 如果有属性选择项
+        if(!$.isEmptyObject(spec_goods_price))
+        {
+            var goods_spec_arr = [];
+            $("input[name^='goods_spec']").each(function () {
+                if($(this).attr('checked') == 'checked'){
+                    goods_spec_arr.push($(this).val());
+                }
+            });
+            var spec_key = goods_spec_arr.sort(sortNumber).join('_');  // 排序后组合成 key
+            goods_price = spec_goods_price[spec_key]['price'];         // 找到对应规格的价格
+            store_count = spec_goods_price[spec_key]['store_count'];   // 找到对应规格的库存
+            midou_index = spec_goods_price[spec_key]['midou_index'];   // 找到对应规格的米豆
+            $("input[name='shop_price']").attr('value',goods_price);
+            $("input[name='store_count']").attr('value',store_count);
+            $("input[name='midou_index']").attr('value',midou_index);
+        }
+        goods_price = $("input[name='shop_price']").attr('value');  // 商品本店价
+        midou_index = $("input[name='midou_index']").attr('value'); // 商品本店价
+        store_count = $("input[name='store_count']").attr('value'); // 商品库存
+
+        $('#market_price_title').empty().html('市场价');
+        $('#market_price').empty().html('￥'+market_price);
+        // $("#goods_price").html("￥"+goods_price);       //变动价格显示
+        $("#midou_index").html(midou_index+" 米豆");       //变动价格显示
+        // $("#goods_midou").html(midou);                  //变动价格显示
+        // $("#goods_midou_money").html("￥"+midou_money); //变动价格显示
+        var integral = round(goods_price - (exchange_integral / point_rate),2);
+        $("#integral").html(integral + '+' +exchange_integral + '积分'); //积分显示
+        //$('#spec_store_count').html(store_count);
+        $('.presale-time').hide();
+        $('#number').attr('max',store_count);
+
+        $('#store_count').html('(库存'+store_count+'件)');
+
+        var num = parseInt($('#number').val());
+        var maxnum = parseInt($('#number').attr('max'));
+        // $('#store_count').text('(库存'+(maxnum-num)+'件)'); //更新库存数量
+    }
+
+
+    //促销商品库存和价格
+    function setPromGoodsPrice(){
+        var prom_goods_price = $("input[name='shop_price']").attr('value');
+        var prom_goods_count = $("input[name='store_count']").attr('value');
+        var market_price = $("input[name='market_price']").attr('value');
+        var start_time = $("input[name='start_time']").attr('value');
+        var end_time = $("input[name='end_time']").attr('value');
+        var activity_title = $("input[name='activity_title']").attr('value');
+        var prom_detail = $("input[name='prom_detail']").attr('value');
+        $("#goods_price").empty().html("￥"+prom_goods_price); //变动价格显示
+        $('#spec_store_count').empty().html(prom_goods_count);
+        $('#activity_type').empty().html('促销');
+        $('.presale-time').show();
+        $('#prom_detail').empty().html(prom_detail).show();
+        $('#activity_time').hide();
+        $('#goods_price_title').empty().html('促销价');
+        $('#market_price_title').empty().html('原价');
+        $('#activity_label').empty().html('促销');
+        $('#activity_title').empty().html(activity_title);
+        $('#activity_title_div').show();
+        $('#market_price').empty().html(market_price);
+        $('#number').attr('max',prom_goods_count);
+
+        $('#store_count').empty().html('(库存'+prom_goods_count+'件)');
+
+        var num = parseInt($('#number').val());
+        var maxnum = parseInt($('#number').attr('max'));
+        $('#store_count').text('(库存'+(maxnum-num)+'件)'); //更新库存数量
+    }
+
+    // 倒计时
+    function activityTime() {
+        var end_time = parseInt($("input[name='end_time']").attr('value'));
+        var timestamp = Date.parse(new Date());
+        var now = timestamp/1000;
+        var end_time_date = formatDate(end_time*1000);
+        var text = GetRTime(end_time_date);
+        //活动时间到了就刷新页面重新载入
+        if(now > end_time){
+            layer.msg('该商品活动已结束',function(){
+                location.reload();
+            });
+        }
+        $("#overTime").text(text);
+    }
+    //时间戳转换
+    function add0(m){return m<10?'0'+m:m }
+    function  formatDate(now)   {
+        var time = new Date(now);
+        var y = time.getFullYear();
+        var m = time.getMonth()+1;
+        var d = time.getDate();
+        var h = time.getHours();
+        var mm = time.getMinutes();
+        var s = time.getSeconds();
+        return y+'/'+add0(m)+'/'+add0(d)+' '+add0(h)+':'+add0(mm)+':'+add0(s);
+    }
+
+    /***用作 sort 排序用*/
+    function sortNumber(a,b)
+    {
+        return a - b;
+    }
+    /**
+     * 立即购买
+     */
+    function buy_now(){
+        if(login_user_id == 0){
+            pop_login();
+            return false;
+        }
+        var store_count = $("input[name='store_count']").attr('value');// 商品原始库存
+        var buyNum      = parseInt($("input[name='goods_num']").val());
+        var goods_id    = parseInt($("input[name='goods_id']").val());
+        var item_id     = $("input[name='item_id']").val();
+        if (buyNum <= store_count) {
+            $('#buy_goods_form').submit();
+        } else {
+            layer.msg('购买数量超过此商品购买上限', {icon: 3});
+        }
+    }
+    /***收藏商品**/
+    $('#collectLink').click(function(){
+        if($('#login_user_id').val() == ''){
+            layer.msg('请先登录！', {icon: 1});
+        }else{
+            $.ajax({
+                type:'post',
+                dataType:'json',
+                data:{goods_id:$('input[name="goods_id"]').val()},
+                url:"{:U('Homered/Goods/collect_goods')}",
+                success:function(res){
+                    if(res.status == 1){
+                    	$('.proviewbox a.sc').addClass('hover');
+                    	$('.proviewbox a.sc').html('已收藏宝贝');
+                        layer.msg('成功添加至收藏夹', {icon: 1});
+                    }else{
+                        layer.msg(res.msg, {icon: 3});
+                    }
+                }
+            });
+        }
+    });
+    function virtual_buy() {
+        var store_count = $("input[name='store_count']").attr('value');// 商品原始库存
+        var buynum = parseInt($('.buyNum').val());
+        var virtual_limit = parseInt($('#virtual_limit').val());
+        if ((buynum <= store_count && buynum <= virtual_limit) || (buynum < store_count && virtual_limit == 0)) {
+            $('#buy_goods_form').submit();
+        } else {
+            layer.msg('购买数量超过此商品购买上限', {icon: 3});
+        }
+    }
+    /***用ajax分页显示评论**/
+    function ajaxComment(commentType,page){
+        $.ajax({
+            type : "GET",
+            url:"/index.php?m=Homered&c=goods&a=ajaxComment&goods_id={$goods['goods_id']}&commentType="+commentType+"&p="+page,//+tab,
+            success: function(data){
+                $("#ajax_comment_return").html('').append(data);
+            }
+        });
+    }
+    /**
+     * 切换图片
+     */
+    function switch_zooming(img)
+    {
+        if(img != ''){
+            $('#daimgok').attr('jqimg', img).attr('src', img);
+        }
+    }
+
+</script>
+<!--商品咨询JS-->
+<script>
+    // 普通 图形验证码
+    function verify(){
+        $('#verify_code').attr('src','/index.php?m=Homered&c=User&a=verify&type=consult&r='+Math.random());
+    }
+    var consult=$('#consult-h');
+    consult.find('.consult-item').eq(0).addClass('consult-ac');
+    consult.find('.consult-menus>a').click(function () {
+        $(this).addClass('consult-ac').siblings().removeClass('consult-ac');
+        consult.find('.consult-item').eq($(this).index())
+                .addClass('consult-ac').siblings().removeClass('consult-ac');
+        $('.check-consult-tpye').find('a').eq($(this).index())
+    });
+    $(document).ready(function () {
+        verify();
+    });
+    $(document).on('click','.pagination  a',function(){
+        var page = $(this).data('p');
+        var type = $('#type').val();
+        getconsult(type,page)
+    });
+    /**
+     * 获取商品咨询
+     * @param type  //咨询类型
+     * @param page  //分页
+     */
+    function getconsult(type,page){
+        var goods_id = {$goods.goods_id};
+        var url = "/index.php?m=Homered&c=Goods&a=ajax_consult";
+        $.ajax({
+            type : "Post",
+            url  : url,
+            data : {goods_id:goods_id,consult_type:type,p:page},
+            dataType: "html",
+            success: function(data){
+                $('#consult_content').html('');
+                $('#consult_content').append(data);
+            }
+        });
+    }
+</script>
+</body>
+</html>

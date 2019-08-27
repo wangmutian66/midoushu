@@ -1,0 +1,73 @@
+<include file="public/header" />
+<style>
+	.e-zil ul li .nei2 .password {
+		width: 80%;
+	}
+	.e-zil ul li .nei2 .password, .e-zil .c_code_msg2 {
+		height: 1.1rem;
+		line-height: 1.1rem;
+		margin-top: .75rem;
+		font-size: 0.55rem;
+		border: 0;
+	}
+</style>
+<div class="e-top">
+	<div class="content">
+		<div class="e-jian">
+			<a href="javascript:history.back(-1)"><img src="__PUBLIC__/staff/img/return.png"></a>
+		</div>
+		<div class="e-wen">
+			修改密码
+		</div>
+	</div>
+</div>
+<form action="" method="post" onsubmit="return reseta();">
+<div class="e-zil">
+	<ul>
+		<li>
+			<div class="bt fl">新密码</div>
+			<div class="nei2 fl">
+				<input type="password" class="password"  name="password"/>
+			</div>
+		</li>
+		<li>
+			<div class="bt fl">确认密码</div>
+			<div class="nei2 fl">
+				<input type="password" class="password"   name="password1"/>
+			</div>
+		</li>
+	</ul>
+</div>  
+<input type="submit" class="e-sub" value="确认" />
+
+</form>
+<script type="text/javascript">
+	function reseta(){
+
+	    var password = $('input[name=password]').val();
+        var password1 = $('input[name=password1]').val();
+        if(password == ""){
+            showErrorMsg('请输入新密码');
+            return false;
+		}
+
+        if(password1 == ""){
+            showErrorMsg('请输入确认新密码');
+            return false;
+        }
+
+        if(password != password1){
+            showErrorMsg('两次输入的密码不一致');
+            return false;
+		}
+
+
+
+
+
+	}
+</script>
+
+                    
+</body>
+</html>

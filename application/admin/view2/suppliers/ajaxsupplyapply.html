@@ -1,0 +1,74 @@
+<table>
+       <tbody>
+            <volist name="supplierList" id="list">
+              <tr data-id="{$list[cid]}">
+                <td class="sign" axis="col6">
+                  <div style="width: 24px;"><i class="ico-check"></i></div>
+                </td>
+                <td align="center" axis="col0">
+                  <div style="width: 50px;">{$list.cid}</div>
+                </td>                
+                <td align="center" axis="col0">
+                  <div style="text-align: left; width: 300px;" id="title_{$list.cid}"  title="{$list.cname}">{$list.cname}</div>
+                </td>
+                <td align="center" axis="col0">
+                  <div style="text-align: center; width: 150px;">{$list.contact}</div>
+                </td>
+                <td align="center" axis="col0">
+                  <div style="text-align: center; width: 100px;">{$list.cid}</div>
+                </td>
+                <td align="center" axis="col0">
+                  <div style="text-align: center; width: 120px;">
+                    <if condition='$list[sexamine] eq 2'>
+                      <span class="yes" ><i class="fa fa-check-circle"></i>通过</span>
+                    </if>
+                    <if condition='$list[sexamine] eq 3'>
+                          <span class="no" ><i class="fa fa-ban"></i>未通过</span>
+                    </if>
+                    <if condition='$list[sexamine] eq 1'>
+                          <span class="no" style="color:#dce64e;"><i class="fa "></i> 请审核</span>
+                    </if>
+                    |
+                    <a href="javascript:;" onclick="is_check({$list.cid});" class="btn blue"><i class="fa fa-search"></i>审核</a>
+                  </div>
+                </td>
+                <td align="" class="" style="width: 100%;">
+                  <div>&nbsp;</div>
+                </td>
+              </tr>
+            </volist>             
+          </tbody>
+          <empty name="supplierList">
+            <div style="margin: 0 auto;text-align: center;margin-top: 14%;font-size: 18px;margin-right: 12%;">  暂无审核数据  </div>
+          </empty>
+        </table>
+        <!--分页位置--> {$page}
+  <script>
+          // 点击分页触发的事件
+          $(".pagination  a").click(function(){
+              cur_page = $(this).data('p');
+              ajax_get_table('search-form2',cur_page);
+          });
+
+          //审核商品
+          function is_check(id)
+          {
+              var url = "{:U('Admin/Suppliers/is_check_company')}";
+              if(id){
+                  url += "?t=1&id="+id;
+                  layer.open({
+                      type: 2,
+                      title: '铺货审核',
+                      shadeClose: true,
+                      shade: 0.8,
+                      area: ['580px', '480px'],
+                      content: url
+                  });
+              }else{
+                  layer.msg('请选择店铺',{icon:2});
+              }
+          }
+          $( 'h5', '.ftitle').empty().html("(共{$pager->totalRows}条记录)");
+		
+        </script>
+

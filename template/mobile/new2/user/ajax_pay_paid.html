@@ -1,0 +1,9 @@
+<foreach name="list" item="vo">
+<li>
+	<h2>服务员：{$vo.staff_name|default='佚名'}| {$vo.store_name|default='米豆薯'}</h2>
+	<div class="ts clearfix">
+		<p><!--推广员：{$vo.tg_name}<br />-->{$vo.create_time|date="Y-m-d",###}</p>
+		<h3>{$vo.money}元</h3>
+	</div>
+</li>
+</foreach>

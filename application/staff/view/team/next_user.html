@@ -1,0 +1,23 @@
+<include file="public/TK_top" />
+<div class="e-bex">
+	
+	<ul class="lin clearfix">
+		<volist name='list' id='vo'>
+		<li style="overflow:hidden">
+			<div class="de">
+				<h2><img src="{$vo.head_pic|default='__STATIC__/images/headPic.jpg'}"></h2>
+				<h3 style="width:60%; margin:0.2rem 0 0 0.5rem">昵称：{$vo.nickname}</h3>
+				<h3 style="width:60%;margin:0.2rem 0 0 0.5rem">手机号码：{$vo.mobile|hide_mobile}</h3>
+				
+				<div class="clear"></div>
+			</div>
+			
+		</li>
+		</volist>
+	</ul>
+	<div class="clear"></div>
+</div>
+<div style="text-align:center">{$page}</div>
+
+</body>
+</html>

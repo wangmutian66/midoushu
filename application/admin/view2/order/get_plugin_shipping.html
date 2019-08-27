@@ -1,0 +1,3 @@
+                        <foreach name="plugin_shipping" item="shipping" key="kk">
+                            <option <if condition="$order[shipping_code] eq $shipping[code]">selected</if> value="{$shipping.code}" >{$shipping.name}</option>
+                        </foreach>

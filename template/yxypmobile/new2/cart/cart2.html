@@ -1,0 +1,277 @@
+<include file="public/header" title="填写订单" body="g4"/>
+<include file="public/header_nav" title="填写订单" href="javascript:history.back(-1)"/>
+<style>
+    div.cuptyp{
+        box-sizing: content-box;
+        border: 2px solid transparent;
+    }
+    div.checked {
+        border: 2px solid #e23435;
+    }
+    .phoneclck{
+        /*部分手机不能点击问题*/
+        cursor: pointer
+    }
+</style>
+<!-- <form name="cart2_form" id="cart2_form" method="post" action="{:U('Mobile/Cart/cart3',array('act'=>'submit_order'))}" target="_bland"> -->
+<form name="cart2_form" id="cart2_form" method="post">
+    <input type="hidden" name="coupon_id" value=""/>
+    <!--立即购买才会用到-s-->
+    <input type="hidden" name="action"    value="{$Request.param.action}">
+    <input type="hidden" name="goods_id"  value="{$Request.param.goods_id}">
+    <input type="hidden" name="item_id"   value="{$Request.param.item_id}">
+    <input type="hidden" name="goods_num" value="{$Request.param.goods_num}">
+    <!--立即购买才会用到-e-->
+    <div class="edit_gtfix">
+        <a href="{:U('Mobileyxyp/User/address_list',array('source'=>'cart2','goods_id'=>$Request.param.goods_id,'goods_num'=>$Request.param.goods_num,'item_id'=>$Request.param.item_id,'action'=>$Request.param.action))}">
+            <div class="namephone fl">
+                <div class="top">
+                    <div class="le fl">{$address.consignee}</div>
+                    <div class="lr fl">{$address.mobile}</div>
+                </div>
+                <div class="bot">
+                    <i class="dwgp"></i>
+                    <span>{$address.address}</span>
+                </div>
+                <input type="hidden" value="{$address.address_id}" name="address_id" /> <!--收货地址id-->
+            </div>
+            <div class="fr youjter">
+                <i class="Mright"></i>
+            </div>
+            <div class="ttrebu">
+                <img src="__STATIC__/images/tt.png"/>
+            </div>
+        </a>
+    </div>
+
+    <!--商品信息-s-->
+    <foreach name="cartList" item="v2" key="k">
+    <div class="ord_list fill-orderlist p">
+        <div class="maleri30">
+            <volist name="v2" id="vo">
+                <div class="shopprice">
+                    <div class="img_or fl"><img src="{$vo[goods_id]|goods_thum_images=200,200}"/></div>
+                    <div class="fon_or fl">
+                        <h2 class="similar-product-text">{$vo[goods_name]}</h2>
+                        <div>{$vo[spec_key_name]}</div>
+                    </div>
+                    <div class="price_or fr">
+                        <p class="red"><span>￥</span><span>{$vo[goods_fee]}</span></p>
+                        <p class="ligfill">x{$vo[goods_num]}</p>
+                    </div>
+                </div>
+            </volist>
+        </div>
+    </div>
+
+    <!--支持配送,发票信息-s-->
+    <div class="information_dr">
+        <div class="maleri30">
+            <div class="invoice list7">
+                <div class="myorder p">
+                    <div class="content30">
+                        <a class="takeoutps" href="javascript:void(0)" data-id="{$v2.0.suppliers_id}">
+                            <div class="order">
+                                <div class="fl">
+                                    <span>支持配送</span>
+                                </div>
+                                <div class="fr">
+                                    <span id="postname_{$v2.0.suppliers_id}" style="line-height: 1.2rem;">不选择，则按默认配送方式</span>
+                                    <i class="Mright"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--配送弹窗-s-->
+    <!-- <div class="losepay-{$v2.0.suppliers_id} closeorder" style="display:none;">
+        <div class="maleri30">
+            <div class="l_top">
+                <span>配送方式</span>
+                <em class="turenoff" data-id="{$v2.0.suppliers_id}"></em>
+            </div>
+            <div class="resonco" id="resonco_{$v2.0.suppliers_id}">
+                <foreach name="v2.0.shippinglist" item="v4" key="k4">
+                    <label >
+                        <div class="radio">
+                            <span class='che <if condition="$k4 eq 0">check_t</if>' postname='{$v4.name}' data-id="{$v2.0.suppliers_id}">
+                                <i></i>
+                                <input type="radio" id="{$v4.code}" name="shipping_code[{$v2.0.suppliers_id}]" id="{$v4.code}" value="{$v4.code}" style="display: none;" <if condition="$k4 eq 0"> checked="checked" </if> onclick="ajax_order_price()" class="c_checkbox_t" />
+                                <span>{$v4.name}</span>
+                                <span>￥{$v.freight}</span>
+                            </span>
+                        </div>
+                    </label>
+                </foreach>
+            </div>
+        </div>
+        <div class="submits_de bagrr" data-id="{$v2.0.suppliers_id}" >确认</div>
+    </div> -->
+    <!--配送弹窗-e-->
+    <!--卖家留言-s-->
+    <input type="hidden" name="suppliers_id[{$v2.0.suppliers_id}]" value="{$v2.0.suppliers_id}" />
+    <div class="customer-messa">
+        <div class="maleri30">
+            <p>用户备注（50字）</p>
+            <textarea class="tapassa" onkeyup="checkfilltextarea('.tapassa{$v2.0.suppliers_id}','50','{$v2.0.suppliers_id}')" name="user_note[{$v2.0.suppliers_id}]" rows="" cols="" placeholder="选填"></textarea>
+            <span class="xianzd"><em id="zero{$v2.0.suppliers_id}">50</em>/50</span>
+        </div>
+    </div>
+    <!--卖家留言-e-->
+    <!--订单金额-s-->
+    <div class="information_dr ma-to-20">
+        <div class="maleri30">
+            <div class="xx-list">
+                <p class="p">
+                    <span class="fl">商品金额：</span>
+                    <span class="fr red"><span>￥</span><span id="payables_{$v2.0.suppliers_id}">0</span>元</span>
+                </p>
+                <p class="p">
+                    <span class="fl">配送费用：</span>
+                    <span class="fr red" ><span>￥</span><span id="postFee_{$v2.0.suppliers_id}">0</span>元</span>
+                </p>
+                <p class="p">
+                    <span class="fl">优惠活动：</span>
+                    <span class="fr red" ><span>-￥</span><span id="order_prom_amount_{$v2.0.suppliers_id}">0</span>元</span>
+                </p>
+            </div>
+        </div>
+    </div>
+    <!--订单金额-e-->
+
+    <!--配送弹窗-s-->
+    
+    <!--配送弹窗-e-->
+    </foreach>
+    <!--商品信息-e-->
+
+    <!--提交订单-s-->
+    <div class="mask-filter-div-{$v2.0.suppliers_id}" style="display: none;"></div>
+    <div class="payit fillpay ma-to-200">
+        <div class="fr submit_price">
+            <a href="javascript:void(0)" onclick="submit_order()">提交订单</a>
+            <!-- <a class="btn-go" href="javascript:;" onclick="document.getElementById('cart2_form').submit();">提交订单<b class="dpl-button"></b></a> -->
+        </div>
+        <div class="fl">
+            <p><span class="pmo">应付金额：</span>￥<span id="payables"></span><span></span></p>
+        </div>
+    </div>
+    <!--提交订单-e-->
+</form>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.radio .che').bind('click',function(){
+                var id = $(this).attr('data-id');
+                //选择配送方式
+                $(this).addClass('check_t')
+                        .parent().parent().siblings('label').find('.che').removeClass('check_t');
+                //选择配送方式显示到支持配送栏
+                showPostName(id)
+            });
+            ajax_order_price(); // 计算订单价钱
+        });
+
+        //显示选择的物流公司
+        function showPostName(id){
+            $('#postname_'+id).text($('#resonco_'+id).find('.radio .check_t').attr('postname'));
+        }
+        // 获取订单价格
+        function ajax_order_price()
+        {
+            $.ajax({
+                type : "POST",
+                url:"{:U('Mobileyxyp/Cart/cart3')}",
+                data : $('#cart2_form').serialize()+"&act=order_price",
+                dataType: "json",
+                success: function(data){
+                	if(data.status == -3 || data.status == -4){
+                		showErrorMsg(data.msg);
+                		refresh_price(data); 
+                		$('.submit_price a').addClass("disable");
+                	}else if(data.status != 1){ 
+    					//执行有误
+    					$('#coupon_div').show();
+    					showErrorMsg(data.msg); 
+    					// 登录超时
+    					if(data.status == -100){
+    					    location.href ="{:U('Mobileyxyp/User/login')}";
+    						return false;
+    					} 
+                  	}else{
+                  		$('.submit_price a').removeClass("disable");
+                        $.each(data.result2,function(i,item){  
+                            console.log(i+"--"+item.postFee);  
+                            $("#postFee_"+i).text(item.postFee);        // 物流费
+                            $("#payables_"+i).text(item.payables);      // 应付
+                            $("#order_prom_amount_"+i).text(item.order_prom_amount);// 订单 优惠活动
+                        }); 
+                        $("#payables").text(data.result.payables);    // 应付
+                        $("#order_prom_amount").text(data.result.order_prom_amount);// 订单 优惠活动
+                  	}
+                  
+                }
+            });
+        }
+        
+
+        // 提交订单
+        ajax_return_status = 1; // 标识ajax 请求是否已经回来 可以进行下一次请求
+        function submit_order() {
+        	if($('.submit_price a').hasClass("disable")){
+        		return;
+        	}
+            if (ajax_return_status == 0)
+                return false;
+            ajax_return_status = 0;
+            $.ajax({
+                type: "POST",
+                url: "{:U('Mobileyxyp/Cart/cart3')}",//+tab,
+                data: $('#cart2_form').serialize() + "&act=submit_order",// 你的formid
+                dataType: "json",
+                success: function (data) {
+                    if (data.status != '1') {
+                        showErrorMsg(data.msg);  //执行有误
+                        // 登录超时
+                        if (data.status == -100){
+                            location.href = "{:U('Mobileyxyp/User/login')}";
+                        }
+                        ajax_return_status = 1; // 上一次ajax 已经返回, 可以进行下一次 ajax请求
+                        return false;
+                    }
+                    //$("#postFee").text(data.result.postFee); // 物流费
+                    $("#payables").text(data.result.payables);// 应付
+                    showErrorMsg('订单提交成功，跳转支付页面!');
+                    location.href = "/index.php?m=Mobileyxyp&c=Cart&a=cart4&order_sn=" + data.result;
+                }
+            });
+        }
+
+        $(function(){
+            //显示配送弹窗
+            $('.takeoutps').click(function(){
+                var id = $(this).attr('data-id');
+                cover();
+                $('.mask-filter-div-'+id).show();
+                $('.losepay-'+id).show();
+            })
+            //关闭选择物流
+            $('.turenoff').click(function(){
+                var id = $(this).attr('data-id');
+                undercover();
+                $('.mask-filter-div-'+id).hide();
+                $('.losepay-'+id).hide();
+            })
+
+            $('.submits_de').click(function(){
+                var id = $(this).attr('data-id');
+                $('.mask-filter-div-'+id).hide();
+                $('.losepay-'+id).hide();
+            })
+        })
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="renderer" content="webkit">
+<title>退换货</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/member.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+<script src="__STATIC__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+<link type="text/css" rel="stylesheet" href="/public/plugins/daterangepicker/daterangepicker-bs3.css">
+<script type="text/javascript" src="/public/plugins/daterangepicker/moment.min.js"></script>
+<script type="text/javascript" src="/public/plugins/daterangepicker/daterangepicker.js"></script>
+<script src="__PUBLIC__/js/global.js?v={$vnum}" type="text/javascript"></script>
+<script src="__PUBLIC__/static/js/layer/layer.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/baidu.js"></script>
+<style>
+	.boldjh{font-size:12px; color:#999}
+	.red{color:#F00}
+</style>
+</head>
+
+<body class="bgg">
+	<include file="public/user_header" />
+	<div class="clear"></div>
+	
+	<div class="y-content">
+		<!--左侧菜单-->
+		<include file="public/user_lefter" />
+		
+		<!--右侧内容-->
+		
+		<div class="y-right-t fri">
+			<div class="y-title0 y-famil">
+				售后服务详情
+			</div>
+			<div class="y-shang clearfix">
+				<!--<a href="{:U('Home/Goods/goodsInfo',array('id'=>$goods['goods_id']))}"><img src="{$goods.goods_id|goods_thum_images=100,100}"></a>-->
+				<a <if condition="$goods['is_allreturn'] eq '1'"> href="{:U('/Homeyxyp/ReturnGoods/goodsInfo',array('id'=>$goods['goods_id']))}" <else /> href="{:U('/Homeyxyp/Goods/goodsInfo',array('id'=>$goods['goods_id']))}" </if>><img src="{$goods.goods_id|goods_thum_images=100,100}"></a>
+				<div class="wen fle">
+					<p>订单编号：<a href="{:U('Homeyxyp/Order/order_detail',array('id'=>$return_goods['order_id']))}">{$return_goods.order_sn}</a></p>
+					<a <if condition="$goods['is_allreturn'] eq '1'"> href="{:U('Homeyxyp/ReturnGoods/goodsInfo',array('id'=>$goods['goods_id']))}" <else /> href="{:U('Homeyxyp/Goods/goodsInfo',array('id'=>$goods['goods_id']))}" </if>>{$goods.goods_name}</a><span>{$goods.goods_num}</span>
+				</div>
+			</div>
+			<div class="y-dxq clearfix">
+				<h2>售后信息</h2>
+				<form action="" onSubmit="return false;" id="postshipping">
+				<ul class="tui">
+                	<if condition="isset($return_goods[imgs])">
+					<li>
+						<h3>图片信息</h3>
+						<div class="zi fle">
+							<foreach name="return_goods[imgs]" item="v">
+							<a href="{$v}" target="_blank"><img src="{$v}" /></a>
+							</foreach>
+						</div>
+					</li>	
+                    </if>				
+					<if condition="($return_goods[status] eq 3) and ($return_goods[type] eq 0)">
+						<li>
+							<h3>退款方式</h3>
+							<div class="zi fle">退回至用户余额</div>
+						</li>
+					</if>
+					
+					<!--进度说明-s-->
+					
+					
+					<!--处理环节-s-->
+					<li>
+						<h3>进度说明：</h3>
+						<div class="zi fle" style="width:727px;">
+							您的服务单已申请成功，等待售后审核中  
+						</div>
+					</li>
+					
+					<if condition="$return_goods.status gt 0">
+						<li>
+							<h3>进度说明：</h3>
+							<div class="zi fle" style="width:727px;">
+								亲爱的客户，您的服务单已通过审核 
+							</div>
+						</li>
+					</if>
+					
+					
+					<if condition="$return_goods.status eq -1">
+						<li>
+							<h3>进度说明：</h3>
+							<div class="zi fle" style="width:727px;">
+								亲爱的客户，您的服务单卖家拒绝您的申请 
+							</div>
+						</li>
+					</if>
+					
+					<if condition="$return_goods.status gt 1 and $return_goods.type eq 2">
+						<li>
+							<h3>进度说明：</h3>
+							<div class="zi fle" style="width:727px;">
+								亲爱的客户，卖家已收到您寄回的物品 
+							</div>
+						</li>
+						<li>
+							<h3>进度说明：</h3>
+							<div class="zi fle" style="width:727px;">
+								<h4 class="y1">亲爱的客户，卖家已重新发货</h4> &nbsp;&nbsp;快递公司：{$return_goods[seller_delivery][express_name]},快递单号：{$return_goods[seller_delivery][express_sn]}
+								
+							</div>
+						</li>
+					</if>
+					<if condition="$return_goods.status eq 3">
+						<li>
+							<h3>进度说明：</h3>
+							<div class="zi fle" style="width:727px;">
+								<h4 class="y3">亲爱的客户，您的服务单完成</h4>
+							</div>
+						</li>
+					</if>
+					<if condition="$return_goods.status eq -2">
+						<li>
+							<h3>进度说明：</h3>
+							<div class="zi fle" style="width:727px;">
+								<h4 class="y3">亲爱的客户，您的服务单已经取消</h4>
+							</div>
+						</li>
+					</if>
+							
+                    <!--处理环节-e-->
+					<if condition="$return_goods[status] eq 2 and $return_goods.type eq 1">
+					<input type="button" value="确认收货" onClick="JavaScript:location.href='{:U('Order/receiveConfirm',array('return_id'=>$return_goods[id]))}'" class="que"  style="margin-bottom:20px;" />
+
+					</if>
+					<if condition="$return_goods[status] neq -2 and $return_goods[status] lt 1">
+					<input type="button" value="取消服务单"  class="que returngoodscancel" style="margin-bottom:40px;" />
+					</if>
+
+					<!--
+					<li>
+						<h3>商品返回方式</h3>
+						<div class="zi fle">若客户已收货，则由客户自行寄回给卖家</div>
+					</li>
+					-->
+					<li  <if condition="$return_goods[status] neq -2 and $return_goods[status] lt 1"> style="border-top:1px solid #eee" </if>>
+						<h3>商品处理方式</h3>
+						<div class="zi fle">客户期望处理方式 “<if condition="$return_goods[type] eq 0">仅退款<elseif condition="$return_goods[type] eq 1"/>退货退款<else/>换货 </if>”</div>
+					</li>
+					
+					<li>
+						<h3>问题描述</h3>
+						<div class="zi fle">{$return_goods['reason']}</div>
+					</li>
+					<if condition="$return_goods['remark']">
+					<li>
+						<h3>服务备注</h3>
+						<div class="zi fle red"><font color="#FF0000" style="font-size:14px">{$return_goods['remark']}</font></div>
+					</li>
+					</if>
+					<li>
+						<h3>卖家收货信息</h3>
+						<if condition="$return_goods['suppliers_id'] neq 0">
+							<div class="zi fle">
+								<span>{$suppliers_info['post_consignee']}(收)</span>    
+								<span>
+									{$region_list[$suppliers_info['post_province']]}
+							    	{$region_list[$suppliers_info['post_city']]}
+							    	{$suppliers_info.post_address}
+								</span>    
+								<span>{$suppliers_info['post_mobile']}</span>
+							</div>
+						<else />
+							<div class="zi fle"><span>{$tpshop_config['shop_info_store_name']}(收)</span>    <span>{$tpshop_config['shop_info_address']}</span>    <span>{$tpshop_config['shop_info_phone']}</span></div>
+						</if>
+					</li>
+					
+					<if condition="!$return_goods['shipping_post_code'] and $return_goods['status'] egt 0  and $return_goods['status'] != 3">
+					<li>
+						<h3><span>*</span>买家物流</h3>
+						<div class="zi fle">
+						<input type="text" name="shipping_code" id="shipping_code" class="text">
+							
+						</div>
+					</li>
+					<li>
+						<h3><span>*</span>买家运单号</h3>
+						<div class="zi fle"><input type="text" name="shipping_post_code" id="shipping_post_code" class="text"></div>
+					</li>
+					<li>
+						<h3>买家说明</h3>
+						<div class="zi fle"><textarea name="shipping_post_remark" id="shipping_post_remark"></textarea></div>
+					</li>
+					<elseif condition="$return_goods['status'] egt 0 and $return_goods['shipping_code']"/>
+						<li>
+							<h3>买家选择物流</h3>
+							<div class="zi fle">{$return_goods.shipping_code}</div>
+						</li>
+						<li>
+							<h3>买家运单号</h3>
+							<div class="zi fle">{$return_goods['shipping_post_code']}</div>
+						</li>
+						<li>
+							<h3>买家说明</h3>
+							<div class="zi fle">{$return_goods['shipping_post_remark']}</div>
+						</li>
+					</if>
+				</ul>
+				
+				
+				
+				<h4 style="color:red; margin-top:30px;"><em>重要提醒</em>：商城平台及销售不会以  <em>任何理由</em> ，要求您点击  <em>任何网址链接</em>  进行退款操作。</h2>
+					
+				<if condition="!$return_goods['shipping_post_code'] and $return_goods['status'] egt 0 and $return_goods['status'] != 3">
+				<input type="submit" class="que" />
+				<input type="reset" class="xiao" /> 
+				</if>
+				<input type="hidden" name="return_id" id="return_id" value="{$return_goods.id}">
+				</form>
+			</div>
+			<script>
+				$(function (){
+					
+					$(".y-left li a").removeClass('on');  
+					$(".y-left li a").eq(8).addClass('on');
+					
+					$('.returngoodscancel').click(function (){
+							layer.confirm('确定取消订单?', {
+								btn: ['确定','取消'] //按钮
+							}, function(){
+									$.ajax({
+										url:"{:U('Order/return_goods_cancel',array('id'=>$return_goods[id]))}",
+										method:'POST',
+										dataType:'json',
+										error: function () {
+											layer.alert("服务器繁忙, 请联系管理员!");
+										},
+										success: function (data) {
+											if (data.status === 1) {
+												layer.msg(data.msg, {icon: 1,time: 1000}, function() {
+													window.parent.location.href = data.url;
+												});
+											} else {
+												layer.msg(data.msg, {icon: 2,time: 1000});
+											}
+										}
+									});
+							}, function(index){
+								layer.close(index);
+							});
+					})
+					
+					
+					
+					$("#postshipping").submit(function(){
+						var shipping_code = $("#shipping_code").val();
+						var shipping_post_code = $.trim($("#shipping_post_code").val());
+						if(shipping_code == ''){
+							layer.alert('请填写物流公司', {icon: 2});
+							return false;
+						}
+						if(shipping_post_code == ''){
+							layer.alert('请选择填写运单号码', {icon: 2});
+							return false;
+						}
+						
+						$.ajax({  
+							url: "{:U('/Homeyxyp/Order/buy_post_shipping')}",  
+							type: 'POST',  
+							data:$("#postshipping").serialize(),  
+							dataType: 'json',  
+							error: function(){alert('系统繁忙，请稍后再试！')},
+							beforeSend:function(){
+								layer.load('2',{shade: 0.6});
+							},
+							success: function(r){
+								if(r.status == 1){
+									layer.msg(r.info, {icon: 1,time: 3000,shade: 0.6},function (){
+										location.reload();
+									}); 
+								}else{
+									layer.msg(r.info, {icon: 2,time: 3000,shade: 0.6});
+								}
+							},
+							complete:function(){
+								layer.closeAll('loading');
+							}
+						});  
+						return false;
+					});
+					
+					
+					
+				})
+				
+				
+			</script>
+			
+			<!--
+			<div class="y-dxq clearfix">
+				<h2>退货信息</h2>
+				<form action="">
+				<ul class="tui">
+					<li>
+						<h3>图片信息</h3>
+						<div class="zi fle">
+							<img src="img/img7.jpg"><img src="img/img7.jpg">
+						</div>
+					</li>
+					<li>
+						<h3>申请退货时间</h3>
+						<div class="zi fle">2018-05-04 15:05</div>
+					</li>
+					<li>
+						<h3>状态</h3>
+						<div class="zi fle"><h4 class="y1">已发货</h4><h4 class="y2">已收到</h4><h4 class="y3">已完成</h4></div>
+					</li>
+					<li>
+						<h3>货物状态</h3>
+						<div class="zi fle">买家已收到货</div>
+					</li>
+					<li>
+						<h3>买家是否需要退货</h3>
+						<div class="zi fle">是</div>
+					</li>
+					<li>
+						<h3>退货原因</h3>
+						<div class="zi fle">不想要了</div>
+					</li>
+					<li>
+						<h3>问题描述</h3>
+						<div class="zi fle">2018-05-04 15:05</div>
+					</li>
+					<li>
+						<h3>退货地址信息</h3>
+						<div class="zi fle"><span>刘二</span>    <span>黑龙江省南岗区西大直街118号</span>    <span>18346189765</span></div>
+					</li>
+					<li>
+						<h3>物流公司</h3>
+						<div class="zi fle">申通快递</div>
+					</li>
+					<li>
+						<h3>运单号</h3>
+						<div class="zi fle">18050876232044</div>
+					</li>
+					<li>
+						<h3>发货说明</h3>
+						<div class="zi fle">现在已经发货了</div>
+					</li>
+				</ul>
+				</form>
+			</div>-->
+			
+		</div>
+		<div class="clear"></div>
+	</div>
+		
+		<!--右侧内容结束-->
+	<include file="public/user_footer" />
+	
+</body>
+</html>

@@ -1,0 +1,131 @@
+<div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+    <table>
+        <tbody>
+        <volist name="supplierList" id="list">
+            <tr data-id="{$list['suppliers_id']}">
+                <td class="sign">
+                    <div style="width: 24px;"><i class="ico-check"></i></div>
+                </td>
+                <td align="left" class="">
+                    <div style="text-align: center; width: 40px;">{$list.cid}</div>
+                </td>
+                <td align="left" class="">
+                    <div style="text-align: center; width: 200px;">{$list.cname}</div>
+                </td>
+               
+               <!--  
+                
+                <td align="center" abbr="status" axis="col6" class="">
+                    <div style="text-align: center; width: 100px;">
+
+                        <if condition='$list[gonghuo_examine] eq 2'>
+                            <span class="yes" >通过</span>
+                        <elseif condition='$list[gonghuo_examine] eq 3'>
+                            <span class="no" >未通过</span>
+
+                        <else/>
+                            <a href="javascript:;" onclick="is_checks({$list.cid});" class="btn blue"><i class="fa fa-search"></i>审核</a>
+                        </if>
+
+                    </div>
+                </td> -->
+                
+                <td align="center" class="handle">
+                    <div style="text-align: center; width: 170px; max-width:250px;">
+                        <a class="btn blue" href="{:U('Admin/suppliers/gonghuodetail',array('id'=>$list['cid']))}"><i class="fa fa-pencil-square-o"></i>详情</a>
+                        
+                    </div>
+                </td>
+                <td align="" class="" style="width: 100%;">
+                    <div>&nbsp;</div>
+                </td>
+            </tr>
+        </volist>
+        <empty name="supplierList">
+                <div style="margin: 0 auto;text-align: center;margin-top: 14%;font-size: 18px;margin-right: 12%;">  暂无审核数据  </div>
+        </empty>
+        </tbody>
+    </table>
+</div>
+<!--分页位置-->
+{$page}
+<script>
+    $(".pagination  a").click(function(){
+        var page = $(this).data('p');
+        ajax_get_table('search-form2',page);
+    });
+    $(document).ready(function(){
+        // 表格行点击选中切换
+        $('#flexigrid >table>tbody>tr').click(function(){
+            $(this).toggleClass('trSelected');
+        });
+        $('#user_count').empty().html("{$pager->totalRows}");
+    });
+    // 修改指定表的指定字段值 包括有按钮点击切换是否 或者 排序 或者输入框文字
+function changeTableVals(table,id_name,id_value,field,obj,str1 = "通过",str2 = "未审核")
+{   
+
+    if($(obj).hasClass('yes')){ // 图片点击是否操作 
+        $(obj).removeClass('yes').addClass('no');
+        $(obj).html("<i class='fa fa-ban'></i>"+str2);
+        var value = 0;
+    }else{ // 其他输入框操作
+        // var value = $(obj).val();
+
+        $(obj).removeClass('no').addClass('yes');
+        $(obj).html("<i class='fa fa-check-circle'></i>"+str1);
+        var value = 1;
+    }
+
+    var param = new Object();
+    param['table'] = table;
+    param['id_name'] = id_name;
+    param['id_value'] = id_value;
+    param['field'] = field;
+    param['value'] = value;
+    $.ajax({
+        url:"__URL__/auditing",
+        data:param,
+        type:"GET",
+        success:function (data) {
+            if(!$(obj).hasClass('yes') && !$(obj).hasClass('no'))
+                     layer.msg('更新成功', {icon: 1});
+        }
+    });
+
+
+
+
+    // $.ajax({
+    //     url:"/index.php?m=Admin&c=Index&a=changeTableVal&table="+table+"&id_name="+id_name+"&id_value="+id_value+"&field="+field+'&value=1',
+    //     success: function(data){
+    //          if(!$(obj).hasClass('yes') && !$(obj).hasClass('no'))
+    //          layer.msg('更新成功', {icon: 1});
+    //     }
+    // });
+}
+
+
+
+    //审核商品
+    function is_checks(id)
+    {
+        var url = "{:U('Admin/Suppliers/is_checkgonghuo')}";
+        if(id){
+            url += "?t=1&cid="+id;
+            layer.open({
+                type: 2,
+                title: '供货商审核',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['580px', '230px'],
+                content: url,
+
+            });
+        }else{
+            layer.msg('请选择商品',{icon:2});
+        }
+    }
+
+
+</script>

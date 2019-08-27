@@ -1,0 +1,163 @@
+<include file="public/layout" />
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title">
+      <div class="subject">
+        <h3>公益池日志</h3>
+        <h5>公益池查询详细信息</h5>
+      </div>
+    </div>
+  </div>
+  <!-- 操作说明 -->
+  <div id="explanation" class="explanation" style="color: rgb(44, 188, 163); background-color: rgb(237, 251, 248); width: 99%; height: 100%;">
+    <div id="checkZoom" class="title"><i class="fa fa-lightbulb-o"></i>
+      <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+      <span title="收起提示" id="explanationZoom" style="display: block;"></span>
+    </div>
+    <ul>
+      <li>公益池管理由总后台设置</li>
+    </ul>
+  </div>
+  <div class="flexigrid">
+    <div class="mDiv">
+      <div class="ftitle">
+        <h3>日志列表</h3>
+        <h5>(共{$pager->totalRows}条记录)</h5>
+      </div>
+      <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+	  
+    </div>
+	<div class="tDiv">
+		<div class="tDiv2">
+			<div class="fbutton"> 
+				<a href="{:U('/Admin/CelfarePool/export')}">
+                    <div class="add" title="导出excel">
+                        <span><i class="fa fa-plus"></i>导出excel</span>
+                    </div>
+                </a> 
+			</div>
+			<div class="fbutton">
+			
+				<div class="add"  onClick="$('title',window.parent.document).html('成欣网子公司流水');window.print();" title="打印数据">
+					<span><i class="fa fa-share"></i>打印数据</span>
+				</div>
+			</div>
+		</div>
+		<div style="clear:both"></div>
+	</div>
+	
+    <div class="hDiv">
+      <div class="hDivBox">
+        <table cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+              <th class="sign" axis="col0">
+                <div style="width: 24px;"><i class="ico-check"></i></div>
+              </th>
+              <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: left; width: 120px;" class="">用户ID</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: left; width: 100px;" class="">是否为管理员</div>
+              </th>
+              <th align="center" abbr="money" axis="col4" class="">
+                <div style="text-align: center; width: 150px;" class="">资金</div>
+              </th>
+              <th align="center" abbr="insert_date" axis="col6" class="">
+                <div style="text-align: center; width: 160px;" class="">更新时间</div>
+              </th>
+              
+              <th align="center" abbr="remark" axis="col7" class="">
+                <div style="text-align: center; width: 300px;" class="">备注</div>
+              </th>
+              
+              <th align="center" abbr="act" axis="col8" class="">
+                <div style="text-align: center; width: 130px;" class="">方法</div>
+              </th>
+              
+              <th align="center" abbr="control" axis="col9" class="">
+                <div style="text-align: center; width: 130px;" class="">控制器</div>
+              </th>
+              
+              
+              <th style="width:100%" axis="col7">
+                <div></div>
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    
+    <div class="bDiv" style="height: auto;">
+      <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+        <table>
+          <tbody>
+            <foreach name="list" item="vo" key="k" >
+              <tr>
+                <td class="sign">
+                  <div style="width: 24px;"><i class="ico-check"></i></div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: left; width: 120px;">
+				  <if condition="$vo.user_id">买家： {$vo.user_id} <a target="_blank" href="{:U('/Admin/user/detail',['id'=>$vo.user_id])}">查看</a> <else/>
+				  {$vo.admin_name}
+				  </if></div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;"><neq name="vo['admin_id']" value='0'> 是 <else/> 否 </neq></div>
+                </td>
+                <td align="center" class="">
+                   <div style="text-align: center; width: 150px;">{$vo.money|tk_money_format}</div>
+                </td>
+                <td align="center" class="">
+                  <div style="text-align: center; width: 160px;">{$vo.create_time|date='Y-m-d H:i:s',###}</div>
+                </td>
+                
+                <td align="center" class="">
+                  <div style="text-align: center; width: 300px;">{$vo.remark}</div>
+                </td>
+                
+                <td align="center" class="">
+                  <div style="text-align: center; width: 130px;">{$vo.act}</div>
+                </td>
+                
+                <td align="center" class="">
+                  <div style="text-align: center; width: 130px;">{$vo.control}</div>
+                </td>
+              
+                
+                <td align="" class="" style="width: 100%;">
+                  <div>&nbsp;</div>
+                </td>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+      </div>
+      <div class="iDiv" style="display: none;"></div>
+    </div>
+    <!--分页位置--> 
+    {$pager->show()} </div>
+</div>
+<script>
+    $(document).ready(function(){	
+	    // 表格行点击选中切换
+	    $('#flexigrid > table>tbody >tr').click(function(){
+		    $(this).toggleClass('trSelected');
+		});
+		
+		// 点击刷新数据
+		$('.fa-refresh').click(function(){
+			location.href = location.href;
+		});
+		
+	});
+
+
+</script>
+</body>
+</html>

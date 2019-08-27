@@ -1,0 +1,101 @@
+<include file="public/layout"/>
+<style>
+    .te_le .dataTables_paginate{float: left;}
+    .bot{float: right;padding: 15px 0}
+</style>
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div class="page" style="padding: 0px 1% 0 1%;">
+    <!-- 操作说明 -->
+    <div class="flexigrid">
+
+        <div class="hDiv">
+            <div class="hDivBox">
+                <div class="sDiv2" style="margin-right:10px;border:none;">
+                    <select name="type" id="type">
+                        <option value="1" <if condition="$Request.param.type eq 1">selected</if>>现金商品</option>
+                        <option value="2" <if condition="$Request.param.type eq 2">selected</if>>米豆商品</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="bot">11<a onclick="select_goods();" class="ncap-btn-big ncap-btn-green">确认提交</a></div>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        $("input[type='radio']:checked").each(function(i,o){
+            var goods_id = $(this).data('id');
+        })
+    });
+    //规格按钮点击事件
+    $(function () {
+        $(document).on("click", '.specBtn', function (e) {
+            if($(this).hasClass('ncap-btn-green')){
+                $(this).css("color","#777").removeClass('ncap-btn-green');
+            }else{
+                $(this).css("color","#FFF").addClass('ncap-btn-green');
+            }
+        })
+    })
+    //全选选中事件
+    $(function () {
+        $(document).on("click", '.checkAll', function (e) {
+            if($(this).is(':checked')){
+                $('.checkItem').each(function(i,o){
+                    $(o).attr('checked','checked');
+                })
+                $("input[type='checkbox']:checked").each(function(i,o){
+                    var goods_id = $(this).val();
+                })
+                $('.specBtn').css("color","#FFF").addClass('ncap-btn-green');
+            }else{
+                $('.checkItem').each(function(i,o){
+                    $(o).removeAttr('checked');
+                })
+                $("input[type='checkbox']").each(function(i,o){
+                    var goods_id = $(this).val();
+                })
+                $('.specBtn').css("color","#777").removeClass('ncap-btn-green');
+            }
+        })
+    })
+
+
+
+    //商品对象
+    function GoodsItem(goods_id, goods_name, store_count, goods_price ,goods_image,type) {
+        this.goods_id = goods_id;
+        this.goods_name = goods_name;
+        this.store_count = store_count;
+        this.goods_price = goods_price;
+        this.goods_image = goods_image;
+        this.type = type;
+    }
+
+    function select_goods()
+    {
+        var type_o = $('#type').val();
+        console.log(type_o);
+        var inputs = $("input[class='checkItem']:checked");
+        if (inputs.length == 0) {
+            layer.alert('请选择商品', {icon: 2}); //alert('请选择商品');
+            return false;
+        }
+        var goodsArr = new Array();
+        inputs.each(function(i,o){
+            var goods_id = $(o).val();
+
+                var goodsItem = new GoodsItem(goods_id, $(o).data('name'),$(o).data('count'), $(o).data('price'), $(o).data('img'), type_o);
+                goodsArr.push(goodsItem);
+
+        })
+        if(goodsArr.length == 0){
+            layer.alert('请至少选择一个商品');
+            return false;
+        }
+        window.parent.call_back(goodsArr);
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<include file="public/layout" />
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+	<div class="fixed-bar">
+		<div class="item-title">
+			<div class="subject">
+				<h3>特别推荐管理</h3>
+				<h5>将商品推荐到特定的位置</h5>
+			</div>
+			<ul class="tab-base nc-row">
+				<li><a href="/index.php/admin/Promotion/elite_goods_list/type/1"  <if condition="$type eq 1">class="current"</if> ><span>现金商品</span></a></li>
+				<li><a href="/index.php/admin/Promotion/elite_goods_list/type/2"  <if condition="$type eq 2">class="current"</if> ><span>米豆商品</span></a></li>
+			</ul>
+		</div>
+	</div>
+	<!-- 操作说明 -->
+	<div id="explanation" class="explanation" style="color: rgb(44, 188, 163); background-color: rgb(237, 251, 248); width: 99%; height: 100%;">
+		<div id="checkZoom" class="title"><i class="fa fa-lightbulb-o"></i>
+			<h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+			<span title="收起提示" id="explanationZoom" style="display: block;"></span>
+		</div>
+		<ul>
+			<li>商品特别推荐管理, 由平台设置管理.</li>
+		</ul>
+	</div>
+	<div class="flexigrid">
+		<div class="mDiv">
+			<div class="ftitle">
+				<h3>推荐商品列表</h3>
+				<h5>(共{$pager->totalRows}条记录)</h5>
+			</div>
+			<div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+		</div>
+		<div class="hDiv">
+			<div class="hDivBox">
+				<table cellspacing="0" cellpadding="0">
+					<thead>
+					<tr>
+						<th class="sign" axis="col0">
+							<div style="width: 24px;"><i class="ico-check"></i></div>
+						</th>
+						<th align="left" abbr="article_title" axis="col3" class="">
+							<div style="text-align: left; width: 350px;" class="">商品名称</div>
+						</th>
+						<th align="left" abbr="ac_id" axis="col4" class="">
+							<div style="text-align: center; width: 80px;" class="">商品类型</div>
+						</th>
+						<th align="center" abbr="article_time" axis="col6" class="">
+							<div style="text-align: center; width: 120px;" class="">价格</div>
+						</th>
+						<th align="center" abbr="article_time" axis="col6" class="">
+							<div style="text-align: center; width: 120px;" class="">库存</div>
+						</th>
+						<th align="center" abbr="article_time" axis="col6" class="">
+							<div style="text-align: center; width: 80px;" class="">是否有效</div>
+						</th>
+						<th align="center" abbr="article_time" axis="col6" class="">
+							<div style="text-align: center; width: 120px;" class="">添加时间</div>
+						</th>
+						<th align="left" axis="col1" class="handle">
+							<div style="text-align: center; width: 150px;">操作</div>
+						</th>
+						<th style="width:100%" axis="col7">
+							<div></div>
+						</th>
+					</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+		<div class="tDiv">
+			<div class="tDiv2">
+				<a onclick="selectGoods()">
+					<div class="fbutton">
+						<div title="添加商品" class="add">
+							<span><i class="fa fa-plus"></i>添加商品</span>
+						</div>
+					</div>
+				</a>
+			</div>
+			<div style="clear:both"></div>
+		</div>
+		<div class="bDiv" style="height: auto;">
+			<div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+				<table>
+					<tbody>
+					<foreach name="list" item="vo" key="k" >
+						<tr id="elite_{$vo.id}">
+							<td class="sign">
+								<div style="width: 24px;"><i class="ico-check"></i></div>
+							</td>
+							<td align="left" class="">
+								<div style="text-align: left; width: 350px;">{$vo.goods_name}</div>
+							</td>
+							<td align="left" class="">
+								<div style="text-align: center; width: 80px;">
+									<if condition="$vo.type eq 1">
+										现金商品
+									<elseif condition="$vo.type eq 2" />
+										米豆商品
+									</if>
+								</div>
+							</td>
+							<td align="left" class="">
+								<div style="text-align: center; width: 120px;">{$vo.shop_price}</div>
+							</td>
+							<td align="left" class="">
+								<div style="text-align: center; width: 120px;">{$vo.store_count}</div>
+							</td>
+							<td align="left" class="">
+								<div style="text-align: center; width: 80px;">
+									<if condition="($vo.is_check eq 0) or ($vo.is_on_sale eq 0)">
+										无效
+									<else/>
+										有效
+									</if>
+								</div>
+							</td>
+							<td align="left" class="">
+								<div style="text-align: center; width: 120px;">{$vo.addtime|date='Y-m-d H:i:s',###}</div>
+							</td>
+							<td align="left" class="handle">
+								<div style="text-align: center; width: 170px; max-width:170px;">
+									<a class="btn red" href="javascript:void();" onclick="delelite('{$vo.id}')"><i class="fa fa-trash-o"></i>删除</a>
+								</div>
+							</td>
+							<td align="" class="" style="width: 100%;">
+								<div>&nbsp;</div>
+							</td>
+						</tr>
+					</foreach>
+					</tbody>
+				</table>
+			</div>
+			<div class="iDiv" style="display: none;"></div>
+		</div>
+		<!--分页位置-->
+		{$page} </div>
+</div>
+<script>
+	$(document).ready(function(){
+		// 表格行点击选中切换
+		$('#flexigrid > table>tbody >tr').click(function(){
+			$(this).toggleClass('trSelected');
+		});
+
+		// 点击刷新数据
+		$('.fa-refresh').click(function(){
+			location.href = location.href;
+		});
+
+	});
+
+	function delfun(obj) {
+		// 删除按钮
+		layer.confirm('确认删除？', {
+			btn: ['确定', '取消'] //按钮
+		}, function () {
+			$.ajax({
+				type: 'post',
+				url: $(obj).attr('data-url'),
+				data : {act:'del',id:$(obj).attr('data-id')},
+				dataType: 'json',
+				success: function (data) {
+					layer.closeAll();
+					if (data.status == 1) {
+						$(obj).parent().parent().parent().remove();
+					} else {
+						layer.alert(data.msg, {icon: 2});  //alert('删除失败');
+					}
+				}
+			})
+		}, function () {
+			layer.closeAll();
+		});
+	}
+
+    function selectGoods(){
+        var url = "{:U('Promotion/search_elite_goods',['type'=>$type])}";
+        layer.open({
+            type: 2,
+            title: '选择商品',
+            shadeClose: true,
+            shade: 0.3,
+            area: ['70%', '80%'],
+            content: url,
+        });
+    }
+
+    function call_back(goodsItem){
+		console.log(goodsItem);
+        var html = '';
+        $.each(goodsItem, function (index, item) {
+            if (item.goods_id != 'on') {
+				$.ajax({
+					url:'__URL__/do_save_elitegoods',
+					type:'POST',
+					dataType:'json',
+					data:{goods_id:item.goods_id,type:item.type},
+					success:function(info){
+						if(info.status == 1){
+						    // location.reload();
+							location.href='/index.php?m=Admin&c=Promotion&a=elite_goods_list&type='+item.type;
+						}
+					}
+				})
+            }
+        });
+        layer.closeAll('iframe');
+    }
+
+    function delelite(id){
+	    if(confirm('确认要删除该推荐商品吗？')){
+            $.ajax({
+                url:'__URL__/del_elitegoods',
+                type:'POST',
+                dataType:'json',
+                data:{id:id},
+                success:function(result){
+                    if(result.status == 1){
+                        $('#elite_'+id).remove();
+                    }else{
+                        alert(result.info);
+                    }
+                }
+            })
+		}
+
+	}
+</script>
+</body>
+</html>

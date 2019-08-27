@@ -1,0 +1,151 @@
+<include file="public/layout" />
+<script type="text/javascript" src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<style type="text/css">
+html, body {
+	overflow: visible;
+}
+
+a.btn {
+    background: #fff none repeat scroll 0 0;
+    border: 1px solid #f5f5f5;
+    border-radius: 4px;
+    color: #999;
+    cursor: pointer !important;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: normal;
+    height: 20px;
+    letter-spacing: normal;
+    line-height: 20px;
+    margin: 0 5px 0 0;
+    padding: 1px 6px;
+    vertical-align: top;
+}
+
+ a.red:hover {
+    background-color: #e84c3d;
+    border-color: #c1392b;
+    color: #fff;
+}
+
+</style>  
+<body style="background-color: #FFF; overflow: auto;">
+<div id="toolTipLayer" style="position: absolute; z-index: 9999; display: none; visibility: visible; left: 95px; top: 573px;"></div>
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title"><a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+      <div class="subject">
+        <h3>快递单详情</h3>
+        <h5>快递推送情况及快递进度</h5>
+      </div>
+    </div>
+  </div>
+    <div class="ncap-form-default">
+   	<dl class="row">
+       <dt class="tit">
+         <label>订单编号</label>
+       </dt>
+       <dd class="opt">
+         {$order_sn}
+       </dd>
+      </dl>
+	  <dl class="row">
+        <dt class="tit">
+          <label>订阅状态</label>
+        </dt>
+        <dd class="opt">
+            {$ordermessage}
+        </dd>
+      </dl>  
+      <dl class="row">
+        <dt class="tit">
+          <label>快递单号</label>
+        </dt>
+        <dd class="opt">
+          {$invoice_no}
+        </dd>
+      </dl>      
+      <dl class="row">
+        <dt class="tit">
+          <label>快递状态</label>
+        </dt>
+        <dd class="opt">
+            {$billStatus}
+        </dd>
+      </dl>
+      <dl class="row">
+          <dt class="tit">
+              <label>订阅时间</label>
+          </dt>
+          <dd class="opt">
+              <if condition="$subtime gt 0">{$subtime|date='Y-m-d H:i:s',###}</if>
+          </dd>
+      </dl>  
+      <dl class="row">
+        <dt class="tit">
+          <label>快递公司</label>
+        </dt>
+        <dd class="opt">
+          {$wuliuarr[$shipping_code]}
+        </dd>
+      </dl>
+      <dl class="row">
+        <dt class="tit">
+          <label>跟踪状态</label>
+        </dt>
+        <dd class="opt">
+            {$pollStatus}
+        </dd>
+      </dl>
+      <dl class="row">
+        <dt class="tit">
+          <label>推送时间</label>
+        </dt>
+        <dd class="opt">
+            <if condition="$pushTime gt 0">{$pushTime|date='Y-m-d H:i:s',###}</if>
+        </dd>
+      </dl>
+    </div>
+    <div class="flexigrid">
+        <div class="hDiv">
+            <div class="hDivBox" id="ajax_return">
+                <table cellspacing="0" cellpadding="0">
+                    <thead>
+                    <tr>
+                        <th align="left" abbr="order_sn">
+                            <div style="text-align: left; width:140px;" class="">时间</div>
+                        </th>
+                        <th align="left" abbr="consignee">
+                            <div style="text-align: left;" class="">地点和跟踪进度</div>
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class="bDiv" style="height: auto;">
+            <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+                <table cellspacing="0" cellpadding="0">
+                    <tbody>
+                    <volist name="kuaidilog" id="vo">
+                        <tr>
+                            <td>
+                                <div style="width:140px;">{$vo.time}</div>
+                            </td>
+                            <td align="left" abbr="order_sn" axis="col3" class="">
+                                <div style="text-align: left;">{$vo.context}</div>
+                            </td>
+
+                        </tr>
+                        </volist>
+                    </tbody>
+                </table>
+            </div>
+            <div class="iDiv" style="display: none;"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+		<ul class="y-left fle">
+			<li><a href="{:U('Home/User/info')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'User') and (ACTION_NAME eq 'info') ">class="on"</if> >个人资料</a></li>
+			<li><a href="{:U('Home/User/recharge')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'User') and ( (ACTION_NAME eq 'recharge') or (ACTION_NAME eq 'withdrawals') or (ACTION_NAME eq 'toCash') ) ">class="on"</if>>账户余额</a></li>
+			<li><a href="{:U('Home/Order/comment')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'Order') and ((ACTION_NAME eq 'comment') or (ACTION_NAME eq 'comment_list')) ">class="on"</if> >我的评价</a></li>
+			<li><a href="{:U('Home/User/safety_settings')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'User') and ( (ACTION_NAME eq 'safety_settings') or (ACTION_NAME eq 'password') or (ACTION_NAME eq 'paypwd_index') or (ACTION_NAME eq 'paypwd') ) ">class="on"</if> >安全设置</a></li>
+			<li><a href="{:U('Home/User/goods_collect')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'User') and (ACTION_NAME eq 'goods_collect') ">class="on"</if> >我的收藏</a></li>
+			<li><a href="{:U('Home/Cart/index')}" target="_blank">购物车</a></li>
+			<li><a href="{:U('Home/Order/order_list')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'Order') and ((ACTION_NAME eq 'order_list') or (ACTION_NAME eq 'order_detail') or (ACTION_NAME eq 'return_goods')) ">class="on"</if> >我的订单</a></li>
+			<li><a href="{:U('Home/User/address_list')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'User') and (ACTION_NAME eq 'address_list') ">class="on"</if> >收货地址</a></li>
+			<li><a href="{:U('Home/Order/return_goods_list')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'Order') and ((ACTION_NAME eq 'return_goods_list') or (ACTION_NAME eq 'refund_order') or (ACTION_NAME eq 'return_goods') or (ACTION_NAME eq 'return_goods_info') or (ACTION_NAME eq 'return_goods_list')) ">class="on"</if> >退货退款</a></li>
+			<li><a href="{:U('Home/User/red_envelope')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'User') and (ACTION_NAME eq 'red_envelope') ">class="on"</if> >我的米豆</a></li>
+			<li><a href="{:U('Home/User/already_rebate')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'User') and (ACTION_NAME eq 'already_rebate') ">class="on"</if> >我的福利</a></li>
+			<li><a href="{:U('Home/User/pay_paid')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'User') and (ACTION_NAME eq 'pay_paid') ">class="on"</if> >线下消费记录</a></li>
+			<li><a href="{:U('Home/User/apply_suppliers')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'User') and ((ACTION_NAME eq 'apply_suppliers') or (ACTION_NAME eq 'suppliers') or (ACTION_NAME eq 'suppliers_password')) ">class="on"</if> >供货商</a></li>
+		</ul>
+		<script type="text/javascript">
+			/*var urlstr = location.href;  
+			var urlstatus=false;  
+			$(".y-left li a").each(function () {  
+			    if ((urlstr + '/').indexOf($(this).attr('href')) > -1&&$(this).attr('href')!='') {  
+			        $(this).addClass('on');  
+			        urlstatus = true;  
+			    } else {  
+			        $(this).removeClass('on');  
+			    }  
+			    if($("#siteMenu li a.on").length>1){  
+					$("#siteMenu li a").eq(0).removeClass('on');  
+				}  
+			});  
+			if (!urlstatus) {  
+			 	$(".y-left li a").eq(0).addClass('on');   
+			}*/  
+		</script>

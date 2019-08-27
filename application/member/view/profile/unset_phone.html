@@ -1,0 +1,103 @@
+<include file="public/header" />
+<div class="e-top">
+	<div class="content">
+		<div class="e-jian">
+			<a href="javascript:history.back(-1)"><img src="__PUBLIC__/staff/img/return.png"></a>
+		</div>
+		<div class="e-wen">
+			换绑手机
+		</div>
+	</div>
+</div>
+<form action="" method="post">
+<div class="e-zil">
+	<ul>
+		<li>
+			<div class="bt fl">原手机号</div>
+			<div class="nei2 fl">
+				<input type="text" class="text" value="{$member_info.phone}"  readonly />
+			</div>
+		</li>
+		<li>
+			<div class="bt fl">
+				短信验证码
+		    </div>
+			<div class="nei fl">
+				<div class="zhmm">
+		            <input type="text" name="mobile_code" id="mobile_code" class="c_code_msg2" placeholder="6位验证码">
+		            <div class="fsyz"  rel="mobile"  onClick="sendcode(this)">获取验证码</div>
+		        </div>
+			</div>
+		</li>
+	</ul>
+</div>  
+<input type="submit" class="e-sub" value="确认解绑" />
+
+</form>
+
+<script>
+	
+
+    //发送短信验证码
+    function sendcode(obj){
+        var tel = "{$member_info.phone}"
+        $.ajax({
+//            url:'/index.php?m=Mobile&c=User&a=send_validate_code&t='+Math.random(), //原获取短信验证码方法
+            url : "/index.php?m=Home&c=Api&a=send_validate_code&scene=6&type=mobile&send="+tel,
+            type:'post',
+            dataType:'json',
+            data:{send:tel},
+            success:function(res){
+                if(res.status==1){
+                    //成功
+                    showErrorMsg(res.msg);
+                    countdown(obj);
+                }else{
+                    //失败
+                    showErrorMsg(res.msg);
+                    $(obj).text('请刷新再试！');
+                    $(obj).attr('id','fetchcode');
+                }
+            }
+        })
+    }
+
+    function countdown(obj){
+        var obj = $(obj);
+        var s = {$tpshop_config['sms_sms_time_out']};
+        //改变按钮状态
+        obj.unbind('click');
+        //添加样式
+        obj.attr('id','fetchcode');
+        callback();
+        //循环定时器
+        var T = window.setInterval(callback,1000);
+        function callback()
+        {
+            if(s <= 0){
+                //移除定时器
+                window.clearInterval(T);
+                obj.bind('click',sendcode)
+                obj.removeAttr('id','fetchcode');
+                obj.text('获取验证码');
+            }else{
+                obj.text(--s + '秒后再获取');
+            }
+        }
+    }
+
+    //提交前验证表单
+    function submitverify(obj){
+        
+        if($('#mobile_code').val() == ''){
+            showErrorMsg('验证码不能空！');
+            return false;
+        }
+        $(obj).submit();
+    }
+
+
+</script>
+                    
+</body>
+</html>

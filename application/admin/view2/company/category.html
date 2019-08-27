@@ -1,0 +1,174 @@
+<include file="public/layout" />
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title">
+      <div class="subject">
+        <h3>公司类目</h3>
+        <h5>公司列表信息</h5>
+      </div>
+    </div>
+  </div>
+
+  <div class="flexigrid">
+    <div class="mDiv">
+      <div class="ftitle">
+        <h3>公司类目</h3>
+        <h5>(共{$pager->totalRows}条记录)</h5>
+      </div>
+      <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+
+    </div>
+	<div class="tDiv">
+		<div class="tDiv2">
+
+
+			<div class="fbutton">
+				<a href="{:U('Admin/Company/AddCategory')}">
+					<div class="add" title="新增类目">
+						<span ><i class="fa fa-plus"></i>新增类目</span>
+					</div>
+				</a>
+			</div>
+
+
+
+		</div>
+		<div style="clear:both"></div>
+	</div>
+	
+    <div class="hDiv">
+      <div class="hDivBox">
+        <table cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+              <th class="sign" axis="col0">
+                <div style="width: 24px;"><i class="ico-check"></i></div>
+              </th>
+			        <th align="left" abbr="article_title" axis="col1" class="">
+                <div style="text-align: left; width: 30px;" class="">ID</div>
+              </th>
+              <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: left; width: 240px;" class="">公司类目名称</div>
+              </th>
+
+              <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: left; width: 240px;" class="">公司类目图片</div>
+              </th>
+            
+             
+                    <th align="center" abbr="control" axis="col9" class="handle">
+                <div style="text-align: center; width: 260px;" class="">操作</div>
+              </th>
+              <th style="width:100%" axis="col7">
+                <div></div>
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    
+    <div class="bDiv" style="height: auto;">
+      <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+        <table>
+          <tbody>
+            <foreach name="list" item="vo" key="k" >
+              <tr data-id="{$vo.id}">
+                <td class="sign">
+                  <div style="width: 24px;"><i class="ico-check"></i></div>
+                </td>
+				        <td align="left" class="">
+                  <div style="text-align: left; width: 30px;">{$vo.id}</div>
+                </td>
+                <td align="left" class="cname">
+                  <div style="text-align: left; width: 240px;">{$vo.cc_name}</div>
+                </td>
+
+                <td align="left" class="cname">
+                  <div style="text-align: center; width: 240px;"><img src="{$vo.cc_image}" alt="" width="24"></div>
+                </td>
+                
+              
+          
+               
+                <td align="center" class="handle">
+                  <div style="text-align: center; width:260px;">
+				  	        <a class="btn blue" href="__URL__/addcategory/id/{$vo.id}"><i class="fa fa-pencil-square-o"></i>编辑</a>
+					       <a class="btn blue" href="__URL__/catdel/id/{$vo.id}" onClick="if(confirm('确认删除吗?')){ return true;}else{return false;}"> <i class="fa fa-trash-o"></i>删除</a>
+                   
+				          </div>
+                </td>
+                <td align="" class="" style="width: 100%;">
+                  <div>&nbsp;</div>
+                </td>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+      </div>
+      {$pager->show()} 
+      <div class="iDiv" style="display: none;"></div>
+	   
+    </div>
+     </div>
+</div>
+<script>
+    $(document).ready(function(){	
+	    // 表格行点击选中切换
+	    $('#flexigrid > table>tbody >tr').click(function(){
+		    $(this).toggleClass('trSelected');
+
+
+      /*$("#searchtype").click(function(){
+          alert("dddd");
+          var stype = $(this).val();
+          if(stype == 88){
+              $("#keyword").attr("placeholder","请输入子公司名称或联系人");
+          }else if(stype == 99){
+              $("#keyword").attr("placeholder","请输入实体店名称或联系人");
+          }
+      })*/
+		});
+		
+		// 点击刷新数据
+		$('.fa-refresh').click(function(){
+			location.href = location.href;
+		});
+
+		$(document).keydown(function(e){
+		    if(e.keyCode == 13){
+		        $("#search-form2").submit();
+            }
+        })
+		
+	});
+	
+    function delfun(obj) {
+      // 删除按钮
+      layer.confirm('确认删除？', {
+        btn: ['确定', '取消'] //按钮
+      }, function () {
+        $.ajax({
+          type: 'post',
+          url: $(obj).attr('data-url'),
+          data: {act: 'del', article_id: $(obj).attr('data-id')},
+          dataType: 'json',
+          success: function (data) {
+            layer.closeAll();
+            if (data) {
+              $(obj).parent().parent().parent().remove();
+            } else {
+              layer.alert('删除失败', {icon: 2});  //alert('删除失败');
+            }
+          }
+        })
+      }, function () {
+        layer.closeAll();
+      });
+    }
+</script>
+</body>
+</html>

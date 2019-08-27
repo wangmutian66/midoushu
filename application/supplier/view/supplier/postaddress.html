@@ -1,0 +1,107 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<style type="text/css">
+    .clearpic{cursor:pointer;color:blue;font-size:14px;padding:5px;border:1px solid #ccc;width:100px;text-align:center;margin-top:10px;background:#ccc;}
+</style>
+<body style="background-color: #FFF; overflow: auto;">
+<div id="toolTipLayer" style="position: absolute; z-index: 9999; display: none; visibility: visible; left: 95px; top: 573px;"></div>
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title"><a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+            <div class="subject">
+                <h3>供货商管理 - 退换货收货地址</h3>
+                <h5>设置退换货收货地址</h5>
+            </div>
+        </div>
+    </div>
+    <form class="form-horizontal" method="post" id="add_form">
+        <div class="ncap-form-default">
+            <dl class="row">
+                <dt class="tit">
+                    <label for="post_consignee">收货人</label>
+                </dt>
+                <dd class="opt">
+                    <input id="post_consignee" name="post_consignee" value="{$config.post_consignee}" class="input-txt" type="text" />
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="post_mobile">联系手机</label>
+                </dt>
+                <dd class="opt">
+                    <input name="post_mobile" value="{$config.post_mobile}" class="input-txt" type="text" />
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="address">具体地址</label>
+                </dt>
+                <dd class="opt">
+                    <select onblur="get_city(this)" id="province" name="post_province">
+                        <option  value="0">选择省份</option>
+                        <volist name="province" id="vo">
+                            <option value="{$vo.id}" <if condition="$config[post_province] eq $vo[id]">selected</if>>{$vo.name}</option>
+                        </volist>
+                    </select>
+                    <select onblur="get_area2(this);" id="city" name="post_city">
+                        <option value="0">选择城市</option>
+                        <volist name="city" id="vo">
+                            <option value="{$vo.id}" <if condition="$config[post_city] eq $vo[id]">selected</if>>{$vo.name}</option>
+                        </volist>
+                    </select>
+                    <input id="address" name="post_address" value="{$config.post_address}" class="input-txt" type="text" />
+                    <p class="notic">具体地址</p>
+                </dd>
+            </dl>
+			
+            <div class="bot"><a href="JavaScript:void(0);" onClick="checkUserUpdate();" class="ncap-btn-big ncap-btn-green" id="submitBtn">确认提交</a></div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    $(function(){
+        initIssuppliers_type();
+        $(document).on("click",'.suppliers_type',function(){
+            initIssuppliers_type();
+        })
+    })
+
+    function checkUserUpdate(){
+        var post_consignee = $.trim($('input[name="post_consignee"]').val());
+        var post_mobile    = $.trim($('input[name="post_mobile"]').val());
+        var post_province  = $('input[name="post_province"]').val();
+        var post_city      = $('input[name="post_city"]').val();
+        var post_address   = $.trim($('input[name="post_address"]').val());
+
+
+        var error ='';
+        if(post_consignee == ''){
+            error += "收货人不能为空\n";
+        }
+        if(post_mobile ==''){
+            error += "联系电话不能为空\n";
+        }
+        if(post_province == 0){
+            error += "请选择省份\n";
+        }
+        if(post_city == 0){
+            error += "请选择城市\n";
+        }
+        if(post_address ==''){
+            error += "详细地址不能为空\n";
+        }
+
+        if(error){
+            layer.alert(error, {icon: 2});  //alert(error);
+            return false;
+        }
+        $('#add_form').submit();
+    }
+</script>
+
+
+
+</body>
+</html>

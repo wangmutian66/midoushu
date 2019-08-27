@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="renderer" content="webkit">
+<title>支付密码设置</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/member.css?v={$vnum}" rel="stylesheet">
+<script src="__STATIC__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/js/global.js?v={$vnum}" type="text/javascript"></script>
+<script src="__PUBLIC__/static/js/layer/layer.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/baidu.js"></script>
+</head>
+
+<body class="bgg">
+	<include file="public/user_header" />
+	<div class="clear"></div>
+	
+	<div class="y-content">
+		<!--左侧菜单-->
+		<include file="public/user_lefter" />
+		
+		<!--右侧内容-->
+		<div class="y-right y-borm fri">
+			<div class="y-title0">
+				<span></span>设置支付密码
+			</div>
+			<input type="hidden" id="order_sn" name="order_sn" value="{$order_sn}">
+
+			<if condition="$step eq 1">
+				<div class="y-yz">
+			        <p>您认证的手机号码：<span>{$user.mobile}</span></p>
+			        <form action="" method="post" class="yzm">
+			        	<input type="hidden" name="mobile" id="mobile" value="{$user.mobile}" />
+				        <div class="zhmm">
+				            <input type="text" class="c_code_msg2" id="code" name="code">
+				            <a href="javascript:void(0);">
+								<input class="button_yzm" type="button" name="" onclick="sendcode(this)" value="获取验证码" />
+							</a>
+				        </div>
+				        <div class="clear"></div>
+				        <input type="button" class="qrtx" onclick="nextstep()" value="确定下一步" />
+				        <div class="clear"></div>
+			        </form>
+				</div>
+			</if>
+			<if condition="$step eq 2">
+				<form action="" method="post" id="pwdform">
+					<div class="y-shez">
+						<p>设置6位支付密码</p>
+						<input type="password" class="pass" name="new_password" id="new_password" value=""placeholder="6位字母、数字或符号组合" onkeyup="securityLevel(this.value)" />
+						<span class="safebil" href="javascript:void(0);" style="text-indent: 0;margin:0 auto 10px auto;">
+							<span>安全程度</span>
+							<span class="lowzg red">低</span>
+							<span class="lowzg ">中</span>
+							<span class="lowzg ">高</span>
+						</span>
+						<p>确认您的支付密码</p>
+						<input type="password" class="pass" name="confirm_password" id="confirm_password" value="" placeholder="6位字母、数字或符号组合" />
+						<input type="hidden" name="step" value="3">
+						<input type="button" onclick="checkSubmit()" class="sub" value="确定下一步" />
+					</div>
+				</form>
+			</if>
+			<if condition="$step eq 3">
+				<div class="y-wc">
+					<img src="__STATIC__/img/xl.png" />
+					<p>恭喜您，完成支付密码的设置！</p>
+					<a href="{:U('Home/Cart/cart4',array('order_sn'=>$order_sn))}" class="ju">去支付</a>
+				</div>
+			</if>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<include file="public/user_footer" />
+	<script type="text/javascript">
+        //显示密码安全等级
+        function securityLevel(sValue) {
+            var modes = 0;
+            //正则表达式验证符合要求的
+            if (sValue.length < 6 ) return modes;
+            if (/\d/.test(sValue)) modes++; //数字
+            if (/[a-z]/.test(sValue)) modes++; //小写
+            if (/[A-Z]/.test(sValue)) modes++; //大写
+            if (/\W/.test(sValue)) modes++; //特殊字符
+            $('.lowzg').eq(modes-1).addClass('red').siblings('.lowzg').removeClass('red');
+        };
+		function sendcode(o){
+			$.ajax({
+				url:'/index.php?m=Home&c=Api&a=send_validate_code&scene=6&t='+Math.random(),
+				type:'get',
+				dataType:'json',
+				data:{type:'phone',send:$('#mobile').val()},
+				success:function(res){
+					if(res.status==1){
+						layer.alert(res.msg, {icon: 1});
+						timer(o);
+					}else{
+						layer.alert(res.msg, {icon: 2});
+					}
+				}
+			})
+		}
+
+		var wait=180;
+		function timer(o) {
+		    if (wait == 0) {  
+		        o.removeAttribute("disabled");            
+		        o.value="获取验证码";  
+		        wait = {$tpshop_config['sms_sms_time_out']};
+		    } else {  
+		        o.setAttribute("disabled", true);  
+		        o.classList.add("fsyz1");
+		        o.value="重新发送(" + wait + ")";  
+		        wait--;  
+		        setTimeout(function() {  
+		          timer(o)  
+		        }, 1000)  
+		    }  
+		}
+		
+		function nextstep(){
+			var order_sn = $('#order_sn').val();
+			var code = $('#code').val();
+			if(code == ''){
+				layer.alert('验证码不能为空', {icon: 2});
+				return false;
+			}
+			if(code.length != 6){
+				layer.alert('验证码错误', {icon: 2});
+				return false;
+			}
+			$.ajax({
+				url:'/index.php?m=Home&c=Api&a=check_validate_code&t='+Math.random(),
+				type:'post',
+				dataType:'json',
+				data:{type:'phone',code:code,send:$('#mobile').val(),scene:6},
+				success:function(res){
+					if(res.status==1){
+						is_check = true;
+						window.location.href='/index.php?m=Home&c=User&a=paypwded&step=2&t='+Math.random()+'&order_sn='+order_sn;
+					}else{
+						layer.alert(res.msg, {icon: 2});
+						return false;
+					}
+				}
+			})
+		}
+		
+		function checkSubmit(){
+			var new_password = $('#new_password').val();
+			var confirm_password = $('#confirm_password').val();
+			if(new_password == ''){
+				layer.alert('新支付密码不能为空', {icon: 2});
+				return false;
+			}
+			if(new_password.length<6 || new_password.length>6){
+				layer.alert('密码长度不符合规范', {icon: 2});
+				return false;
+			}
+			if(new_password != confirm_password){
+				layer.alert('两次密码不一致', {icon: 2});
+				return false;
+			}
+			$('#pwdform').submit();
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<include file="public/TK_top" />
+<if condition="empty($list)">
+<div class="e-zil">
+	<div class="zt">
+		<div class="nei fl" >
+			您还没有佣金，请努力推广用户吧~~~
+	    </div>
+	</div>
+</div>
+</if>
+<volist name="list" id="vo">
+<div class="e-zil">
+	<div class="zt">
+		<div class="bt fl">
+			累计时间：
+	    </div>
+		<div class="nei fl">
+			{$vo.create_time|date='Y-m-d H:i:s',###}
+		</div>
+	</div>
+	<div class="zt">
+		<div class="bt fl">
+			订单编码：
+	    </div>
+		<div class="nei fl">
+			{$vo.order_sn}
+		</div>
+	</div>
+	
+	<div class="zt">
+		<div class="bt fl">
+			订单归属：
+	    </div>
+		<div class="nei fl">
+			<if condition="$vo['pay_id'] eq 0">
+				<span style="color:green">线上</span>
+			<else />
+			<span style="color:#f23030">线下</span>
+
+			</if>
+		</div>
+	</div>
+	<if condition="$vo['pay_id'] eq 0">
+	<div class="zt">
+		<div class="bt fl">
+			购买商城：
+	    </div>
+		<div class="nei fl">
+			<if condition="$vo['is_red'] neq 1">
+				<span style="color:#ff4401">现金商城</span>
+			<else />
+			<span style="color:red">米豆商城</span>
+			</if>
+		</div>
+	</div>
+	</if>
+	<if condition="$vo['pay_id'] neq 0">
+	<div class="zt">
+		<div class="bt fl">
+			所属实体店：
+	    </div>
+		<div class="nei fl">
+			
+			<span style="color:#2894FF">{$vo.store_name}</span>
+		</div>
+	</div>
+	</if>
+	
+	<div class="zt">
+		<div class="bt fl">
+			累计金额：
+	    </div>
+		<div class="nei fl">
+			<h2>{$vo.money}</h2>
+		</div>
+	</div>
+</div>
+</volist>
+<div style="text-align:center">
+	{$page}
+</div>
+</body>
+</html>

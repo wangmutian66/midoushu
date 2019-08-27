@@ -1,0 +1,133 @@
+<include file="public/layout" />
+<style>
+    .err{color:#F00; display:none;}
+</style>
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<!--以下是在线编辑器 代码 -->
+<load href="__ROOT__/public/plugins/Ueditor/ueditor.config.js"/>
+<load href="__ROOT__/public/plugins/Ueditor/ueditor.all.min.js"/>
+<script type="text/javascript" charset="utf-8" src="__ROOT__/public/plugins/Ueditor/lang/zh-cn/zh-cn.js"></script>
+<body style="background-color: #FFF; overflow: auto;">
+<div id="toolTipLayer" style="position: absolute; z-index: 9999; display: none; visibility: visible; left: 95px; top: 573px;"></div>
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title"><a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+            <div class="subject">
+                <h3>供货申请</h3>
+                <h5></h5>
+            </div>
+        </div>
+    </div>
+    <form class="form-horizontal" id="handleposition" method="post">
+        <input type="hidden" id="goods_id" name="goods_id" value="{$info.goods_id}">
+        <input type="hidden" name="id" value="{$info.id}">
+        <input type="hidden" name="item_id" value="{$info.item_id}">
+        <div class="ncap-form-default">
+            <dl class="row">
+                <dt class="tit">
+
+                </dt>
+                <dd class="opt">
+                    <img src="{$company.litpic}" style="width: 70px; height: 70px; float: left;"/>
+                    <div style="float:left; margin-left: 10px;">
+                        <div>名称：{$company.cname}</div>
+                        <div>联系人：{$company.contact} &nbsp;&nbsp; 手机号：{$company.mobile}</div>
+                        <div>店铺地址：{$company.address}</div>
+                    </div>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label><em>*</em>内容</label>
+                </dt>
+                <dd class="opt">
+                   {$company.strore_supply_content}
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label><em>*</em>选择抢购商品</label>
+                </dt>
+                <dd class="opt">
+                    <div style="overflow: hidden" id="selected_group_goods">
+                        <foreach name="supply" item="v" key="k" >
+                        <div style="float: left;margin: 10px auto; margin-right: 25px; width: 162px;" class="selected-group-goods">
+                            <div class="goods-thumb">
+                                <img style="width: 162px;height: 162px" src="{$v[goods_id]|goods_thum_images=115,115,'red'}">
+                            </div>
+                            <div class="goods-name" style="height: 72px;">
+                                <a target="_blank" href="/index.php?m=Homered&amp;c=Goods&amp;a=goodsInfo&amp;id={$v.goods_id}">{$v.goods_name}</a>
+                                {$v.key_name}
+                            </div>
+                            <div class="goods-price">库存:{$v.stock} </div>
+                            <input type="hidden" name="goodid" value="{$v.goods_id}">
+                            <input type="hidden" name="itemid" value="{$v.item_id}">
+                            <input type="hidden" name="stock" value="{$v.stock}">
+                            <p class="notic">
+                                <if condition="$v['status'] eq '1' ">
+                                    <if condition="$v['is_examine'] eq '2' ">
+                                        <a  class="ncap-btn ncap-btn-green" style="background-color:#aaa;border-color: #aaa;">已拒绝<!-- {$v.id} --></a><br><span style="color:red;">拒绝原因：{$v['examine_reason']}</span>
+                                        
+                                    <else/>
+                                        <a  class="ncap-btn ncap-btn-green" style="background-color:#aaa;border-color: #aaa;">审核中</a>
+                                    </if>
+                                <else />
+                                    <a onclick="selectGoods(this,{$v.id})" class="ncap-btn ncap-btn-green" id="select_goods_button">同意供货</a>
+                                </if>
+
+                            </p>
+                        </div>
+                        </foreach>
+                    </div>
+                    <span class="err" id="err_goods_name"></span>
+
+                </dd>
+            </dl>
+
+
+
+
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+
+
+    function selectGoods(element,id){
+        var selectgoods = $(element).parents(".selected-group-goods");
+        var good_id = selectgoods.find("input[name=goodid]").val();
+        var item_id = selectgoods.find("input[name=itemid]").val();
+        var stock = selectgoods.find("input[name=stock]").val();
+
+        var param = new Object();
+        param["id"] = id;
+        param["good_id"] = good_id;
+        param["item_id"] = item_id;
+        param["stock"] = stock;
+        param["store_id"] = "{$Think.get.store_id}";
+
+        $.ajax({
+            url:"__URL__/setsupply",
+            data:param,
+            dataType:"json",
+            type:"POST",
+            success:function(data){
+                if(data.error == 0){
+                    layer.alert('发送供货', {icon: 1});
+                    setTimeout(function(){
+                        window.location.reload();
+                    },1000);
+                }else{
+                    layer.alert(data.msg, {icon: 1});
+                }
+            }
+        })
+    }
+
+</script>
+</body>
+</html>

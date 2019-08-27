@@ -1,0 +1,64 @@
+<div class="classreturn loginsignup ">
+    <div class="content">
+        <div class="ds-in-bl return">
+            <a href="[href]"><img src="__STATIC__/images/return.png" alt="返回"></a>
+        </div>
+        <div class="ds-in-bl search center">
+            <span>[title]</span>
+        </div>
+        <div class="ds-in-bl menu">
+            <a href="javascript:void(0);"><img src="__STATIC__/images/class1.png" alt="菜单"></a>
+        </div>
+    </div>
+</div>
+<div class="flool tpnavf">
+    <div class="footer">
+        <ul>
+            <li>
+                <a class="yello" href="{:U('Index/index')}">
+                    <div class="icon">
+                        <i class="icon-shouye iconfont"></i>
+                        <p>线上选购</p>
+                    </div>
+                </a>
+            </li>
+             <li>
+                <a href="{:U('Mobilered/Goods/storegoodsList',['store_id'=>$store_id])}">
+                    <div class="icon">
+                        <i class="icon-gouwuche iconfont"></i>
+                        <p>线下选购</p>
+                    </div>
+                </a>
+            </li>
+            <style type="text/css">
+                .footer ul li span.ys{
+                }
+                .footer ul li span.ys img{
+                    width:1.06667rem;
+                    vertical-align: top;
+                }
+            </style>
+            <li>
+                <a href="{:U('user/dosweepCode',array('vs'=>'4','staff_id'=>$staff_info.id))}">
+                    <div class="icon">
+                        <!-- <i class="icon-man1 iconfont"></i> -->
+                        <span class="ys"><img src="__STATIC__/css/man1.png" style="margin-top: 0.1rem;"></span>
+                        <p>申请推广员</p>
+                    </div>
+                </a>
+            </li>
+            
+            <li>
+                <!--<a href="shopcar.html">-->
+                <a href="{:U('user/dosweepCode',array('vs'=>'3','staff_id'=>$staff_info.id))}">
+                    <div class="icon">
+                        <span class="ys"><img src="__STATIC__/css/man2.png"></span>
+                        <!-- <i class="icon-wode iconfont"></i> -->
+                        <p>申请服务员</p>
+                    </div>
+                </a>
+            </li>
+           
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>操作提示</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="__STATIC__/css/ghs-style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript"  src="__STATIC__/js/jquery.min.js"></script>  
+</head>
+
+<body style="background: #f2f5f8;">
+	<div class="ghs-zhmm">
+		<div class="zh">
+			<div class="main">
+				<div class="zh-logo"><img src="__STATIC__/images/zh-logo.png"></div>
+				<div class="bdj">
+					<div class="dj"><img src="__STATIC__/images/dj.png"></div>
+				</div>
+				<?php if($code == 1) {?>    
+				<!--修改成功-s-->
+				<div class="yz">
+					<div class="xx">
+						<span class="ys-1">对不起！您的账号已冻结，无法登陆！</span>
+					</div>
+					<div class="xx-2">
+						<span class="ys">如有问题请联系客服</span>
+						<span class="ys">客服热线：{$tpshop_config['shop_info_phone']}</span>
+					</div>
+					<div class="line-1">
+						<a href="" class="inp-3">重新登录</a>
+						<a href="" class="inp-3">返回商城</a>
+					</div>
+				</div>
+				<!--修改成功-e-->
+				<?php }else{?>
+				<!--修改失败-s-->
+				<div class="yz">
+					<div class="xx">
+						<span class="ys-1"><?php echo(strip_tags($msg)); ?></span>
+					</div>
+					<div class="xx-2">
+						<span class="ys">页面自动跳转中...</span>
+						<span class="ys"><a id="href" href="<?php echo($url); ?>" style="color: #666666">等待时间：<em  id="wait"><?php echo($wait); ?></em></a></span>
+					</div>
+					<div class="xx-2">
+						<span class="ys">如有问题请联系客服</span>
+						<span class="ys">客服热线：{$tpshop_config['shop_info_phone']}</span>
+					</div>
+					<div class="line-1">
+						<a href="{:U('Supplier/Supplier/login')}" class="inp-3">重新登录</a>
+						<a href="/" class="inp-3">返回商城</a>
+					</div>
+				</div>
+				<!--修改失败-e-->
+				<?php }?> 
+			</div>
+			<div class="bq">© 2005-2018 {$tpshop_config['shop_info_store_name']|default='米豆薯'} 版权所有，并保留所有权利</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		(function(){
+			var wait = document.getElementById('wait'),href = document.getElementById('href').href;
+			var interval = setInterval(function(){
+				var time = --wait.innerHTML;
+				if(time <= 0) {
+					location.href = href;
+					clearInterval(interval);
+				};
+			}, 1000);
+		})();
+	</script>   
+</body>
+</html>

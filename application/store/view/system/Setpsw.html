@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<include file="public/TK_public"/>
+<title>无标题文档</title>
+</head>
+
+<body>
+<script>
+
+parent.layer.closeAll('loading');
+	function postdata(){
+		if($("#newpsw").val() != $("#repsw").val()){
+			layer.msg('重复密码不一致，请重新填写', {icon: 2,time: 2000},function (){
+				$("#newpsw").val('').focus();
+			});
+			return false;
+		}
+		
+		$.ajax({  
+			url: "{:U('/Store/System/doSetpsw')}",  
+			type: 'POST',  
+			data:$("#formf").serialize(),  
+			dataType: 'json',  
+			error: function(){alert('请刷新重试')},
+			beforeSend:function(){
+				parent.layer.load('2',{shade: 0.3});
+			},
+			success: function(r){
+				if(r.status == 1){
+					layer.msg('修改密码成功！', {icon: 1,time: 2000},function (){
+						location.reload();
+					}); 
+				}else{
+					layer.msg(r.info, {icon: 2,time: 2000});
+				}
+			},
+			complete:function(){
+				parent.layer.closeAll('loading');
+			}  
+		});  
+		return false;
+	}
+	
+</script>
+
+<form onsubmit="return postdata()" id="formf">
+<div class="h-title" style="margin:3% 0 1% 3%">
+	修改密码
+</div>
+<ul class="h-bd">
+	<li>
+		<h6>原密码：</h6>
+		<input type="password" class="wenb" id="oldpsw" name="oldpsw" required="required" value="" autocomplete="new-password"  style="width: 284px;">
+	</li>
+	<li>
+		<h6>新密码：</h6>
+		<input type="password" class="wenb" id="newpsw" name="newpsw" required value="" autocomplete="new-password"  style="width: 284px;">
+	</li>
+	<li>
+		<h6>新密码确认：</h6>
+		<input type="password" class="wenb" id="repsw" name="repsw" required value="" autocomplete="new-password"  style="width: 284px;">
+	</li>
+	
+</ul>
+<input type="submit" class="h-que2" value="确认修改">
+</form>
+
+</body>
+</html>

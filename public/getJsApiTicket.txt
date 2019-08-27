@@ -1,0 +1,1 @@
+https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=16_1aqIDlMs4AThkbQ4b8hqkfEYc039I0dKjFcrtK7-nrhHBJ8emEpPHBXesFUm7TS2UfpqDtmltPBxNlJUGos6hkw8U4fnWyvqAO73DpNGpaF6EhlkEhxdDcB0B6PF_t1PQ9wzGQ34kFNVWSsxJFNcAIASOW&type=jsapi

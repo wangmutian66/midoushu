@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>详情-{$tpshop_config['shop_info_store_title']}</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/second.css?v={$vnum}" rel="stylesheet">
+<script src="__PUBLIC__/js/baidu.js"></script>
+</head>
+
+<body>
+	<include file="public/top"/>
+	<div class="notice">
+		<div class="l">
+			<div class="single-n">
+				<h2>{$article.title}</h2>
+				<div class="fbsj">
+					<span>{$article.add_time|date='Y-m-d H:i',###}</span>
+				</div>
+				<div class="main">
+					{$article.content|htmlspecialchars_decode}
+				</div>
+			</div>
+		</div>
+		<include file="article/righter"/>
+	</div>
+	<include file="public/footer"/>
+</body>
+</html>

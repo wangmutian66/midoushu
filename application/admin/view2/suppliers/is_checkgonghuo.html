@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>供货商申请审核-{$tpshop_config['shop_info_store_title']}</title>
+    <meta http-equiv="keywords" content="{$tpshop_config['shop_info_store_keyword']}" />
+    <meta name="description" content="{$tpshop_config['shop_info_store_desc']}" />
+    <!--<link rel="stylesheet" href="__STATIC__/css/edit_address.css" type="text/css">-->
+    <script src="__PUBLIC__/js/jquery-1.10.2.min.js"></script>
+    <!--<script src="__STATIC__/js/slider.js"></script>-->
+	<script src="__PUBLIC__/js/layer/layer-min.js"></script><!--弹窗js 参考文档 http://layer.layui.com/-->
+</head>
+<style type="text/css">
+.wi80-BFB{width:80%}
+.wi40-BFB{width:40%}
+.seauii{ padding:7px 10px; margin-right:10px}
+.he110{ height:110px}
+.di-bl{ display:inherit}
+</style>
+<body>
+<div class="adderss-add">
+    <div class="ner-reac ol_box_4" style="visibility: visible; position: fixed; z-index: 500; width: 100%; height:100%">
+        <div class="box-ct">
+            <div class="box-header">
+                <!-- <a href="" class="box-close"></a> -->
+            </div>
+            <form action="{:U('Admin/Suppliers/dois_checkgonghuo')}" method="post" onSubmit="return checkForm()">
+                <input type="hidden" name="cid" value="{$Request.param.cid}">
+                <input type="hidden" name="id" value="{$Request.param.id}">
+                <table width="90%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td style="width:130px"><div>&nbsp;</div></td>
+                        <td ><div>&nbsp;</div></td>
+                    </tr>
+                    <tr>
+                        <td align="right" valign="top">审核：</td>
+                        <td>
+                            <div class="onoff">
+                                <input id="is_check1" name="is_check" value="2" type="radio" > 通过 &nbsp;&nbsp;&nbsp;&nbsp;
+                                <input id="is_check0" name="is_check" value="3" type="radio" > 未通过
+                                 
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><div>&nbsp;</div></td>
+                        <td><div>&nbsp;</div></td>
+                    </tr>
+                    <tr  style="display:none" id="yuanyin">
+                        <td align="right">未通过原因：</td>
+                        <td>
+                            <div><textarea rows="3" cols="20" name="gonghuo_reason"></textarea></div>
+                        </td>
+                    </tr>
+
+                   <tr style="height:60px">
+                        <td class="pa-50-0">&nbsp;</td>
+                        <td align="right">
+                            <button type="submit" style="padding: 4px 16px;cursor: pointer;position:absolute;right:80px;bottom:35px;"><span>确认</span></button>
+                        </td>    
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="__PUBLIC__/js/global.js"></script>
+<script src="__PUBLIC__/js/pc_common.js"></script>
+
+<script>
+    function checkForm(){
+        var error = '';
+        if(error){
+			layer.alert(error, {icon: 2});
+            return false;
+        }
+        return true;
+    }
+$("#is_check0").click(function(){
+  $("#yuanyin").show();
+  // alert('123');
+});
+$("#is_check1").click(function(){
+  $("#yuanyin").hide();
+  // alert('123');
+});
+</script>
+</body>
+</html>

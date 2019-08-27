@@ -1,0 +1,54 @@
+<include file="public/header" title="设置支付密码" body=""/>
+<include file="public/header_nav" title="设置支付密码"  href='javascript:history.go(-1)'/>
+
+
+<input type="hidden" id="order_sn" name="order_sn" value="{$order_sn}">
+    <div class="loginsingup-input">
+        <form  method="post"  id="payform">
+            <div class="reset-pwd-title">设置支付密码</div>
+            <div class="lsu">
+                <span class="ico ico-password"></span>
+                <input type="password" name="new_password" id="new_password"  placeholder="请输入新密码"/>
+            </div>
+            <div class="lsu">
+                <span class="ico ico-password"></span>
+                <input type="password" name="confirm_password" id="confirm_password"  placeholder="再次输入新密码" />
+            </div>
+            <div class="lsu-submit">
+                <input type="button" onclick="submitverify()" value="确认修改" />
+            </div>
+        </form>
+    </div>
+<script>
+
+    //提交前验证表单
+    function submitverify(){
+        var order_sn = $('#order_sn').val();
+        var new_password = $('#new_password').val();
+        var confirm_password = $('#confirm_password').val();
+      
+        $.ajax({
+            url:'/index.php?m=Mobile&c=User&a=setpaypwdred&t='+Math.random()+'&order_sn='+order_sn,
+            type:'post',
+            dataType:'json',
+            data:$('#payform').serialize(),
+            success:function(data){
+                if(data.status==1){
+                    showErrorMsg(data.msg);
+					window.setTimeout("location.href='"+data.url+"';",2000);  
+                }else{
+                    showErrorMsg(data.msg);
+                    return false;
+                }
+            }
+        })
+    }
+    /**
+     * 提示弹窗
+     * */
+    function showErrorMsg(msg){
+        layer.open({content:msg,time:2});
+    }
+</script>
+</body>
+</html>

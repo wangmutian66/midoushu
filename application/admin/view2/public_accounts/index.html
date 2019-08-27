@@ -1,0 +1,276 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<script src="__ROOT__/public/js/company.js"></script>
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>提现记录</h3>
+            </div>
+        </div>
+    </div>
+    <!-- 操作说明 -->
+
+    <div class="flexigrid">
+        <div class="mDiv">
+            <div class="ftitle">
+                <h3>提现记录列表</h3>
+                <h5>(共<span id="user_count">{$pager->totalRows}</span>条记录)</h5>
+            </div>
+            <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+            <form action="__URL__/index" id="search-form2" class="navbar-form form-inline" method="get">
+                <input type="hidden" id="export" name="export"/>
+                <div class="sDiv">
+                    <div class="sDiv2">
+                        <select name="company_id" id="company_id" class="select" onChange="company_change($(this))">
+                            <option value="">请选择</option>
+                            <volist name='company_list' id='c_list'>
+                                <option value="{$c_list.cid}" <if condition="$c_list['cid'] eq $Request.param.company_id"> selected </if>>{$c_list.cname}</option>
+                            </volist>
+                        </select>
+					</div>
+                     <div class="sDiv2">
+                        <select name="store_id" id="store_id" class="select">
+                            <option value="">请选择</option>
+                            <volist name='store_list' id='s_list'>
+                                <option value="{$s_list.cid}" <if condition="$s_list['cid'] eq $Request.param.store_id"> selected </if>>{$s_list.cname}</option>
+                            </volist>
+                        </select>
+                        </div>
+                     <div class="sDiv2">
+						<select name="settlement_status" id="settlement_status" class="select">
+                            <option value="">所有</option>
+                            <option value="3" <if condition="$Request.param.settlement_status eq 3"> selected </if> >待结算</option>
+                            <option value="1" <if condition="$Request.param.settlement_status eq 1"> selected </if> >待转账</option>
+                            <option value="2" <if condition="$Request.param.settlement_status eq 2"> selected </if> >已转账</option>
+                        </select>
+                        </div>
+                     <div class="sDiv2">
+						<div class="sDiv2" style="margin-right: 10px;">
+							<input type="text" size="30" name="start_time" id="start_time" value="{$start_time}" placeholder="起始时间" class="qsbox">
+							<input type="button" class="btn" value="起始时间">
+						</div>
+						<div class="sDiv2" style="margin-right: 10px;">
+							<input type="text" size="30" name="end_time" id="end_time" value="{$end_time}" placeholder="截止时间" class="qsbox">
+							<input type="button" class="btn" value="截止时间">
+						</div>
+
+                        <input type="text" size="30" name="key_word" class="qsbox" style="width:200px;" placeholder="请输入订单号码" value="{$Think.get.key_word|default=''}">
+                        <input type="submit"  class="btn" value="搜索">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="tDiv">
+            <div class="tDiv2">
+                <div class="fbutton">
+                    <a href="javascript:;">
+                        <div class="add" title="导出表格" onClick="downExcel()">
+                            <span><i class="fa fa-plus"></i>导出表格</span>
+                        </div>
+                    </a>
+
+                </div>
+                
+                <div class="fbutton">
+                    <a href="javascript:;">
+                        <div class="add" title="结算" onClick="settlement(1)">
+                            <span><i class="fa fa-plus"></i>结算</span>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="fbutton">
+                    <a href="javascript:;">
+                        <div class="add" title="手动转账" onClick="settlement(2)">
+                            <span><i class="fa fa-plus"></i>转账</span>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+            <div style="clear:both"></div>
+        </div>
+
+        <div class="hDiv">
+            <div class="hDivBox">
+                <table cellspacing="0" cellpadding="0" style="width: 100%;">
+                    <thead>
+                    <tr>
+                        <th class="sign" axis="col0">
+                            <div style="width: 24px;"><i class="ico-check"></i></div>
+                        </th>
+                        <th align="left" abbr="article_title" axis="col1" class="">
+                            <div style="text-align: left; width:40px;" class="">ID</div>
+                        </th>
+                        <th align="left"  class="">
+                            <div style="text-align: center; width:100px;" class="">实体店名称</div>
+                        </th>
+                        <th align="left"  class="">
+                            <div style="text-align: center; width:200px;" class="">子公司名称</div>
+                        </th>
+                        
+                        <th align="left"  axis="col4" class="">
+                            <div style="text-align: center; width: 150px;" class="">订单号码</div>
+                        </th>
+                        <th align="left"  axis="col4" class="">
+                            <div style="text-align: center; width:120px;" class="">创建时间</div>
+                        </th>
+                        <th align="left"  axis="col4" class="">
+                            <div style="text-align: center; width: 60px;" class="">结算状态</div>
+                        </th>
+
+                        
+                        <th align="left"  axis="col4" class="">
+                            <div style="text-align: center; width:60px;" class="">结算金额</div>
+                        </th>
+                        
+						<th align="left" abbr="ac_id" axis="col4" class="">
+                            <div style="text-align: left; width: 120px;" class="">结算时间</div>
+                          </th>
+                          <th align="left" class="">
+                            <div style="text-align: center; width: 60px;" class="">最终操作人</div>
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+        <div class="bDiv" style="height: auto;">
+            <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+
+                <table>
+                    <tbody>
+                    <foreach name="list" item="vo" key="k" >
+                        <tr data-id='{$vo.id}'>
+                            <td class="sign">
+                                <div style="width: 24px;"><i class="ico-check"></i></div>
+                            </td>
+                            <td align="left" class="">
+                                <div style="text-align: left; width:40px;">{$vo.id}</div>
+                            </td>
+                            <td align="left" class="">
+                                <div style="text-align: center; width: 100px;">{$vo.store_name}</div>
+                            </td>
+                            <td align="left" class="">
+                                <div style="text-align: center; width: 200px;">{$vo.company_name}</div>
+                            </td>
+                            <td align="left" class="">
+                                <div style="text-align: center; width: 150px;">{$vo.paid_sn}</div>
+                            </td>
+                            <td align="left" class="">
+                                <div style="text-align: center; width:120px;">{$vo.create_time|date="Y-m-d H:i:s",###}</div>
+                            </td>
+                            <td align="left" class="">
+                                <div style="text-align: center; width: 60px;"><if condition="$vo.settlement_status eq 0">待结算<elseif condition="$vo.settlement_status eq 1"/>待转账<elseif condition="$vo.settlement_status eq 2"/>已完成</if></div>
+                            </td>
+                             <td align="left" class="">
+                                <div style="text-align: center; width: 60px;">{$vo.settlement_amount}</div>
+                            </td>
+                            <td align="left" class="">
+                            <div style="text-align: center; width: 120px;">
+                            <if condition="$vo.settlement_time">{$vo.settlement_time|date="Y-m-d H:i:s",###}</if>
+                                </div>
+                            </td>
+                            <td align="left" class="">
+                                <div style="text-align: center; width: 60px;">
+                                    {$vo.settlement_admin_name}
+                                </div>
+                            </td>
+							
+                            
+                        </tr>
+                    </foreach>
+                    </tbody>
+                </table>
+                <!--分页位置-->
+                {$page}
+            </div>
+            <div class="iDiv" style="display: none;"></div>
+        </div>
+        <!--分页位置-->
+    </div>
+</div>
+
+<script type="text/javascript">
+function downExcel(){
+    $('#export').val(1);
+    $('#search-form2').submit();
+}
+
+$(document).ready(function(){
+	 // 表格行点击选中切换
+	$('#flexigrid > table>tbody >tr').click(function(){
+		$(this).toggleClass('trSelected');
+	});
+	
+	// 点击刷新数据
+	$('.fa-refresh').click(function(){
+		location.href = location.href;
+	});
+	$('#start_time').layDate();
+	$('#end_time').layDate();
+});
+
+
+
+function settlement(set_status)
+{
+	var obj = $('.trSelected');
+	var url = "{:url('/Admin/PublicAccounts/settlement_list')}";
+	if(obj.length > 0){
+		var check_val = [];
+		obj.each(function(){
+			check_val.push($(this).attr('data-id'));
+		});
+		$.ajax({  
+			url: url,  
+			type: 'POST',  
+			data:"ids="+check_val+"&set_status="+set_status,  
+			dataType: 'json',  
+			error: function(){alert('请刷新重试')},
+			beforeSend:function(){
+				layer.load(2,{shade: 0.6});
+			},
+			success: function(r){
+				if(r.status == 1){
+					layer.msg('数据更新成功！', {icon: 1,time: 3000,shade: 0.6},function (){
+						location.reload();
+					});
+				}else{
+					layer.msg(r.info, {icon: 2,time: 2000,shade: 0.6});
+				}
+			},
+			complete:function(){
+				layer.closeAll('loading');
+			}
+		});  
+		
+	}else{
+		layer.msg('请选择结算信息',{icon:2});
+	}
+}
+
+//选中全部
+$('.hDivBox .sign').click(function(){
+	var sign = $('#flexigrid > table>tbody>tr');
+   if($(this).parent().hasClass('trSelected')){
+	   sign.each(function(){
+		   $(this).removeClass('trSelected');
+	   });
+	   $(this).parent().removeClass('trSelected');
+   }else{
+	   sign.each(function(){
+		   $(this).addClass('trSelected');
+	   });
+	   $(this).parent().addClass('trSelected');
+   }
+})
+
+</script>
+</body>
+</html>

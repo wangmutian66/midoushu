@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="renderer" content="webkit">
+<title>商城公告</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/second.css?v={$vnum}" rel="stylesheet">
+<script src="__PUBLIC__/js/baidu.js"></script>
+</head>
+
+<body>
+	<include file="public/top"/>
+	<div class="notice">
+		<div class="l">
+			<ul>
+				<volist name="article" id="vo">
+				<li>
+					<div class="tu"><img src="{$vo.article_id|article_thum_images=210,140}"></div>
+					<div class="wz">
+						<h2><a href="{:U('Article/notice_detail',array('article_id'=>$vo['article_id']))}">{$vo.title}</a></h2>
+						<div class="fbt"><a href="{:U('Article/notice_detail',array('article_id'=>$vo['article_id']))}">{$vo.description}</a></div>
+						<div class="bot">
+							<div class="ck"><a href="{:U('Article/notice_detail',array('article_id'=>$vo['article_id']))}">查看详细 >></a></div>
+							<div class="sj">{$vo.add_time|date='Y-m-d',###}</div>
+						</div>
+					</div>
+				</li>
+				</volist>
+			</ul>
+			{$page}
+		</div>
+		<include file="article/righter"/>
+	</div>
+	<include file="public/footer"/>
+</body>
+</html>

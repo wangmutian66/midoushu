@@ -1,0 +1,1008 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<style type="text/css">
+    .clearpic{cursor:pointer;color:blue;font-size:14px;padding:5px;border:1px solid #ccc;width:100px;text-align:center;margin-top:10px;background:#ccc;}
+</style>
+<body style="background-color: #FFF; overflow: auto;">
+<div id="toolTipLayer" style="position: absolute; z-index: 9999; display: none; visibility: visible; left: 95px; top: 573px;"></div>
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title"><a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+            <div class="subject">
+                <h3>供货商管理 - 供货商信息</h3>
+                <h5></h5>
+            </div>
+        </div>
+    </div>
+    <form class="form-horizontal" method="post" id="add_form">
+        <div class="ncap-form-default">
+            <dl class="row">
+                <dt class="tit">
+                    <label><em></em>用户名</label>
+                </dt>
+                <dd class="opt">
+                    <if condition="empty($supplier['user_id'])">
+                        <input type="text" name="user_name" id="user_name" class="input-txt" placeholder="手机或邮箱搜索" />
+                        <select name="user_id" id="user_id" >
+                            <option value="0">匿名用户</option>
+                        </select>
+                        <a href="javascript:void(0);" onClick="search_user();" class="ncap-btn ncap-btn-green" ><i class="fa fa-search"></i>搜索</a>
+                    <else />
+                        {$supplier.user_id|get_user_nickname}
+                    </if>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="suppliers_name"><em>*</em>供货商名称</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="suppliers_name" id="suppliers_name" value="{$supplier.suppliers_name}" class="input-txt">
+                    <span class="err"></span>
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>账户余额</label>
+                </dt>
+                <dd class="opt"><strong class="red">{$supplier.suppliers_money}</strong>&nbsp;元 </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="suppliers_level">供应商等级</label>
+                </dt>
+                <dd class="opt">
+                   <select name="suppliers_level" id="suppliers_level"  class="small form-control">
+                        <option value="">请选择等级</option>
+                        <foreach name="levelList" item="v" key="k" >
+                            <option value="{$v['level_id']}" <if condition="$v['level_id'] eq $supplier['suppliers_level'] ">selected="selected"</if>>
+                                  {$v['level_name']}
+                            </option>
+                        </foreach>
+                    </select> 
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="suppliers_contacts"><em>*</em>供应商联系人</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="suppliers_contacts" id="suppliers_contacts" value="{$supplier.suppliers_contacts}" class="input-txt">
+                    <span class="err"></span>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="suppliers_phone"><em>*</em>供应商电话</label>
+                </dt>
+                <dd class="opt">
+                    {$supplier.suppliers_phone}
+                    <span class="err"></span>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                  <label for="consignee"><em>*</em>地址</label>
+                </dt>
+                <dd class="opt">
+                  <select onBlur="get_city(this,0)" id="province" name="province_id"  title="请选择所在省份">
+                       <option value="">选择省份</option>
+                       <volist name="province" id="vo">
+                           <option value="{$vo.id}" <if condition="$supplier['province_id'] eq $vo['id']">selected</if> >{$vo.name}</option>
+                       </volist>
+                   </select>
+                   <select id="city" name="city_id" title="请选择所在城市">
+                        <option value="">选择城市</option>
+                        <volist name="city" id="vo">
+                            <option value="{$vo.id}" <if condition="$supplier['city_id'] eq $vo['id']">selected</if> >{$vo.name}</option>
+                        </volist>
+                    </select>
+                </dd>
+            </dl>
+            <!-- <dl class="row">
+                <dt class="tit">
+                    <label for="suppliers_email"><em>*</em>邮件地址</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="suppliers_email" id="suppliers_email" class="input-txt">
+                    <span class="err"></span>
+                    <p class="notic">前台登陆账号，手机邮箱任意一项都可以</p>
+                </dd>
+            </dl> -->
+            <dl class="row">
+                <dt class="tit">
+                    <label for="suppliers_desc">供应商描述</label>
+                </dt>
+                <dd class="opt">
+                  <textarea class="input-txt" id="suppliers_desc" name="suppliers_desc" title="">{$supplier.suppliers_desc}</textarea>
+                  <span class="err"></span>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="business_licence_number"><em>*</em>营业执照号</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="business_licence_number" id="business_licence_number" value="{$supplier.business_licence_number}" class="input-txt">
+                    <span class="err"></span>
+                    <p class="notic">必须与营业执照一致</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>营业执照</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a_zhizhao" target="_blank" class="nyroModal" rel="gal" href="{$supplier.zhizhao}">
+                                <i id="img_i_zhizhao" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$supplier.zhizhao} height=100 />',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="zhizhao" name="zhizhao" value="{$supplier.zhizhao}" class="type-file-text">
+                            <input type="button" name="button" id="button1" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify_supplier2(1,'zhizhao','suppliers','img_call_back','zhizhao')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <div onclick="clearpic('zhizhao');" class="clearpic">
+                            清除图片
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">请上传图片格式文件</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>开户许可证</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a_bank_licence_electronic" target="_blank" class="nyroModal" rel="gal" href="{$supplier.bank_licence_electronic}">
+                                <i id="img_i_bank_licence_electronic" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$supplier.bank_licence_electronic} height=100 />',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="bank_licence_electronic" name="bank_licence_electronic" value="{$supplier.bank_licence_electronic}" class="type-file-text">
+                            <input type="button" name="button" id="button2" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify_supplier2(1,'bank_licence_electronic','suppliers','img_call_back','bank_licence_electronic')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <div onclick="clearpic('bank_licence_electronic');"  class="clearpic">
+                            清除图片
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">请上传图片格式文件</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="organization_code">组织机构代码</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="organization_code" id="organization_code" value="{$supplier.organization_code}" class="input-txt">
+                    <span class="err"></span>
+                    <p class="notic">必须与组织机构代码证一致</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>组织机构代码证</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a_organization_code_electronic" target="_blank" class="nyroModal" rel="gal" href="{$supplier.organization_code_electronic}">
+                                <i id="img_i_organization_code_electronic" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$supplier.organization_code_electronic} height=100 />',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="organization_code_electronic" name="organization_code_electronic" value="{$supplier.organization_code_electronic}" class="type-file-text">
+                            <input type="button" name="button" id="button3" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify_supplier2(1,'organization_code_electronic','suppliers','img_call_back','organization_code_electronic')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <div onclick="clearpic('organization_code_electronic');"  class="clearpic">
+                            清除图片
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">请上传图片格式文件</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>正规授权书</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a_formal_authorization" target="_blank" class="nyroModal" rel="gal" href="{$supplier.formal_authorization}">
+                                <i id="img_i_formal_authorization" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$supplier.formal_authorization} height=100 />',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="formal_authorization" name="formal_authorization" value="{$supplier.formal_authorization}" class="type-file-text">
+                            <input type="button" name="button" id="button4" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify_supplier2(1,'formal_authorization','suppliers','img_call_back','formal_authorization')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <div onclick="clearpic('formal_authorization');"  class="clearpic">
+                            清除图片
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">请上传图片格式文件。非微商(若是代理的品牌必须有授权书)。</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>一般纳税人证明</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a_general_taxpayer" target="_blank" class="nyroModal" rel="gal" href="{$supplier.general_taxpayer}">
+                                <i id="img_i_general_taxpayer" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$supplier.general_taxpayer} height=100 />',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="general_taxpayer" name="general_taxpayer" value="{$supplier.general_taxpayer}" class="type-file-text">
+                            <input type="button" name="button" id="button5" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify_supplier2(1,'general_taxpayer','suppliers','img_call_back','general_taxpayer')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <div onclick="clearpic('general_taxpayer');"  class="clearpic">
+                            清除图片
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">请上传图片格式文件。</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="enterprise_credit_information_url">全国企业信用信息公示系统：链接网址</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="enterprise_credit_information_url" id="enterprise_credit_information_url" value="{$supplier.enterprise_credit_information_url}" class="input-txt">
+                    <span class="err"></span>
+                    <p class="notic">必须与营业执照一致</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>全国企业信用信息公示系统：查询公司信息截图</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a_enterprise_credit_information_img" target="_blank" class="nyroModal" rel="gal" href="{$supplier.enterprise_credit_information_img}">
+                                <i id="img_i_enterprise_credit_information_img" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$supplier.enterprise_credit_information_img} height=100 />',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="enterprise_credit_information_img" name="enterprise_credit_information_img" value="{$supplier.enterprise_credit_information_img}" class="type-file-text">
+                            <input type="button" name="button" id="button6" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify_supplier2(1,'enterprise_credit_information_img','suppliers','img_call_back','enterprise_credit_information_img')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <div onclick="clearpic('enterprise_credit_information_img');"  class="clearpic">
+                            清除图片
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">请上传图片格式文件</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="id_card"><em>*</em>法人身份证号码</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="id_card" id="id_card" value="{$supplier.id_card}" class="input-txt">
+                    <span class="err"></span>
+                    <p class="notic">必须与法人身份证一致</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>法人身份证扫描件</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a_fr_idcard_front" target="_blank" class="nyroModal" rel="gal" href="{$supplier.fr_idcard_front}">
+                                <i id="img_i_fr_idcard_front" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$supplier.fr_idcard_front} height=100 />',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="fr_idcard_front" name="fr_idcard_front" value="{$supplier.fr_idcard_front}" class="type-file-text">
+                            <input type="button" name="button" id="button7" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify_supplier2(1,'fr_idcard_front','suppliers','img_call_back','fr_idcard_front')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <div onclick="clearpic('fr_idcard_front');"  class="clearpic">
+                            清除图片
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">请上传图片格式文件。身份证正反面复印件加盖公章。</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="operator_id_card_no">运营者身份证号码</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="operator_id_card_no" id="operator_id_card_no" value="{$supplier.operator_id_card_no}" class="input-txt">
+                    <span class="err"></span>
+                    <p class="notic">必须与运营者身份证一致</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>运营者身份证扫描件</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a_operator_idcard_front" target="_blank" class="nyroModal" rel="gal" href="{$supplier.operator_idcard_front}">
+                                <i id="img_i_operator_idcard_front" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$supplier.operator_idcard_front} height=100 />',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="operator_idcard_front" name="operator_idcard_front" value="{$supplier.operator_idcard_front}" class="type-file-text">
+                            <input type="button" name="button" id="button8" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify_supplier2(1,'operator_idcard_front','suppliers','img_call_back','operator_idcard_front')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <div onclick="clearpic('operator_idcard_front');"  class="clearpic">
+                            清除图片
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">请上传图片格式文件。身份证正反面联系方式复印版加盖公章。</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>相关的产品认证</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a_related_product_certification" target="_blank" class="nyroModal" rel="gal" href="{$supplier.related_product_certification}">
+                                <i id="img_i_related_product_certification" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$supplier.related_product_certification} height=100 />',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="related_product_certification" name="related_product_certification" value="{$supplier.related_product_certification}" class="type-file-text">
+                            <input type="button" name="button" id="button9" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify_supplier2(1,'related_product_certification','suppliers','img_call_back','related_product_certification')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <div onclick="clearpic('related_product_certification');"  class="clearpic">
+                            清除图片
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">请上传图片格式文件。</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>报关证明</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a_customs_declaration" target="_blank" class="nyroModal" rel="gal" href="{$supplier.customs_declaration}">
+                                <i id="img_i_customs_declaration" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$supplier.customs_declaration} height=100 />',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="customs_declaration" name="customs_declaration" value="{$supplier.customs_declaration}" class="type-file-text">
+                            <input type="button" name="button" id="button10" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify_supplier2(1,'customs_declaration','suppliers','img_call_back','customs_declaration')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <div onclick="clearpic('customs_declaration');"  class="clearpic">
+                            清除图片
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">请上传图片格式文件。若是进出口的产品，必须有报关证明和检验检疫证明.</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>海关检疫证明</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a_customs_quarantine_certificate" target="_blank" class="nyroModal" rel="gal" href="{$supplier.customs_quarantine_certificate}">
+                                <i id="img_i_customs_quarantine_certificate" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$supplier.customs_quarantine_certificate} height=100 />',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="customs_quarantine_certificate" name="customs_quarantine_certificate" value="{$supplier.customs_quarantine_certificate}" class="type-file-text">
+                            <input type="button" name="button" id="button11" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify_supplier2(1,'customs_quarantine_certificate','suppliers','img_call_back','customs_quarantine_certificate')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <div onclick="clearpic('customs_quarantine_certificate');"  class="clearpic">
+                            清除图片
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">请上传图片格式文件。若是进出口的产品，必须有报关证明和检验检疫证明</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>企业证书</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a_enterprise_certificate" target="_blank" class="nyroModal" rel="gal" href="{$supplier.enterprise_certificate}">
+                                <i id="img_i_enterprise_certificate" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$supplier.enterprise_certificate} height=100 />',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="enterprise_certificate" name="enterprise_certificate" value="{$supplier.enterprise_certificate}" class="type-file-text">
+                            <input type="button" name="button" id="button26" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify_supplier2(1,'enterprise_certificate','suppliers','img_call_back','enterprise_certificate')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <div onclick="clearpic('enterprise_certificate');"  class="clearpic">
+                            清除图片
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">请上传图片格式文件。</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>国家级认证证书</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a_national_certification_certificate" target="_blank" class="nyroModal" rel="gal" href="{$supplier.national_certification_certificate}">
+                                <i id="img_i_national_certification_certificate" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$supplier.national_certification_certificate} height=100 />',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="national_certification_certificate" name="national_certification_certificate" value="{$supplier.national_certification_certificate}" class="type-file-text">
+                            <input type="button" name="button" id="button27" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify_supplier2(1,'national_certification_certificate','suppliers','img_call_back','national_certification_certificate')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <div onclick="clearpic('national_certification_certificate');"  class="clearpic">
+                            清除图片
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">请上传图片格式文件。</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="suppliers_type">商户类型</label>
+                </dt>
+                <dd class="opt">
+                    <input class="suppliers_type" id="suppliers_type" name="suppliers_type" type="radio" value="1" <if condition="$supplier['suppliers_type'] eq 1">checked</if>>一般企业  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input class="suppliers_type" name="suppliers_type" type="radio" value="2" <if condition="$supplier['suppliers_type'] eq 2">checked</if>>食品企业  &nbsp;&nbsp;&nbsp;&nbsp;
+                </dd>
+            </dl>
+
+            <dl class="row suppliers_type0" style="display: none;">
+                <dt class="tit">
+                    <label for="tax_registration_certificate">税务登记证号</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="tax_registration_certificate" id="tax_registration_certificate" value="{$supplier.tax_registration_certificate}" class="input-txt">
+                    <span class="err"></span>
+                </dd>
+            </dl>
+
+            <dl class="row suppliers_type0" style="display: none;">
+                <dt class="tit">
+                    <label>税务登记证号电子版</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a_tax_registration_certificate_electronic" target="_blank" class="nyroModal" rel="gal" href="{$supplier.tax_registration_certificate_electronic}">
+                                <i id="img_i_tax_registration_certificate_electronic" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$supplier.tax_registration_certificate_electronic} height=100 />',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="tax_registration_certificate_electronic" name="tax_registration_certificate_electronic" value="{$supplier.tax_registration_certificate_electronic}" class="type-file-text">
+                            <input type="button" name="button" id="button12" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify_supplier2(1,'tax_registration_certificate_electronic','suppliers','img_call_back','tax_registration_certificate_electronic')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <div onclick="clearpic('tax_registration_certificate_electronic');"  class="clearpic">
+                            清除图片
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">请上传图片格式文件。</p>
+                </dd>
+            </dl>
+
+            <dl class="row suppliers_type0" style="display: none;">
+                <dt class="tit">
+                    <label>工业产品生产许可证</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a_manufacturing_industrial_products_license" target="_blank" class="nyroModal" rel="gal" href="{$supplier.manufacturing_industrial_products_license}">
+                                <i id="img_i_manufacturing_industrial_products_license" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$supplier.manufacturing_industrial_products_license} height=100 />',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="manufacturing_industrial_products_license" name="manufacturing_industrial_products_license" value="{$supplier.manufacturing_industrial_products_license}" class="type-file-text">
+                            <input type="button" name="button" id="button14" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify_supplier2(1,'manufacturing_industrial_products_license','suppliers','img_call_back','manufacturing_industrial_products_license')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <div onclick="clearpic('manufacturing_industrial_products_license');"  class="clearpic">
+                            清除图片
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">请上传图片格式文件。</p>
+                </dd>
+            </dl>
+
+            <dl class="row suppliers_type0" style="display: none;">
+                <dt class="tit">
+                    <label>卫生许可证</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a_hygienic_license" target="_blank" class="nyroModal" rel="gal" href="{$supplier.hygienic_license}">
+                                <i id="img_i_hygienic_license" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$supplier.hygienic_license} height=100 />',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="hygienic_license" name="hygienic_license" value="{$supplier.hygienic_license}" class="type-file-text">
+                            <input type="button" name="button" id="button15" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify_supplier2(1,'hygienic_license','suppliers','img_call_back','hygienic_license')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <div onclick="clearpic('hygienic_license');"  class="clearpic">
+                            清除图片
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">请上传图片格式文件。</p>
+                </dd>
+            </dl>
+
+            <dl class="row suppliers_type0" style="display: none;">
+                <dt class="tit">
+                    <label>消毒许可证</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a_disinfection_license" target="_blank" class="nyroModal" rel="gal" href="{$supplier.disinfection_license}">
+                                <i id="img_i_disinfection_license" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$supplier.disinfection_license} height=100 />',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="disinfection_license" name="disinfection_license" value="{$supplier.disinfection_license}" class="type-file-text">
+                            <input type="button" name="button" id="button16" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify_supplier2(1,'disinfection_license','suppliers','img_call_back','disinfection_license')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <div onclick="clearpic('disinfection_license');"  class="clearpic">
+                            清除图片
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">请上传图片格式文件。</p>
+                </dd>
+            </dl>
+
+            <dl class="row suppliers_type0" style="display: none;">
+                <dt class="tit">
+                    <label>化妆品行政（卫生）许可批件或备案凭证</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a_cosmetics_instructions_permit" target="_blank" class="nyroModal" rel="gal" href="{$supplier.cosmetics_instructions_permit}">
+                                <i id="img_i_cosmetics_instructions_permit" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$supplier.cosmetics_instructions_permit} height=100 />',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="cosmetics_instructions_permit" name="cosmetics_instructions_permit" value="{$supplier.cosmetics_instructions_permit}" class="type-file-text">
+                            <input type="button" name="button" id="button17" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify_supplier2(1,'cosmetics_instructions_permit','suppliers','img_call_back','cosmetics_instructions_permit')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <div onclick="clearpic('cosmetics_instructions_permit');"  class="clearpic">
+                            清除图片
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">请上传图片格式文件。</p>
+                </dd>
+            </dl>
+
+            <dl class="row suppliers_type0" style="display: none;">
+                <dt class="tit">
+                    <label>国产非特殊化妆品备案登记凭证</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a_non_special_cosmetics_registration_vouchers" target="_blank" class="nyroModal" rel="gal" href="{$supplier.non_special_cosmetics_registration_vouchers}">
+                                <i id="img_i_non_special_cosmetics_registration_vouchers" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$supplier.non_special_cosmetics_registration_vouchers} height=100 />',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="non_special_cosmetics_registration_vouchers" name="non_special_cosmetics_registration_vouchers" value="{$supplier.non_special_cosmetics_registration_vouchers}" class="type-file-text">
+                            <input type="button" name="button" id="button18" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify_supplier2(1,'non_special_cosmetics_registration_vouchers','suppliers','img_call_back','non_special_cosmetics_registration_vouchers')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <div onclick="clearpic('non_special_cosmetics_registration_vouchers');"  class="clearpic">
+                            清除图片
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">请上传图片格式文件。</p>
+                </dd>
+            </dl>
+
+            <!--食品类-->
+            <dl class="row suppliers_type1" style="display: none;">
+                <dt class="tit">
+                    <label>食品生产许可证</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a_food_production_license" target="_blank" class="nyroModal" rel="gal" href="{$supplier.food_production_license}">
+                                <i id="img_i_food_production_license" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$supplier.food_production_license} height=100 />',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="food_production_license" name="food_production_license" value="{$supplier.food_production_license}" class="type-file-text">
+                            <input type="button" name="button" id="button19" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify_supplier2(1,'food_production_license','suppliers','img_call_back','food_production_license')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <div onclick="clearpic('food_production_license');"  class="clearpic">
+                            清除图片
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">请上传图片格式文件。</p>
+                </dd>
+            </dl>
+
+            <dl class="row suppliers_type1" style="display: none;">
+                <dt class="tit">
+                    <label>食品流通许可证</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a_food_circulation_permit" target="_blank" class="nyroModal" rel="gal" href="{$supplier.food_circulation_permit}">
+                                <i id="img_i_food_circulation_permit" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$supplier.food_circulation_permit} height=100 />',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="food_circulation_permit" name="food_circulation_permit" value="{$supplier.food_circulation_permit}" class="type-file-text">
+                            <input type="button" name="button" id="button20" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify_supplier2(1,'food_circulation_permit','suppliers','img_call_back','food_circulation_permit')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <div onclick="clearpic('food_circulation_permit');"  class="clearpic">
+                            清除图片
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">请上传图片格式文件。</p>
+                </dd>
+            </dl>
+
+            <dl class="row suppliers_type1" style="display: none;">
+                <dt class="tit">
+                    <label>商标注册书</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a_trademark_registration" target="_blank" class="nyroModal" rel="gal" href="{$supplier.trademark_registration}">
+                                <i id="img_i_trademark_registration" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$supplier.trademark_registration} height=100 />',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="trademark_registration" name="trademark_registration" value="{$supplier.trademark_registration}" class="type-file-text">
+                            <input type="button" name="button" id="button21" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify_supplier2(1,'trademark_registration','suppliers','img_call_back','trademark_registration')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <div onclick="clearpic('trademark_registration');"  class="clearpic">
+                            清除图片
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">请上传图片格式文件。若是品牌，最好是R标。</p>
+                </dd>
+            </dl>
+
+            <dl class="row suppliers_type1" style="display: none;">
+                <dt class="tit">
+                    <label>保健食品卫生许可证</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a_health_food_hygiene_license" target="_blank" class="nyroModal" rel="gal" href="{$supplier.health_food_hygiene_license}">
+                                <i id="img_i_health_food_hygiene_license" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$supplier.health_food_hygiene_license} height=100 />',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="health_food_hygiene_license" name="health_food_hygiene_license" value="{$supplier.health_food_hygiene_license}" class="type-file-text">
+                            <input type="button" name="button" id="button23" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify_supplier2(1,'health_food_hygiene_license','suppliers','img_call_back','health_food_hygiene_license')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <div onclick="clearpic('health_food_hygiene_license');"  class="clearpic">
+                            清除图片
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">请上传图片格式文件。</p>
+                </dd>
+            </dl>
+
+            <dl class="row suppliers_type1" style="display: none;">
+                <dt class="tit">
+                    <label>食品经营许可证</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a_food_business_license" target="_blank" class="nyroModal" rel="gal" href="{$supplier.food_business_license}">
+                                <i id="img_i_food_business_license" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$supplier.food_business_license} height=100 />',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="food_business_license" name="food_business_license" value="{$supplier.food_business_license}" class="type-file-text">
+                            <input type="button" name="button" id="button24" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify_supplier2(1,'food_business_license','suppliers','img_call_back','food_business_license')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <div onclick="clearpic('food_business_license');"  class="clearpic">
+                            清除图片
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">请上传图片格式文件。</p>
+                </dd>
+            </dl>
+
+            <dl class="row suppliers_type1" style="display: none;">
+                <dt class="tit">
+                    <label>酒类流通备案登记表或酒类批发许可证</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a_liquor_circulation_registration" target="_blank" class="nyroModal" rel="gal" href="{$supplier.liquor_circulation_registration}">
+                                <i id="img_i_liquor_circulation_registration" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$supplier.liquor_circulation_registration} height=100 />',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="liquor_circulation_registration" name="liquor_circulation_registration" value="{$supplier.liquor_circulation_registration}" class="type-file-text">
+                            <input type="button" name="button" id="button25" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify_supplier2(1,'liquor_circulation_registration','suppliers','img_call_back','liquor_circulation_registration')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <div onclick="clearpic('liquor_circulation_registration');"  class="clearpic">
+                            清除图片
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">请上传图片格式文件。</p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="buchong">其它补充资质</label>
+                </dt>
+                <dd class="opt">
+                    <div class="tab-pane" id="tab_goods_images">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <foreach name="$supplier['buchongImages']" item="vo" key="k" >
+                                            <if condition="$vo">
+                                            <div style="width:100px; text-align:center; margin: 5px; display:inline-block;" class="goods_xc">
+                                                <input type="hidden" value="{$vo}" name="buchong[]">
+                                                <a onClick="" href="{$vo}" target="_blank"><img width="100" height="100" src="{$vo}"></a>
+                                                <br>
+                                                <a href="javascript:void(0)" onClick="ClearPicArr2(this,'{$vo}')">删除</a>
+                                            </div>
+                                            </if>
+                                        </foreach>
+                                        <div class="goods_xc" style="width:100px; text-align:center; margin: 5px; display:inline-block;">
+                                            <input type="hidden" name="buchong[]" value="" />
+                                            <a href="javascript:void(0);" onClick="GetUploadify_supplier(10,'','suppliers','call_back2');"><img src="/public/images/add-button.jpg" width="100" height="100" /></a>
+                                            <br/>
+                                            <a href="javascript:void(0)">&nbsp;&nbsp;</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="is_check">审核</label>
+                </dt>
+                <dd class="opt">
+                    <if condition="$supplier['is_check'] eq 0">未审核</if>  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <if condition="$supplier['is_check'] eq 1">审核中</if>  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <if condition="$supplier['is_check'] eq 2">审核未通过</if>  &nbsp;&nbsp;&nbsp;&nbsp;
+                    <if condition="$supplier['is_check'] eq 3">审核通过</if>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="supplier_remark">审核意见</label>
+                </dt>
+                <dd class="opt">
+                    <textarea class="input-txt" id="supplier_remark" name="supplier_remark" title="" readonly="true">{$supplier.supplier_remark}</textarea>
+                    <span class="err"></span>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>冻结供货商</label>
+                </dt>
+                <dd class="opt">
+                    <if condition="$supplier[status] eq 1">冻结</if>
+                    <if condition="$supplier[status] eq 0">正常</if>
+                    <p class="notic"></p>
+                </dd>
+            </dl>  
+			
+            <div class="bot"><a href="JavaScript:void(0);" onClick="checkUserUpdate();" class="ncap-btn-big ncap-btn-green" id="submitBtn">确认提交</a></div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    $(function(){
+        initIssuppliers_type();
+        $(document).on("click",'.suppliers_type',function(){
+            initIssuppliers_type();
+        })
+    })
+
+
+    function initIssuppliers_type(){
+        var is_virtual = $("input[name='suppliers_type']:checked").val();
+        if(is_virtual == 1){
+            $('.suppliers_type0').show();
+            $('.suppliers_type1').hide();
+        }else{
+            $('.suppliers_type0').hide();
+            $('.suppliers_type1').show();
+        }
+    }
+
+    function initIs_check(){
+        var is_check = $("input[name='is_check']:checked").val();
+        if(is_check == 1){
+            $('.suppliers_type1').show();
+            $('.suppliers_type0').hide();
+        }else{
+            $('.suppliers_type1').hide();
+            $('.suppliers_type0').show();
+        }
+    }
+
+    // 上传商品相册回调函数
+    function call_back2(paths){
+        
+        var  last_div = $(".goods_xc:last").prop("outerHTML");  
+        for (var i=0;i<paths.length ;i++ )
+        {
+            $(".goods_xc:eq(0)").before(last_div);  // 插入一个 新图片
+                $(".goods_xc:eq(0)").find('a:eq(0)').attr('href',paths[i]).attr('onclick','').attr('target', "_blank");// 修改他的链接地址
+            $(".goods_xc:eq(0)").find('img').attr('src',paths[i]);// 修改他的图片路径
+                $(".goods_xc:eq(0)").find('a:eq(1)').attr('onclick',"ClearPicArr2(this,'"+paths[i]+"')").text('删除');
+            $(".goods_xc:eq(0)").find('input').val(paths[i]); // 设置隐藏域 要提交的值
+        }              
+    }
+    /*
+     * 上传之后删除组图input     
+     * @access   public
+     * @val      string  删除的图片input
+     */
+    function ClearPicArr2(obj,path)
+    {
+        $.ajax({
+                    type:'GET',
+                    url:"{:U('supplier/Uploadify/delupload')}",
+                    data:{action:"del", filename:path},
+                    success:function(){
+                           $(obj).parent().remove(); // 删除完服务器的, 再删除 html上的图片                
+                    }
+        });    
+    }
+
+    /*
+     * 以下是图片上传方法
+     */
+    // 上传商品图片成功回调函数
+    function img_call_back(fileurl_tmp,idstr)
+    {
+        $("#"+idstr).val(fileurl_tmp);
+        $("#img_a_"+idstr).attr('href', fileurl_tmp);
+        $("#img_i_"+idstr).attr('onmouseover', "layer.tips('<img src="+fileurl_tmp+" height=100 />',this,{tips: [1, '#fff']});");
+    }
+
+    function clearpic(i){
+        $('#img_a_'+i).attr('href','');
+        $('#img_i_'+i).attr("onMouseOver","layer.tips('<img src= height=100 />',this,{tips: [1, '#fff']});");
+        $('#'+i).val('');
+    }
+
+    function checkUserUpdate(){
+        var suppliers_name          = $.trim($('input[name="suppliers_name"]').val());
+        var suppliers_contacts      = $.trim($('input[name="suppliers_contacts"]').val());
+        var business_licence_number = $('input[name="business_licence_number"]').val();
+        var organization_code       = $('input[name="organization_code"]').val();
+        var fr_id_card_no           = $('input[name="fr_id_card_no"]').val();
+        var suppliers_password = $('input[name="suppliers_password"]').val();
+        var suppliers_password2 = $('input[name="suppliers_password2"]').val();
+
+        var error ='';
+        if(suppliers_name == ''){
+            error += "供应商名称不能为空\n";
+        }
+
+        if(suppliers_password != suppliers_password2){
+            error += "两次密码不一样\n";
+        }
+
+        if(suppliers_contacts ==''){
+            error += "供应商联系人不能为空\n";
+        }
+        if(business_licence_number ==''){
+            error += "营业执照号不能为空\n";
+        }
+        if(fr_id_card_no ==''){
+            error += "法人身份证号码不能为空\n";
+        }
+
+        if(error){
+            layer.alert(error, {icon: 2});  //alert(error);
+            return false;
+        }
+        $('#add_form').submit();
+    }
+</script>
+
+
+
+</body>
+</html>

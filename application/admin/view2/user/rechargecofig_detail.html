@@ -1,0 +1,58 @@
+<include file="public/layout" />
+<body style="background-color: #FFF; overflow: auto;">
+<div id="toolTipLayer" style="position: absolute; z-index: 9999; display: none; visibility: visible; left: 95px; top: 573px;"></div>
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title"><a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+            <div class="subject">
+                <h3>充值额度管理 - 编辑充值额度</h3>
+                <h5>网站系统充值额度管理</h5>
+            </div>
+        </div>
+    </div>
+    <form class="form-horizontal" id="handleposition" action="{:U('Admin/User/rechargecofig_Handle')}" method="post">
+        <input type="hidden" name="act" value="{$act}">
+        <input type="hidden" name="rec_id" value="{$info.rec_id}">
+        <div class="ncap-form-default">
+            <dl class="row">
+                <dt class="tit">
+                    <label for="account"><em>*</em>金额</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="account" value="{$info.account}" id="account" class="input-txt">
+                    <span class="err"></span>
+                    <p class="notic">请填写充值金额</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="orderby"><em>*</em>排序</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="orderby" value="{$info.orderby}" id="orderby" class="input-txt">
+                    <span class="err"></span>
+                    <p class="notic">请填写自然数，充值额度会根据排序进行由小到大排列显示</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>是否显示</label>
+                </dt>
+                <dd class="opt">
+                    <div class="onoff">
+                        <label for="is_show1" class="cb-enable <if condition='$info[is_show] eq 1'>selected</if>">是</label>
+                        <label for="is_show0" class="cb-disable <if condition='$info[is_show] eq 0'>selected</if>">否</label>
+                        <input id="is_show1" name="is_show" value="1" type="radio" <if condition="$info[is_show] eq 1"> checked="checked"</if>>
+                        <input id="is_show0" name="is_show" value="0" type="radio" <if condition="$info[is_show] eq 0"> checked="checked"</if>>
+                    </div>
+                    <p class="notic">是否在前台显示</p>
+                </dd>
+            </dl>
+            <div class="bot"><a href="JavaScript:void(0);" onclick="$('#handleposition').submit();" class="ncap-btn-big ncap-btn-green" id="submitBtn">确认提交</a></div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

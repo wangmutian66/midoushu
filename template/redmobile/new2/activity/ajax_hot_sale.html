@@ -1,0 +1,23 @@
+<foreach name="goodsList" item="good">
+    <div class="orderlistshpop p">
+        <div class="maleri30">
+            <a href="{:U('Mobilered/Goods/goodsInfo',array('id'=>$good[goods_id]))}" class="item">
+                <div class="sc_list se_sclist">
+                    <div class="shopimg fl">
+                        <img class="lazy" src="{$good.goods_id|goods_thum_images=400,400,'red'}">
+                    </div>
+                    <div class="deleshow fr">
+                        <div class="deletes">
+                            <span class="similar-product-text fl">{$good.goods_name|getSubstr=0,20}</span>
+                        </div>
+                        <div class="prices">
+                            <p class="sc_pri fl"><span>￥</span><span>{$good[midou_index]}米豆</span></p>
+                            <p class="sc_pri fl" style="text-decoration:line-through;color:#999;margin-left:5px;"> <span>¥</span> {$good[market_price]} </p>
+                        </div>
+                        <p class="weight"><span>{$good[praise]}</span><span>条评价</span></p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</foreach>

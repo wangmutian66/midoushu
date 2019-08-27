@@ -1,0 +1,126 @@
+<include file="public/layout" />
+<body style="background-color: #FFF; overflow: auto;">
+<div id="toolTipLayer" style="position: absolute; z-index: 9999; display: none; visibility: visible; left: 95px; top: 573px;"></div>
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title"><a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+            <div class="subject">
+                <h3>供货商供货管理  </h3>
+                <h5> </h5>
+            </div>
+        </div>
+    </div>
+        
+        <div class="ncap-form-default">
+            <dl class="row">
+                <dt class="tit">
+                    <label>子公司id</label>
+                </dt>
+                <dd class="opt">
+                        {$company[cid]}
+                </dd>
+            </dl>
+           
+            <dl class="row">
+                <dt class="tit">
+                    <label>实体店供货所填内容</label>
+                </dt>
+                <dd class="opt">{$company.strore_supply_content}</dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label></label>
+                </dt>
+                <dd class="opt"><a class="ncap-btn ncap-btn-green" onclick="window.location.href='{:url('/Admin/suppliers/downExcelGoods',array('id'=>$id))}'">导出表格</a></dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>申请的商品</label>
+                    <div><input type="checkbox" class="checkbox" name="allgoodredid" id="allgoodredid"/> <label for="allgoodredid">全选</label></div>
+                </dt>
+                <dd class="opt">
+
+                    <foreach name="goods" item="v" key="k" >
+                        <div style="float: left;margin: 10px auto; margin-right: 25px; width: 162px;" class="selected-group-goods">
+                            <div class="goods-thumb">
+                                <img style="width: 162px;height: 162px" src="{$v[goods_id]|goods_thum_images=115,115,'red'}">
+                            </div>
+                            <div class="goods-name" style="height: 72px;">
+                                <a target="_blank" href="/index.php?m=Homered&amp;c=Goods&amp;a=goodsInfo&amp;id={$v.goods_id}">{$v.goods_name}</a>
+                                {$v.key_name}
+                            </div>
+                            <div class="goods-price">库存:{$v.stock} </div>
+                            
+                            <input type="checkbox" class="checkbox" name="id" value="{$v.id}">
+                        </div>
+                        </foreach>
+                </dd>
+            </dl>
+                <dl class="row">
+                <dt class="tit">
+                   
+                </dt>
+                <dd class="opt">
+                     <a href="javascript:;" onclick="is_checks({$company.cid});" class="ncap-btn-big ncap-btn-green">审核</a>
+                </dd>
+            </dl>
+          
+            
+           <script>
+               $("#allgoodredid").click(function(){
+                   $("input[name='id']").prop("checked",$(this).is(":checked"));
+               });
+               $("input[name='id']").click(function(){
+                   $("#allgoodredid").prop("checked",false);
+               });
+             //审核商品
+    function is_checks(id)
+    {
+
+        var test = $("input[name='id']:checked");
+        var checkBoxValue = "";
+        if(test.length<=0){
+            layer.msg('请选择商品',{icon:2});
+            return false;
+        }
+        test.each(function() {
+            checkBoxValue += $(this).val() + "-";
+        });
+
+
+        var url = "{:U('Admin/Suppliers/is_checkgonghuo')}";
+        if(id){
+            url += "?t=1&cid="+id+"&id="+checkBoxValue;
+            layer.open({
+                type: 2,
+                title: '供货商审核',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['580px', '230px'],
+                content: url,
+
+                // yes: function() {
+                //      layer.closeAll();
+                //     // window.location.href="{:U('/Admin/Suppliers/supplygonghuo')}";
+                // },
+
+                // location.href = "{:U('/Admin/Suppliers/supplygonghuo')}";
+
+            });
+        }else{
+            layer.msg('请选择商品',{icon:2});
+        }
+
+    }
+</script>
+           
+            
+        </div>
+</div>
+
+</body>
+</html>

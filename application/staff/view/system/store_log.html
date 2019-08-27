@@ -1,0 +1,39 @@
+<include file="public/TK_top" />
+<foreach name="balanceLog" item="vo" key="k" >
+	<div class="e-zil">
+		<div class="zt">
+			<div class="bt fl">
+				转入时间：
+			</div>
+			<div class="nei fl">
+				{$vo.time|date="Y-m-d H:i:s",###}
+			</div>
+		</div>
+		<div class="zt">
+			<div class="bt fl">
+				转入金额：
+			</div>
+			<div class="nei fl">
+				<h2>{$vo.money}</h2>
+			</div>
+			</div>
+		<div class="zt">
+			<div class="bt fl">
+				转入状态：
+			</div>
+			<div class="nei fl">
+				<h3>成功</h3>
+			</div>
+		</div>
+	</div> 
+</foreach>
+<div style="text-align:center">{$page}</div>
+<!--
+<div class="y-sxfy y-tco">
+	<a href="?page=1">首页</a>
+    <a href="#" class="on">上一页</a>
+    <a href="#">下一页</a>
+    <a href="#">尾页</a>
+</div>-->
+</body>
+</html>

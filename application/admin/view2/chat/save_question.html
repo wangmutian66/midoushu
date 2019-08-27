@@ -1,0 +1,81 @@
+<include file="public/layout" />
+<body style="background-color: #FFF; overflow: auto;">
+<div id="toolTipLayer" style="position: absolute; z-index: 9999; display: none; visibility: visible; left: 95px; top: 573px;"></div>
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title"><a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+            <div class="subject">
+                <h3>{$title}问题</h3>
+                <h5></h5>
+            </div>
+        </div>
+    </div>
+    <form class="form-horizontal" id="handleposition" action="{$url}" method="post" onsubmit="return save_reply();">
+        <div class="ncap-form-default">
+            <dl class="row">
+                <dt class="tit">
+                    <label for="cq_question"><em>*</em>问题</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="cq_question"  id="cq_question" class="input-txt" value="{$chat_question.cq_question}">
+                    <span class="err"></span>
+                    <p class="notic">请不要填写重复的问题</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="cq_answer"><em>*</em>答案</label>
+                </dt>
+                <dd class="opt">
+                    <textarea  name="cq_answer"  id="cq_answer"  class="tarea" rows="6">{$chat_question.cq_answer}</textarea>
+                    <span class="err"></span>
+
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="cq_sort"><em>*</em>排序</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="cq_sort"  id="cq_sort" class="input-txt"  value="{$chat_question.cq_sort}">
+                    <span class="err"></span>
+
+                </dd>
+            </dl>
+            <div class="bot"><a href="JavaScript:void(0);" onClick="$('#handleposition').submit();" class="ncap-btn-big ncap-btn-green" id="submitBtn">确认提交</a></div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+
+    function save_reply(){
+        var cq_question = $("#cq_question").val();
+        var cq_answer = $("#cq_answer").val();
+
+
+        if(cq_question == ""){
+            layer.alert('请填写问题', {icon: 2});
+            return false;
+        }
+
+        if(cq_answer == ""){
+            layer.alert('请填写答案', {icon: 2});
+            return false;
+        }
+
+
+
+    }
+
+
+    function img_call_back(fileurl_tmp)
+    {
+        $("#link_logo").val(fileurl_tmp);
+        $("#img_a").attr('href', fileurl_tmp);
+        $("#img_i").attr('onmouseover', "layer.tips('<img src="+fileurl_tmp+">',this,{tips: [1, '#fff']});");
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,305 @@
+<include file="public/layout" />
+<style>
+    .err{color:#F00; display:none;}
+</style>
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<!--以下是在线编辑器 代码 -->
+<load href="__ROOT__/public/plugins/Ueditor/ueditor.config.js"/>
+<load href="__ROOT__/public/plugins/Ueditor/ueditor.all.min.js"/>
+<script type="text/javascript" charset="utf-8" src="__ROOT__/public/plugins/Ueditor/lang/zh-cn/zh-cn.js"></script>
+<style>
+    .table-striped tbody>tr:nth-child(odd)>td, .table-striped tbody>tr:nth-child(odd)>th {
+        background-color: #f9f9f9;
+    }
+    .table-bordered th, .table-bordered td {
+        border-left: 1px solid #ddd;
+        text-align: center;
+        height: 30px;
+    }
+    table {
+        max-width: 100%;
+        background-color: transparent;
+        border-collapse: collapse;
+        border-spacing: 0;
+        border: 1px solid #ddd;
+    }
+</style>
+<body style="background-color: #FFF; overflow: auto;">
+<div id="toolTipLayer" style="position: absolute; z-index: 9999; display: none; visibility: visible; left: 95px; top: 573px;"></div>
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title"><a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+            <div class="subject">
+                <h3>供货申请</h3>
+                <h5></h5>
+            </div>
+        </div>
+    </div>
+    <form class="form-horizontal" id="handleposition" method="post">
+        <input type="hidden" id="goods_id" name="goods_id" value="{$info.goods_id}">
+        <input type="hidden" name="id" value="{$info.id}">
+        <input type="hidden" name="item_id" value="{$info.item_id}">
+        <div class="ncap-form-default">
+            <dl class="row">
+                <dt class="tit">
+
+                </dt>
+                <dd class="opt">
+                    <img src="{$company.litpic}" style="width: 70px; height: 70px; float: left;"/>
+                    <div style="float:left; margin-left: 10px;">
+                        <div>名称：{$company.cname}</div>
+                        <div>联系人：{$company.contact} &nbsp;&nbsp; 手机号：{$company.mobile}</div>
+                        <div>店铺地址：{$company.address}</div>
+                    </div>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label><em>*</em>内容</label>
+                </dt>
+                <dd class="opt">
+                    <textarea class="span12 ckeditor" id="goods_content" name="goods_content" title="">{$company.strore_supply_content}</textarea>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label><em>*</em>选择抢购商品</label>
+                </dt>
+                <dd class="opt">
+                    <div style="overflow: hidden" id="selected_group_goods">
+
+                    </div>
+                    <span class="err" id="err_goods_name"></span>
+                    <p class="notic">
+                        <a onclick="selectGoods()" class="ncap-btn" id="select_goods_button"><i class="fa fa-search"></i>选择商品</a>
+                    </p>
+                </dd>
+            </dl>
+
+
+
+            <div class="bot"><a onclick="verifyForm()" class="ncap-btn-big ncap-btn-green">确认提交</a></div>
+
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>商品审核结果</label>
+                </dt>
+                <dd class="opt">
+                    <table class="table table-striped table-bordered">
+                        <tr>
+                            <td>商品</td>
+                            <td>提交时间</td>
+                            <td>数量</td>
+                            <td>申请结果</td>
+                            <td>是否同意供货</td>
+                            <td>审核结果</td>
+                            <td>操作</td>
+                        </tr>
+                        <if condition="supply_goods">
+
+                            <foreach name="supply_goods" item="v" key="k" >
+                                <tr>
+                                    <td>{$v.goods_name}</td>
+                                    <td>{$v.time|date='Y-m-d H:i:s',###}</td>
+                                    <td>{$v.stock}</td>
+                                    <td>
+                                        <if condition="$v.is_com eq '0'">
+                                            <span style="color: #ccc;">未审核</span>
+                                        <elseif condition="$v.is_com eq '1'"/>
+                                                <span style="color: green;">通过</span>
+                                        <elseif condition="$v.is_com eq '2'"/>
+                                            <span style="color: red;">未通过<br/>{$v.reason}</span>
+                                        </if>
+                                    </td>
+                                    <td>
+
+                                        <if condition="$v.is_supply eq 1">
+                                            <span style="color: green;">同意供货</span>
+                                        </if>
+                                    </td>
+                                    <td>
+
+                                        <if condition="$v.is_examine eq 0">
+                                            <span style="color: #ccc;">未审核</span>
+                                            <elseif condition="$v.is_examine eq 1"/>
+                                            <span style="color: green;">通过</span>
+                                            <elseif condition="$v.is_examine eq 2"/>
+                                            <span style="color: red;">未通过</span>
+                                        </if>
+                                    </td>
+
+                                    <td>
+                                        <if condition='$v[is_examine] eq 1 and $v[is_confirm] eq 0'>
+                                            <a class="ncap-btn-mini ncap-btn-green" href="javascript:;" onclick="showwuliu({$v.id})">查看物流</a>
+                                            <a class="ncap-btn-mini  ncap-btn-green" href="javascript:;" onclick="confirmgood({$v.id})">确认收货</a>
+                                        </if>
+
+                                        <if condition='$v[is_confirm] eq 1'>
+                                            <span class="yes" >已收货</span>
+                                        </if>
+                                    </td>
+                                </tr>
+                            </foreach>
+                            <else/>
+                            <tr>
+                                <td colspan="4">没有相关结果</td>
+                            </tr>
+                        </if>
+                    </table>
+                </dd>
+            </dl>
+
+
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    //查看物流
+    function showwuliu(id){
+        var url = "{:U('Company/Member/showwuliu')}";
+        url+="?id="+id;
+        layer.open({
+            type: 2,
+            title: '查看物流',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['600px', '430px'],
+            content: url,
+        });
+    }
+
+
+    //确认收货
+    function confirmgood(id){
+        layer.confirm('是否确认收货？', {
+            btn: ['确定','取消'] //按钮
+        }, function() {
+            $.ajax({
+                url: "{:U('Company/Member/confirmgood')}",
+                data: {id: id},
+                dataType: "json",
+                type: "POST",
+                success: function (data) {
+                    console.log();
+                    if (data.code == 200) {
+                        //layer.alert(data.msg, {icon: 1, time: 3000});
+
+                        parent.location.reload();
+
+                    } else {
+                        layer.alert("操作失败，请稍后重试", {icon: 2, time: 3000});
+                    }
+                }
+            });
+        });
+    }
+
+
+    function selectGoods(){
+        var url = "{:U('Member/search_goods',array('tpl'=>'select_goods','prom_type'=>1,'prom_id'=>$info[id]))}";
+        layer.open({
+            type: 2,
+            title: '选择商品',
+            shadeClose: true,
+            shade: 0.2,
+            area: ['75%', '75%'],
+            content: url,
+        });
+    }
+    function call_back(goodsItems){
+        localStorage.clear();
+        //$('#goods_id').val(goodsItem.goods_id);
+        var html = '';
+
+        for(var i in goodsItems){
+            goodsItem = goodsItems[i];
+            console.log(goodsItem);
+            if(goodsItem.spec != null){
+                //有规格
+                html += '<div style="float: left;margin: 10px auto; margin-left: 5px; width: 162px;" class="selected-group-goods"><div class="goods-thumb">' +
+                    '<img style="width: 162px;height: 162px" src="'+goodsItem.goods_image+'"/></div> <div class="goods-name"> ' +
+                    '<a target="_blank" href="/index.php?m=Homered&c=Goods&a=goodsInfo&id='+goodsItem.goods_id+'">'+goodsItem.goods_name+goodsItem.spec.key_name+'</a> </div>' +
+                    ' <div class="goods-price">库存:'+goodsItem.spec.store_count+' </div> <input type="hidden" name="goodid" value="'+goodsItem.goods_id+'">' +
+                    '<input type="hidden" name="itemid" value="'+goodsItem.spec.item_id+'"> <input type="hidden" name="stock" value="'+goodsItem.spec.store_count+'"><a href="javascript:;" onclick="removeGoods(this)" class="ncap-btn">删除</a></div>';
+                //$('input[name=item_id]').val(goodsItem.spec.item_id)
+                //$('input[name=goods_name]').val(goodsItem.goods_name + goodsItem.spec.key_name);
+            }else{
+                html += '<div style="float: left;margin: 10px auto;margin-left: 5px; width: 162px;" class="selected-group-goods"><div class="goods-thumb">' +
+                    '<img style="width: 162px;height: 162px" src="'+goodsItem.goods_image+'"/></div> <div class="goods-name"> ' +
+                    '<a target="_blank" href="/index.php?m=Homered&c=Goods&a=goodsInfo&id='+goodsItem.goods_id+'">'+goodsItem.goods_name+'</a> </div>' +
+                    ' <div class="goods-price">库存:'+goodsItem.store_count+' </div> <input type="hidden" name="goodid" value="'+goodsItem.goods_id+'">' +
+                    '<input type="hidden" name="itemid" value="0"> <input type="hidden" name="stock" value="'+goodsItem.store_count+'"><a href="javascript:;" onclick="removeGoods(this)"  class="ncap-btn">删除</a></div>';
+                $('input[name=goods_name]').val(goodsItem.goods_name);
+            }
+            //$('#select_goods_button').attr('data-goods-id',goodsItem.goods_id);
+
+        }
+        $('#selected_group_goods').append(html);
+        $('.selected-group-goods').show();
+        layer.closeAll('iframe');
+    }
+
+    var ue = UE.getEditor('goods_content',{
+        zIndex: 999,
+        initialFrameWidth: "100%", //初化宽度
+        initialFrameHeight: 300, //初化高度
+        focus: false, //初始化时，是否让编辑器获得焦点true或false
+        maximumWords: 99999, removeFormatAttributes: 'class,style,lang,width,height,align,hspace,valign',//允许的最大字符数 'fullscreen',
+        pasteplain:false, //是否默认为纯文本粘贴。false为不使用纯文本粘贴，true为使用纯文本粘贴
+        autoHeightEnabled: true
+    });
+
+
+
+
+    function removeGoods(element){
+        $(element).parents('.selected-group-goods').remove();
+    }
+
+
+
+
+    function verifyForm(){
+        var arr = new Array();
+        $(".selected-group-goods").each(function(v,o){
+            var obj={"goodid":$(o).find('input[name=goodid]').val(),"itemid":$(o).find('input[name=itemid]').val(),"stock":$(o).find('input[name=stock]').val()};
+            arr.push(obj);
+        });
+
+        var content =  ue.getContent();
+
+        var param = new Object();
+        param['goods'] = arr;
+        param['content'] = content;
+        param['store_id'] = "{$Think.get.store_id}";
+
+        $.ajax({
+            url:"__URL__/doapply",
+            data:param,
+            dataType:"json",
+            type:"POST",
+            success:function(data){
+                if(data.error==0){
+                    layer.alert('申请成功', {icon: 1});
+                    setTimeout(function(){
+                        // window.history.go(-1);
+                        window.location.href="{:U('Index/welCome')}";
+                    },1000);
+
+                }else{
+                    layer.alert(data.msg, {icon: 2});
+                }
+            },error:function(data){
+                console.log(data);
+            }
+        });
+
+    }
+</script>
+</body>
+</html>

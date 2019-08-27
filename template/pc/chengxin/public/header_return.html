@@ -1,0 +1,54 @@
+
+	<!-- banner -->
+	<div id="solid">
+	    <ul>
+	    	<adv pid="59" item="v1" limit="5" key="kr">
+		        <li class="bg{$kr}"><img src="{$v1[ad_code]}"></li>
+	        </adv>
+	    </ul>
+	   <div id="btt" style="margin-left:-420px;">
+	    	<adv pid="59" item="v1" limit="5" key="kr">
+		    <span></span> 
+		    </adv>
+	    </div>
+	</div>
+	<script src="__STATIC__/js/fordboy.js"></script>
+	<!-- banner end -->
+	
+	<div class="sec">
+		<!--  商品分类  -->
+		<div class="containor">
+			<div class="nav_left">
+				<ul>
+					<volist name="goods_category_tree" id="v" key="kr">
+						<if condition="$v[level] eq 1">
+							<li data-id="{$kr}"><a href="{:U('Home/Goods/goodsList',array('id'=>$v[id]))}" target="_blank"><span>{$v[name]}</span></a></li>
+						</if>
+					</volist>
+				</ul>
+			</div>
+			<div class="nav_right hide">
+				<volist name="goods_category_tree" id="v" key="kr">
+					<div class="sub hide" data-id="{$kr}">
+						<foreach name="v['tmenu']" key="k2" item='v2'>
+							<if condition="$v2[parent_id] eq $v['id']">
+								<dl>
+									<dt><a href="{:U('Home/Goods/goodsList',array('id'=>$v2[id]))}" target="_blank">{$v2[name]} <i> &gt;</i></a> </dt>
+									<dd>
+										<foreach name="v2['sub_menu']" key="k3" item='v3'>
+											<if condition="$v3[parent_id] eq $v2['id']">
+												<a href="{:U('Home/Goods/goodsList',array('id'=>$v3[id]))}" target="_blank">{$v3[name]}</a>
+											</if>
+										</foreach>
+									</dd>
+								</dl>
+							</if>
+						</foreach>
+					</div>
+				</volist>
+			</div>
+		</div>
+
+		
+	</div>
+	

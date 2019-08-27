@@ -1,0 +1,178 @@
+<include file="public/TK_top" />
+<style type="text/css">
+	.qh{
+		width:100%;
+		padding:0 .2rem;
+		font-size:.5rem;
+		line-height:1rem;
+	}
+	
+	.qh span{
+		vertical-align:top;	
+	}
+	
+	.qh select{
+		width:8rem;
+		height:1rem;
+		border:1px solid #ccc;
+		border-radius:.5rem;
+		padding:.2rem .5rem;
+		outline:none;
+		font-size:.5rem;
+	}
+</style>
+<!-- <div class="e-fu e-pad e-mot1 clearfix">
+	<div class="qh">
+		<span>切换用户：</span>
+		<select id="store_id" name="store_id">
+	    	<option>--请选择实体店--</option>
+	    	<volist name="staff_list" id='r'>
+	    	<option value="{$r.store_id}" <if condition="$r.store_id eq $staff_info.store_id"> selected="selected" </if>>{$r.store_name}</option>
+	        </volist>
+	    </select>
+	</div>
+</div> -->
+<script>
+
+	$("#store_id").change(function (){
+		var store_id = $(this).val();
+		var this_store_id = "{$staff_info.store_id}";
+		var mobile = "{$staff_info.phone}";
+		if(store_id != this_store_id){
+			$.post("/Staff/system/switch_user",{store_id:store_id,mobile:mobile},function (r){
+
+				if(r.status == 0){
+					 showErrorMsg(r.info);
+				}else{
+					location.reload();
+				}
+			},'json')
+		}
+	})
+</script>
+
+<div class="e-fu e-pad e-mot1 clearfix">
+	<div class="e-lei e-bg1 fl">
+		累计佣金
+		<p>{$cumulative_money|tk_money_format}</p>
+	</div>
+	<a href="{:U('/Staff/Commission/Index')}" class="e-ck e-bg2 fr">查看记录</a>
+</div>
+<div class="e-fu e-pad e-mot1 clearfix">
+	<div class="e-lei e-bg3 fl">
+		当前可提现余额
+		<p>{$tmoney|tk_money_format}</p>
+	</div>
+	<a href="{:U('/Staff/Deposit/withdraw')}" class="e-ck e-bg4 fr">我要提现</a>
+</div>
+
+<div class="e-fu e-pad e-mot1 clearfix">
+	<div class="e-lei e-bg3 fl">
+		实体店总额
+		<p id="zmoney">{$zmoney|tk_money_format}</p>
+	</div>
+
+	<a href="{:U('/Staff/system/store')}" class="e-ck e-bg2 fr" style="margin-left: 10px;">查看详情</a>
+
+	<a href="javascript:;" class="e-ck e-bg2 fr" onclick="yijianyue()">一键转余额</a>
+</div>
+
+<if condition="$staff_info.company_level neq 0">
+<div class="e-fu e-pad e-mot1 clearfix">
+	<a href="{:U('/Staff/Paid/Index')}" class="e-djl">
+		<div class="e-lei e-bg5 fl">
+			代付记录
+		</div>
+	</a>
+</div>
+</if>
+<if condition="$staff_info.company_level neq 0">
+<div class="e-fu e-pad e-mot1 clearfix">
+	<a href="{:U('/Staff/Paid/Log')}" class="e-djl">
+		<div class="e-lei e-bgdf fl">
+			收款记录
+		</div>
+	</a>
+</div>
+</if>
+
+<div class="e-fu e-pad e-mot1 clearfix">
+	<a href="{:U('/Staff/System/resetPwd')}">
+		<div class="e-lei e-bgpwd fl">
+			修改密码
+		</div>
+	</a>
+</div>
+
+
+<if condition="!$is_weixin_browser">
+<div class="e-fu e-pad e-mot1 clearfix">
+	<a href="{:U('/Staff/System/logout')}">
+		<div class="e-lei e-bg7 fl">
+			安全退出
+		</div>
+	</a>
+</div>
+<else/>
+<div class="e-fu e-pad e-mot1 clearfix">
+	<a href="{:U('/Staff/System/login/')}">
+		<div class="e-lei e-bg7 fl">
+			切换账户
+		</div>
+	</a>
+</div>
+</if>
+<div class="e-fu e-pad e-mot1 clearfix">
+	<div class="e-san fl">
+		<a href="{:U('/Staff/Profile/')}"><img src="__PUBLIC__/staff/img/e-ico9.png"><p>个人信息</p></a>
+	</div>
+	<div class="e-san fl">
+		<a href="{:U('/Staff/Deposit/Index')}"><img src="__PUBLIC__/staff/img/e-ico8.png"><p>提现记录</p></a>
+	</div>
+	
+	<!--<div class="e-san fl">
+		<a href='<if condition="$staff_info.type eq 0">{:U("/Staff/Team/Index")}<else/>{:U("/Staff/Team/next_user",["id"=>$staff_info["id"]])}</if>'><img src="__PUBLIC__/staff/img/e-ico7.png"><p>我的团队</p></a>
+	</div>-->
+	
+    <div class="e-san fl">
+		<a href='{:U("/Staff/Team/next_user",["id"=>$staff_info["id"]])}'><img src="__PUBLIC__/staff/img/e-ico7.png"><p>我的团队</p></a>
+	</div>
+    
+    
+</div>
+<script>
+	function yijianyue(){
+		var zmoney = $("#zmoney").text();
+        if(zmoney == 0){
+            layer.open({
+                time:1,
+                content: '转到可提现余额不能为0'
+            });
+            return false;
+        }
+        //询问框
+        layer.open({
+            content: '您确定要转到余额吗？'
+            ,btn: ['确定', '取消']
+            ,yes: function(index){
+                $.ajax({
+                    url:"{:url('Staff/system/transferbalanceall')}",
+                    data:{},
+                    dataType:"json",
+                    type:"POST",
+                    success:function(data){
+                        //信息框
+                        layer.open({
+                            content: '已转到余额！'
+                        });
+                        window.location.reload();
+                        layer.close(index);
+                    }
+                });
+            }
+        });
+	}
+</script>
+                        
+</body>
+</html>

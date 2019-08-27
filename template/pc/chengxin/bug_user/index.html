@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="/public/staff/css/Employee.css">
+
+<title>无标题文档</title>
+</head>
+
+<body>
+
+<volist name="\think\Config::get('PAY_STATUS')" id='pay_vo'>
+{$key} : {$pay_vo} <br>
+</volist>
+<hr />
+<table style="width:1200px;">
+    <tr>
+        <td width="100">ID</td>
+        <td width="100">会员ID</td>
+        <td width="300">订单编码</td>
+        <td width="200">收货人：电话</td>
+        <td width="100">支付状态</td>
+        <td width="100">米豆金额</td>
+        <td width="100">支付（真）</td>
+        <td></td>
+    </tr>
+<volist name='array_list' id='vo'>
+<tr style="height:30px; font-size:12px;">
+	<td>{$vo.order_id}</td>
+    <td>{$vo.user_id} <a href="{:url('/Home/BugUser/getAccountLog',['user_id'=>$vo.user_id])}" target="_blank"> 查询 </a> </td>
+    <td>{$vo.order_sn}</td>
+    <td>{$vo.consignee}:{$vo.mobile} </td>
+    <td>{$vo.pay_status}</td>
+    <td>{$vo.order_midou}</td>
+    <td>{$vo.log_id|default='未支付'}</td>
+    <td></td>
+</tr>
+
+    <volist name="vo.son_order" id='son_vo'>
+    <tr style="height:30px; font-size:12px; background:#999">
+        <td>{$son_vo.order_id}</td>
+        <td>&nbsp;</td>
+        <td>{$son_vo.order_sn}</td>
+        <td>{$son_vo.consignee}:{$vo.mobile} </td>
+        <td>{$son_vo.pay_status}</td>
+        <td>{$son_vo.order_midou}</td>
+        <td></td>
+        <td></td>
+    </tr>
+    </volist>
+    
+</volist>
+</table>
+
+
+<div>
+	{$list->render()}
+</div>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>我的订单</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/member.css?v={$vnum}" rel="stylesheet">
+<script src="__STATIC__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="__STATIC__/js/Progress.js?v={$vnum}"></script>
+<script src="__PUBLIC__/js/baidu.js"></script>
+<style>
+	.boldjh{font-size:12px; color:#999}
+</style>
+</head>
+
+<body class="bgg">
+	<include file="public/user_header" />
+	<div class="clear"></div>
+	
+	<div class="y-content">
+		<!--左侧菜单-->
+		<include file="public/user_lefter" />
+		
+		<!--右侧内容-->
+		
+		<div class="y-right y-borm fri">
+			<div class="y-title0">
+				<span></span>返利中心
+			</div>
+			<div class="y-fla clearfix">
+				<div class="qian fbow fle">
+					返利总额
+					<p><span>{$user.rebate_money_all|tk_money_format}</span>元</p>
+				</div>
+				<div class="qian fle">
+					可提金额
+					<p><span>{$user.rebate_money|tk_money_format}</span>元</p>
+				</div>
+				<div class="qian fle">
+					<a href="{:U('/Home/User/toCash')}">我要提到现金余额</a>
+				</div>
+			</div>
+			
+			<if condition="$Request.param.rebate_status neq ok">
+            <div class="y-zhti y-bg2">
+            	<a href="{:U('/Homered/User/already_rebate')}"  class="jx">进行中</a>
+            	<a href="{:U('/Homered/User/already_rebate/rebate_status/ok')}">已完成</a>
+            </div>
+			<else/>
+			<div class="y-zhti y-bg3">
+            	<a href="{:U('/Homered/User/already_rebate')}">进行中</a>
+            	<a href="{:U('/Homered/User/already_rebate/rebate_status/ok')}" class="jx">已完成</a>
+            </div>
+			</if>
+            <ul class="y-jind">
+				<volist name="list" id="vo">
+            	<li>
+            		<h4>建立返利时间：{$vo.add_time|date="Y-m-d H:i:s",###}</h4>
+            		<div class="jdt {$vo.order_id}">
+            			<h3>返利金额：{$vo.rebate_price|tk_money_format}</h3>
+            			<div class="ui fle">
+            				<span>进度：</span>
+            				<canvas id="canvas{$i}"></canvas>
+            			</div>
+            			<h2>进行中</h2>
+            		</div>
+            	</li>
+            	</volist>
+            </ul>
+			<script type="text/javascript">
+				window.onload = function(){
+					<volist name="list" id="vo">
+					new Progress().renderOne('canvas{$i}',60,5,{$vo.progress_bar});
+					</volist>
+				}
+            </script>
+            <style>
+				.pagination{}
+				.pagination li{float:left}
+			</style>
+			<!--分页-->
+            <div class="y-sxfy  tco" style="text-align:center">
+               {$page->show()}
+            </div>
+			
+		</div>
+		<div class="clear"></div>
+	</div>
+	<!--右侧内容结束-->
+	<include file="public/user_footer" />
+	
+</body>
+</html>

@@ -1,0 +1,44 @@
+<include file="public/header" title="线下消费记录" body=""/>
+<include file="public/header_nav" title="线下消费记录" href="{:U('/Mobile/User/index')}"/>
+<link rel="stylesheet" href="__STATIC__/css/tian.css?v={$vnum}">
+<link rel="stylesheet" href="/public/static/css/page.css?v={$vnum}">
+<div class="allaccounted">
+    <div class="maleri30">
+        <div class="head_acc ma-to-20">
+            <ul>
+				<li style="width:50%" <if condition="$Request.param.t eq 999 or empty($Request.param.t)">class="red"</if>>
+                    <a href="{:U('/Mobile/User/pay_paid')}"   data-list="2">我的付款</a>
+                </li>
+                <li style="width:50%" <if condition="$Request.param.t eq 1">class="red"</if>">
+                    <a href="{:U('/Mobile/User/pay_paid',['t'=>1])}"  data-list="1">代付记录</a>
+                </li>                
+                <input type="hidden" class="record" value="{$type}"/>
+            </ul>
+        </div>
+		    
+<ul class="y-jil allpion">
+<foreach name="list" item="vo">
+	<li>
+		<h2>服务员：{$vo.staff_name|default='佚名'}| {$vo.store_name|default='米豆薯'}</h2>
+		<div class="ts clearfix">
+			<p><!--推广员：{$vo.tg_name}<br />-->{$vo.create_time|date="Y-m-d H:i:s",###}</p>
+			<h3>{$vo.money}元</h3>
+		</div>
+	</li>
+	</foreach>
+</ul>
+
+<div style="text-align:center">
+	{$page}
+</div>
+
+<empty name="list">
+	<div style="font-size:.24rem;text-align: center;color:#888;padding:.25rem .24rem .4rem; clear:both">
+		<span style="font-size:1rem">暂无数据</span>
+	</div>
+</empty>
+    </div>
+</div>
+
+</body>
+</html>

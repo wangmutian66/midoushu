@@ -1,0 +1,219 @@
+<include file="public/header" title="商品列表"/>
+    <!--搜索栏-s-->
+    <div class="classreturn ">
+        <div class="content">
+            <div class="ds-in-bl return">
+                <a href="javascript:history.back(-1);"><img src="__STATIC__/images/return.png" alt="返回"></a>
+            </div>
+            <div class="ds-in-bl search">
+                <span style="color: #fff;">{$reginName}{$cc_name}店铺</span>
+            </div>
+            <div class="ds-in-bl menu">
+
+            </div>
+        </div>
+    </div>
+    <!--搜索栏-e-->
+
+
+
+    <!--商品详情s-->
+    <div id="template" class="">
+        <empty name="company">
+            <p class="goods_title" id="goods_title" style="line-height: 100px;text-align: center;margin-top: 30px;">抱歉暂时没有相关结果！</p>
+        <else />
+            <!--<foreach name="company" item="vo" key="k"  >-->
+
+            <!--<div class="orderlistshpop p">-->
+                <!--<div class="maleri30">-->
+                    <!--<a href="{:U('Mobilered/Goods/goodsInfo',array('id'=>$vo[goods_id]))}" class="item">-->
+                        <!--<div class="sc_list se_sclist">-->
+                            <!--<div class="shopimg fl">-->
+                                <!--<if condition="$vo.litpic">-->
+                                    <!--<img src="{$vo.litpic}">-->
+                                <!--<else/>-->
+                                    <!--<img src="__PUBLIC__/images/icon_goods_thumb_empty_300.png">-->
+                                <!--</if>-->
+
+                            <!--</div>-->
+                            <!--<div class="deleshow fr">-->
+                                <!--<div class="deletes">-->
+                                    <!--<span class="similar-product-text fl">{$vo.cname|getSubstr=0,20}</span>-->
+                                <!--</div>-->
+                                <!--<div style="width:6.5rem;float:left;">-->
+                                    <!--<span class="similar-product-text fl jj2" style="color:#999;width:6.5rem;">-->
+                                        <!--{$vo.address}-->
+                                    <!--</span>-->
+                                    <!--<div class="prices" style="width:6.5rem;">-->
+                                        <!--<p class="sc_pri fl"><span>{$cc_name}</span></p>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+
+                                <!--<div style="width:3rem;float:left;margin-left:.5rem;height:2.5rem;text-align:right;">    <span class="zb-xl">-->
+                                    <!--12759.68km-->
+                                <!--</span>-->
+
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</a>-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <!--</foreach>-->
+        </empty>
+    </div >
+    <!--商品详情e-->
+
+    <!--加载更多S-->
+    <notempty name="goods_list">
+         <div class="loadbefore">
+            <img class="ajaxloading" src="__STATIC__/images/loading.gif" alt="loading...">
+        </div>
+    </notempty>
+    <!--加载更多E-->
+
+
+
+
+<div class="mask-filter-div" style="display: none;"></div>
+
+
+<!--底部导航-end-->
+<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+
+<script type="text/javascript">
+
+
+
+    //滚动加载更多
+    $(window).scroll(
+        function() {
+            var scrollTop = $(this).scrollTop();
+            var scrollHeight = $(document).height();
+            var windowHeight = $(this).height();
+            if (scrollTop + windowHeight == scrollHeight) {
+                var sort = $(document.body).attr('sort');
+                var page = $(document.body).attr('page');
+                stroelist(page,sort);//调用加载更多
+            }
+        }
+    );
+
+
+    var before_request = 1; // 上一次请求是否已经有返回来, 有才可以进行下一次请求
+    var page = 0;
+
+    function stroelist(page,sort){
+
+
+        $(".sort"+sort).addClass('red').siblings().removeClass('red');
+        var param = new Object();
+
+        param["latitude"] = $(document.body).attr('lat');
+        param["longitude"] = $(document.body).attr('lng');
+        // param["latitude"] = "45.751182556152344";
+        // param["longitude"] = "126.70684051513672";
+        param['search_text'] = $('#search_text').val();
+        param["sort"] = (sort==undefined)?1:sort;
+        param['cid'] = "<?php echo I('get.cid'); ?>";
+        param['pro'] = "<?php echo I('get.pro'); ?>";
+        if(before_request == 0)// 上一次请求没回来 不进行下一次请求
+            return false;
+        before_request = 0;
+        page++;
+        $(document.body).attr('sort',sort);
+        $(document.body).attr('page',page);
+        $.ajax({
+            url:"__URL__/stroelist/p/"+page,
+            data:param,
+            dataType:"json",
+            type:"POST",
+            success:function(data){
+                if(page == 0){
+                    $("#template").html("");
+                }
+                if(data && data.length>0){
+                    console.log(data.length);
+                    var str = "";
+                    for(var i in data){
+                        str+='<div class="maleri30" style="margin-top:.5rem;margin-bottom:.5rem;">';
+                        str+='<a href="'+data[i]['url']+'">';
+                        str+='<div class="sc_list se_sclist">';
+                        str+='<div class="shopimg fl ys">';
+                        str+='<img src="'+data[i]['litpic']+'">';
+                        str+='</div>';
+                        str+='<div class="deleshow fr">';
+                        str+='<div class="deletes">';
+                        str+='<span class="similar-product-text fl zb">'+data[i]['cname']+'</span>';
+                        str+='</div>';
+                        str+='<div style="width:6.5rem;float:left;">';
+                        str+='   <span class="similar-product-text fl jj2" style="color:#999;width:6.5rem;">'+data[i]['address']+'</span>';
+                        str+='    <div class="prices" style="width:6.5rem;">';
+                        str+='    <p class="sc_pri fl"><span>'+data[i]['cc_name']+'</span></p>';
+                        str+='</div>';
+                        str+='</div>';
+                        str+='<div style="width:3rem;float:left;margin-left:.5rem;height:2.5rem;text-align:right;">';
+                        str+='    <span class="zb-xl">'+data[i]['julicon']+'</span>';
+                        str+='</div></div></div></a></div>';
+                    }
+
+                    $("#template").append(str);
+                    before_request = 1;
+                }else{
+                    $('.get_more').hide();
+                }
+
+            }
+        });
+    }
+
+
+
+    wx.config({
+        debug: false,
+        appId: '{$signPackage["appId"]}',
+        timestamp: '{$signPackage["timestamp"]}',
+        nonceStr: '{$signPackage["nonceStr"]}',
+        signature: '{$signPackage["signature"]}',
+        jsApiList: [
+            // 所有要调用的 API 都要加到这个列表中
+            'getLocation',
+        ]
+    });
+    wx.ready(function () {
+        wx.checkJsApi({
+            jsApiList: [
+                'getLocation'
+            ],
+
+            success: function (res) {
+                $(document.body).attr('lat',res['latitude']);
+                $(document.body).attr('lng',res['longitude']);
+                if (res.checkResult.getLocation == false) {
+                    alert('你的微信版本太低，不支持微信JS接口，请升级到最新的微信版本！');
+                    return;
+                }
+            }
+        });
+        wx.error(function(res){
+            alert("接口调取失败")
+        });
+        wx.getLocation({
+            success: function (res) {
+                $(document.body).attr('lat',res['latitude']);
+                $(document.body).attr('lng',res['longitude']);
+                stroelist(page);
+            },
+            cancel: function (res) {
+                alert('用户拒绝授权获取地理位置');
+            }
+        });
+    });
+
+</script>
+
+
+
+	</body>
+</html>

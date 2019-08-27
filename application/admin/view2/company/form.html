@@ -1,0 +1,1186 @@
+<include file="public/layout" />
+<script src="https://webapi.amap.com/maps?v=1.4.0&key=34757d6f3a85d3ad5fac697a62f0204f&plugin=AMap.Geocoder" type="text/javascript"></script>
+<script src="https://webapi.amap.com/ui/1.0/main.js?v=1.0.10"></script>
+<script src="https://webapi.amap.com/demos/js/liteToolbar.js" type="text/javascript"></script>
+<style>
+/* 地图 */
+.container {
+    font-size: 13px;
+    width: 500px;
+    height:400px;
+
+}
+
+
+</style>
+<!--物流配置 css -end-->
+<!--以下是在线编辑器 代码 -->
+<load href="__ROOT__/public/plugins/Ueditor/ueditor.config.js"/>
+<load href="__ROOT__/public/plugins/Ueditor/ueditor.all.min.js"/>
+<script type="text/javascript" charset="utf-8" src="__ROOT__/public/plugins/Ueditor/lang/zh-cn/zh-cn.js"></script>
+<body style="background-color: #FFF; overflow: auto;">
+
+    <div id="append_parent"></div>
+    <div id="ajaxwaitid"></div>
+    <div class="page">
+        <div class="fixed-bar">
+            <div class="item-title">
+                <div class="subject">
+                    <h3>操作<if condition="$Request.param.company_id gt 0 or $item['parent_id'] gt 0 or $Request.param.searchtype eq 99">实体店<else/>子公司</if></h3>
+                    <h5><a href="{:U('Admin/Company/index',['company_id'=>$Request.param.company_id,'searchtype'=>$Request.param.searchtype])}" id="log_list"><if condition="$Request.param.company_id gt 0 or $Request.param.searchtype eq 99">实体店<else/>子公司</if>列表</a></h5>
+                </div>
+                <ul class="tab-base nc-row">
+                    <li><a href="javascript:void(0);" data-index='1' class="tab current"><span>基本信息</span></a></li>
+                    <li><a href="javascript:void(0);" data-index='2' class="tab"><span>介绍</span></a></li>
+                </ul>
+            </div>
+        </div>
+        <script>
+
+          $(function (){
+             if($("input[name='is_payment']:checked").val() == 0){
+                $(".tkpay").hide();
+            }else{
+                $(".tkpay").show();
+            }
+
+
+            $("input[name='is_payment']").change(function (){
+               if($("input[name='is_payment']:checked").val() == 0){
+                  $(".tkpay").slideUp("slow");
+              }else{
+                  $(".tkpay").slideDown("slow");
+              }
+          })
+
+            if($("input[name='is_weixin']:checked").val() == 0){
+                $(".dkpay").hide();
+            }else{
+                $(".dkpay").show();
+            }
+
+            $("input[name='is_weixin']").change(function (){
+               if($("input[name='is_weixin']:checked").val() == 0){
+                  $(".dkpay").slideUp("slow");
+              }else{
+                  $(".dkpay").slideDown("slow");
+              }
+          })
+        })
+    </script>
+    <style>.tkpay{display:none}</style>
+
+    <form method="post" id="handlepost" action="" name="form1" autocomplete="off" onSubmit="return postcheck();" >
+        <div class="ncap-form-default  tab_div_1" id="goods_spec_table">
+
+            <input type="hidden" name="{$pk}" id="{$pk}" value="{$item[$pk]}" />
+            <dl class="row">
+                <dt class="tit">
+                    <label for="cname"><em>*</em>名称:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="cname" name="cname"  value="{$item.cname}" required  placeholder=""  class="input-txt" type="text" <if condition="$item.is_locks eq 1  && $item "> readonly="readonly" </if> />
+                    <p class="notic">  <!--{:\think\\Request::instance()->action()}--> </p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="password"><em>*</em>登录密码</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="password" id="password" <if condition="'Add' eq $Request.action"> required </if> value="" class="input-txt" <if condition="$item.is_locks eq 1  && $item "> readonly="readonly" </if>>
+                    <span class="err"></span>
+                    <p class="notic">6-16位字母数字符号组合</p>
+                </dd>
+            </dl>
+
+            <if condition="$Request.param.company_id gt 0 or $item['parent_id'] gt 0 or $Request.param.searchtype eq 99">
+             <dl class="row">
+                <dt class="tit">
+                    <label for="parent_id"><em>*</em>所属子公司</label>
+                </dt>
+                <dd class="opt">
+                    <select name="parent_id" id="parent_id" size="5" <if condition="$item.is_locks eq 1  && $item "> disabled="disabled" </if>>
+                        <option value="">请选择所属子公司</option>
+                        <volist name="company_list" id="vo">
+                            <option value="{$vo.cid}" <if condition="$vo['cid'] eq $item['parent_id'] || $vo['cid'] eq $Request.param.company_id">selected="selected"</if> >{$vo.cname}</option>
+                        </volist>
+                    </select>
+                    <span class="err"></span>
+                    <span><input type="text" id='parent_search' placeholder="模糊搜索" onblur='search_company_list("#parent_search")' class="s-input-txt" <if condition="$item.is_locks eq 1  && $item "> readonly="readonly" </if>><input type="button" value="查询" onclick='search_company_list("#parent_search")'></span>
+                </dd>
+            </dl>
+        </if>
+
+        <dl class="row">
+            <dt class="tit">
+                <label for="cat_id"><em>*</em>分类</label>
+            </dt>
+            <dd class="opt">
+                <select name="cat_id" id="cat_id" <if condition="$item.is_locks eq 1  && $item "> disabled="disabled" </if>>
+                    <option value="">请选择分类</option>
+                    <volist name="companyCategroy" id="vo">
+                        <option value="{$vo.id}" <if condition="$vo['id'] eq $item['cat_id']">selected="selected"</if> >{$vo.cc_name}</option>
+                    </volist>
+                </select>
+                <span class="err"></span>
+
+            </dd>
+        </dl>
+
+        <!--推荐的子公司-->
+        <!--推荐的子公司-->
+        <dl class="row">
+            <dt class="tit">
+                <label for="parent_id">推荐子公司（谁推荐的）</label>
+            </dt>
+            <dd class="opt">
+                <select name="select_t_parent_id" id="select_t_parent_id" <if condition="$item.is_locks eq 1  && $item "> disabled="disabled" </if>>
+                    <!-- <option value="">请选择推荐子公司</option> -->
+                    <volist name="company_list" id="vo">
+                        <option value="{$vo.cid}">{$vo.cname}</option>
+                    </volist>
+                </select>
+                <span class="err"></span>
+
+                <input type="text" id="region_search_child_company" placeholder="模糊搜索" onblur="searchChildcompany()" <if condition="$item.is_locks eq 1  && $item "> readonly="readonly" </if>>
+                <select name="search_content_child_company" id="search_res_child_company" multiple size=5 style='display:none'>
+                    <option  value="0">模糊搜索</option>
+                </select>
+
+            </dd>
+        </dl>
+        <dl style="display:;">
+            <dt class="tit"></dt>
+            <dd class="opt" id="t_company_list">
+                <ul>
+                    <php>
+                        $str = '';
+                    </php>
+                    <foreach name="t_company_list" item="tcl">
+                        <php>
+                            if($str == ''){
+                            $str = $tcl['t_company_id'].':'.$tcl['company_level'];
+                        }else{
+                        $str .= ','.$tcl['t_company_id'].':'.$tcl['company_level'];
+                    }
+                </php>
+                <li id="{$tcl.t_company_id}">{$tcl.cname}
+                    <span>
+                        <if condition="$tcl['company_level'] gt 0">
+                            <font color="blue">[等级：{$tcl.lv_name},分红：{$tcl.profit}]</font>
+                        </if>
+                    </span>
+                    <if condition="$item.is_locks eq 0  && $item ">(<a href="javascript:;" onClick="select_level({$tcl.t_company_id});">选择等级</a>)&nbsp;&nbsp;&nbsp;<i class="fa fa-trash-o" onClick="delcompany(this)"></i></if>
+                </li>
+            </foreach>
+        </ul>
+    </dd>
+</dl>
+<input type="hidden" name="t_company_id" id="t_company_id" value="{$item.t_company_id}">
+<input type="hidden" name="company_level" id="company_level" value="{$str}">
+<script>
+    $(function(){
+        $('#select_t_parent_id').change(function(){
+            var t_company_id = $(this).val();
+            var t_company_text = $(this).find(':selected').text();
+
+            if(t_company_id == ''){
+                $('#t_company_id').val('');
+                $('#t_company_list ul').html('');
+            }else{
+                var company_id = $('#t_company_id').val();
+                var company_level = $('#company_level').val();
+                if(company_id != ''){
+                    var arr_t_company_id = company_id.split(',');
+                    if(arr_t_company_id.indexOf(t_company_id) == -1){
+                        $('#t_company_id').val(company_id+','+t_company_id);
+                        $('#company_level').val(company_level+','+t_company_id+':0');
+                        $('#t_company_list ul').append('<li id="'+t_company_id+'">'+t_company_text+'<span></span>(<a href="javascript:;" onclick="select_level('+t_company_id+');">选择等级</a>)&nbsp;&nbsp;&nbsp;<i class="fa fa-trash-o" onclick="delcompany(this)"></i></li>');
+                    }
+                }else{
+                    $('#t_company_id').val(t_company_id);
+                    $('#company_level').val(t_company_id+':0');
+                    $('#t_company_list ul').append('<li id="'+t_company_id+'">'+t_company_text+'<span></span>(<a href="javascript:;" onclick="select_level('+t_company_id+');">选择等级</a>)&nbsp;&nbsp;&nbsp;<i class="fa fa-trash-o" onclick="delcompany(this)"></i></li>');
+                }
+            }
+
+        });
+        
+
+    })
+
+
+    function searchChildcompany() {
+        var keyword = $('#region_search_child_company').val().trim();
+        $.ajax({
+            url: "/Home/Api/getKeywordChildcompany/keyword/"+keyword,
+            type: 'GET',
+                    error: function(){layer.alert('系统繁忙，请稍后再试',{icon:2,time:2000});},
+                    success: function(data){
+                        console.log(11);
+                        $('#select_t_parent_id').empty().html(data);
+                    }
+                });
+        return false;
+    }
+
+
+
+    function delcompany(obj){
+        if(confirm('确认要删除此推荐子公司吗？')){
+            var t_company_id = $(obj).parent().attr('id');
+            var company_id = $('#t_company_id').val();
+            var company_level = $('#company_level').val();
+            var arr_t_company_id = company_id.split(',');
+            var arr_company_level = company_level.split(',');
+            var pos = arr_t_company_id.indexOf(t_company_id);
+            if(pos != -1){
+                arr_t_company_id.splice(pos,1);
+                arr_company_level.splice(pos,1);
+                $('#t_company_id').val(arr_t_company_id.join(','));
+                $('#company_level').val(arr_company_level.join(','));
+            }
+            $(obj).parent().remove();
+
+        }
+    }
+
+    function select_level(t_company_id){
+
+        $.ajax({
+            url:"{:U('Company/search_company_level',['cid'=>$item[$pk]])}",
+            type:"POST",
+            dataType:"json",
+            success:function(data){
+                var html = "<select id='level_list'>";
+                html += "<option value='0'>请选择等级</option>";
+                for (var i in data) {
+                    html += "<option value='" + data[i].id + "'>" + data[i].lv_name + "</option>";
+                }
+                html += "</select>";
+                            //询问框
+                            layer.confirm('选择分红等级', {
+                                title: '操作',
+                                content: "<div style='text-align: center'>分红等级：" + html + "</div>"
+                            }, function () {
+                                var level_id = $("#level_list").val();
+                                ajax_append(t_company_id,level_id);
+                                layer.closeAll('dialog');
+                            }, function () {
+
+                            });
+                        }
+                    });
+    }
+
+    function ajax_append(t_company_id,level_id){
+        $.ajax({
+            url:"{:U('Company/get_company_level')}",
+            data:{level_id:level_id},
+            type:"POST",
+            dataType:"json",
+            success:function(data){
+                console.log(data);
+                if(data.status == 0){
+
+                    var company_id = $('#t_company_id').val();
+                    var company_level = $('#company_level').val();
+                    var arr_t_company_id = company_id.split(',');
+                    var arr_company_level = company_level.split(',');
+                    var pos = arr_t_company_id.indexOf(t_company_id.toString());
+                    arr_company_level[pos] = t_company_id+":"+level_id;
+                    $('#company_level').val(arr_company_level.join(','));
+                    $('#'+t_company_id).find('span').html('<font color="blue">[等级：'+data.info.lv_name+',分红：'+data.info.profit+']</font>');
+
+                }else{
+                    alert(data.info);
+                }
+            }
+        });
+    }
+
+</script>
+
+
+<dl class="row">
+    <dt class="tit">
+        <label><em>*</em>所在地区</label>
+    </dt>
+    <dd class="opt">
+        <select name="province_id" id="province" onchange="get_city(this)" <if condition="$item.is_locks eq 1  && $item "> disabled="disabled" </if>>
+            <option value="0">请选择</option>
+            <volist name="province" id="p">
+                <option <if condition="$item['province_id'] eq $p['id']">selected</if>  value="{$p.id}">{$p.name}</option>
+            </volist>
+        </select>
+        <select name="city_id" id="city" onchange="get_area(this)" <if condition="$item.is_locks eq 1  && $item "> disabled="disabled" </if>>
+            <option  value="0">请选择</option>
+            <volist name="city" id="p">
+                <option <if condition="$item['city_id'] eq $p['id']">selected</if>  value="{$p.id}">{$p.name}</option>
+            </volist>
+        </select>
+        <select name="district_id" id="district" <if condition="$item.is_locks eq 1  && $item "> disabled="disabled" </if>>
+            <option  value="0">请选择</option>
+            <volist name="district" id="p">
+                <option <if condition="$item['district_id'] eq $p['id']">selected</if>  value="{$p.id}">{$p.name}</option>
+            </volist>
+        </select>
+        <input type="text" id="region_search" placeholder="模糊搜索" onchange="searchRegion()" <if condition="$item.is_locks eq 1  && $item "> readonly="readonly" </if>>
+        <select name="search_content" id="search_res" multiple size=5 style='display:none'>
+           <option  value="0">模糊搜索</option>
+       </select>
+       <p class="notic">所在地区</p>
+   </dd>
+</dl>
+<script type="text/javascript">
+    $(function(){
+        $("#search_res").change(function(){
+                        var regin_val = $(this).val().toString(); //.split("|")
+                        var regin_val_id = $(this).val().toString().split("|");
+                        $.ajax({
+                            url:"__URL__/get_city_area",
+                            data:{regin_val:regin_val},
+                            dataType:"json",
+                            type:"post",
+                            success:function(data){
+                                var province = data.province;
+                                var city = data.city;
+                                var area = data.area;
+                                var provinceHTML = "";
+                                for(var i in province){
+                                    if(regin_val_id[0]==province[i]["id"]){
+                                        provinceHTML+="<option value='"+province[i]["id"]+"' selected>"+province[i]["name"]+"</option>";
+                                    }else{
+                                        provinceHTML+="<option value='"+province[i]["id"]+"'>"+province[i]["name"]+"</option>";
+                                    }
+                                }    
+                                $("#province").html(provinceHTML);
+
+                                
+                                var cityHTML = "<option value=\"0\">请选择</option>";
+                                for(var i in city){
+                                    if(regin_val_id[1]==city[i]["id"]){
+                                        cityHTML+="<option value='"+city[i]["id"]+"' selected>"+city[i]["name"]+"</option>";
+                                    }else{
+                                        cityHTML+="<option value='"+city[i]["id"]+"'>"+city[i]["name"]+"</option>";
+                                    }
+                                }    
+                                $("#city").html(cityHTML);
+                                
+                                var areaHTML = "<option value=\"0\">请选择</option>";
+                                for(var i in area){
+                                    if(regin_val_id[2]==area[i]["id"]){
+                                        areaHTML+="<option value='"+area[i]["id"]+"' selected>"+area[i]["name"]+"</option>";
+                                    }else{
+                                        areaHTML+="<option value='"+area[i]["id"]+"'>"+area[i]["name"]+"</option>";
+                                    }
+                                }    
+                                $("#district").html(areaHTML);
+
+
+                            }
+                        });    
+
+                        /*
+                        var regin_length = regin_val.length;
+                        //省
+                        if(regin_length==1){
+                            $("#province").val(regin_val[0]);
+                            $('#district').empty().css('display','none');
+                            get_city("#province");
+                        }
+                        //市
+                        if(regin_length==2){
+                            $("#province").val(regin_val[0]);
+                            get_three_area("#province","",regin_val[1],"");
+                            // get_city("#province",regin_val[1]);
+                        }
+                        //区
+                        if(regin_length==3){
+                            $("#province").val(regin_val[0]);
+                            get_three_area("#province","#city",regin_val[1],regin_val[2]);
+                            // get_city("#province",regin_val[1]);
+                            // get_area("#city",regin_val[2]);
+                        }*/
+                    })
+    })
+</script>
+<dl class="row">
+    <dt class="tit">
+        <label for="mobile"><em>*</em>手机号码:</label>
+    </dt>
+    <dd class="opt">
+        <input id="mobile" name="mobile" value="{$item.mobile}" required type="text" <if condition="$item.is_locks eq 1  && $item "> readonly="readonly" </if>/>
+        <p class="notic"> </p>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="tel">固定电话:</label>
+    </dt>
+    <dd class="opt">
+        <input id="tel" name="tel" value="{$item.tel}" type="text" <if condition="$item.is_locks eq 1  && $item "> readonly="readonly" </if>/>
+        <p class="notic"></p>
+    </dd>
+</dl>
+<dl class="row">
+    <dt class="tit">
+        <label for="address">地址:</label>
+    </dt>
+    <dd class="opt">
+        <input id="address" name="address" value="{$item.address}"  class="input-txt" type="text" <if condition="$item.is_locks eq 1  && $item "> readonly="readonly" </if>/>
+        <p class="notic"></p>
+        <div class="map container" id="ditu" tabindex="0" style="position:relative" >
+            <if condition="$item.is_locks eq 1  && $item "><div style="width:500px;height:400px;position:absolute;top:0;left:0;z-index:9999999;"></div></if></div>
+            <input type="hidden" id="lng" name="lng" value="{$item.lng}"/>
+            <input type="hidden" id="lat" name="lat" value="{$item.lat}"/>
+        </dd>
+    </dl>
+    <dl class="row drgxq">
+        <dt class="tit">
+            <label for="contact"><em>*</em>联系人:</label>
+        </dt>
+        <dd class="opt">
+            <input id="contact" name="contact" value="{$item.contact}"  required type="text" <if condition="$item.is_locks eq 1  && $item "> readonly="readonly" </if>/>
+            <p class="notic"> </p>
+        </dd>
+    </dl>
+    <if condition="($is_hide neq 1) or ($searchtype neq '')">
+        <dl class="row tkhidesk">
+            <dt class="tit">
+              <label>是否参与大盘米豆返利</label>
+          </dt>
+          <dd class="opt">
+            <if condition="$item.is_locks eq 0   && $item "> <label for='is_z_back1'><input id="is_z_back1" name="is_z_back" value="1" type="radio" <if condition="$item[is_z_back] eq 1"> checked="checked" </if> > 是</label>
+                <label for='is_z_back0'><input id="is_z_back0" name="is_z_back" value="0" type="radio" <if condition="$item[is_z_back] eq 0"> checked="checked" </if>> 否</label>
+            <else /> 
+            <label ><input  name="is_z_back" value="1" type="radio" <if condition="$item[is_z_back] eq 1"> checked="checked" </if> <if condition="$item.is_locks eq 1  && $item "> disabled="disabled" </if>> 是</label>
+            <label ><input  name="is_z_back" value="0" type="radio" <if condition="$item[is_z_back] eq 0"> checked="checked" </if> <if condition="$item.is_locks eq 1  && $item "> disabled="disabled" </if>> 否</label>
+            </if>
+        <p class="notic"></p>
+    </dd>
+</dl>
+<dl class="row tkhidesk" id="midou2" <if condition="$item[is_z_back] eq 1">style="display:none;"</if> >
+    <dt class="tit">
+        <label for="record_no">可返米豆比率</label>
+    </dt>
+    <dd class="opt">
+        <input type="text" value="{$item.midou_back_percent|default='100'}" name="midou_back_percent" class="t_mane" onKeyUp="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')" <if condition="$item.is_locks eq 1  && $item "> readonly="readonly" </if>/>
+        <span class="err" id="midou_back_percent" style="color:#F00; display:none;"></span>
+        <p class="notic">100时不限制, 为0时不能使用米豆, 50时米豆抵扣金额不能超过该笔订单应付金额的50%</p>
+    </dd>
+</dl>
+<dl class="row tkhidesk" >
+    <dt class="tit">
+        <label for="proportion"><em>*</em>利润比:</label>
+    </dt>
+    <dd class="opt">
+        <input id="proportion" name="proportion"  required value="{$item.proportion}" type="text" <if condition="$item.is_locks eq 1  && $item "> readonly="readonly" </if>/>
+        <p class="notic"> 请填写小数，例：0.36 ，   0.36等于36% （子公司不需要填写，实体店必须填写，涉及线下分红）  </p>
+    </dd>
+</dl>
+
+<dl class="row tkhidesk">
+    <dt class="tit">
+      <label>是否使用大盘比例：</label>
+  </dt>
+  <dd class="opt">
+   <label for='is_public1'><input id="is_public1" name="is_public" value="1" type="radio" <if condition="$item[is_public] eq 1"> checked="checked" </if> <if condition="$item.is_locks eq 1  && $item "> disabled="disabled" </if>> 是</label>
+   <label for='is_public0'><input id="is_public0" name="is_public" value="0" type="radio" <if condition="$item[is_public] eq 0"> checked="checked" </if> <if condition="$item.is_locks eq 1  && $item "> disabled="disabled" </if>> 否</label>
+   <p class="notic"> </p>
+</dd>
+</dl>
+<dl class="row tkhidesk">
+    <dt class="tit">
+      <label>推广员，线下比例：</label>
+  </dt>
+  <dd class="opt">
+   <input type="text" name="tgyxxbl" id="tgyxxbl" value="{$item.tgyxxbl ? $item.tgyxxbl : '0.25|0.75'}" <if condition="$item.is_locks eq 1  && $item "> readonly="readonly" </if>/>
+   <p class="notic">请填写小数，例：0.2|0.4 ，  前面是推广员比例，后面是线下比例</p>
+</dd>
+</dl>
+<dl class="row tkhidesk">
+    <dt class="tit">
+        <label>设定推广员，实体店，子公司推广分红比例：</label>
+    </dt>
+    <dd class="opt">
+        <input type="text" name="tscbl" id="tscbl" value="{$item.tscbl ? $item.tscbl : '1|0|0'}" <if condition="$item.is_locks eq 1  && $item "> readonly="readonly" </if>/>
+        <p class="notic">请填写小数，例：0.2|0.4|0.3，总数不能大于1，中间用竖线（“|”）隔开 注意顺序</p>
+    </dd>
+</dl>
+<dl class="row tkhidesk">
+    <dt class="tit">
+        <label>设定员工，实体店，子公司分红比例：</label>
+    </dt>
+    <dd class="opt">
+        <input type="text" name="yscbl" id="yscbl" value="{$item.yscbl ? $item.yscbl : '0|0|0'}" <if condition="$item.is_locks eq 1  && $item "> readonly="readonly" </if>/>
+        <p class="notic">例：0.3|0.4|0.1 总数不能大于1，中间用竖线（“|”）隔开 注意顺序</p>
+    </dd>
+</dl>
+
+
+
+<dl class="row tkhidesk">
+    <dt class="tit">
+      <label>设定总公司，实体店实际分红比例：</label>
+  </dt>
+  <dd class="opt">
+   <input type="text" name="dbystore" id="dbystore" value="{$item.dbystore ? $item.dbystore : '0|0'}" <if condition="$item.is_locks eq 1  && $item "> readonly="readonly" </if>/>
+   <p class="notic">例： 0.3|0.7 总数必须等于1，中间用竖线（“|”）隔开 注意顺序</p>
+</dd>
+</dl>
+
+<dl class="row tkhidesk">
+    <dt class="tit">
+      <label>是否为自动打款：</label>
+  </dt>
+  <dd class="opt">
+    <input type="radio" name="is_auto_pay" required value="0" <if condition="$item.is_auto_pay eq 0"> checked</if> <if condition="$item.is_locks eq 1  && $item "> disabled="disabled" </if>> 否
+    <input type="radio" name="is_auto_pay" required value="1" <if condition="$item.is_auto_pay eq 1"> checked</if> <if condition="$item.is_locks eq 1  && $item "> disabled="disabled" </if>> 是
+    <input type="radio" name="is_auto_pay" required value="2" <if condition="$item.is_auto_pay eq 2"> checked</if> <if condition="$item.is_locks eq 1  && $item "> disabled="disabled" </if>> 对公账户
+    <p class="notic"></p>
+</dd>
+</dl>
+
+<dl class="row tkhidesk">
+    <dt class="tit">
+      <label>收款方式：</label>
+  </dt>
+  <dd class="opt">
+   
+    <input type="radio" name="is_bank" required value="0" <if condition="$item.is_bank eq 0"> checked</if> <if condition="$item.is_locks eq 1  && $item "> disabled="disabled" </if>> 零钱
+    <input type="radio" name="is_bank" required value="1" <if condition="$item.is_bank eq 1"> checked</if> <if condition="$item.is_locks eq 1  && $item "> disabled="disabled" </if>> 银行卡
+    <p class="notic"></p>
+</dd>
+</dl>
+
+<dl class="row tkhidesk">
+    <dt class="tit">
+      <label>设定实体店收款手机号码：</label>
+  </dt>
+  <dd class="opt">
+    <input type="text" name="receivable_mobile" id="receivable_mobile" value="{$item.receivable_mobile}" onblur="getUserInfo(this)" <if condition="$item.is_locks eq 1  && $item "> readonly="readonly" </if>/>  <span></span>
+    <input type="hidden" name="hidden_mobile" value="{$item.receivable_mobile}"  readonly="readonly"/>
+    <p class="notic">例：必须为本站已关注公众号的用户</p>
+</dd>
+</dl>
+
+
+<dl class="row tkhidesk">
+    <dt class="tit">
+      <label>收款方用户名：</label>
+  </dt>
+  <dd class="opt">
+   <input type="text" name="enc_true_name" id="enc_true_name" value="{$item.enc_true_name}" <if condition="$item.is_locks eq 1  && $item "> readonly="readonly" </if>/>
+   <input type="hidden" name="hidden_name" value="{$item.enc_true_name}"  readonly="readonly" />
+   <p class="notic"> </p>
+</dd>
+</dl>
+<dl class="row tkhidesk">
+    <dt class="tit">
+      <label>收款方银行卡号：</label>
+  </dt>
+  <dd class="opt">
+   <input type="text" name="enc_bank_no" id="enc_bank_no" value="{$item.enc_bank_no}" <if condition="$item.is_locks eq 1  && $item "> readonly="readonly" </if>/>
+   <input type="hidden" name="hidden_bank_no" value="{$item.enc_bank_no}"  readonly="readonly"/>
+   <p class="notic">例：必须为本站已关注公众号的用户</p>
+</dd>
+</dl>
+<dl class="row tkhidesk">
+    <dt class="tit">
+      <label>收款方开户行：</label>
+  </dt>
+  <dd class="opt">
+   <volist name='bank_list' id='vo'>
+       <input type="radio" name="bank_code" value="{$key}" <if condition="$item.bank_code eq $key"> checked</if> <if condition="$item.is_locks eq 1  && $item "> disabled="disabled" </if>> {$vo}
+   </volist>
+   <p class="notic">例：必须选择</p>
+</dd>
+</dl>
+
+
+</if>
+<dl class="row">
+    <dt class="tit">
+      <label>是否冻结</label>
+  </dt>
+  <dd class="opt">
+    <if condition="$item.is_locks eq 0  && $item "> 
+        <div class="onoff">
+            <label for="is_lock0" class="cb-enable <if condition="$item[is_lock] eq 0">selected</if>">否</label>
+            <label for="is_lock1" class="cb-disable <if condition="$item[is_lock] eq 1">selected</if>">是</label>
+            <input id="is_lock0" name="is_lock" value="0" type="radio" <if condition="$item[is_lock] eq 0"> checked="checked"</if>>
+            <input id="is_lock1" name="is_lock" value="1" type="radio" <if condition="$item[is_lock] eq 1"> checked="checked"</if>>
+        </div>
+        <else /> 
+        <input name="is_lock" value="0" type="radio" <if condition="$item[is_lock] eq 0"> checked="checked"</if> <if condition="$item.is_locks eq 1  && $item "> disabled="disabled" </if>>否
+        <input name="is_lock" value="1" type="radio" <if condition="$item[is_lock] eq 1"> checked="checked"</if> <if condition="$item.is_locks eq 1  && $item "> disabled="disabled" </if>>是
+    </if>
+    
+    <p class="notic">  </p>
+</dd>
+</dl>
+
+<dl class="row">
+    <dt class="tit">
+        <label for="store_logo">缩略图</label>
+    </dt>
+    <dd class="opt">
+        <div class="input-file-show">
+            <span class="show">
+              <if condition="$item.is_locks eq 0  && $item "> 
+                <a id="img_a" class="nyroModal" rel="gal" href="{$item.litpic}" >
+                    <i id="img_i" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$item.litpic}>',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();" ></i>
+                </a>
+                <else /> 
+                <i id="img_i" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$item.litpic}>',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();" ></i>
+            </if>
+        </span>
+        <span class="type-file-box">
+            <input type="text" id="litpic" name="litpic" value="{$item.litpic}" class="type-file-text" <if condition="$item.is_locks eq 1  && $item "> disabled="disabled" </if>>
+            <input type="button" name="button" id="button1" value="选择上传..." class="type-file-button" <if condition="$item.is_locks eq 1  && $item "> disabled="disabled" </if>>
+            <input  class="type-file-file" onClick="GetUploadify(1,'','company','img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效"  <if condition="$item.is_locks eq 1  && $item "> disabled="disabled" </if>>
+        </span>
+    </div>
+    <span class="err"></span>
+    <p class="notic">最佳尺寸 150 * 150</p>
+</dd>
+</dl>
+
+
+
+<script type="text/javascript">
+				//网站首页logo
+				function img_call_back(fileurl_tmp)
+				{
+					$("#litpic").val(fileurl_tmp);
+					$("#img_a").attr('href', fileurl_tmp);
+					$("#img_i").attr('onmouseover', "layer.tips('<img src="+fileurl_tmp+">',this,{tips: [1, '#fff']});");
+				}
+			</script>
+            <dl class="row">
+                <dt class="tit">
+                    
+                    <label for="cash_envelope">备注:</label>
+                </dt>
+                <dd class="opt">
+                    <textarea name="remark" style="width:400px; height:100px" id="remark" <if condition="$item.is_locks eq 1  && $item "> readonly="readonly" </if>>{$item.remark}</textarea>
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+            <notempty name="item['update_time']">
+                <dl class="row">
+                    <dt class="tit">
+                        <label for="update_time">更新时间</label>
+                    </dt>
+                    <dd class="opt">
+                        {$item.update_time|date="Y-m-d H:i:s",###}
+                    </dd>
+                </dl>
+            </notempty>
+
+            <dl class="row">
+                <dt class="tit">
+                  <label>企业是否使用支付宝收款</label>
+              </dt>
+              <dd class="opt">
+                <if condition="$item.is_locks eq 0  && $item "> 
+                  <div class="onoff">
+                    <label for="is_payment0" class="cb-enable <if condition="$item[is_payment] eq 0">selected</if>">否</label>
+                    <label for="is_payment1" class="cb-disable <if condition="$item[is_payment] eq 1">selected</if>">是</label>
+                    <input id="is_payment0" name="is_payment" value="0" type="radio" <if condition="$item[is_payment] eq 0"> checked="checked"</if>>
+                    <input id="is_payment1" name="is_payment" value="1" type="radio" <if condition="$item[is_payment] eq 1"> checked="checked"</if>>
+                </div>
+                <else /> 
+                <input  name="is_payment" value="0" type="radio" <if condition="$item[is_payment] eq 0"> checked="checked"</if> <if condition="$item.is_locks eq 1  && $item "> disabled="disabled" </if>>否
+                <input name="is_payment" value="1" type="radio" <if condition="$item[is_payment] eq 1"> checked="checked"</if> <if condition="$item.is_locks eq 1  && $item "> disabled="disabled" </if>>是
+            </if>
+            <p class="notic">  </p>
+        </dd>
+    </dl>
+
+    
+    <dl class="row tkpay">
+        <dt class="tit">
+            <label for="address">支付宝AppID:</label>
+        </dt>
+        <dd class="opt">
+            <input id="alipay_id" name="alipay_id" value="{$item.alipay_id}"  class="input-txt" type="text" <if condition="$item.is_locks eq 1  && $item "> readonly="readonly" </if>/>
+            <p class="notic"></p>
+        </dd>
+    </dl>
+
+    <dl class="row tkpay">
+        <dt class="tit ">
+            <label for="address">支付宝公钥:</label>
+        </dt>
+        <dd class="opt">
+           <textarea id="gongyao" name="gongyao" style="width:600px; height:100px" <if condition="$item.is_locks eq 1  && $item "> readonly="readonly" </if>>{$item.gongyao}</textarea>
+           <p class="notic"></p>
+       </dd>
+   </dl>
+
+
+   <dl class="row tkpay">
+    <dt class="tit">
+        <label for="address">支付宝私钥:</label>
+    </dt>
+    <dd class="opt">
+       <textarea id="siyao" name="siyao" style="width:600px; height:150px" <if condition="$item.is_locks eq 1  && $item "> readonly="readonly" </if>>{$item.siyao}</textarea>
+       <p class="notic"></p>
+   </dd>
+</dl>
+    <dl class="row tkhidesk">
+        <dt class="tit">
+            <label>打印机编号：</label>
+        </dt>
+        <dd class="opt">
+            <input type="text" name="printer_sn" id="printer_sn" value="{$item.printer_sn}" <if condition="$item.is_locks eq 1  && $item "> readonly="readonly" </if>/>
+
+            <p class="notic"> </p>
+        </dd>
+    </dl>
+<if condition="$item.is_locks eq 1 && $item">
+    <dl class="row pass">
+        <dt class="tit">
+            *
+        </dt>
+        <dd class="opt oop">
+            <span class="err"></span>
+            <p class="notic" onClick="is_check_password('{$item.cid}',0);" style="cursor: pointer;">解锁</p>
+        </dd>
+    </dl>
+</if>
+<if condition="$item.is_locks eq 0 && $item">
+    <dl class="row pass">
+        <dt class="tit">
+            *
+        </dt>
+        <dd class="opt oop">
+            <span class="err"></span>
+            <p class="notic" onClick="is_check_password('{$item.cid}',1);" style="cursor: pointer;">上锁</p>
+        </dd>
+    </dl>
+</if>
+
+<div class="bot">
+    <!-- <input type="submit" value="确认提交" class="tk_submit"> -->
+    
+    <if condition="$item ">
+        <input  value="确认提交" class="tk_submit" <if condition="$item.is_locks eq 0  && $item "> type="submit" <else /> type="button" </if>>
+        <else />
+        <input type="submit" value="确认提交" class="tk_submit">
+    </if>
+</div>
+</div>
+<div class="ncap-form-default tab_div_2" style="display: none;">
+    <dl class="row">
+        <dt class="tit">
+            <label for="record_no">商品详情描述</label>
+        </dt>
+        <dd class="opt" >
+            <textarea class="span12 ckeditor" id="strore_content" name="strore_content" title="">{$item.strore_content}</textarea>
+            <span class="err" id="err_goods_content" style="color:#F00; display:none;"></span>
+        </dd>
+      
+  </dl>
+  <div class="bot">
+
+    <if condition="$item ">
+        <input  value="确认提交" class="tk_submit" type="submit" >
+        <else />
+        <input type="submit" value="确认提交" class="tk_submit">
+    </if>
+</div>
+</div>
+
+
+
+</form>
+
+
+<script>
+	function postcheck(){
+		if($("input[name='is_lock']:checked").val() == 1 && $("#remark").val() == ''){
+			layer.alert('冻结账户必须填写备注',{icon:2,time:2000});
+			return false;
+		}
+		$.ajax({
+			url: "__URL__/{$acts}",
+			type: 'POST',
+			data:$("#handlepost").serialize(),
+			dataType: 'json',
+			error: function(){layer.alert('系统繁忙，请稍后再试',{icon:2,time:2000});},
+			beforeSend:function(){
+				layer.load('2',{shade: 0.6});
+			},
+			success: function(r){
+				if(r.status == 1){
+					layer.msg('数据更新成功！', {icon: 1,time: 2000,shade: 0.6},function (){
+						setTimeout(function(){
+							location.href="{:U('/Admin/Company/index/searchtype/99')}";
+						},2000);
+                });
+				}else{
+					layer.msg(r.info, {icon: 2,time: 2000,shade: 0.6});
+				}
+			},
+			complete:function(){
+				layer.closeAll('loading');
+			}
+		});
+		return false;
+	}
+
+    $('label[for="is_z_back1"]').click(function (){
+        $("#midou2").slideUp();
+    })
+    $('label[for="is_z_back0"]').click(function(){
+        $("#midou2").slideDown();
+    })
+</script>
+<script>
+  $("#parent_id").change(function (){
+     $('.tkhidesk').remove();
+     if($(this).val() != ''){
+        html = ["<dl class=\"row tkhidesk\">",
+        "	<dt class=\"tit\">",
+        "	  <label>是否参与大盘米豆返利</label>",
+        "	</dt>",
+        "	<dd class=\"opt\">",
+        "<label for='is_z_back1'><input id=\"is_z_back1\" name=\"is_z_back\" value=\"1\" type=\"radio\" > 是</label>",
+        "<label for='is_z_back0'><input id=\"is_z_back0\" name=\"is_z_back\" value=\"0\" type=\"radio\" checked=\"checked\"> 否</label>",
+        "	  <p class=\"notic\"></p>",
+        "	</dd>",
+        "</dl>   ",
+        "<dl class=\"row tkhidesk\" id=\"midou2\" style='display:none;'>",
+        "	<dt class=\"tit\">",
+        "		<label for=\"record_no\">可返米豆比率</label>",
+        "	</dt>",
+        "	<dd class=\"opt\">",
+        "		<input type=\"text\" value=\"100\" name=\"midou_back_percent\" class=\"t_mane\"   onkeyup=\"this.value=this.value.replace(/[^\\d]/g,'') \" />",
+        "		<span class=\"err\" id=\"midou_back_percent\" style=\"color:#F00; display:none;\"></span>",
+        "		<p class=\"notic\">100时不限制, 为0时不能使用米豆, 50时米豆抵扣金额不能超过该笔订单应付金额的50%</p>",
+        "	</dd>",
+        "</dl>",
+        "<dl class=\"row tkhidesk\" >",
+        "	<dt class=\"tit\">",
+        "		<label for=\"proportion\"><em>*</em>利润比:</label>",
+        "	</dt>",
+        "	<dd class=\"opt\">",
+        "		<input id=\"proportion\" name=\"proportion\"  required value=\"\" type=\"text\" />",
+        "		<p class=\"notic\"> 请填写小数，例：0.36 ，   0.36等于36% （子公司不需要填写，实体店必须填写，涉及线下分红）  </p>",
+        "	</dd>",
+        "</dl>",
+        "<dl class=\"row tkhidesk\">",
+        "	<dt class=\"tit\">",
+        "	  <label>是否使用大盘比例：</label>",
+        "	</dt>",
+        "	<dd class=\"opt\">",
+        "		<label for=\'is_public\'><input id=\"is_public1\" name=\"is_public\" value=\"1\" type=\"radio\"> 是</label>",
+        "		<label for=\'is_public\'><input id=\"is_public0\" name=\"is_public\" value=\"0\" type=\"radio\" checked=\"checked\"> 否</label>",
+        "	  <p class=\"notic\"> </p>",
+        "	</dd>",
+        "</dl>",
+        "<dl class=\"row tkhidesk\">",
+        "	<dt class=\"tit\">",
+        "	  <label>推广员，线下比例：</label>",
+        "	</dt>",
+        "	<dd class=\"opt\">",
+        "		<input type=\"text\" name=\"tgyxxbl\" id=\"tgyxxbl\" value=\"{$item.tgyxxbl ? $item.tgyxxbl : '0.25|0.75'}\"  />",
+        "	  <p class=\"notic\">请填写小数，例：0.2|0.4 ，  前面是推广员比例，后面是线下比例</p>",
+        "	</dd>",
+        "</dl>",
+        "<dl class=\"row tkhidesk\">",
+        "     <dt class=\"tit\">",
+        "           <label>设定推广员，实体店，子公司推广分红比例：</label>",
+        "     </dt>",
+        "       <dd class=\"opt\">",
+        "           <input type=\"text\" name=\"tscbl\" id=\"tscbl\" value=\"{$item.tscbl ? $item.tscbl : '1|0|0'}\" />",
+        "            <p class=\"notic\">请填写小数，例：0.2|0.4|0.3，总数不能大于1，中间用竖线（“|”）隔开 注意顺序</p>",
+        "       </dd>",
+        "       </dl>",
+        "<dl class=\"row tkhidesk\">",
+        "	<dt class=\"tit\">",
+        "	  <label>设定员工，实体店，子公司分红比例：</label>",
+        "	</dt>",
+        "	<dd class=\"opt\">",
+        "		<input type=\"text\" name=\"yscbl\" id=\"yscbl\" value=\"{$item.yscbl ? $item.yscbl : '0|0|0'}\" />",
+        "	  <p class=\"notic\">例：0.3|0.4|0.1 总数不能大于1，中间用竖线（“|”）隔开 注意顺序</p>",
+        "	</dd>",
+        "</dl><dl class=\"row tkhidesk\">",
+        "				<dt class=\"tit\">",
+        "				  <label>设定实体店收款手机号码：</label>",
+        "				</dt>",
+        "				<dd class=\"opt\">",
+        "					<input type=\"text\" name=\"receivable_mobile\" id=\"receivable_mobile\" value=\"{$item.receivable_mobile}\"  onblur=\"getUserInfo(this)\"/> <span></span>",
+        "				  <p class=\"notic\">例：必须为本站已关注公众号的用户</p>",
+        "				</dd>",
+        "			</dl>",
+        "            <dl class=\"row tkhidesk\">",
+        "				<dt class=\"tit\">",
+        "				  <label>设定总公司，实体店实际分红比例：</label>",
+        "				</dt>",
+        "				<dd class=\"opt\">",
+        "					<input type=\"text\" name=\"dbystore\" id=\"dbystore\" value=\"{$item.dbystore ? $item.dbystore : '0|0'}\" />",
+        "				  <p class=\"notic\">例： 0.3|0.7 总数必须等于1，中间用竖线（“|”）隔开 注意顺序</p>",
+        "				</dd>",
+        "			</dl>",
+        "<dl class=\"row tkhidesk\">",
+        "				<dt class=\"tit\">",
+        "				  <label>是否为自动打款：</label>",
+        "				</dt>",
+        "				<dd class=\"opt\">",
+        "                    <input type=\"radio\" name=\"is_auto_pay\" required value=\"0\"  > 否",
+        "                    <input type=\"radio\" name=\"is_auto_pay\" required value=\"1\"  > 是",
+        "				  <p class=\"notic\"> 例外： 如金额小于1元则存入账户中手动提款</p>",
+        "				</dd>",
+        "			</dl>",
+        "            ",
+        "            <dl class=\"row tkhidesk\">",
+        "				<dt class=\"tit\">",
+        "				  <label>收款方式：</label>",
+        "				</dt>",
+        "				<dd class=\"opt\">",
+        "					",
+        "                    <input type=\"radio\" name=\"is_bank\" required value=\"0\" > 零钱",
+        "                    <input type=\"radio\" name=\"is_bank\" required value=\"1\" > 银行卡",
+        "				  <p class=\"notic\"></p>",
+        "				</dd>",
+        "			</dl>",						
+        "<dl class=\"row tkhidesk\">",
+        "				<dt class=\"tit\">",
+        "				  <label>收款方用户名：</label>",
+        "				</dt>",
+        "				<dd class=\"opt\">",
+        "					<input type=\"text\" name=\"enc_true_name\" id=\"enc_true_name\" value=\"{$item.enc_true_name}\" />",
+        "				  <p class=\"notic\"> </p>",
+        "				</dd>",
+        "			</dl>",
+        "            <dl class=\"row tkhidesk\">",
+        "				<dt class=\"tit\">",
+        "				  <label>收款方银行卡号：</label>",
+        "				</dt>",
+        "				<dd class=\"opt\">",
+        "					<input type=\"text\" name=\"enc_bank_no\" id=\"enc_bank_no\" value=\"{$item.enc_bank_no}\" />",
+        "				  <p class=\"notic\">例：必须为本站已关注公众号的用户</p>",
+        "				</dd>",
+        "			</dl>",
+        "            <dl class=\"row tkhidesk\">",
+        "				<dt class=\"tit\">",
+        "				  <label>收款方开户行：</label>",
+        "				</dt>",
+        "				<dd class=\"opt\">",
+        <volist name='bank_list' id='vo'>
+        "<input type=\"radio\" name=\"bank_code\" value=\"{$key}\" > {$vo}",
+        </volist>
+        "				  <p class=\"notic\">例：必须选择</p>",
+        "				</dd>",
+        "			</dl>"].join("");
+
+        $('.drgxq').after(html);
+        $('label[for="is_z_back1"]').unbind('click').click(function (){
+           $("#midou2").slideUp();
+       })
+        $('label[for="is_z_back0"]').unbind('click').click(function(){
+           $("#midou2").slideDown();
+       })
+    }
+});
+</script>
+</div>
+<div id="goTop"> <a href="JavaScript:void(0);" id="btntop"><i class="fa fa-angle-up"></i></a><a href="JavaScript:void(0);" id="btnbottom"><i class="fa fa-angle-down"></i></a></div>
+
+
+<script src="__PUBLIC__/js/amap.js" type="text/javascript"></script>
+<script>
+    mapsamp('{$item.lng}','{$item.lat}');
+    $(document).ready(function(){
+        //插件切换列表
+        $('.tab-base').find('.tab').click(function(){
+            $('.tab-base').find('.tab').each(function(){
+                $(this).removeClass('current');
+            });
+            $(this).addClass('current');
+            var tab_index = $(this).data('index');
+            $(".tab_div_1, .tab_div_2").hide();
+            $(".tab_div_"+tab_index).show();
+        });
+
+
+    });
+
+    var url="{:url('Admin/Ueditor/index',array('savePath'=>'goods'))}";
+    var ue = UE.getEditor('strore_content',{
+        serverUrl :url,
+
+        zIndex: 999,
+        initialFrameWidth: "100%", //初化宽度
+        initialFrameHeight: 300, //初化高度
+        focus: false, //初始化时，是否让编辑器获得焦点true或false
+        maximumWords: 99999, removeFormatAttributes: 'class,style,lang,width,height,align,hspace,valign',//允许的最大字符数 'fullscreen',
+        pasteplain:false, //是否默认为纯文本粘贴。false为不使用纯文本粘贴，true为使用纯文本粘贴
+        autoHeightEnabled: true
+    });
+
+
+    function botsubmit(){
+        var strore_content = ue.getContent();
+        
+
+        $.ajax({
+            url:"__URL__/save_strore_content",
+            data:{strore_content:strore_content},
+            type:"POST",
+            dataType:"json",
+            success:function(data){
+
+            }
+        });
+    }
+    
+    function getUserInfo(obj){
+        var mobile = $(obj).val();
+        $.ajax({
+            url:"__URL__/get_user_info",
+            data:{mobile:mobile},
+            type:"POST",
+            dataType:"json",
+            success:function(data){
+                if(data.status == 1){
+                    $("#receivable_mobile").next().html("【昵称："+data.info.nickname+"&nbsp;&nbsp;&nbsp;注册时间："+data.info.reg_time+"】");
+                }else{
+                    $("#receivable_mobile").next().html(data.info);
+                }
+            }
+        });
+    }
+    function showSearch(searchId, resId) {
+        var search_input = $("#"+resId),
+        search_content = $("#"+searchId+" option");
+        $("#"+searchId+" option").each(function(idx, val){
+         var text = $(this).text();
+         $("#"+searchId).val(text).attr("selected",false);
+     });
+        $("#"+searchId+" option:contains(" + search_input.val().trim() + ")").prop("selected",true);
+    }
+    function search_company_list(text){
+        var cname = $(text).val();
+        $.ajax({
+            url:"__URL__/search_company_list",
+            data:{cname:cname},
+            type:"POST",
+            dataType:"json",
+            success:function(data){
+                var str="<option value='0'>请选择所属子公司</option>";
+                $.each(data.data,function(n,val){
+                    str += "<option value="+val.cid+">"+val.cname+"</option>"; 
+                })
+                $("#parent_id").empty().html(str);
+            }
+        });
+    }
+
+    /**地区模糊搜索**/
+    function searchRegion() {
+       var keyword = $('#region_search').val().trim();
+       $.ajax({
+         url: "/Home/Api/getKeywordRegion/keyword/"+keyword,
+         type: 'GET',
+			//dataType: 'json',
+			error: function(){layer.alert('系统繁忙，请稍后再试',{icon:2,time:2000});},
+			success: function(data){
+				data = '<option value="0">模糊搜索</option>'+ data;
+				$('#search_res').empty().html(data);
+				$("#search_res").show();
+			}
+		});
+       return false;
+   }
+
+
+
+/**
+     * 回调函数
+     */
+     function call_back10(v) {
+        layer.closeAll();
+        if (v == 1) {
+            layer.msg('发送成功',{icon:1});
+            $('.red').attr('readonly','readonly');
+            $('.oop').html(
+                "<span class='err'></span>"+
+                "<p class='notic' onClick=\"is_check_password('{$item.cid}',2);\" style='cursor: pointer;'>解锁</p>"
+                );
+            setTimeout(function(){  //使用  setTimeout（）方法设定定时2000毫秒
+               location.reload();//页面刷新
+           },2000);
+        } else {
+            layer.msg('发送失败',{icon:2});
+        }
+    }
+    
+     /**
+     * 回调函数
+     */
+     function call_back20(v) {
+        layer.closeAll();
+        if (v == 1) {
+            layer.msg('发送成功',{icon:1});
+            $('.red').removeAttr('readonly');
+            $('.oop').html(
+                "<span class='err'></span>"+
+                "<p class='notic' onClick=\"is_check_password('{$item.cid}',1);\" style='cursor: pointer;'>上锁</p>"
+                );
+            setTimeout(function(){  //使用  setTimeout（）方法设定定时2000毫秒
+               location.reload();//页面刷新
+           },2000);
+        } else {
+            layer.msg('发送失败',{icon:2});
+        }
+    }
+
+    //商品上锁/解锁密码
+    function is_check_password(id,t){
+        if(t == 1){
+            var url = "{:U('Admin/Company/dois_check_password')}";
+        }else{
+            var url = "{:U('Admin/Company/is_check_password')}";
+        }
+        if(id){
+            if(t == 1){
+                $.ajax({
+                    type:'GET',
+                    data:{cid:id,type:t}, 
+                    url:url,
+                    success:function(data){
+                        if(data == 1){
+                            call_back10(1);
+
+                        }else{
+                            call_back10(2);
+                        } 
+                    }
+                });
+            }else{
+                url += "?cid="+id+"&t="+t;
+                layer.open({
+                    type: 2,
+                    title: '输入密码',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['380px', '280px'],
+                    content: url
+                });
+            }
+            
+        }else{
+            layer.msg('请选择实体店',{icon:2});
+        }
+    }
+
+  
+</script>
+</body>
+</html>

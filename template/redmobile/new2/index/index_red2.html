@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>米豆专区-{$tpshop_config['shop_info_store_title']}</title>
+	<link rel="stylesheet" href="__STATIC__/css/style.css">
+	<link rel="stylesheet" type="text/css" href="__STATIC__/css/iconfont.css"/>
+	<script src="__STATIC__/js/jquery-3.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+	<!--<script src="__STATIC__/js/zepto-1.2.0-min.js" type="text/javascript" charset="utf-8"></script>-->
+	<script src="__STATIC__/js/mobile-util.js?v={$vnum}" type="text/javascript" charset="utf-8"></script>
+	<script src="__STATIC__/js/swipeSlide.min.js?v={$vnum}" type="text/javascript" charset="utf-8"></script>
+	<script src="__STATIC__/js/layer.js?v={$vnum}"  type="text/javascript" ></script>
+</head>
+<body style="background: #fff;">
+<!--顶部搜索栏-s-->
+<header>
+	<div class="content">
+		<div class="ds-in-bl search">
+			<div class="sea-box">
+				<div class="logo">
+					<a href=""><img src="__STATIC__/images/logo-2.png" alt="LOGO"></a>
+				</div>
+				<span ></span>
+				<form action=""  method="post">
+					<div class="sear-input">
+						<a href="{:U('Goods/ajaxSearch')}">
+							<input type="text" name="q" id="search_text" class="search_text"   value="" placeholder="请输入您所搜索的商品">
+						</a>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="ds-in-bl login">
+                <span>
+                <if condition="$user_id gt 0">
+                    <a href="{:U('Mobilered/User/index')}"> <img class="after_login" src="__STATIC__/images/my-2.png"></a>
+                <else/>
+                    <a href="{:U('Mobile/User/login')}"> 登录</a>
+                </if>
+            </span>
+		</div>
+	</div>
+</header>
+<!--顶部搜索栏-e-->
+
+<!--顶部滚动广告栏-s-->
+<div class="banner ban1">
+	<div class="mslide red_ys" id="new_red_ys">
+		<ul>
+			<!--广告表-->
+			<adv pid ="106" limit="5" item="v">
+				<li class="banner-ys">
+					<a href="{$v.ad_link}">
+						<img src="{$v[ad_code]}" title="{$v[title]}" style="{$v[style]}" alt="">
+					</a>
+				</li>
+			</adv>
+		</ul>
+	</div>
+</div>
+<!--顶部滚动广告栏-e-->
+
+
+<!--菜单-start-->
+<div class="floor dh">
+	<nav>
+		<!--<a href="{:U('Goods/categoryList')}">
+            <span>
+                <img src="__STATIC__/images/icon_qb.png" alt="全部分类" /><br />
+                <span>全部分类</span>
+            </span>
+        </a>-->
+		<a href="{:U('Mobile/Index/index_cash')}">
+                <span>
+                    <img src="__STATIC__/images/ico_new01.png" alt="现金专区" /><br />
+                    <span>现金专区</span>
+                </span>
+		</a>
+		<a href="{:U('Activity/new_sale')}">
+                <span>
+                    <img src="__STATIC__/images/ico_new04.png" alt="特卖专区" /><br />
+                    <span>特卖专区</span>
+                </span>
+		</a>
+		<a href="https://www.midoushu.com/mobilered/Goods/search.html?q=%E7%A7%92%E6%9D%80">
+                <span>
+                    <img src="__STATIC__/images/ico_new03.png" alt="限时秒杀" /><br />
+                    <span>限时秒杀</span>
+                </span>
+		</a>
+		<a href="{:U('Mobilered/StoreIndex/index')}">
+                <span>
+                    <img src="__STATIC__/images/ico_new08.png" alt="服务周边" /><br />
+                    <span>服务周边</span>
+                </span>
+		</a>
+
+
+	</nav>
+</div>
+<!--菜单-end-->
+
+<!--广告位-start-->
+<div class="banner ma-to-20" style="margin-top: 3%;">
+	<adv limit="1" item="v" pid="43">
+		<a href="{$v[ad_link]}">
+			<img src="__STATIC__/images/xszn.jpg" title="{$v[title]}" style="{$v[style]}"/>
+		</a>
+	</adv>
+</div>
+
+<!--新加滑动列表-->
+<div class="cash_gundong_bt">
+	<div class="l">豆丁专区</div>
+	<div class="r"><a href="{:U('Activity/douding_sale')}"><div class="circle"></div><div class="circle"></div><div class="circle"></div></a></div>
+</div>
+<div class="cash_gundong">
+
+	<div class="guesslike ys ys_gundong_1">
+		<div class="likeshop ys2">
+			<ul class="product single_item info">
+				<!--商品最多30个-->
+				<volist name="douding_list" id="douding_val">
+					<li class="new_cash_list_1 bj">
+						<div class="similer-product products_kuang">
+							<a href="{:U('Mobilered/Goods/goodsInfo',array('id'=>$douding_val[goods_id]))}" title="{$douding_val.goods_name}">
+								<img src="{$douding_val[goods_id]|goods_thum_images=400,400,'red'}"/>
+								<span class="similar-product-text ys">{$douding_val[goods_name]|getSubstr=0,20}</span>
+							</a>
+							<span class="similar-product-price">
+									<span class="big-price">{$douding_val[midou_index]}</span>米豆
+									<span class="big-price" style="text-decoration:line-through;color:#999;margin-left:5px;"> ¥ {$douding_val[market_price]}</span>
+								</span>
+						</div>
+					</li>
+				</volist>
+			</ul>
+		</div>
+	</div>
+</div>
+<!---->
+<!--新加滑动列表-->
+<div class="cash_gundong_bt">
+	<div class="l">新品推荐</div>
+	<div class="r"><a href="{:U('Activity/new_sale')}"><div class="circle"></div><div class="circle"></div><div class="circle"></div></a></div>
+</div>
+<div class="cash_gundong">
+
+	<div class="guesslike ys ys_gundong_1">
+		<div class="likeshop ys2">
+			<ul class="product single_item info">
+				<!--商品最多15个-->
+				<volist name="recommend_list" id="recommend_val">
+					<li class="new_cash_list_1 bj">
+						<div class="similer-product products_kuang">
+							<a href="{:U('Mobilered/Goods/goodsInfo',array('id'=>$recommend_val[goods_id]))}" title="{$recommend_val.goods_name}">
+								<img src="{$recommend_val[goods_id]|goods_thum_images=400,400,'red'}"/>
+								<span class="similar-product-text ys">{$recommend_val[goods_name]|getSubstr=0,20}</span>
+							</a>
+							<span class="similar-product-price">
+									<span class="big-price">{$recommend_val[midou_index]}</span>米豆
+									<span class="big-price" style="text-decoration:line-through;color:#999;margin-left:5px;"> ¥ {$recommend_val[market_price]}</span>
+								</span>
+						</div>
+					</li>
+				</volist>
+			</ul>
+		</div>
+	</div>
+</div>
+<!---->
+
+<!--新加滑动列表-->
+<div class="cash_gundong_bt">
+	<div class="l">热销精选</div>
+	<!-- <div class="r"><a href="{:U('Activity/hot_sale')}">更多></a></div> -->
+</div>
+<div class="cash_gundong">
+
+	<div class="guesslike ys ys_gundong_1">
+		<div class="likeshop ys2">
+			<ul class="product single_item info">
+				<!--商品最多15个-->
+				<volist name="hot_list" id="hot_val">
+					<li class="new_cash_list_1 bj">
+						<div class="similer-product products_kuang">
+							<a href="{:U('Mobilered/Goods/goodsInfo',array('id'=>$hot_val[goods_id]))}" title="{$hot_val.goods_name}">
+								<img src="{$hot_val[goods_id]|goods_thum_images=400,400,'red'}"/>
+								<span class="similar-product-text ys">{$hot_val[goods_name]|getSubstr=0,20}</span>
+							</a>
+							<span class="similar-product-price">
+									<span class="big-price">{$hot_val[midou_index]}</span>米豆
+									<span class="big-price" style="text-decoration:line-through;color:#999;margin-left:5px;"> ¥ {$hot_val[market_price]}</span>
+								</span>
+						</div>
+					</li>
+				</volist>
+			</ul>
+		</div>
+	</div>
+</div>
+<!---->
+
+
+
+
+
+<!--分类版块01-->
+
+<div class="new_index_fl_01">
+	<div class="new_index_bt">—— 品类精选 ——</div>
+	<volist name="index_category" id='category_val'>
+		<div class="bt">
+			<a href="{:url('/Mobilered/Index/index8category',['catid'=>$category_val.id])}"><img src="{$category_val.image}" title="{$category_val.mobile_name}"></a>
+		</div>
+		<div class="guesslike ys">
+			<div class="likeshop ys">
+				<ul class="product single_item info">
+					<!--商品最多12个-->
+					<volist name='category_val.goods_list' id='goods_val'>
+						<li>
+							<div class="similer-product products_kuang">
+								<a href="{:U('Mobilered/Goods/goodsInfo',array('id'=>$goods_val[goods_id]))}" title="{$v.goods_name}">
+									<img src="{$goods_val[goods_id]|goods_thum_images=400,400,'red'}"/>
+									<span class="similar-product-text ys">{$goods_val[goods_name]|getSubstr=0,20}</span>
+								</a>
+								<span class="similar-product-price">
+									<span class="big-price">{$goods_val[midou_index]}</span>米豆
+									<span class="big-price" style="text-decoration:line-through;color:#999;margin-left:5px;"> ¥ {$goods_val[market_price]}</span>
+								</span>
+							</div>
+						</li>
+					</volist>
+				</ul>
+			</div>
+		</div>
+	</volist>
+</div>
+<!---->
+
+<!--底部-start-->
+<include file="public/footer"/>
+<!--底部-end-->
+<!--底部导航-start-->
+<include file="public/footer_nav"/>
+<!--底部导航-end-->
+<script src="__PUBLIC__/js/jqueryUrlGet.js?v={$vnum}"></script><!--获取get参数插件-->
+<script src="__STATIC__/js/style.js?v={$vnum}" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>

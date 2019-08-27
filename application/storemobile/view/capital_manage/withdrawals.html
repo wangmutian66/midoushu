@@ -1,0 +1,236 @@
+﻿<include file="public/layout" />
+           
+                <!-- header -->
+                <div class="mdk-header js-mdk-header bg-primary" data-fixed>
+                    <div class="mdk-header__content">
+
+                        <nav class="navbar navbar-expand-md bg-primary navbar-dark d-flex-none">
+                            <button class="btn btn-link text-white pl-0" type="button" data-toggle="sidebar">
+                                <i class="material-icons align-middle md-36">short_text</i>
+                            </button>
+                            <div class="page-title m-0">申请提现</div>
+
+                            <div class="collapse navbar-collapse" id="mainNavbar" style="width:50px">
+                                <ul class="navbar-nav ml-auto align-items-center">
+
+                                        <li class="nav-item" style="float:right !important">
+                                            <a href="#" class="nav-link dropdown-toggle dropdown-clear-caret" data-toggle="sidebar" data-target="#user-drawer">
+                                              系统操作
+                                              <img src="{$store_info.litpic|default='__PUBLIC__/storemobile/img/errors.jpg'}" class="img-fluid rounded-circle ml-1" width="35"
+                                                alt="">
+                                            </a>
+                                        </li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- content -->
+                <div class="mdk-header-layout__content ls-top-navbar mdk-header-layout__content--scrollable h-100">
+                    <!-- main content -->
+                    
+                    <div class="container-fluid">
+                        
+                        <div class="tab-content" id="accountTabsContent">
+                            <div class="fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+                                <div class="row">
+                                    <div class="col-lg-9">
+                                        <div class="card card-account">
+                                            <div class="card-body">
+                                               <!--  <form action="{:U('/Store/CapitalManage/dowithdrawals/test/1')}" method="post"> -->
+                                               <form action="" method="post" onSubmit="return postcheck();" id="txform">
+                                                    
+                                                    <div class="form-group">
+                                                        <label>提现金额</label>
+                                                        <div class="input-group input-group--inline">
+                                                            <input type="text" class="form-control" name="money" placeholder="请输入提现金额" id="money">
+                                                        </div>
+                                                        <div style="padding:.5rem 0;color:#666;overflow:hidden">可用余额:({$store_info.store_money|tk_money_format})</div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>提现方式</label>
+                                                        <div class="input-group input-group--inline" style="margin-top:.5rem">
+                                                                <div class="custom-control custom-radio mb-1" style="width:50%;float:left;">
+                                                                    <input type="radio" id="customRadio1" name="presentation_mode" class="custom-control-input" checked="" value="1">
+                                                                    <label class="custom-control-label" for="customRadio1">零钱</label>
+                                                                </div>
+                                                                <div class="custom-control custom-radio" style="width:50%;float:left;">
+                                                                    <input type="radio" id="customRadio2" name="presentation_mode" class="custom-control-input" value="2">
+                                                                    <label class="custom-control-label" for="customRadio2">银行卡</label>
+                                                                </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="form-group zhushi yhk">
+                                                        <ul>
+                                                            <li class="wenzi">◆ 付款到账实效为1-3日，最快次日到账</li>
+                                                            <li class="wenzi">◆ 每笔按付款金额收取手续费，按金额0.1%收取，最低1元，最高25元</li>
+                                                            <li class="wenzi">◆ 银行卡支持17家银行，更多银行逐步开放中<br> <a href="">查询详细</a></li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="form-group yhk">
+                                                        <label for="instant-phone">银行卡号</label>
+                                                        <div class="input-group input-group--inline">
+                                                            
+                                                            <textarea class="form-control" style="height:2.2rem;resize:none;" disabled="disabled" name="bank_no">{$store_info.enc_bank_no}</textarea>
+                                                            
+                                                        </div>
+                                                        <!-- <div style="padding:.5rem 0;color:#ff0000;overflow:hidden;font-size:.75rem">如需更改请联系网站管理员</div> -->
+                                                    </div>
+                                                    <div class="form-group yhk">
+                                                        <label>用户名</label>
+                                                        <div class="input-group input-group--inline">
+                                                            <div class="input-group-addon">
+                                                                <i class="material-icons">person</i>
+                                                            </div>
+                                                            <textarea class="form-control" name="bank_uname" style="height:2.2rem;resize:none;" disabled="disabled">{$store_info.enc_true_name}</textarea>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group zhushi lq">
+                                                        <ul>
+                                                            <li class="wenzi">◆ 无手续费</li>
+                                                            <li class="wenzi">◆ 单笔单日限额2W/2W</li>
+                                                            <li class="wenzi">◆ 不支持给非实名用户打款</li>
+                                                            <li class="wenzi">◆ 每日最多提现10次</li>
+                                                        </ul>
+                                                    </div>
+
+                                                    <div class="form-group lq">
+                                                        <label for="instant-phone">提现微信手机号</label>
+                                                        <div class="input-group input-group--inline">
+                                                            <div class="input-group-addon">
+                                                                <i class="material-icons">phone</i>
+                                                            </div>
+                                                            <textarea class="form-control" name="txphone" style="height:2.2rem;resize:none;" disabled="disabled">{$store_info.receivable_mobile}</textarea>
+                                                            
+                                                        </div>
+                                                        <div style="padding:.5rem 0;color:#ff0000;overflow:hidden;font-size:.75rem">如需更改请联系网站管理员</div>
+                                                    </div>
+                                                    <div class="form-group lq">
+                                                        <label>验证码</label>
+                                                        <div class="input-group input-group--inline">
+                                                            <div class="input-group-addon">
+                                                                <i class="material-icons">find_in_page</i>
+                                                            </div>
+                                                            <input type="text" class="form-control" name="dxyzm" placeholder="请输入验证码">
+                                                            <button type="button" class="btn btn-outline-primary" style="margin-left:.5rem;"><a  onClick="sendcode(this)">获取验证码</a> </button>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <button class="btn btn-success">提交申请</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            
+                            
+                        </div>
+                    </div>
+
+                </div>
+                <script>
+    $(function (){
+        
+
+        $("input[name='presentation_mode']").change(function (){
+            var presentation_mode = $(this).val();
+            if(presentation_mode == 1){
+                $('.lq').show();
+                $('.yhk').hide();
+            }else{
+                $(".lq").hide();
+                $('.yhk').show();   
+            }
+        })
+    })
+
+function postcheck(){
+     var store_money = '{$store_info.store_money|tk_money_format}';
+    var money = $("#money").val();
+    if(money == ''  || money ==null){
+        alert('提现金额不能为空，请重新输入');
+        return false;   
+    }
+    if(money < 1){
+        alert('提现金额不能小于1元');
+        return false;
+    }
+    if(money > store_money){
+        alert('提现金额不能大于可用余额');
+        return false;
+    }
+    
+    $.ajax({
+        url: "{:U('/Storemobile/CapitalManage/dowithdrawals/test/1')}",
+        type: "POST",
+        data: $("#txform").serialize(),
+        dataType:"json",
+       
+        success: function(r){   
+            if(r.status == 1){
+                alert(r.info);
+            }else{
+                alert(r.info);   
+            }
+        },
+        error:function (r){
+            console.log(r.info);
+        }
+    });
+    return false;
+}
+    function countdown(obj){
+        var obj = $(obj);
+        var s = {$tpshop_config['sms_sms_time_out']};
+        //改变按钮状态
+        obj.unbind('click');
+        //添加样式
+        obj.attr('id','fetchcode');
+        callback();
+        //循环定时器
+        var T = window.setInterval(callback,1000);
+        function callback()
+        {
+            if(s <= 0){
+                //移除定时器
+                window.clearInterval(T);
+                obj.bind('click',sendcode)
+                obj.removeAttr('id','fetchcode');
+                obj.text('获取验证码');
+            }else{
+                obj.text(--s + '秒后再获取');
+            }
+        }
+    }
+
+    //发送短信验证码
+    function sendcode(obj){
+        var tel = "{$store_info.receivable_mobile}";
+        $.ajax({
+            url : "/index.php?m=Home&c=Api&a=send_validate_code&scene=6&type=mobile&send="+tel,
+            type:'post',
+            dataType:'json',
+            data:{send:tel},
+            success:function(res){
+                if(res.status==1){
+                    //成功
+                    alert(res.msg);
+                    countdown(obj);
+                }else{
+                    //失败
+                    alert(res.msg);
+                    $(obj).text('请刷新再试！');
+                    $(obj).attr('id','fetchcode');
+                }
+            }
+        })
+        
+    }
+    </script>
+ <include file="public/foot" />

@@ -1,0 +1,120 @@
+<include file="public/layout" />
+
+<!--物流配置 css -end-->
+<!--以下是在线编辑器 代码 -->
+
+<body style="background-color: #FFF; overflow: auto;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>操作类目</h3>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <form method="post" id="handlepost" action="" name="form1" autocomplete="off" onSubmit="return postcheck();" >
+        <div class="ncap-form-default  tab_div_1">
+
+            <input type="hidden" name="id" value="{$item.id}" />
+            <dl class="row">
+                <dt class="tit">
+                    <label for="ccname"><em>*</em>类目名称:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="ccname" name="cc_name"  value="{$item.cc_name}" required  placeholder=""  class="input-txt" type="text" />
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+
+
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="cc_image">缩略图</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a" class="nyroModal" rel="gal" href="{$item.cc_image}">
+                                <i id="img_i" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$item.cc_image}>',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+           	            <span class="type-file-box">
+                            <input type="text" id="cc_image" name="cc_image" value="{$item.cc_image}" class="type-file-text">
+                            <input type="button" name="button" id="button1" value="选择上传..." class="type-file-button">
+                            <input  class="type-file-file" onClick="GetUploadify(1,'','company','img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">最佳尺寸 39 * 39</p>
+                </dd>
+            </dl>
+
+			<script type="text/javascript">
+				//网站首页logo
+				function img_call_back(fileurl_tmp)
+				{
+					$("#cc_image").val(fileurl_tmp);
+					$("#img_a").attr('href', fileurl_tmp);
+					$("#img_i").attr('onmouseover', "layer.tips('<img src="+fileurl_tmp+">',this,{tips: [1, '#fff']});");
+				}
+			</script>
+
+
+
+
+            <div class="bot">
+                <input type="submit" value="确认提交" class="tk_submit">
+            </div>
+        </div>
+
+
+
+
+    </form>
+
+<script>
+    function postcheck(){
+        $.ajax({
+            url: "{:U('/Admin/Company/addcategory')}",
+            type: 'POST',
+            data:$("#handlepost").serialize(),
+            dataType: 'json',
+            error: function(){layer.alert('系统繁忙，请稍后再试',{icon:2,time:2000});},
+            beforeSend:function(){
+                parent.layer.load('2',{shade: 0.6});
+            },
+            success: function(r){
+                if(r.status == 1){
+                    layer.msg(r.info, {icon: 1,time: 3000,shade: 0.6},function (){
+                        location.href="{:U('/Admin/Company/category')}";
+                    });
+                }else{
+                    parent.layer.msg(r.info, {icon: 2,time: 2000,shade: 0.6});
+                }
+            },
+            complete:function(){
+                parent.layer.closeAll('loading');
+            }
+        });
+        return false;
+    }
+
+    
+    </script>
+
+</div>
+<div id="goTop"> <a href="JavaScript:void(0);" id="btntop"><i class="fa fa-angle-up"></i></a><a href="JavaScript:void(0);" id="btnbottom"><i class="fa fa-angle-down"></i></a></div>
+
+
+
+
+
+</body>
+</html>

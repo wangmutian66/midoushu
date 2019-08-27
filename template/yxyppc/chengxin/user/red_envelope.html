@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>我的红包</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/member.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+<script src="__STATIC__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+<link type="text/css" rel="stylesheet" href="/public/plugins/daterangepicker/daterangepicker-bs3.css">
+<script type="text/javascript" src="/public/plugins/daterangepicker/moment.min.js"></script>
+<script type="text/javascript" src="/public/plugins/daterangepicker/daterangepicker.js"></script>
+<script src="__PUBLIC__/js/global.js?v={$vnum}" type="text/javascript"></script>
+<script src="__PUBLIC__/static/js/layer/layer.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/baidu.js"></script>
+<style>
+	.boldjh{font-size:12px; color:#999}
+</style>
+</head>
+
+<body class="bgg">
+	<include file="public/user_header" />
+	<div class="clear"></div>
+	
+	<div class="y-content">
+		<!--左侧菜单-->
+		<include file="public/user_lefter" />
+		
+		<!--右侧内容-->
+		
+		<div class="y-right y-borm fri">
+			<div class="y-title0">
+				<span></span>我的米豆明细
+			</div>
+			<div class="y-fla clearfix">
+				<div class="qian fle">
+					可用的米豆余额
+					<p><span>{$user.midou}</span>米豆</p>
+				</div>
+				<div class="qian fle">
+					<a href="{:U('/Homered')}" target="_blank">兑换超值商品</a>
+				</div>
+			</div>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0" class="y-boxh">
+			    <tr>
+				   
+				    <td class="bt" >米豆明细</td>
+				    <td class="bt" width="245">日期</td>
+				    <td class="bt" width="170">备注</td>
+			    </tr>
+				<volist name="list" id="vo">
+			    <tr>
+				
+				    <td class="nei ji tco" width="155">{$vo.money|tk_money_format}</td>
+				    <td class="nei time tco" width="245">{$vo.create_time|date="Y-m-d H:i:s",###}</td>
+				    <td class="nei time tco" width="170">{$vo.source}</td>
+			    </tr>
+			    </volist>
+			</table>
+            
+            
+            <style>
+				.pagination{}
+				.pagination li{float:left}
+			</style>
+			<!--分页-->
+            <div class="y-sxfy  tco" style="text-align:center">
+               {$page->show()}
+            </div>
+			
+		</div>
+		<div class="clear"></div>
+	</div>
+		
+		<!--右侧内容结束-->
+	<include file="public/user_footer" />
+	
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+
+    <title>{$web_title|default='系统提示'}</title>
+    <link rel="stylesheet" href="__PUBLIC__/staff/css/Employee.css">
+    <script src="__PUBLIC__/staff/js/mobile-util.js" type="text/javascript" charset="utf-8"></script>
+    <!-- <meta name="viewport" content="user-scalable=no"> -->
+    <script type="text/javascript" src="__PUBLIC__/static/js/jquery.js"></script>
+</head>
+<body class="bgh">
+<link rel="stylesheet" href="/template/mobile/new2/static/css/style.css">
+    <div class="classreturn loginsignup ys1">
+        <div class="content">
+            <div class="ds-in-bl return">
+                <a href="javascript:history.back(-1);"><img src="/template/mobile/new2/static/images/return.png" alt="返回"></a>
+            </div>
+            <div class="ds-in-bl search center">
+                <span>系统提示</span>
+            </div>
+            <!--<div class="ds-in-bl menu">
+                <a href="javascript:void(0);"><img src="i__STATIC__/mages/class1.png" alt="菜单"></a>
+            </div>-->
+        </div>
+    </div>
+
+    <div class="successsystem">
+        <?php if($code == 1) {?>
+            <img src="/template/mobile/new2/static/images/icogantanhao.png"></div>
+        <?php }else{ ?>
+            <img src="/template/mobile/new2/static/images/icogantanhao-sb.png"></div>
+        <?php }?>
+    </div>
+    <p class="prompt_s">
+        <?php if($code == 1) {?><?php echo(strip_tags($msg)); ?>
+        <?php }else{?>
+        <?php echo(strip_tags($msg)); ?>
+        <?php }?> ，等待时间：<b id="wait"><?php echo($wait); ?></b>
+    </p>
+
+    <div class="systemprompt ys1">
+        <a href="<?php echo($url); ?>" id="href">返回上一页</a>
+        <a href="{:U('/Mobile/index')}">返回首页</a>
+    </div>
+
+<script src="/template/mobile/new2/static/js/style.js" type="text/javascript" charset="utf-8"></script>
+
+<script type="text/javascript">
+    (function(){
+        var wait = document.getElementById('wait'),href = document.getElementById('href').href;
+        var interval = setInterval(function(){
+            var time = --wait.innerHTML;
+            if(time <= 0) {
+                location.href = href;
+                clearInterval(interval);
+            };
+        }, 1000);
+    })();
+
+</script>
+<style type="text/css">
+
+.classreturn.ys1{
+    background: #3783b5;
+    border-bottom: 1px solid #3783b5;
+}
+
+.systemprompt.ys1 a{
+    background: #3783b5;
+}
+
+</style>
+</body>
+</html>

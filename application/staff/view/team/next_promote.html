@@ -1,0 +1,35 @@
+<include file="public/TK_top" />
+<div class="e-bex">
+	<div class="shai clearfix">
+		<form action="" method="">
+			<select class="sele"><option>等级：全部</option></select>
+			<div class="ss fr">
+				<input type="text" class="text fl" placeholder="姓名：" />
+				<input type="submit" class="submit fl" value="搜索" />
+			</div>
+		</form>
+	</div>
+	<ul class="lin clearfix">
+		<volist name='list' id='vo'>
+		<li>
+			<div class="de">
+				<h2><img src="{$vo.head_pic|default='__STATIC__/images/headPic.jpg'}"></h2>
+				<h3>用户名称：<if condition="$vo.real_name">{$vo.real_name}<else/>{$vo.uname}</if></h3>
+				<div class="ran fr">
+					<a href="{:U('/Staff/Team/view_staff',['id'=>$vo['id']])}" class="ck">查看详细</a>
+					<if condition="$vo.next_user"><a href="{:U('/Staff/Team/next_user',['id'=>$vo['id']])}" class="xj">查看所属会员</a></if>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="qi">
+				<p>累计佣金：<span>{$vo.cumulative_money|tk_money_format}</span></p>
+			</div>
+		</li>
+		</volist>
+	</ul>
+	<div class="clear"></div>
+</div>
+<div style="text-align:center">{$page}</div>
+
+</body>
+</html>

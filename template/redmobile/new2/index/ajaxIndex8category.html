@@ -1,0 +1,18 @@
+<volist name="goods_list" id="goods_val">
+    <a href="{:url('/Mobilered/Goods/goodsInfo',['id'=>$goods_val.goods_id])}">
+        <div class="k_box2">
+            <div class="k_box2_img1"><img src="{$goods_val[goods_id]|goods_thum_images=400,400,'red'}"></div>
+            <div class="k_box2_he1">
+                <div class="k_box2_he1_title">{$goods_val.goods_name}</div>
+                <div class="k_box2_he1_box1">
+                    <div>市场价 <span>¥ {$goods_val[market_price]}</span></div>
+                    <div>已售{$goods_val.sellcount}件</div>
+                </div>
+                <div class="k_box2_he1_box2">
+                    <div>现价 <span>{$goods_val.midou_index}米豆</span></div>
+                    <if condition="$vo.praise gt 0"><div><img src="__STATIC__/images/k_xiao.png" style="width:.68rem;">{$goods_val.praise}人说好</div></if>
+                </div>
+            </div>
+        </div>
+    </a>
+</volist>

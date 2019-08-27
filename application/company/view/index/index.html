@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link href="__PUBLIC__/company/css/hou.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="__PUBLIC__/static/js/jquery.js"></script>
+		<script type="text/javascript" src="__PUBLIC__/static/js/layer/layer.js"></script>
+		<script>
+			if($(window).width() < 1400){
+				layer.alert('您的浏览器宽度过小，为了更好的体验，屏幕分辨率请调整到1440以上',{icon: 6});
+			}
+		</script>
+
+
+	</head>
+	<body class="qh">	
+		<div class="h-left">
+			<div class="h-bt">
+				米豆薯平台管理系统
+			</div>
+			<div class="h-tx">
+				<div class="dbg">
+					<div class="logo">
+						<img src="{$company_info.litpic|default='__PUBLIC__/static/images/errors.jpg'}">
+					</div>
+					<div class="zi">
+						{$company_info.cname|default='暂未设置公司名称'}
+					</div>
+				</div>
+				<ul class="menus">
+					<li><a href="{:U('/Company/Index/welCome')}" target="workspace"><img src="__PUBLIC__/company/img/h-ico3.png">后台首页     >>  </a></li>
+					<li><a href="{:U('/Company/System/Setpsw')}" target="workspace"><img src="__PUBLIC__/company/img/h-ico11.png">修改密码     >>  </a></li>
+					<li><a href="{:U('/Company/Member/')}" target="workspace"><img src="__PUBLIC__/company/img/h-ico4.png">成员管理     >>  </a></li>
+					<li><a href="{:U('/Company/Rebate/member')}" target="workspace"><img src="__PUBLIC__/company/img/h-ico4.png">成员分红流水     >>  </a></li>
+					<li><a href="{:U('/Company/Level/')}" target="workspace"><img src="__PUBLIC__/company/img/h-ico4.png">下级管理     >>  </a></li>
+					<li><a href="{:U('/Company/Rebate/Index')}" target="workspace"><img src="__PUBLIC__/company/img/h-ico5.png">分红流水     >>  </a></li>
+					 <!--<li><a href="{:U('/Company/Rebate/Order')}" target="workspace"><img src="__PUBLIC__/company/img/h-ico5.png">订单流水     >>  </a></li>-->
+					<li><a href="{:U('/Company/Rebate/Sweep')}" target="workspace"><img src="__PUBLIC__/company/img/h-ico5.png">线下消费     >>  </a></li>
+					<li><a href="{:U('/Company/Rebate/repurchase')}" target="workspace"><img src="__PUBLIC__/company/img/h-ico5.png">线下换购订单     >>  </a></li>
+				</ul>
+			</div>
+			<div class="h-foot">	
+				Copyright © 2018<br />创赏科技开发有限公司
+			</div>
+		</div>
+		<div class="h-right">
+			<include file="public/TK_top"/>
+			<div class="h-main">
+				<iframe src="{:U('/Company/Index/welCome')}" id="workspace" name="workspace" style="overflow: visible;" frameborder="0" width="100%" height="100%" scrolling="yes"></iframe>
+			</div>
+		</div>
+	</body>
+</html>

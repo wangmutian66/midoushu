@@ -1,0 +1,135 @@
+﻿<include file="public/layout" />
+<!-- header -->
+                <div class="mdk-header js-mdk-header bg-primary" data-fixed>
+                    <div class="mdk-header__content">
+
+                        <nav class="navbar navbar-expand-md bg-primary navbar-dark d-flex-none">
+                            <button class="btn btn-link text-white pl-0" type="button" data-toggle="sidebar">
+                                <i class="material-icons align-middle md-36">short_text</i>
+                            </button>
+                            <div class="page-title m-0">成员管理</div>
+
+                            <div class="collapse navbar-collapse" id="mainNavbar" style="width:50px">
+                                <ul class="navbar-nav ml-auto align-items-center">
+
+                                        <li class="nav-item" style="float:right !important">
+                                            <a href="#" class="nav-link dropdown-toggle dropdown-clear-caret" data-toggle="sidebar" data-target="#user-drawer">
+                                              系统操作
+
+                                              <img src="{$store_info.litpic|default='__PUBLIC__/storemobile/img/errors.jpg'}" class="img-fluid rounded-circle ml-1" width="35"
+                                                alt="">
+                                            </a>
+                                        </li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+<!-- content -->
+                <div class="mdk-header-layout__content ls-top-navbar mdk-header-layout__content--scrollable h-100">
+                    <!-- main content -->
+
+                    <div class="container-fluid">                      
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row align-items-center">
+                                    <div class="col-md-4">
+                                        <div class="card-title">员工管理<span>员工列表/5条记录</span></div>
+                                    </div>
+                                    <div class="col-md-8 d-flex justify-content-md-end">
+                                        <div class="dropdown mr-2">
+                                            <button class="btn btn-white dropdown-toggle" type="button" id="sortOrdersDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">请选择</button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="{:U('/Storemobile/Level/Staff',['t'=>2])}">员工管理</a>
+                                                <a class="dropdown-item" href="{:U('/Storemobile/Member/Index')}">成员管理</a>
+                                                
+                                            </div>
+                                        </div>
+                                        <form class="form-inline" style="margin-top:1rem;width:100%" action="__URL__/staff/" method="get">
+                                    <div class="form-group mx-sm-3" style="margin-bottom:0;width:60%;margin-right:5%;">
+                                        <input type="text" class="form-control" placeholder="请输入手机号/真实姓名" style="float:right;width:100%;" name="key_word">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary" style="float:right;">搜索</button>
+                                </form>
+                                    </div>
+
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="liebiao">
+                                <ul>
+                                     <foreach name="list" item="vo" key="k" >
+                                    <li>
+                                        <div class="hang">
+                                            <div class="l">ID</div>
+                                            <div class="r2">{$vo.id}</div>
+                                            <div class="l">真实姓名</div>
+                                            <div class="r2">{$vo.real_name}</div>
+                                        </div>
+                                        <div class="panel">
+                                        <div class="hang">
+                                            <div class="l">用户名</div>
+                                            <div class="r1">{$vo.uname}</div>
+                                        </div>
+                                        <div class="hang">
+                                            <div class="l">推广员</div>
+                                            <div class="r1">    <if condition="$vo['type'] eq 0">否<else/>是</if></div>
+                                        </div>
+                                        <div class="hang">
+                                            <div class="l">层级</div>
+                                            <div class="r1">{$vo.lv_name}</div>
+                                        </div>
+                                        <div class="hang">
+                                            <div class="l">手机号</div>
+                                            <div class="r1">{$vo.phone}</div>
+                                        </div>
+                                        <div class="hang">
+                                            <div class="l">用户金额</div>
+                                            <div class="r2">{$vo.money|tk_money_format}</div>
+                                            <div class="l">冻结金额</div>
+                                            <div class="r2">{$vo.frozen|tk_money_format}</div>
+                                        </div>
+                                        <div class="hang">
+                                            <div class="l">是否冻结</div>
+                                            <div class="r2"><eq name='vo[is_lock]' value='1'> 是 <else/> 否 </eq></div>
+                                            <div class="l">操作</div>
+                                            <div class="r2"><a href="{:U('/Storemobile/Level/staff_view',array('id'=>$vo['id']))}">查看详细</a></div>
+                                        </div>
+                                        </div>
+                                        <div class="flip">>>更多信息（查看/收起）</div>
+                                    </li>
+                                    </foreach>
+                                 
+                                </ul>
+                            </div>
+                            <div class="col-sm-12 col-md-7">
+                                <div class="dataTables_paginate paging_simple_numbers" id="data-table_paginate">
+                                    <ul class="pagination">
+                                    
+                                       <!--  <li class="paginate_button page-item active"><a href="#" aria-controls="data-table" data-dt-idx="1" tabindex="0" class="page-link">1</a></li>
+                                        <li class="paginate_button page-item "><a href="#" aria-controls="data-table" data-dt-idx="2" tabindex="0" class="page-link">2</a></li>
+                                        <li class="paginate_button page-item "><a href="#" aria-controls="data-table" data-dt-idx="3" tabindex="0" class="page-link">3</a></li>
+                                        <li class="paginate_button page-item "><a href="#" aria-controls="data-table" data-dt-idx="4" tabindex="0" class="page-link">4</a></li>
+                                        <li class="paginate_button page-item "><a href="#" aria-controls="data-table" data-dt-idx="5" tabindex="0" class="page-link">5</a></li>
+                                        <li class="paginate_button page-item "><a href="#" aria-controls="data-table" data-dt-idx="6" tabindex="0" class="page-link">6</a></li>
+                                        <li class="paginate_button page-item next" id="data-table_next"><a href="#" aria-controls="data-table" data-dt-idx="7" tabindex="0" class="page-link">></a></li> -->
+                                        {$pager->show()}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <style type="text/css">
+                    .panel{display: none;}
+                    .flip{line-height:2rem;text-align:center;color:#3783b5;}
+                </style>
+                <script> 
+                    $(document).ready(function(){
+                        $(".flip").click(function(){
+                            $(this).prev($(".panel")).slideToggle("slow");
+                        });
+                    });
+                </script>
+<include file="public/foot" />

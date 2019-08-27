@@ -1,0 +1,227 @@
+<div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+    <table>
+        <tbody>
+        <volist name="supplierList" id="list">
+            <tr data-id="{$list['suppliers_id']}">
+                <td class="sign">
+                    <div style="width: 24px;"><i class="ico-check"></i></div>
+                </td>
+                <td align="left" class="">
+                    <div style="text-align: center; width: 40px;">{$list.id}</div>
+                </td>
+                <td align="left" class="">
+                    <div style="text-align: center; width: 150px;">{$list.suppliers_id|gonghuoshang}</div>
+                </td>
+                <td align="left" class="">
+                    <div style="text-align: center; width: 110px;">{$list.store_id|shitis}</div>
+                </td>
+                <td align="left" class="">
+                    <div style="text-align: center; width: 300px;">{$list.goods_id|shangpin} <br/><span style="font-size: 12px; color: #999;">{$list.item_id|guige}</span> </div>
+                </td>
+                <td align="left" class="">
+                    <div style="text-align: center; width: 50px;">{$list.stock}</div>
+                </td>
+
+                <td align="left" class="">
+                    <div style="text-align: center; width: 130px;">{$list.create_time|date='Y-m-d H:i:s',###}</div>
+                </td>
+                
+                <td align="center" abbr="status" axis="col6" class="">
+                    <div style="text-align: center; width: 80px;">
+                        <!--onClick="changeTableVals('StoreGoodsSupplices','id','{$list.id}','is_examine',this)"-->
+
+                        <if condition='$list[is_examine] eq 1'>
+                            <span class="yes" >通过</span>
+                        <elseif condition='$list[is_examine] eq 2'>
+                            <span class="no" >未通过</span>
+
+                        <else/>
+                            <a href="javascript:;" onclick="is_checks({$list.id});" class="btn blue"><i class="fa fa-search"></i>审核</a>
+                        </if>
+
+                    </div>
+                </td>
+                <td align="left" class="">
+                    <div style="text-align: center; width: 150px;">
+
+                        <if condition="$list.Logistics_single_number neq '' or ($list.is_examine eq '1' and $list.is_confirm neq '0')">
+                            <span class="yes">已发货</span>
+                            <else/>
+                            <span style="color: #999;">未发货</span>
+                        </if>
+
+                    </div>
+                </td>
+                 <td align="left" class="">
+                    <div style="text-align: center; width: 150px;">{$list.examine_reason}</div>
+                </td>
+                <td align="center" class="handle">
+                    <div style="text-align: center; width: 300px; ">
+
+                        <if condition='$list[is_examine] eq 1 and $list[is_confirm] eq 0'>
+
+                            <!--<a class="btn blue" href="javascript:;" onclick="is_fahuo({$list.id})"><i class="fa fa-list-alt"></i>发货</a>-->
+
+                            <if condition="$list[is_examine] eq 1">
+                                <a class="btn blue" href="javascript:;" onclick="showwuliu({$list.id})">查看物流</a>
+                                <a class="btn blue" href="javascript:;" onclick="confirmgood({$list.id})">确认收货</a>
+                            <else/>
+
+                            </if>
+                        </if>
+                        <if condition='$list[is_confirm] eq 1'>
+                            <span class="yes" >已收货</span>
+                        </if>
+                    </div>
+                </td>
+                <td align="" class="" style="width: 100%;">
+                    <div>&nbsp;</div>
+                </td>
+            </tr>
+        </volist>
+        </tbody>
+    </table>
+</div>
+<!--分页位置-->
+{$page}
+<script>
+
+
+    //审核商品
+    function is_fahuo(id)
+    {
+        var url = "{:U('Admin/Suppliers/is_fahuo')}";
+        if(id){
+            url += "?id="+id;
+            layer.open({
+                type: 2,
+                title: '物流信息',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['580px', '480px'],
+                content: url
+            });
+        }else{
+            layer.msg('请选择要操作的数据',{icon:2});
+        }
+    }
+
+    $(".pagination  a").click(function(){
+        var page = $(this).data('p');
+        ajax_get_table('search-form2',page);
+    });
+    $(document).ready(function(){
+        // 表格行点击选中切换
+        $('#flexigrid >table>tbody>tr').click(function(){
+            $(this).toggleClass('trSelected');
+        });
+        $('#user_count').empty().html("{$pager->totalRows}");
+    });
+    // 修改指定表的指定字段值 包括有按钮点击切换是否 或者 排序 或者输入框文字
+function changeTableVals(table,id_name,id_value,field,obj,str1 = "通过",str2 = "未审核")
+{   
+
+    if($(obj).hasClass('yes')){ // 图片点击是否操作 
+        $(obj).removeClass('yes').addClass('no');
+        $(obj).html("<i class='fa fa-ban'></i>"+str2);
+        var value = 0;
+    }else{ // 其他输入框操作
+        // var value = $(obj).val();
+
+        $(obj).removeClass('no').addClass('yes');
+        $(obj).html("<i class='fa fa-check-circle'></i>"+str1);
+        var value = 1;
+    }
+
+    var param = new Object();
+    param['table'] = table;
+    param['id_name'] = id_name;
+    param['id_value'] = id_value;
+    param['field'] = field;
+    param['value'] = value;
+    $.ajax({
+        url:"__URL__/auditing",
+        data:param,
+        type:"GET",
+        success:function (data) {
+            if(!$(obj).hasClass('yes') && !$(obj).hasClass('no'))
+                     layer.msg('更新成功', {icon: 1});
+        }
+    });
+
+
+
+
+    // $.ajax({
+    //     url:"/index.php?m=Admin&c=Index&a=changeTableVal&table="+table+"&id_name="+id_name+"&id_value="+id_value+"&field="+field+'&value=1',
+    //     success: function(data){
+    //          if(!$(obj).hasClass('yes') && !$(obj).hasClass('no'))
+    //          layer.msg('更新成功', {icon: 1});
+    //     }
+    // });
+}
+
+
+
+    //审核商品
+    function is_checks(id)
+    {
+        var url = "{:U('Admin/Suppliers/is_check')}";
+        if(id){
+            url += "?t=1&id="+id;
+            layer.open({
+                type: 2,
+                title: '供货商审核',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['580px', '230px'],
+                content: url,
+
+            });
+        }else{
+            layer.msg('请选择商品',{icon:2});
+        }
+    }
+
+    //查看物流
+    function showwuliu(id){
+        var url = "{:U('Admin/Suppliers/showwuliu')}";
+        url+="?id="+id;
+        layer.open({
+            type: 2,
+            title: '查看物流',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['600px', '430px'],
+            content: url,
+        });
+    }
+
+
+    //确认收货
+    function confirmgood(id){
+        layer.confirm('是否确认收货？', {
+            btn: ['确定','取消'] //按钮
+        }, function() {
+            $.ajax({
+                url: "{:U('Admin/Suppliers/confirmgood')}",
+                data: {id: id},
+                dataType: "json",
+                type: "POST",
+                success: function (data) {
+                    console.log();
+                    if (data.code == 200) {
+                        //layer.alert(data.msg, {icon: 1, time: 3000});
+
+                        parent.location.reload();
+
+                    } else {
+                        layer.alert("操作失败，请稍后重试", {icon: 2, time: 3000});
+                    }
+                }
+            });
+        });
+    }
+
+
+</script>

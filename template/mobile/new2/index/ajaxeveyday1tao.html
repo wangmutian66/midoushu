@@ -1,0 +1,18 @@
+<volist name="products_list" id='vo'>
+    <a href="{:url('/Mobile/Goods/goodsInfo',['id'=>$vo.goods_id])}">
+        <div class="k_box2">
+            <div class="k_box2_img1"><img src="{$vo[goods_id]|goods_thum_images=400,400}"></div>
+            <div class="k_box2_he1">
+                <div class="k_box2_he1_title">{$vo.goods_name}</div>
+                <div class="k_box2_he1_box1">
+                    <div>市场价 <span>¥ {$vo[market_price]}</span></div>
+                    <div>已售{$vo.sellcount}件</div>
+                </div>
+                <div class="k_box2_he1_box2">
+                    <div>现价 <span>¥ {$vo.shop_price}</span></div>
+                    <if condition="$vo.praise gt 0"><div><img src="__STATIC__/images/k_xiao.png">{$vo.praise}人说好</div></if>
+                </div>
+            </div>
+        </div>
+    </a>
+</volist>

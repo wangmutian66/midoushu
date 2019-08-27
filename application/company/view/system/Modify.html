@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<include file="public/TK_public"/>
+<title>无标题文档</title>
+</head>
+
+<body>
+<script>
+
+	function postdata(){
+		$.ajax({  
+			url: "{:U('/Company/System/doModify')}",  
+			type: 'POST',  
+			data:$("#formf").serialize(),  
+			dataType: 'json',  
+			error: function(){alert('请刷新重试')},
+			beforeSend:function(){
+				parent.layer.load('2',{shade: 0.6});
+			},
+			success: function(r){
+				if(r.status == 1){
+					layer.msg('数据更新成功！', {icon: 1,time: 3000},function (){
+					//	location.reload();
+					}); 
+				}else{
+					parent.layer.msg(r.info, {icon: 2,time: 2000});
+				}
+			},
+			complete:function(){
+				parent.layer.closeAll('loading');
+			}
+		});  
+		
+		
+		return false;
+	}
+	$(function (){
+		$(".hb").click(function (){
+			location.href="{:U('/Company/System/setMobile')}";
+			/*layer.confirm('是否换绑手机？', {
+			  btn: ['是','否'] //按钮
+			}, function(){
+				layer.closeAll();
+			}, function(){
+			  	//否
+			});	*/
+		})	
+	})
+</script>
+<form onsubmit="return postdata()" id="formf">
+	<ul class="h-bd">
+		<li>
+			<h6>头像上传：</h6>
+			<div class="line">
+				<span class="span">
+					<input name="litpic" type="text" id="viewfile" value="{$company_info.litpic}" readonly="readonly" onmouseout="document.getElementById('upload').style.display='none';" class="inputstyle" placeholder="未选择任何文件" />
+				</span>
+				<label for="unload" onmouseover="document.getElementById('upload').style.display='block';" class="file1">上传图片</label>
+				<input type="button"  onClick="GetUploadify2(1,'viewfile','company','')" onchange="document.getElementById('viewfile').value=this.value;this.style.display='none';" class="file" id="upload" />
+		   </div>
+		</li>
+		<li>
+			<h6>公司/店面名称：</h6>
+			<input type="text" class="wenb" name="cname" id="cname" required value="{$company_info.cname}" >
+		</li>
+		<li>
+			<h6>联系电话：</h6>
+			<input type="text" class="wenb" name="mobile" readonly="readonly" value="{$company_info.mobile|mobile_hide}" readonly style="width: 100px; border: 0;">
+			<a href="JavaScript:;" class="hb">换绑电话</a>
+		</li>
+		<li>
+			<h6>联系人：</h6>
+			<input type="text" class="wenb" id="contact" name="contact" required value="{$company_info.contact}"  style="width: 284px;">
+		</li>
+		<li>
+			<h6>地址：</h6>
+			<input type="text" class="wenb" name="address" id="address" value="{$company_info.address}" >
+		</li>
+		<li>
+			<h6>分佣比例：</h6>
+			<input type="text" class="wenb" value="{$company_info.proportion|percentage}" style="border: 0;">
+		</li>
+	</ul>
+	<input type="submit" class="h-que2" value="确认修改" />
+</form>
+</body>
+</html>

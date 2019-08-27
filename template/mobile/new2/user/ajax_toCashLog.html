@@ -1,0 +1,11 @@
+<volist name="list" id='vo'>
+<div class="y-xinl">
+	<p>{$vo.create_time|date="Y-m-d",###}</p>
+	<div class="qi y-tco clearfix">
+		<h2><span>{$vo.money|tk_money_format}</span>元</h2>
+		<h2>{$vo.status|check_withdrawal} <if condition="$vo.status eq -1"> <a href="JavaScript:;" onClick="als_msg('{$vo.id}')">详情</a>
+					<input type="hidden" id="msg_{$vo.id}" value="{$vo.remark|nl2br}">
+					 </if></h2>
+	</div>
+</div>
+</volist>

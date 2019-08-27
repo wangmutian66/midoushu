@@ -1,0 +1,188 @@
+<include file="public/TK_top1" />
+
+<form method="post" id="handlepost" name="form1" autocomplete="off" onSubmit="return checkpost();" >
+<div class="e-fu e-pad e-mot clearfix">
+	<div class="e-lei e-bg3 fl">
+		可提现余额
+		<p>{$money|tk_money_format}</p>
+	</div>
+</div>
+<div class="e-zil">
+	<div style="width: 100%; font-size: .554667rem; line-height: .75rem; color: #666;">提现手续费为提现金额的<em style="color: #000;">{$staff_info['service_charge']}%</em>，最低提现额度{$staff_info['present_money']}<br />当前账户金额：<em style="color: #e12c20;">{$money|tk_money_format}</em>元，本次提现总额为：<em id="v" style="color: #000;">0</em>元</div>
+	<ul>
+		<li>
+			<div class="bt fl">提现金额</div>
+			<div class="nei2 fl">
+				<input type="text" class="text" value=""  id="money" name="money" placeholder="填写金额" />
+				<span class="yuan">元</span>
+			</div>
+			<script type="text/javascript">
+                $('#money').keyup(function(){
+					if($(this).val() == ''){
+						$('#v').text(0);return;	
+					}
+                    var m = parseFloat($(this).val());
+                    var l = parseFloat({$staff_info['service_charge']});
+                    var v = m + m*l/100;
+                    $('#v').text(v);
+                });
+            </script>
+		</li>
+		<li>
+			<div class="bt fl">收款银行</div>
+			<div class="nei2 fl">
+				<select name="bank_name" id="bank_name" style="line-height: 1.1rem;    margin-top: .75rem;    font-size: 0.55rem;">
+					<option value="">请选择</option>
+					<volist name='bank_list' id='v'>
+						<option value="{$v}">{$v}</option>
+					</volist>
+				</select>
+			</div>
+		</li>
+		<script>
+			$("#bank_name").change(function (){
+				var bank_name = $(this).val();
+				if(bank_name == '微信' ||  bank_name == '支付宝'){
+					$("#addtk").hide();
+				}else{
+					$("#addtk").show();
+				}
+			});
+		</script>
+		<li>
+			<div class="bt fl">收款账号</div>
+			<div class="nei2 fl">
+				<input type="text" class="text" id="bank_card" name="bank_card" value="" placeholder="银行账号，支付宝、微信账号等..." />
+			</div>
+		</li>
+		<li id='addtk'>
+			<div class="bt fl">开户地址</div>
+			<div class="nei2 fl">
+				<input type="text" class="text" id="bank_address" name="bank_address" value="" placeholder="支付宝，微信可忽略" />
+			</div>
+		</li>
+		
+		<li>
+			<div class="bt fl">开户人</div>
+			<div class="nei2 fl">
+				<input type="text" class="text" value="" id="real_name" name="real_name" placeholder="收款账号的开户人姓名" />
+			</div>
+		</li>
+		<li>
+			<div class="bt fl">
+				验证码
+		    </div>
+			<div class="nei fl">
+				<div class="zhmm">
+		            <input type="text" class="c_code_msg2" id="mobile_code" name="mobile_code" >
+		            <div class="fsyz"  onClick="sendcode(this)">获取验证码</div>
+		        </div>
+			</div>
+		</li>
+	</ul>
+</div>  
+<input type="submit" class="e-sub" value="确认提交资料" />
+</form>
+
+<script>
+
+
+	function countdown(obj){
+        var obj = $(obj);
+        var s = "{$tpshop_config['sms_sms_time_out']}";
+        //改变按钮状态
+        obj.unbind('click');
+        //添加样式
+        obj.attr('id','fetchcode');
+        callback();
+        //循环定时器
+        var T = window.setInterval(callback,1000);
+        function callback()
+        {
+            if(s <= 0){
+                //移除定时器
+                window.clearInterval(T);
+                obj.bind('click',sendcode)
+                obj.removeAttr('id','fetchcode');
+                obj.text('获取验证码');
+            }else{
+                obj.text(--s + '秒后再获取');
+            }
+        }
+    }
+
+	//发送短信验证码
+    function sendcode(obj){
+		var tel = "{$staff_info.phone}";
+		$.ajax({
+			url : "/index.php?m=Home&c=Api&a=send_validate_code&scene=6&type=mobile&send="+tel,
+			type:'post',
+			dataType:'json',
+			data:{send:tel},
+			success:function(res){
+				if(res.status==1){
+					//成功
+					showErrorMsg(res.msg);
+					countdown(obj);
+				}else{
+					//失败
+					showErrorMsg(res.msg);
+					$(obj).text('请刷新再试！');
+					$(obj).attr('id','fetchcode');
+				}
+			}
+		})
+		
+    }
+
+	function checkpost(){
+		var money = $("#money").val();
+		var bank_name = $("#bank_name").val();
+		var bank_card = $("#bank_card").val();
+		var bank_address = $("#bank_address").val();
+		var real_name = $("#real_name").val();
+		var mobile_code= $("#mobile_code").val();
+		if(money == '' || money == null){
+			showErrorMsg('提现金额不能为空');
+			return false;
+		}
+		if(bank_name == ''){
+			showErrorMsg('请选择收款银行');
+			return false;	
+		}
+		if(bank_card == ''){
+			showErrorMsg('请填写收款账号');
+			return false;	
+		}
+		if(bank_name != '微信' && bank_name != '支付宝' && bank_address==''){
+			showErrorMsg('请填写开户行地址');
+			return false;
+		}	
+		if(real_name == ''){
+			showErrorMsg('请填写收款人姓名');
+			return false;	
+		}
+		if(mobile_code == ''){
+			showErrorMsg('请填写手机验证码');
+			return false;	
+		}
+		$.ajax({
+			url: "{:U('/Staff/Deposit/doWithdraw')}",
+			type: "POST",
+			data: $("#handlepost").serialize(),
+			dataType:"json",
+			success: function(r){
+				if(r.status == 1){
+					showErrorMsg('申请成功，请等待管理员审核');
+					window.setTimeout("location.href='{:U("/Staff/")}';",2000);  
+				}else{
+					showErrorMsg(r.info);
+				}
+			}
+		});
+		return false;	
+	}
+
+</script>
+</body>
+</html>

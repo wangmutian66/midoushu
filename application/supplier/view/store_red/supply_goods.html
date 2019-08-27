@@ -1,0 +1,107 @@
+<include file="public/layout" />
+
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title">
+      <div class="subject">
+        <h3>供货申请</h3>
+        <h5>子公司供货管理</h5>
+      </div>
+    </div>
+  </div>
+
+  <div class="flexigrid">
+    <div class="mDiv">
+      <div class="ftitle">
+        <h3>商品评价列表</h3>
+        <h5></h5>
+      </div>
+      <a href=""><div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div></a>
+
+    </div>
+    <div class="hDiv">
+      <div class="hDivBox">
+        <table cellspacing="0" cellpadding="0">
+          <thead>
+	        	<tr>
+	              <th class="sign" axis="col0" onclick="checkAllSign(this)">
+	                <div style="width: 24px;"><i class="ico-check"></i></div>
+	              </th>
+                    <th align="left" abbr="article_show" axis="col5" class="">
+                        <div style="text-align: left; width: 200px;" class="">实体店</div>
+                    </th>
+	                <th align="left" abbr="consignee" axis="col4" class="">
+	                   <div style="text-align: left; width: 600px;" class="">申请内容</div>
+	                </th>
+                    <th align="center" abbr="article_time" axis="col6" class="">
+                        <div style="text-align: center; width: 160px;" class=""> 是否有供货商品</div>
+                    </th>
+                    <th align="center" abbr="article_time" axis="col6" class="">
+                        <div style="text-align: center; width: 160px;" class=""> 操作</div>
+                      </th>
+                      <th style="width:100%" axis="col7">
+                        <div></div>
+                    </th>
+	            </tr>
+	          </thead>
+        </table>
+      </div>
+    </div>
+      <div class="tDiv">
+
+          <div style="clear:both">
+
+          </div>
+      </div>
+    <div class="bDiv" style="height: auto;">
+      <div id="flexigrid" cellpadding="0" cellspacing="0" border="0" data-url="{:U('Supplier/CommentRed/commentHandle')}">
+          <table>
+              <foreach name="supply" item="v" key="k" >
+              <tr data-cid="{$v.cid}">
+                  <td class="sign" axis="col0">
+                      <div style="width: 24px;"><i class="ico-check"></i></div>
+                  </td>
+                  <td align="left" abbr="content" axis="col4" class="">
+                      <div style="text-align: left; width: 200px;" class="">{$v.cname}</div>
+                  </td>
+                  <td align="center" abbr="article_show" axis="col5" class="" style="white-space: normal;">
+                      <div style="text-align: left; width: 600px;white-space: normal;height:inherit;line-height: inherit;" class="">
+                          {$v.strore_supply_content}
+                      </div>
+                  </td>
+                  <td align="center" abbr="article_time" axis="col6" class="">
+                      <div style="text-align: center; width: 160px;" class="">
+                          <if condition="$v.coun eq ''">
+                              <span style="color: darkgrey;">无新的供货商品</span>
+                              <else/>
+                              <span style="color: green;">有新的供货商品</span>
+                          </if>
+
+                      </div>
+                  </td>
+                  <td align="center" abbr="article_time" axis="col6" class="">
+                      <div style="text-align: center; width: 160px;" class="">
+                          <a class="btn green" style="display:" href="{:url('Supplier/StoreRed/detail',array('store_id'=>$v.store_id))}"><i class="fa fa-list-alt"></i>查看</a>
+                      </div>
+                  </td>
+                  <td align="" class="" style="width: 100%;">
+                      <div>&nbsp</div>
+                  </td>
+              </tr>
+              </foreach>
+
+          </table>
+      </div>
+      <div class="iDiv" style="display: none;"></div>
+    </div>
+    <!--分页位置-->
+      <!--分页位置-->
+      {$page}
+  </div>
+</div>
+
+</body>
+</html>

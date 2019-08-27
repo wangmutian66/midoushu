@@ -1,0 +1,156 @@
+<include file="public/layout" />
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title">
+      <div class="subject">
+        <h3>全返日志</h3>
+        <h5>查看全返资金日志</h5>
+      </div>
+    </div>
+  </div>
+  <!-- 操作说明 -->
+  <div id="explanation" class="explanation" style="color: rgb(44, 188, 163); background-color: rgb(237, 251, 248); width: 99%; height: 100%;">
+    <div id="checkZoom" class="title"><i class="fa fa-lightbulb-o"></i>
+      <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+      <span title="收起提示" id="explanationZoom" style="display: block;"></span>
+    </div>
+    <ul>
+      <li>全返</li>
+    </ul>
+  </div>
+  <div class="flexigrid">
+    <div class="mDiv">
+      <div class="ftitle">
+        <h3>日志列表</h3>
+        <h5>(共{$pager->totalRows}条记录)</h5>
+      </div>
+      <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+	  
+    </div>
+    <div class="hDiv">
+      <div class="hDivBox">
+        <table cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+              <th class="sign" axis="col0">
+                <div style="width: 24px;"><i class="ico-check"></i></div>
+              </th>
+			  
+              <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: left; width:80px;" class="">订单ID</div>
+              </th>			  
+			  <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: left; width: 100px;" class="">买家ID</div>
+              </th>
+			  <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width:100px;" class="">全返金额</div>
+              </th>
+              <th align="center" abbr="money" axis="col4" class="">
+                <div style="text-align: center; width:80px;" class="">订单全返人数</div>
+              </th>
+			  <th align="center" abbr="money" axis="col4" class="">
+                <div style="text-align: center; width: 160px;" class="">更新时间</div>
+              </th>
+              <th align="center" abbr="control" axis="col9" class="">
+                <div style="text-align: center; width: 100px;" class="">操作</div>
+              </th>
+              <th style="width:100%" axis="col7">
+                <div></div>
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    
+    <div class="bDiv" style="height: auto;">
+      <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+        <table>
+          <tbody>
+            <foreach name="list" item="vo" key="k" >
+              <tr>
+                <td class="sign">
+                  <div style="width: 24px;"><i class="ico-check"></i></div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: left; width:80px;"><if condition="$vo.order_id eq 0">手动冲全返<else/>{$vo.order_id}</if></div>
+                </td>
+                <td align="center" class="">
+                   <div style="text-align: center; width:100px;">用户ID：{$vo.uid} </div>
+                </td>
+				 <td align="center" class="">
+                  <div style="text-align: center; width: 100px;"> {$vo.money|tk_money_format} </div>
+                </td>
+                <td align="center" class="">
+                  <div style="text-align: center; width: 80px;"> {$vo.back_sum} </div>
+                </td>
+                
+               
+                <td align="center" class="">
+                  <div style="text-align: center; width: 160px;">{$vo.create_time|date='Y-m-d H:i:s',###}</div>
+                </td>
+                
+                <td align="center" class="">
+                  <div style="text-align: center; width: 100px;">
+        				<if condition="$vo.order_id neq 0">  	<a href="{:U('admin/PreviousLog/view',array('order_id'=>$vo['order_id']))}">查看详细</a></if>
+        				  </div>
+                </td>
+              
+                
+                <td align="" class="" style="width: 100%;">
+                  <div>&nbsp;</div>
+                </td>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+      </div>
+      <div class="iDiv" style="display: none;"></div>
+    </div>
+    <!--分页位置--> 
+    {$pager->show()} </div>
+</div>
+<script>
+    $(document).ready(function(){	
+	    // 表格行点击选中切换
+	    $('#flexigrid > table>tbody >tr').click(function(){
+		    $(this).toggleClass('trSelected');
+		});
+		
+		// 点击刷新数据
+		$('.fa-refresh').click(function(){
+			location.href = location.href;
+		});
+		
+	});
+
+
+    function delfun(obj) {
+      // 删除按钮
+      layer.confirm('确认删除？', {
+        btn: ['确定', '取消'] //按钮
+      }, function () {
+        $.ajax({
+          type: 'post',
+          url: $(obj).attr('data-url'),
+          data: {act: 'del', article_id: $(obj).attr('data-id')},
+          dataType: 'json',
+          success: function (data) {
+            layer.closeAll();
+            if (data) {
+              $(obj).parent().parent().parent().remove();
+            } else {
+              layer.alert('删除失败', {icon: 2});  //alert('删除失败');
+            }
+          }
+        })
+      }, function () {
+        layer.closeAll();
+      });
+    }
+</script>
+</body>
+</html>

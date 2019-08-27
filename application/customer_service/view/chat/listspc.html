@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>在线客服 - 米豆薯商城</title>
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link rel="stylesheet" type="text/css" href="__STATIC__/pc/css/style.css" />
+<script src="__STATIC__/qqFace/js/jquery.min.js"></script>
+<script src="/public/static/js/layer/layer.js" type="text/javascript"></script>
+<style type="text/css">
+	.sel-box{
+		min-width:300px;
+		height:35px;
+		margin-top:15px;
+		border-radius:15px;
+		padding:0 15px;
+		outline:none;
+		float:left;
+		background:#fff;
+	}
+	
+	.sel-box select{
+		width:200px;
+		height:35px;
+		line-height:35px;
+		box-sizing:border-box;
+		border:none;
+		outline:none;
+		margin:0;
+		padding:0;
+		float:left;
+		border-right:1px solid #aaa;
+	}
+	
+	.faqi{
+		display:block;
+		width:100px;
+		height:35px;
+		padding:0 15px;
+		line-height:35px;
+		text-align:center;
+		box-sizing:border-box;
+		float:left;
+		font-size:14px;
+	}
+</style>
+</head>
+
+<body>
+	<div class="header">
+        <div class="logo" style="color: white">客服【工作台】</div>
+        <!--<select name="is_line" id="is_line" class="is_line">
+        	<option value="0" <if condition="$is_line eq 0">selected</if> >离线</option>
+            <option value="1" <if condition="$is_line eq 1">selected</if> >上线</option>
+            <option value="2" <if condition="$is_line eq 2">selected</if> >离开</option>
+        </select>-->
+        
+        <div class="sel-box">
+        
+            <select id="chat_group_list" name="chat_group_list" class="is_line">
+                <option value="">请选择</option>
+                <volist name='chat_group' id="v">
+                <option value="{$v.id}">{$v.name}</option>
+                </volist>
+            </select>
+            <a href="JavaScript:;" id="send_chat" class="faqi">发起聊天</a>
+        </div>
+       
+        <a href="javascript:;" onclick="loginOut()">
+            <button class="layui-btn layui-bg-red">
+                <i class="layui-icon"></i> 退出下班
+            </button>
+        </a>
+    </div>
+	<div class="box">
+		<div class="left">
+			<div class="top">
+				正在咨询的会员
+			</div>
+			<div class="list">
+				<ul class="list-content">
+				</ul>
+			</div>
+		</div>
+		<div class="right">
+			<iframe src="" id="chat" width="1142px" height="700px" style="border:none !important;" scrolling="no"></iframe>
+		</div>
+	</div>
+    <audio id="chatAudio"><source src="__STATIC__/images/1.mp3" type="audio/mpeg"></audio>
+    <input type="button" id="click_left">
+</body>
+</html>
+
+
+
+<script>
+	
+	var API_URL = "{:U('/customer_service/Api/','','')}";
+    var fromid = '{$fromid}';
+	var html = '';
+	var from_name = '';
+	var fromip = "{$fromip}";
+	
+	ws =  new WebSocket("{$socket_url}");
+	
+    ws.onmessage=function(e){
+        var message = eval("("+ e.data+")");
+		console.log(message);
+        switch (message.type){
+            case  "init":
+                var bild = '{"type":"bind","fromid":"'+fromid+'"}';
+                ws.send(bild);
+                list(1);
+                return;
+            case "text":
+				xiangling();
+				if(message.uuid == 'say_hello' || message.uuid == 'sys_prompt'){
+					add_static_html(message);	
+				}else{
+					window.setTimeout(list,1000);		
+				}
+                return;
+			case 'ping':
+                ws.send('{"type":"ping"},"fromid":"'+fromid+'"}');
+                break;
+			case "send_goods":
+				 xiangling();
+			  	 window.setTimeout(list,1000);
+				 break;
+            case "send_file":
+			    xiangling();
+                window.setTimeout(list,1000);
+                return;
+        }
+    }
+	
+	
+	
+	function xiangling(){
+		$('#chatAudio').get(0).play();
+	}
+    function list(init){
+	//	$(".list-content").html("");
+		var init_url = '';
+        $.post(
+                API_URL+"get_list/source/pc",
+                {id:fromid},
+                function(res){
+					var html = '';
+					$.each(res,function(index,content){
+						if(index == 0 && init == 1){
+							$("#chat").attr('src',content.chat_page);
+						}
+						var redcount= '';
+						if(content.countNoread > 0){
+							redcount	=	'<div class="sign">'+content.countNoread+'</div>';
+						}
+						if(content.last_message.type == 2){
+							content.last_message.content = '新图片';
+						}
+						if(content.last_message.type == 3){
+							content.last_message.content = '新的商品信息';
+						}
+						//如果是连接消息
+						if(content.last_message.content == 'sys_connection'){
+							content.last_message.content = '';
+						}
+						html += ['<li onclick=redi("'+content.chat_page+'")>',
+								'						<a href="JavaScript:;">',
+								'							<div class="tu"><img src="'+content.head_url+'">'+redcount+'</div>',
+								'							<div class="xx">',
+								'								<div class="name">'+content.username+'</div>',
+								'								<div class="mes">'+content.last_message.content+'</div>',
+								'							</div>',
+								'							<div class="sj">',
+								'								<div class="date">'+content.last_message.tkdate+'</div>',
+								'								<div class="time">'+content.last_message.tktime+'</div>',
+								'							</div>',
+								'						</a>',
+								'					</li>'].join("");
+                    })
+					$(".list-content").html(html);
+					$(".list-content").find('li').click(function (){
+						$(".list-content").find('li').removeClass('ys');
+						$(this).addClass('ys');
+						$(this).find('.sign').remove();
+					})
+                },'json'
+        )
+		
+	}
+	
+	function add_static_html(e){ 
+		var date = new Date(); 
+		var static_time	=  date.getHours() +':' +  date.getMinutes() + ':' + date.getSeconds()
+		if(e.fromid < 10000000){
+			get_name(e.fromid);
+		}else{
+			from_name = e.fromid;
+		}
+		var static_html= '';
+		static_html +=	'<li id="static_'+e.fromid+'" onclick=redi("/customer_service/Chat/indexpc/fromid/'+e.toid+'/toid/'+e.fromid+'")>',
+		static_html +=	'<a href="JavaScript:;">',
+		static_html +=	'<div class="tu"><img src="/template/pc/chengxin/static/img/img5.jpg"></div>',
+		static_html +=	'<div class="xx" style="width:auto">',
+		static_html +=	'<div class="name">'+from_name+'</div>',
+		static_html +=	'<div class="mes"  style="width:auto"> '+e.data+' </div>',
+		static_html +=	'</div>',
+		static_html +=	'</a>',
+		static_html +=	'</li>';
+		$(".list-content").prepend(static_html);
+		$(".list-content li[id='static_"+e.fromid+"']:gt(0)").remove();
+	}
+	
+    /**
+     *根据时间戳格式化为日期形式
+     */
+    function mydate(nS){
+        return new Date(parseInt(nS) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
+    }
+	function redi(url){
+		$("#chat").attr('src',url);
+    }
+	function get_name(fromid){
+		$.ajax({
+			type: "POST",
+			url: API_URL + 'getName',
+			data: "uid="+fromid,
+			async:false,
+			success: function(r){
+				from_name = r;
+			}
+		});
+	}
+	function loginOut(){
+		$.getJSON("{:U('/customer_service/Chat/loginOut')}",{fromid:fromid},function (r){
+			layer.alert('退出成功！',function (){
+				location.href= '{:U("/customer_service/Chat/login/")}';
+			})
+		})
+	}
+	$("#is_line").change(function (){
+		$.getJSON("{:U('/customer_service/Chat/switch_logon')}",{id:$(this).val()},function (r){
+			layer.alert(r.info);
+		})	
+	})
+	
+	/*顶部选择其他客服组,进行聊天*/
+	$("#chat_group_list").change(function (){
+		if($(this).val() == ''){
+			return ;
+		}
+		$.post("/customer_service/chat/get_users",{group_id:$(this).val()},function(r){
+			var user_is_line = '';
+			$("#chat_group").remove();
+			var list_html = '<select id="chat_group" class="is_line">';
+			$.each(r,function (i,v){
+			//	console.log(v)
+				if(v.is_line == 1){
+					user_is_line	= '在线';
+				}else{
+					user_is_line	=	'不在线';	
+				}
+				list_html += "<option value='"+v.user_id+"'>"+v.nickname+" "+user_is_line+"</option>";
+			});
+			list_html += "</select>";
+			$("#chat_group_list").after(list_html);
+		},'json');
+	})
+	$("#send_chat").click(function (){
+		var chat_user_id = $("#chat_group").val();
+		if(chat_user_id == fromid){
+			console.log('您不能和自己聊天')
+			return false;	
+		}
+		var message = '{"data":"sys_connection","fromid":"'+fromid+'","toid":"'+chat_user_id+'","type":"say","uuid":"connection_data","fromip":"'+fromip+'"}';
+		ws.send(message);
+		save_message(message);
+		window.setTimeout(list,400);
+	})
+	
+	
+	$(function(){
+		get_name(fromid);
+	})
+	function save_message(message){
+		$.ajax({
+			type: "POST",
+			dataType:'JSON',
+			url: API_URL+"save_message",
+			data:{data:message},
+			success: function(r){
+				if(r.status == 0){
+					showErrorMsg('系统繁忙，请刷新页面重新发送信息');
+				}
+			}
+		});
+	}
+
+	
+	
+//	$(".list-content").bind('click',addclass);
+	
+</script>
+
+</html>

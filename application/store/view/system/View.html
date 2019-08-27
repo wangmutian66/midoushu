@@ -1,0 +1,52 @@
+<include file="public/layout" />
+<body style="background-color: #FFF; overflow: auto;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>查看系统消息</h3>
+              
+            </div>
+            
+        </div>
+    </div>
+
+        <div class="ncap-form-default">
+            
+            <input type="hidden" name="{$pk}" id="{$pk}" value="{$item[$pk]}" />
+            <dl class="row">
+                <dt class="tit">
+                    <label for="cname">消息内容:</label>
+                </dt>
+                <dd class="opt">
+                   {$item.message|nl2br}
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+            
+            <dl class="row">
+                <dt class="tit">
+                    <label for="mobile">发送时间:</label>
+                </dt>
+                <dd class="opt">
+                    {$item.create_time|date="Y-m-d H:i:s",###}
+                    <p class="notic"> </p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="tel">消息类型:</label>
+                </dt>
+                <dd class="opt">
+                    {$item.info}
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+           
+        </div>
+</div>
+<div id="goTop"> <a href="JavaScript:void(0);" id="btntop"><i class="fa fa-angle-up"></i></a><a href="JavaScript:void(0);" id="btnbottom"><i class="fa fa-angle-down"></i></a></div>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/js/company.js"></script>
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title">
+      <div class="subject">
+        <h3>实体店员工管理</h3>
+      </div>
+    </div>
+  </div>
+  <!-- 操作说明 -->
+  <div class="flexigrid">
+    <div class="mDiv">
+      <div class="ftitle">
+        <h3>员工列表</h3>
+        <h5>(共<span id="user_count">{$pager->totalRows}</span>条记录)</h5>
+      </div>
+      <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+	    <form action="__URL__/index" id="search-form2" class="navbar-form form-inline" method="get">
+        <div class="sDiv">
+          <div class="sDiv2">           
+            <select name="company_id" id="company_id" class="select" onChange="company_change($(this))">
+              <option value="">请选择</option>
+			  <volist name='company_list' id='c_list'>
+			  <option value="{$c_list.cid}" <if condition="$c_list['cid'] eq $Request.param.company_id"> selected </if>>{$c_list.cname}</option>
+			  </volist>
+            </select>
+			
+			<select name="store_id" id="store_id" class="select">
+              <option value="">请选择</option>
+			  <volist name='store_list' id='s_list'>
+			  <option value="{$s_list.cid}" <if condition="$s_list['cid'] eq $Request.param.store_id"> selected </if>>{$s_list.cname}</option>
+			  </volist>
+            </select>
+			
+		
+			
+			<select name="t" id="t" class="select">
+				<option value="">请选择</option>
+				<option value="0" <if condition="$_GET['t'] eq 0 && $_GET['t']!=''"> selected </if>>员工</option>
+				<option value="1" <if condition="$_GET['t'] eq 1"> selected </if>>推广员</option>
+			</select>
+			
+            <input type="text" size="30" name="key_word" class="qsbox" style="width:200px;" placeholder="请输入手机号码或真实姓名..." value="{$Think.get.key_word|default=''}">
+            <input type="submit"  class="btn" value="搜索">
+          </div>
+        </div>
+      </form>
+    </div>
+	<div class="tDiv">
+		<div class="tDiv2">
+			<div class="fbutton">
+		<a href="{:U('/Admin/Staff/add/',array('company_id'=>$Request.param.company_id,'store_id'=>$Request.param.store_id))}">
+          <div class="add" title="添加成员" onClick="AddData()">
+            <span><i class="fa fa-plus"></i>添加{$add_data.titstr}</span>
+          </div>
+		  
+        </a>
+			
+			</div>
+			<div class="fbutton">
+				<div class="add" title="重新生成二维码">
+					<span onClick="location.href='{:U('/Admin/Staff/re_qrcode')}';	"><i class="fa fa-share"></i>重新生成二维码(更换域名时需要)</span>
+				</div>
+			</div>
+		</div>
+		<div style="clear:both"></div>
+	</div>
+	
+    <div class="hDiv">
+      <div class="hDivBox">
+        <table cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+              <th class="sign" axis="col0">
+                <div style="width: 24px;"><i class="ico-check"></i></div>
+              </th>
+			        <th align="left" abbr="article_title" axis="col1" class="">
+                <div style="text-align: left; width: 60px;" class="">ID</div>
+              </th>
+              <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">用户名</div>
+              </th>
+			        <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">真实姓名</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">邀请码</div>
+              </th>
+          
+                <th align="left" abbr="isadmin" axis="col4" class="">
+                  <div style="text-align: center; width: 150px;" class="">是否为推广员</div>
+                </th>
+
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width:150px;" class="">隶属实体店</div>
+              </th>
+             
+			   <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">用户余额</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">手机号码</div>
+              </th>
+             
+			        <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">是否冻结</div>
+              </th>
+			        <th align="center" abbr="control" axis="col9" class="">
+                <div style="text-align: center; width: 250px;" class="">操作</div>
+              </th>
+              <th style="width:100%" axis="col7">
+                <div></div>
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    
+    <div class="bDiv" style="height: auto;">
+      <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+	  
+	          <table>
+          <tbody>
+            <foreach name="list" item="vo" key="k" >
+              <tr>
+                <td class="sign">
+                  <div style="width: 24px;"><i class="ico-check"></i></div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: left; width: 60px;">{$vo.id}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.uname}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.real_name}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.invite_code}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 150px;">
+                    <if condition='$vo[type] eq 1'>
+                      <span class="yes" onClick="changeTableVal('staff','id','{$vo.id}','type',this)" ><i class="fa fa-check-circle"></i>是</span>
+                      <else />
+                      <span class="no" onClick="changeTableVal('staff','id','{$vo.id}','type',this)" ><i class="fa fa-ban"></i>否</span>
+                    </if>
+                  </div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align:left; width:150px;">{$vo.store_name}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.money|tk_money_format}</div>
+                </td>
+                
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.phone}</div>
+                </td>
+              
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">
+				  
+                    <if condition='$vo[is_lock] eq 1'>
+                      <span class="yes" onClick="changeTableVal('staff','id','{$vo.id}','is_lock',this)" ><i class="fa fa-check-circle"></i>是</span>
+                      <else />
+                      <span class="no" onClick="changeTableVal('staff','id','{$vo.id}','is_lock',this)" ><i class="fa fa-ban"></i>否</span>
+                    </if>
+					
+                  </div>
+                </td>
+                <td align="center" class="">
+                  <div style="text-align: center; width:250px;">
+                    <a class="btn blue" href="{:U('Staff/staff_user',array('staff_id'=>$vo['id']))}"><i class="fa fa-search"></i>发展会员管理</a>
+                     |
+                    <a class="btn blue" href="{:U('Staff/edit',array('id'=>$vo['id'],'t'=>$Request.param.t))}"><i class="fa fa-pencil-square-o"></i>编辑</a>
+                     |
+                    <!--<a class="btn blue" href="__URL__/del/id/{$vo.id}" onClick="if(confirm('确认删除吗?')){ return true;}else{return false;}"><i class="fa fa-trash-o"></i>删除</a>-->
+                    <a class="btn blue" data-url="__URL__/ajax_del/id/{$vo.id}" onClick="delcompany(this,'staff')"><i class="fa fa-trash-o"></i>删除</a>
+
+                  </div>
+                </td>
+                <td align="" class="" style="width: 100%;">
+                  <div>&nbsp;</div>
+                </td>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+        <!--分页位置-->
+        {$page}
+
+      
+	  
+	  </div>
+      <div class="iDiv" style="display: none;"></div>
+    </div>
+    <!--分页位置--> 
+  </div>
+</div>
+<script>
+    $(document).ready(function(){
+	  // 表格行点击选中切换
+	  $('#flexigrid > table>tbody >tr').click(function(){
+		    $(this).toggleClass('trSelected');
+		});
+		// 点击刷新数据
+		$('.fa-refresh').click(function(){
+			location.href = location.href;
+		});
+
+        $(document).keydown(function(e){
+            if(e.keyCode == 13){
+                $("#search-form2").submit();
+            }
+        })
+		
+		
+	});
+</script>
+<script src="__PUBLIC__/js/delinfo.js"></script>
+</body>
+</html>

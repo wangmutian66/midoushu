@@ -1,0 +1,184 @@
+<include file="public/layout" />
+
+<script type="text/javascript" src="__ROOT__/public/js/laydate/laydate.js"></script>
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title">
+      <div class="subject">
+        <h3><if condition="$company_info">{$company_info.cname}<else/>子公司管理</if></h3>
+        <h5><if condition="$company_info">实体店管理<else/>子公司列表信息</if></h5>
+      </div>
+    </div>
+  </div>
+  <!-- 操作说明 -->
+  <div id="explanation" class="explanation" style="color: rgb(44, 188, 163); background-color: rgb(237, 251, 248); width: 99%; height: 100%;">
+    <div id="checkZoom" class="title"><i class="fa fa-lightbulb-o"></i>
+      <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+      <span title="收起提示" id="explanationZoom" style="display: block;"></span>
+    </div>
+    <ul>
+      <li>子公司管理设置</li>
+    </ul>
+  </div>
+  <div class="flexigrid">
+    <div class="mDiv">
+      <div class="ftitle">
+        <h3>日志列表</h3>
+        <h5>(共{$pager->totalRows}条记录)</h5>
+      </div>
+      <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+	  
+    </div>
+   
+	<div class="tDiv">
+		<div class="tDiv2">
+        	<!--<div class="fbutton"> 
+				<a href="{:U('/admin/company/export_company')}">
+                    <div class="add" title="导出excel">
+                        <span><i class="fa fa-plus"></i>导出excel</span>
+                    </div>
+                </a> 
+			</div>-->
+		<div style="clear:both"></div>
+	</div>
+	
+    <div class="hDiv">
+    	<div style="margin:20px ;">
+            <input type="text" id="limit_date" name="limit_date" value="" style="width:500px;" readonly/>
+            <input type="text" id="percentage" name="percentage" onKeyUp="value=value.replace(/[^\d]/g,'')" placeholder="请输入全返百分比" />
+            <input type="text" id="backmidou" name="backmidou" onKeyUp="value=value.replace(/[^\d]/g,'')" placeholder="请输入米豆百分比" />
+            <input type="text" id="sorts" name="sorts" onKeyUp="value=value.replace(/[^\d]/g,'')" placeholder="排序位置,可忽略" />(日期相同的时候会导致审核不通过)
+    		<input type="button" id="submit_post" value="提交">
+        </div>
+      <div class="hDivBox">
+        <table cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+              <th class="sign" axis="col0">
+                <div style="width: 24px;"><i class="ico-check"></i></div>
+              </th>
+			        <th align="left" abbr="article_title" axis="col1" class="">
+                <div style="text-align: left; width: 30px;" class="">ID</div>
+              </th>
+              <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: left; width: 240px;" class="">开始时间</div>
+              </th>
+            
+              <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: left; width: 240px;" class="">结束时间</div>
+              </th>
+              <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: left; width: 100px;" class="">现金百分比</div>
+              </th>
+              <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: left; width: 100px;" class="">米豆百分比</div>
+              </th>
+              <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: left; width: 50px;" class="">排序</div>
+              </th>
+                    <th align="center" abbr="control" axis="col9" class="handle">
+                <div style="text-align: center; width:50px;" class="">操作</div>
+              </th>
+              <th style="width:100%" axis="col7">
+                <div></div>
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    
+    <div class="bDiv" style="height: auto;">
+      <div id="flexigrid" cellpadding="0" cellspacing="0" border="0" data-url="{:U('/Admin/Company/sendSms')}">
+        <table>
+          <tbody>
+            <foreach name="list" item="vo" key="k" >
+              <tr data-id="{$vo.id}">
+                <td class="sign">
+                  <div style="width: 24px;"><i class="ico-check"></i></div>
+                </td>
+				<td align="left" class="">
+                  <div style="text-align: left; width: 30px;">{$vo.id}</div>
+                </td>
+                <td align="left" class="cname">
+                  <div style="text-align: left; width: 240px;">{$vo.start_date|date="Y-m-d",###}</div>
+                </td>
+                <td align="left" class="cname">
+                  <div style="text-align: left; width: 240px;">{$vo.end_date|date="Y-m-d",###}</div>
+                </td>
+                <td align="left" class="cname">
+                  <div style="text-align: left; width: 100px;">{$vo.proportion}%</div>
+                </td>
+                <td align="left" class="cname">
+                  <div style="text-align: left; width: 100px;">{$vo.backmidou}%</div>
+                </td>
+                <td align="left" class="cname">
+                  <div style="text-align: left; width: 50px;">{$vo.sort}</div>
+                </td>
+                <td align="center" class="handle">
+                  <div style="text-align: center; width:50px;">
+				  	        
+					       <a class="btn blue" href="__URL__/del/id/{$vo.id}" onClick="if(confirm('确认删除吗?')){ return true;}else{return false;}"> <i class="fa fa-trash-o"></i>删除</a>
+                    
+				          </div>
+                </td>
+                <td align="" class="" style="width: 100%;">
+                  <div>&nbsp;</div>
+                </td>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+      </div>
+      <div class="iDiv" style="display: none;"></div>
+	   
+    </div>
+    <!--分页位置--> 
+    {$pager->show()} </div>
+</div>
+<script type="text/javascript">
+laydate.render({
+  elem: '#limit_date'
+  ,range: true
+});
+
+$("#submit_post").click(function (){
+	var limit_date = $("#limit_date").val();
+	var percentage = $("#percentage").val();
+	var backmidou = $("#backmidou").val();
+	var sorts = $("#sorts").val();
+	if(limit_date == ''){
+		layer.alert('日期不能为空', {icon: 2});
+		return false;
+	}
+	if(percentage == ''){
+		layer.alert('请输入全返百分比', {icon: 2});
+		return false;
+	}
+	if(backmidou == ''){
+		layer.alert('请输入米豆百分比', {icon: 2});
+		return false;
+	}
+	if((parseInt(backmidou) + parseInt(percentage)) != 100){
+		layer.alert('米豆加全返百分比必须为100', {icon: 2});
+		return false;
+	}
+	$.post('{:U("/Admin/BackDateLimit/save_data")}',{date:limit_date,percentage:percentage,sorts:sorts,backmidou:backmidou},function (r){
+		if(r.status == 1){
+			layer.alert('添加成功', {icon: 1},function (){
+				location.reload();	
+			});
+		}else{
+			layer.alert(r.info, {icon: 2});;
+		}
+	},'json');
+})
+
+    
+    
+</script>
+</body>
+</html>

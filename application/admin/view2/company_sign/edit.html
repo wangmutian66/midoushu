@@ -1,0 +1,117 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<body style="background-color: #FFF; overflow: auto;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>推荐子公司管理</h3>
+                <h5><a href="{:U('/Admin/CompanySign/index')}" id="log_list">推荐子公司列表</a></h5>
+            </div>
+            
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    
+    <style>
+ 
+	#handlepost textarea{width:400px; height:150px;}
+   </style>
+    
+    <form method="post" id="handlepost" name="form1" autocomplete="off" >
+        <div class="ncap-form-default">
+                <input type="hidden" name="id" id="id" value="{$id}" />
+			 <dl class="row">
+                            <dt class="tit">
+                                <label for="lv">子公司名称:</label>
+                            </dt>
+                            <dd class="opt">
+                                {$company_name}
+                            </dd>
+                        </dl>
+            <dl class="row">
+                            <dt class="tit">
+                                <label for="lv">实体店名称:</label>
+                            </dt>
+                            <dd class="opt">
+                                {$store_name}
+                            </dd>
+                        </dl> 
+            <dl class="row">
+                <dt class="tit">
+                    <label for="lv">推荐子公司名称:</label>
+                </dt>
+                <dd class="opt">
+                    {$t_company_name}
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="company_level"><em>*</em>分红等级</label>
+                </dt>
+                <dd class="opt" id='levels'>
+                    <select name="company_level" id="company_level">
+                        <option value="" profit="">请选择等级</option>
+                        <volist name="level_list" id="level_vo">
+                            <option value="{$level_vo.id}" profit="{$level_vo.profit}"  <if condition="$level_vo['id'] eq $company_level ">selected="selected"</if> >{$level_vo.lv_name}</option>
+                        </volist>
+                    </select>
+                    <span class="err"></span>
+                    <p class="notic">分红比率：{$profit}</p>
+                </dd>
+            </dl>
+            <script>
+                $(function (){
+                    $("#company_level").change(function(){
+                        $("#levels").find('p').html("分红比率："+$(this).find("option:selected").attr('profit'));
+                    })
+                })
+            </script>
+            <div class="bot">
+                <a href="JavaScript:void(0);" class="ncap-btn-big ncap-btn-green" onClick="return checkCompanyUpdate();">确认提交</a>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="goTop"> <a href="JavaScript:void(0);" id="btntop"><i class="fa fa-angle-up"></i></a><a href="JavaScript:void(0);" id="btnbottom"><i class="fa fa-angle-down"></i></a></div>
+<script type="text/javascript">
+
+    function checkCompanyUpdate(){
+
+        var error ='';
+
+		if($("#company_level").val() == ''){
+			error += "请选择分红等级<br>";
+		}
+
+        if(error){
+            layer.alert(error, {icon: 2});
+            return false;
+        }
+
+		$.ajax({  
+			url: "__URL__/edit/id/{$Request.param.id}",
+			type: 'POST',  
+			data:$("#handlepost").serialize(),  
+			dataType: 'json',  
+			error: function(){alert('请刷新重试')},
+			success:function(r){
+			    console.log(r);
+				if(r.status == 1){
+					layer.msg('数据更新成功！', {icon: 1,time: 3000,shade: 0.6},function (){
+						window.location.href='{:U("/Admin/CompanySign/index/")}';
+					}); 
+				}else{
+					parent.layer.msg(r.info, {icon: 2,time: 2000,shade: 0.6});
+				}
+			},
+			complete:function(){
+				parent.layer.closeAll('loading');
+			}
+		});
+    }
+</script>
+</body>
+</html>

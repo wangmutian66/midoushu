@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="renderer" content="webkit">
+<title>我的账户-{$tpshop_config['shop_info_store_title']}</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/member.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_logo']}" media="screen"  />
+<script src="__STATIC__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/js/baidu.js"></script>
+</head>
+
+<body class="bgg">
+	<include file="public/user_header" />
+	<div class="clear"></div>
+	
+	<div class="y-content">
+		<!--左侧菜单-->
+		<include file="public/user_lefter" />
+		
+		<!--右侧内容-->
+		<div class="right00 fri">
+			<div class="y-hyt">
+				<div class="tx fle">
+					<a href="#"><img src="{$user.head_pic|default='__STATIC__/img/img5.jpg'}">{$user.nickname}（<span>{$level[$user['level']]['level_name']}</span>）</a>
+				</div>
+				<div class="time fri">
+					<b>本次登录：</b>{$user.last_login|date='Y-m-d H:i',###}  <!-- /  <b></b>上次登录：{$user.pre_last_login|date='Y-m-d H:i',###} -->
+				</div>
+			</div>
+			<ul class="y-zut">
+				<li><a href="{:U('Order/order_list',array('type'=>'WAITPAY'))}">待付款</a></li>
+				<li><a href="{:U('Order/order_list',array('type'=>'WAITSEND'))}">待发货</a></li>
+				<li><a href="{:U('Order/order_list',array('type'=>'WAITRECEIVE'))}">待收货</a></li>
+				<li><a href="{:U('Order/comment',array('status'=>'0'))}">待评价 <span>{$com_num}</span></a></li>
+				<li><a href="{:U('Homeyxyp/Order/return_goods_list')}">退款</a></li>
+			</ul>
+			
+			
+			
+            <div class="y-zxdd">
+            	<div class="bt">
+            		<p><i></i>最新订单</p>
+            		<a href="{:U('Homeyxyp/Order/order_list')}">查看全部订单</a>
+            	</div>
+            	<!--订单-->
+            	<empty name="order_list">
+					<div class="car-none-pl">
+						<i class="account-acco1"></i>您最近没有待处理订单，<a href="/">快去逛逛吧~</a>
+					</div>
+				<else/>
+					<volist name="order_list" id="list">
+		            	<table width="930" border="0" cellspacing="0" cellpadding="0" class="y-dd">
+							<tr>
+							    <td>
+		                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="dbt">
+									    <tr>
+									        <td width="880" class="dh">{$list.add_time|date='Y-m-d H:i:s',###}      订单号: {$list.order_sn}</td>
+									        <td width="120" class="ljt">
+											<if condition="$list.pay_btn eq 1">
+												<a class="ps_lj" href="{:U('Homeyxyp/Cart/cart4',array('order_id'=>$list[order_id]))}"  target="_blank">立即支付</a>
+											</if>
+											<if condition="$list.order_button[cancel_info] eq 1">
+												 <a class="consoorder" href="{:U('Order/cancel_order_info',array('order_id'=>$list[order_id]))}">取消详情</a>
+											</if>
+											<if condition="$list.receive_btn eq 1">
+												<a class="ps_lj" href="javascript:;" onclick="order_confirm({$list.order_id});">确认收货</a>
+											</if>
+											<if condition="$list.cancel_btn eq 1">
+												<if condition="$list[pay_status] eq 0">
+												<a class="consoorder" href="javascript:void(0);" onClick="cancel_order({$list.order_id})" >取消订单</a>
+												<else/>
+												<a class="consoorder" href="javascript:void(0);" data-url="{:U('Homeyxyp/Order/refund_order',['order_id'=>$list.order_id])}" onClick="refund_order(this)" >取消订单</a>
+												</if>
+											<else/>
+												<!--<div class="dele" onclick="verConfirm('确认删除该订单?','{:U('Home/Order/del_order',array('order_id'=>$list['order_id'], 'type'=>$Request.param.type))}')"></div>-->
+											</if>
+											</td>
+									    </tr>
+		                            </table>
+
+							    </td>
+							</tr>
+							<tr>
+								<td>
+									<table width="100%" border="0" cellspacing="0" cellpadding="0" class="dxq">
+								    	<volist name="list.goods_list" id="goods" key="k">
+									    <tr>
+									        <td width="393" class="xni">
+									        	<a <if condition="$goods['is_allreturn'] eq '1'"> href="{:U('Homeyxyp/ReturnGoods/goodsInfo',array('id'=>$goods['goods_id']))}" <else /> href="{:U('Homeyxyp/Goods/goodsInfo',array('id'=>$goods['goods_id']))}" </if>><img src="{$goods.goods_id|goods_thum_images=80,80}"></a>
+									        	<div class="zi fle">
+									        		<h3><a <if condition="$goods['is_allreturn'] eq '1'"> href="{:U('Homeyxyp/ReturnGoods/goodsInfo',array('id'=>$goods['goods_id']))}" <else /> href="{:U('Homeyxyp/Goods/goodsInfo',array('id'=>$goods['goods_id']))}" </if> >{$goods.goods_name}</a></h3>
+									        		<p>{$goods.spec_key_name}{$goods['is_allreturn']}</p>
+									        	</div>
+									        </td>
+									        <td width="93" class="xni1">￥{$goods.member_goods_price}</td>
+									        <td width="100" class="xni1">
+									        	{$goods.goods_num}
+									        	<if condition="isset($goods[rstatus])">
+	                                            	<br />
+		                                            <a class="applyafts">{$goods[rstatus_str]}</a>
+		                                        <else />
+		                                        	<br />
+		                                            <a href="{:U('Homeyxyp/Order/return_goods',['rec_id'=>$goods['rec_id']])}" class="applyafts">申请售后</a>
+		                                        </if>
+									        </td>
+											<if condition="$key eq 0">
+									        <td width="112" class="xni1" rowspan="{$list.goods_list|count}">
+												<p class="d_pri"><span>￥</span><span>{$list.order_amount}</span></p>
+												<p class="d_yzo">
+													<span>含运费：</span>
+													<span>{$list.shipping_price}</span></p>
+												<p class="d_yzo"><a href="javascript:void(0);">{$list.pay_name}</a></p>
+									        </td>
+									        <td width="126" class="xni1" rowspan="{$list.goods_list|count}">
+									        	<p class="d_yzo">
+													<if condition="$goods[is_comment] eq 1">
+														已完成
+													<elseif condition="$goods[is_comment] neq 1 and $list['shipping_status'] eq 2"/>
+														<if condition="$goods[is_send] eq 0">
+															待发货
+															<else/>
+															已发货
+														</if>
+													<else/>
+														{$list['order_status_desc']}
+													</if>
+                                                </p>
+                                                <p>
+													<if condition="$list.order_prom_type eq 5">
+														<a href="{:U('Order/virtual_order',array('order_id'=>$list['order_id']))}">查看详情</a>
+													<else/>
+														<a href="{:U('Homeyxyp/Order/order_detail',array('id'=>$list['order_id']))}">查看详情</a>
+													</if>
+												</p>
+									        </td>
+									        <td width="106" class="xni1" rowspan="{$list.goods_list|count}">
+												<p class=""><a href="{:U('Homeyxyp/Goods/goodsInfo',array('id'=>$goods['goods_id']))}">再次购买</a></p>
+												<if condition="($list[comment_btn] eq 1) and ($goods[is_comment] eq 0)">
+													<p class="inspect"><a href="{:U('Homeyxyp/Order/comment')}"><h6>评价</h6></a></p>
+												</if>
+									        </td>
+									        </if>
+									    </tr>
+		                            </volist>
+		                            </table>  
+								</td>
+							</tr>
+		            	</table>
+		            </volist>
+            	</empty>
+
+
+            </div>
+		</div>
+		<div class="clear"></div>
+	</div>
+
+	<include file="public/user_footer" />
+</body>
+</html>

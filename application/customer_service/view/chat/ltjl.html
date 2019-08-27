@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link rel="stylesheet" type="text/css" href="/public/newcj/pc/css/user-style.css" />
+<title>无标题文档</title>
+
+<style type="text/css">
+    .bot{
+        width:100%;
+    }
+
+    .bot .l{
+        width:100%;
+    }
+
+    .bot .l .t{
+        width:100%;
+    }
+
+    .bot .l .t .message{
+        width:520px;
+        margin-top:20px;
+        overflow: hidden;
+        float:left;
+    }
+
+    .bot .l .t .message.ys{
+        float:right;
+    }
+
+    .bot .l .t .message .tx{
+        width:48px;
+        height:48px;
+        float:left;
+    }
+
+    .bot .l .t .message .tx img{
+        width:100%;
+    }
+
+    .bot .l .t .message .xx{
+        width:450px;
+        margin-left:22px;
+        float:left;
+    }
+
+    .bot .l .t .message.ys .xx{
+        margin-left:0;
+        margin-right:22px;
+    }
+
+    .bot .l .t .message .xx .dp{
+        width:450px;
+        height:24px;
+        overflow: hidden;
+    }
+
+    .bot .l .t .message .xx .dp .nc{
+        width:120px;
+        height:24px;
+        overflow: hidden;
+        font-size:14px;
+        font-family: "微软雅黑";
+        color:#888;
+        float:left;
+        vertical-align: top;
+    }
+
+    .bot .l .t .message .xx .dp .sj{
+        float:left;
+    }
+
+    .bot .l .t .message.ys .xx .dp .sj{
+        float:right;
+    }
+
+
+    .bot .l .t .message .xx .dp .sj span{
+        margin-left:5px;
+        font-size:14px;
+        font-family: "微软雅黑";
+        color:#888;
+        vertical-align: top;
+    }
+
+    .bot .l .t .message .xx .nr{
+        position: relative;
+    }
+
+    .bot .l .t .message .xx .nr .fd{
+        position: absolute;
+        top:0;
+        left:-9px;
+        width:9px;
+        height:20px;
+    }
+
+    .bot .l .t .message.ys .xx .nr .fd{
+        position: absolute;
+        top:0;
+        left:auto;
+        right:-9px;
+        width:9px;
+        height:20px;
+    }
+
+    .bot .l .t .message .xx .nr span{
+        max-width: 100%;
+        border-radius: 5px;
+        background: #eeeeee;
+        padding:10px 15px;
+        overflow: hidden;
+        box-sizing: border-box;
+        line-height:20px;
+        float:left;
+        word-wrap: break-word;
+        white-space:normal;
+        font-size:12px;
+        color:#4f4f4f;
+    }
+
+    .bot .l .t .message.ys .xx .nr span{
+        background: #d2e6f9;
+        float:right;
+    }
+
+    .bot .l .t .message .xx .nr span .sp{
+        width:200px;
+        height:95px;
+        box-sizing: border-box;
+    }
+
+    .bot .l .t .message .xx .nr span .sp .tu{
+        width:80px;
+        height:80px;
+        float:left;
+        margin:7px 10px;
+    }
+
+    .bot .l .t .message .xx .nr span .sp .tu img{
+        width:100%;
+    }
+
+    .bot .l .t .message .xx .nr span .sp .wz{
+        width:90px;
+        height:55px;
+        margin:20px 0;
+        float:left;
+    }
+
+    .bot .l .t .message .xx .nr span .sp .wz .bt{
+        width:90px;
+        height:30px;
+        line-height: 15px;
+        font-size:12px;
+        color:#333;
+        overflow: hidden;
+    }
+
+    .bot .l .t .message .xx .nr span .sp .wz a:hover{
+        text-decoration: underline;
+    }
+
+    .bot .l .t .message .xx .nr span .sp .wz .price{
+        width:90px;
+        height:15px;
+        line-height: 15px;
+        font-size:12px;
+        color:#ff0000;
+        overflow: hidden;
+        margin-top:10px;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="bot">
+        <div class="l">
+            <div class="t" id="chat_content">
+                <volist name='msg.list' id='vo'>
+                <if condition="$vo.fromid neq $Request.param.fromid">
+                <div class="message">
+    				<div class="tx">
+                        <img src="{$msg.head_pic.to_head} ">
+                    </div>
+                    <div class="xx">
+                        <div class="dp"><div class="sj"><span>{$vo.time|date="Y-m-d H:i:s",###}</span></div></div>
+                        <if condition="$vo.type == 2">
+                            <div class="nr"><span>{$vo.fromname} : <br/><br/><a href="{$vo.content}" target="_blank"><img src="{$vo.content}" style="height:100px;"></a></span>  </div>
+                            <else/>
+                            <div class="nr"><span>{$vo.fromname} : {$vo.content} </span>  </div>
+                        </if>
+
+
+                    </div>
+                </div>
+                <else/>
+                <div class="message ys">
+                    <div class="xx">
+                        <div class="dp"><div class="sj"><span>{$vo.time|date="Y-m-d H:i:s",###}</span></div></div>
+                        <if condition="$vo.type == 2">
+                            <div class="nr"><span>{$vo.fromname} : <br/><br/><a href="{$vo.content}" target="_blank"><img src="{$vo.content}" style="height:100px;"></a></span>  </div>
+                            <else/>
+                            <div class="nr"><span>{$vo.fromname} : {$vo.content} </span>  </div>
+                        </if>
+
+                    </div>
+                    <div class="tx"><img src="{$msg.head_pic.from_head}"></div>
+                </div>
+                </if>
+                </volist>
+            </div>
+        </div>
+
+
+</div>
+<script>
+    //老张加 2018-11-10  加载完显示最新信息，滚动条默认在最底部
+    var t;
+    if(document.documentElement.scrollHeight){
+        t = document.documentElement.scrollHeight;
+        document.documentElement.scrollTop = t;
+    }else{
+        t = document.body.scrollHeight;
+        document.body.scrollTop = t;
+    }
+
+
+</script>
+</body>
+</html>

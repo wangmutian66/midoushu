@@ -1,0 +1,26 @@
+		<ul class="y-left fle">
+			<li><a href="{:U('Homered/Order/comment')}" <if condition=" (CONTROLLER_NAME eq 'Order') and ((ACTION_NAME eq 'comment') or (ACTION_NAME eq 'comment_list')) ">class="on"</if> >我的评价</a></li>
+			<li><a href="{:U('Homered/User/goods_collect')}" <if condition=" (CONTROLLER_NAME eq 'User') and (ACTION_NAME eq 'goods_collect') ">class="on"</if> >我的收藏</a></li>
+			<li><a href="{:U('Homered/Cart/index')}">购物车</a></li>
+			<li><a href="{:U('Homered/Order/order_list')}" <if condition=" (CONTROLLER_NAME eq 'Order') and ((ACTION_NAME eq 'order_list') or (ACTION_NAME eq 'order_detail') or (ACTION_NAME eq 'return_goods')) ">class="on"</if> >我的订单</a></li>
+			<li><a href="{:U('Homered/Order/return_goods_list')}" <if condition=" (CONTROLLER_NAME eq 'Order') and ((ACTION_NAME eq 'return_goods_list') or (ACTION_NAME eq 'refund_order') or (ACTION_NAME eq 'return_goods') or (ACTION_NAME eq 'return_goods_info') or (ACTION_NAME eq 'return_goods_list')) ">class="on"</if> >退货退款</a></li>
+			<li><a href="{:U('Homered/User/already_rebate')}" <if condition=" (CONTROLLER_NAME eq 'User') and (ACTION_NAME eq 'already_rebate') ">class="on"</if> >我的返利</a></li>
+		</ul>
+		<script type="text/javascript">
+			/*var urlstr = location.href;  
+			var urlstatus=false;  
+			$(".y-left li a").each(function () {  
+			    if ((urlstr + '/').indexOf($(this).attr('href')) > -1&&$(this).attr('href')!='') {  
+			        $(this).addClass('on');  
+			        urlstatus = true;  
+			    } else {  
+			        $(this).removeClass('on');  
+			    }  
+			    if($("#siteMenu li a.on").length>1){  
+					$("#siteMenu li a").eq(0).removeClass('on');  
+				}  
+			});  
+			if (!urlstatus) {  
+			 	$(".y-left li a").eq(0).addClass('on');   
+			}  */
+		</script>

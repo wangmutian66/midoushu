@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>首页-{$tpshop_config['shop_info_store_title']}</title>
+    <meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+    <meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+    <link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+    <link rel="stylesheet" href="__STATIC__/css/style.css?v={$vnum}">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/css/iconfont.css?v={$vnum}"/>
+    <script src="__STATIC__/js/jquery-3.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <!--<script src="__STATIC__/js/zepto-1.2.0-min.js" type="text/javascript" charset="utf-8"></script>-->
+    <script src="__STATIC__/js/mobile-util.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__STATIC__/js/swipeSlide.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__STATIC__/js/layer.js?v={$vnum}"  type="text/javascript" ></script>
+</head>
+<body>
+    <!--顶部搜索栏-s-->
+    <header>
+        <div class="content">
+            <div class="ds-in-bl search">
+                <div class="sea-box">
+                    <div class="logo">
+                        <a href=""><img src="__STATIC__/images/logo-2.png" alt="LOGO"></a>
+                    </div>
+                    <span ></span>
+                    <form action=""  method="post">
+                        <div class="sear-input">
+                            <a href="{:U('ReturnGoods/ajaxSearch')}">
+                                <input type="text" name="q" id="search_text" class="search_text"   value="" placeholder="请输入您所搜索的商品">
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="ds-in-bl login">
+                <span>
+                <if condition="$user_id gt 0">
+                    <a href="{:U('Mobileyxyp/User/index')}"> <img class="after_login" src="__STATIC__/images/my.png"></a>
+                <else/>
+                    <a href="{:U('Mobileyxyp/User/login')}"> 登录</a>
+                </if>
+            </span>
+            </div>
+        </div>
+    </header>
+    <!--顶部搜索栏-e-->
+
+    <!--顶部滚动广告栏-s-->
+    <div class="banner ban1">
+        <div class="mslide gd-01" id="slideTpshop">
+            <ul>
+                <!--广告表-->
+                <adv pid ="63" limit="5" item="v">
+                    <li class="banner-ys"><a href="{$v.ad_link}">
+                        <img src="{$v[ad_code]}" title="{$v[title]}" style="{$v[style]}" alt="">
+                    </a></li>
+                </adv>
+            </ul>
+        </div>
+    </div>
+    <!--顶部滚动广告栏-e-->
+
+    <!--菜单-start-->
+    <div class="floor dh">
+        <nav>
+            <a href="{:U('ReturnGoods/categoryList')}">
+                <span>
+                    <img src="__STATIC__/images/icon_qb.png" alt="全部分类" /><br />
+                    <span>全部分类</span>
+                </span>
+            </a>  
+            <a href="{:U('Mobilered/Index/index')}">
+                <span>
+                    <img src="__STATIC__/images/icon_md.png" alt="米豆换购" /><br />
+                    <span>米豆换购</span>
+                </span>
+            </a>
+        	<a href="{:U('Index/index')}">
+                <span>
+                    <img src="__STATIC__/images/icon_xian.png" alt="现金商城" /><br />
+                    <span>现金商城</span>
+                </span>
+           </a>
+            <a href="{:U('User/index')}">
+                <span>
+                    <img src="__STATIC__/images/icon_hy.png" alt="会员中心" /><br />
+                    <span>会员中心</span>
+                </span>
+            </a>
+
+            <!--<a href="shopcar.html">-->
+            <!--<a href="my.html">-->
+        </nav>
+    </div>
+    <!--菜单-end-->
+
+
+    <!--新品推荐--><!--这里是新加的！！！！！！！！！！！！！！-->
+    <div class="floor guesslike" style="margin-top: 0;">
+    	<div class="xp_bt"><!--新加的标题-->
+    		福利专区<span> | 挑选更多精选产品</span>
+    	</div>
+    	<style>
+    		.xp_bt{ padding: 0 2%;line-height: 1.6rem; font-size: 0.75rem; color: #000; border-top: 1px solid #ccc;}
+    		.xp_bt span{ color: #a9a9a9; font-size: 0.58rem; padding-left: 1%;}
+    	</style>
+    	
+        <div class="likeshop">
+            <ul class="product single_item info">     
+                <foreach name="$favourite_goods" item="v" key="k">                              
+                <li>
+                    <div class="similer-product products_kuang">   
+                        <a href="{:U('Mobileyxyp/ReturnGoods/goodsInfo',array('id'=>$v[goods_id]))}" title="">
+                        <img src="{$v[goods_id]|goods_thum_images=400,400}">
+                        <span class="similar-product-text ys">{$v[goods_name]|getSubstr=0,20}</span>
+                        </a>
+                        <span class="similar-product-price">
+                            ¥<span class="big-price">{$v[shop_price]}</span>
+                            <a href="{:U('Mobileyxyp/ReturnGoods/goodsInfo',array('id'=>$v[goods_id]))}" title="{$v[goods_name]|getSubstr=0,20}">
+                                <span class="guess-button J_ping"></span>
+                            </a>
+                        </span>
+                        <span class="similar-product-price">
+                            <span class="big-price" style="color:#999;font-size:.58rem;line-height:1rem;">赠送<span id="back_midou" style="color:red;">{$v.back_midou}</span>米豆</span>
+                        </span>
+                    </div>
+                </li>
+                </foreach>
+            </ul>
+        </div>
+    </div>
+
+
+    <!--底部-start-->
+    <include file="public/footer"/>
+    <!--底部-end-->
+    <!--底部导航-start-->
+    <include file="public/footer_nav_return"/>
+    <!--底部导航-end-->
+    <script src="__PUBLIC__/js/jqueryUrlGet.js?v={$vnum}"></script><!--获取get参数插件-->
+    <script src="__STATIC__/js/style.js?v={$vnum}" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="__STATIC__/js/sourch_submit.js?v={$vnum}"></script>
+    <script type="text/javascript">
+
+        /**
+         * 继续加载猜您喜欢
+         * */
+        var before_request = 1; // 上一次请求是否已经有返回来, 有才可以进行下一次请求
+        var page = 0;
+        function ajax_sourch_submit(){
+            if(before_request == 0)// 上一次请求没回来 不进行下一次请求
+                return false;
+            before_request = 0;
+            page++;
+            $.ajax({
+                type : "get",
+                url:"/index.php?m=Mobileyxyp&c=ReturnIndex&a=ajaxGetMore&p="+page,
+                success: function(data)
+                {
+                    if(data){
+                        $("#J_ItemList>ul").append(data);
+                        before_request = 1;
+                    }else{
+                        $('.get_more').hide();
+                    }
+                }
+            });
+        }
+        //设置推荐人
+        set_first_leader();
+    </script>
+	</body>
+</html>
+
+    

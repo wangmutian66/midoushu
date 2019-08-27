@@ -1,0 +1,215 @@
+<include file="public/layout" />
+<!--物流配置 css -start-->
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<style>
+    ul.group-list {
+        width: 96%;min-width: 1000px; margin: auto 5px;list-style: disc outside none;
+    }
+    .err{color:#F00; display:none;}
+    ul.group-list li {
+        white-space: nowrap;float: left;
+        width: 150px; height: 25px;
+        padding: 3px 5px;list-style-type: none;
+        list-style-position: outside;border: 0px;margin: 0px;
+    }
+    .row .table-bordered td .btn,.row .table-bordered td img{
+        vertical-align: middle;
+    }
+    .row .table-bordered td{
+      padding: 8px;
+      line-height: 1.42857143;
+    }
+    .table-bordered{
+      width: 100%
+    }
+    .table-bordered tr td{
+      border: 1px solid #f4f4f4;
+    }
+    .btn-success {
+        color: #fff;background-color: #449d44;border-color: #398439 solid 1px;
+    }
+    .btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.col-xs-8 {
+    width: 66.66666667%;
+}
+.col-xs-4 {
+    width: 33.33333333%;
+}
+.col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+    float: left;
+}
+.row .tab-pane h4{
+  padding: 10px 0;
+}
+.row .tab-pane h4 input{
+  vertical-align: middle;
+} 
+.table-striped>tbody>tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+.ncap-form-default .title{
+  border-bottom: 0
+}
+.ncap-form-default dl.row, .ncap-form-all dd.opt{
+    /*border-color: #F0F0F0;*/
+    border: none;
+}
+.ncap-form-default dl.row:hover, .ncap-form-all dd.opt:hover{
+    border: none;box-shadow: inherit;
+}
+.addprine{display: inline; }
+.alisth{margin-top: 10px}
+.p_plus strong{cursor: pointer;margin-left: 4px;}
+</style>
+<!--物流配置 css -end-->
+<!--以下是在线编辑器 代码 -->
+<load href="__ROOT__/public/plugins/Ueditor/ueditor.config.js"/>
+<load href="__ROOT__/public/plugins/Ueditor/ueditor.all.min.js"/>
+<script type="text/javascript" charset="utf-8" src="__ROOT__/public/plugins/Ueditor/lang/zh-cn/zh-cn.js"></script>
+<!--以上是在线编辑器 代码  end-->
+<body style="background-color: #FFF; overflow: auto;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>商品设置</h3>
+                <h5>商品基本信息设置</h5>
+            </div>
+           
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom"><i class="fa fa-lightbulb-o"></i>
+            <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+            <span id="explanationZoom" title="收起提示"></span> </div>
+        <ul>
+            <li>添加自定义评论</li>
+        </ul>
+    </div>
+    <!--表单数据-->
+    <form method="post" id="addEditGoodsForm">
+        <input type="hidden" value="{$Request.param.is_distribut}" name="is_distribut" class="input-txt"/>
+        <!--通用信息-->
+        <div class="ncap-form-default tab_div_1">
+            <dl class="row">
+                <dt class="tit">
+                    <label for="record_no">商品名称</label>
+                </dt>
+                <dd class="opt">
+                    <input id="myCars" list="goods_name" name="goods_id" class="input-txt"/>
+                    <datalist  id="goods_name">
+                        <foreach name="goods_list" item="v" key="k" >
+                            <option value="{$v['goods_id']}">{$v['goods_name']}</option>
+                        </foreach>
+                    </datalist>
+                    <br>
+                  
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="record_no">选择用户</label>
+                </dt>
+                <dd class="opt">
+                    <input id="myCar" list="user_name" name="user_id" class="input-txt"/>
+                    <datalist id="user_name">
+                        <foreach name="user_list" item="v" key="k" >
+                            <option value="{$v['user_id']}">{$v['nickname']}</option>
+                        </foreach>
+                    </datalist>
+                    <br>
+                  
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="record_no">评论内容</label>
+                </dt>
+                <dd class="opt">
+                    <textarea   class="form-control" placeholder="请输入评论内容" required="required" name="content" style="width:500px;height:100px"></textarea>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="record_no">商品符合度</label>
+                </dt>
+                <dd class="opt">
+                    <select name="goods_rank" id="">
+                        <option value="5">5</option>
+                        <option value="4">4</option>
+                        <option value="3">3</option>
+                        <option value="2">2</option>
+                        <option value="1">1</option>
+                    </select>
+                </dd>
+            </dl>
+
+           <dl class="row">
+                <dt class="tit">
+                    <label for="record_no">店家服务态度</label>
+                </dt>
+                <dd class="opt">
+                    <select name="service_rank" id="">
+                        <option value="5">5</option>
+                        <option value="4">4</option>
+                        <option value="3">3</option>
+                        <option value="2">2</option>
+                        <option value="1">1</option>
+                    </select>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="record_no">物流发货速度</label>
+                </dt>
+                <dd class="opt">
+                    <select name="deliver_rank" id="">
+                        <option value="5">5</option>
+                        <option value="4">4</option>
+                        <option value="3">3</option>
+                        <option value="2">2</option>
+                        <option value="1">1</option>
+                    </select>
+                </dd>
+            </dl>
+          
+        
+             
+            
+                                              
+        </div>
+<!--通用信息-->
+        <div class="ncap-form-default">        
+         
+                <div class="form-group"><button type="submit" class="btn btn-primary pull-right margin">回复</button></div>
+        </div> 
+     </form>
+    <!--表单数据-->
+</div>
+
+
+</body>
+</html>

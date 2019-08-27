@@ -1,0 +1,149 @@
+<include file="public/layout" />
+<script type="text/javascript" src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<link href="__STATIC__/css/ghs-style.css" rel="stylesheet" type="text/css" />
+</head>
+<body  style="background: #f2f5f8;">
+	<div class="ghs-message">
+		<div class="top">
+			<div class="bt">消息通知</div>
+			<div class="nr">
+				<a href="{:U('/Supplier/Supplier/message_notice')}" class="xttz ys">系统通知</a>
+				<a href="{:U('/Supplier/Article/index')}" class="ptgg">平台公告</a>
+				<div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+			</div>
+		</div>
+
+		<div class="bg">
+			<if condition="empty($messages)">
+				<p class="norecode" style="font-size: 16px;color: #999999;padding:100px 0;text-align: center;">抱歉，您暂时没有要处理的消息！</p>
+			<else/>
+			<table id="msg">
+				<tr>
+					<th style="border-radius:5px 0 0 0"><input type="checkbox" name="msgid" onclick="swapCheck()"></th>
+					<th>全选</th>
+					<th>通知内容</th>
+					<th>类型</th>
+					<th>状态</th>
+					<th>通知时间</th>
+					<th style="border-radius: 0 5px 0 0">操作</th>
+				</tr>
+				    <volist name="messages" id="message">
+				        <tr class="trys">   
+				            <td><input type="checkbox" name="message_id" data-id="{$message.rec_id}" value="{$message.rec_id}" id="message_{$message.rec_id}"></td>
+				            <td><img src="__STATIC__/images/ico-001.png"></td>
+				            <td class="kuan"><a href="{:U('/Supplier/Supplier/message_notice_detail',array('id'=>$message['message_id']))}">{$message['message']|getSubstr=0,20}</a></td>
+				            <td class="kuan"><if condition="$message['category'] eq 1">活动通知<else/>系统通知</if></td>
+				            <td class="kuan"><if condition="$message['status'] eq 1"><span style="color:green;">已读</span><else/><span style="color:red;">未读</span></if></td>
+				            <td class="kuan">{$message['send_time']|date='Y-m-d H:i:s',###}</td>
+				            <td class="kuan"><a href="javascript:;" onclick="del_message({$message.category},{$message.message_id})" class="ck"><img src="__STATIC__/images/sc.jpg"></a></td>
+				        </tr>
+				    </volist>
+				<tr class="trys2">
+					<td><input type="checkbox" name="" onclick="swapCheck()"></td>
+					<td>全选</td>
+					<td class="kuan" style="text-align:left;" colspan="5"><a href="javascript:;" onclick="del_all_message(this)" data-msg_type="0" class="sc"><img src="__STATIC__/images/sc.jpg"></a></td>
+				</tr>
+				<tr class="trys2">
+					<td colspan="7" class="fenye">
+						{$page}
+					</td>
+				</tr>
+			</table>
+			<script type="text/javascript">  
+		        //checkbox 全选/取消全选  
+		        var isCheckAll = false;  
+		        function swapCheck() {  
+		            if (isCheckAll) {  
+		                $("input[type='checkbox']").each(function() {  
+		                    this.checked = false;  
+		                });  
+		                isCheckAll = false;  
+		            } else {  
+		                $("input[type='checkbox']").each(function() {  
+		                    this.checked = true;  
+		                });  
+		                isCheckAll = true;  
+		            }  
+		        }  
+		    </script> 
+		    </if>
+		</div>
+	</div>
+
+<script type="text/javascript">
+	/**
+     * 清除这类型下全部消息
+     * @param type
+     */
+    function del_all_message(obj) {
+        layer.confirm('消息删除后将无法找回！', {
+            btn: ['是','否']
+        }, function() {
+            var msg_type = $(obj).data('msg_type');
+            var ids = '';
+	        $('#msg').find('input[name=message_id]:checked').each(function(i,o){
+	            // ids.push($(o).data('id'));
+	            ids += $(o).data('id')+',';
+	        });
+
+	        if(ids == ''){
+	            layer.msg('至少选择一项', {icon: 2, time: 2000});
+	            return false;
+	        }
+
+            $.ajax({
+                type: "POST",
+                url: "{:U('Supplier/Supplier/del_message_notice')}",
+                data: {msg_id:ids,type:msg_type},
+                dataType:'json',
+                success: function (data) {
+                    if (data.status==1) {
+                        layer.alert(data.msg , {icon:1, time:2000});
+                        location.reload()
+                    } else {
+                        layer.alert(data.msg , {icon:2, time:2000});
+                    }
+                },
+                error:function(){
+                    layer.alert('网络错误，请稍后再试', {icon:2, time:2000});
+                }
+            });
+        }, function(tmp){
+            layer.close(tmp);
+        })
+    }
+
+    /**
+     * 清除单条消息
+     * @param type
+     */
+    function del_message(type,msg_id) {
+        layer.confirm('消息删除后将无法找回！', {
+            btn: ['是','否']
+        }, function() {
+            $.ajax({
+                type: "POST",
+                url: "{:U('Supplier/Supplier/del_message_notice')}",
+                data: {type: type, msg_id: msg_id},
+                dataType: 'json',
+                success: function (data) {
+                    if (data.status == 1) {
+                        layer.alert(data.msg, {icon: 1, time: 2000});
+                        $('#message_' + msg_id).remove()
+                    } else {
+                        layer.alert(data.msg, {icon: 2, time: 2000});
+                    }
+                },
+                error: function () {
+                    layer.alert('网络错误，请稍后再试', {icon: 2, time: 2000});
+                }
+            });
+        }, function(tmp){
+            layer.close(tmp);
+        })
+
+    }
+</script>
+
+</body>
+</html>

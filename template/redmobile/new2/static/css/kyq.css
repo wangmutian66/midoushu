@@ -1,0 +1,79 @@
+/*body{background: #ff0000;}*/
+.wrap{background: #F6F6F6;}
+img{vertical-align: middle;}
+.k_fieldset{border-bottom: 0;border-right: 0;border-left: 0;margin: 0 auto;width: 7rem;border-top: 1px solid #000000;height: 0.426666rem; }
+.k_legend{text-align: center;width: 4.13rem;background: #ffffff;font-family: 微软雅黑 Regular;color: #333333;font-size: 0.767999rem;}
+.k_box1{width: 16rem;background: #ffffff;padding: 0.426666rem 0;}
+.k_box2{overflow: hidden;width: 15.4rem;margin-left: 0.29866rem;background: #ffffff;height: 4.73599rem;margin-top: 0.5rem;padding-right: 0.2rem;}
+.k_box2_img1{width: 4.73599rem;float: left;overflow: hidden;}
+.k_box2_img1 img{width: 100%;height: 100%;}
+.k_box2_he1{width: 10.0533rem;float: right;height: 4.73599rem;}
+.k_box2_he1_title{color: #4b4b4b;font-family: 微软雅黑 Regular;font-size: 0.597333rem;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;height: 1.45066rem;margin-top: 0.426666rem;line-height: 0.75rem;}
+.k_box2_he1_box1,.k_box2_he1_box2{overflow: hidden;}
+.k_box2_he1_box1 div:nth-child(1),.k_box2_he1_box2 div:nth-child(1){float: left;}
+.k_box2_he1_box1 div:nth-child(2),.k_box2_he1_box2 div:nth-child(2){float: right;}
+.k_box2_he1_box1 div,.k_box2_he1_box2 div:nth-child(1){color: #ababab;font-size: 0.5rem;}
+.k_box2_he1_box1 div span{text-decoration: line-through;}
+.k_box2_he1_box2 div:nth-child(2){font-size: 0.5rem;color: #ababab;}
+.k_box2_he1_box1{margin-top: 0.597333rem;}
+.k_box2_he1_box2{margin-top: 0.65333rem;}
+.k_box2_he1_box2 div span{color: #ff0000;font-family: 微软雅黑 Regular;font-size: 0.6rem;}
+.k_fu{padding-bottom: 0.5rem;}
+
+
+
+
+
+.swiper1{border-bottom: 2px solid #dddddd;overflow: hidden;}
+.swiper1 .selected {color: #e2231a;border-bottom: 4px solid #e2231a;}
+.swiper1 .swiper-slide {text-align: center;font-size: 0.6rem;height: 1.70666rem;float: left;line-height: 1.60666rem;cursor: pointer;}
+.swiper2{width: 100%;}
+
+
+.k_ss.ys{background:#fff;height: 1.877333rem;text-align: center;width: 16rem;position: static;top: 0;z-index: 2;}
+.k_sss.ys{background:rgba(255,255,255,.5);border:1px solid #ddd;height: 1.36533rem;width: 11.7066rem;font-size: 0.6rem;padding-left: 1.5rem;border-radius: 0.7rem;margin-top: 0.21rem;outline: none;}
+
+
+
+.k_ss{background: #F7570D;height: 1.877333rem;text-align: center;width: 16rem;position: fixed;top: 0;z-index: 2;}
+.k_sss{height: 1.36533rem;width: 11.7066rem;font-size: 0.6rem;padding-left: 1.5rem;border-radius: 0.7rem;border: 0;margin-top: 0.252rem;outline: none;}
+.k_ss span{color: #999;font-size: 0.7rem;margin-left: 0.4rem;}
+.k_ss div{position: relative;}
+.k_ss img{position: absolute;left: 1rem;top: 0.6rem;width: 0.74333rem;height: 0.74333rem;}
+
+
+
+
+
+#goToTop { position: fixed; bottom: 20px; right: 10%;border: 1px solid #ff0000;}
+#goToTop a { background: none repeat scroll 0 0 #336699; border: 1px solid #CCCCCC; border-radius: 3px;-webkit-border-radius: 3px;
+    color: #ff0; font-size: 14px; padding: 5px; text-decoration: none;text-shadow: 0 1px 0 #999; -webkit-text-shadow: 0 1px 0 #999;
+}
+
+
+
+.mryt{height: 7.210666rem;max-height: 7.210666rem;margin-top:1.877333rem;}
+.mslide .mryt_dot {position: absolute;right: .21333rem;bottom: .41333rem;z-index: 5;font-size: 0;}
+.mslide .mryt_dot span {display: inline-block;width: .21333rem;height: .21333rem;margin-left: .21333rem;border: 2px solid #fff;border-radius: 50%;}
+.mslide .mryt_dot .cur {background-color: #fff;}
+
+
+.xptj{height: 7.210666rem;max-height: 7.210666rem;margin-top:1.877333rem;}
+.mslide .xptj_dot {position: absolute;right: .21333rem;bottom: .41333rem;z-index: 5;font-size: 0;}
+.mslide .xptj_dot span {display: inline-block;width: .21333rem;height: .21333rem;margin-left: .21333rem;border: 2px solid #fff;border-radius: 50%;}
+.mslide .xptj_dot .cur {background-color: #fff;}
+
+
+.category{height: 7.210666rem;max-height: 7.210666rem;margin-top:1.877333rem;}
+.category.ys{height: 7.210666rem;max-height: 7.210666rem;margin-top:0;position: relative;}
+.mslide .category_dot {position: absolute;right: .21333rem;bottom: .41333rem;z-index: 5;font-size: 0;}
+.mslide .category_dot span {display: inline-block;width: .21333rem;height: .21333rem;margin-left: .21333rem;border: 2px solid #fff;border-radius: 50%;}
+.mslide .category_dot .cur {background-color: #fff;}
+
+
+
+
+
+
+

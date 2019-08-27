@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>首页-{$tpshop_config['shop_info_store_title']}</title>
+    <meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+    <meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+    <link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+    <link rel="stylesheet" href="__STATIC__/css/style.css?v={$vnum}">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/css/iconfont.css?v={$vnum}"/>
+    <link rel="stylesheet" href="__STATIC__/js/need/layer.css">
+    <script src="__STATIC__/js/jquery-3.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <!--<script src="__STATIC__/js/zepto-1.2.0-min.js" type="text/javascript" charset="utf-8"></script>-->
+    <script src="__STATIC__/js/mobile-util.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__STATIC__/js/swipeSlide.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__STATIC__/js/layer/layer.js?v={$vnum}"  type="text/javascript" ></script>
+    <!-- <script src="__STATIC__/js/jq_scroll.js" type="text/javascript"></script>
+    <script type="text/javascript">
+    $(document).ready(function(){
+            $("#scrollDiv").Scroll({line:1,speed:500,timer:3000,up:"but_up",down:"but_down"});
+    });
+    </script> -->
+</head>
+<body>
+    <!--顶部搜索栏-s-->
+    <header>
+        <div class="content">
+        <form action=""  method="post" onsubmit="return searchp()">
+            <div class="ds-in-bl search">
+                <div class="sea-box">
+                    <div class="logo">
+                        <a href=""><img src="__STATIC__/images/logo-2.png" alt="LOGO"></a>
+                    </div>
+                    <span ></span>
+                    
+                        <div class="sear-input">
+                                <input type="text" name="q" id="search_text" class="search_text"   value="" placeholder="请输入您所搜索的店铺">
+                        </div>
+                    
+                </div>
+            </div>
+            <div class="ds-in-bl login">
+                <span>
+	                    <a href="javascript:;" onclick="stroelist(0)"> 搜索</a>
+	            </span>
+            </div>
+            </form>
+        </div>
+    </header>
+    <!--顶部搜索栏-e-->
+
+    <!--顶部滚动广告栏-s-->
+    <div class="banner ban1">
+        <div class="mslide gd-01" id="slideTpshop">
+            <ul>
+                <!--广告表-->
+                <adv pid ="85" limit="5" item="v">
+                    <li class="banner-ys">
+                        <a href="{$v.ad_link}">
+	                       	 <img src="{$v[ad_code]}" title="{$v[title]}" style="{$v[style]}" alt="">
+                    	</a>
+                    </li>
+                </adv>
+            </ul>
+        </div>
+    </div>
+
+    <div class="floor dh dh-2" style="border-bottom: 10px solid #f7f7f7;">
+        <nav class="ys">
+            <a href="{:U('/mobile/index/index')}"><!--新加的    需要程序-->
+                <span>
+                    <img src="__STATIC__/images/ico_new00.png" alt="首页" /><br />
+                    <span>首页</span>
+                </span>
+            </a>
+            
+            <a href="{:U('/mobilered/index/index_red')}">
+                <span>
+                    <img src="__STATIC__/images/ico_new02.png" alt="米豆换购" /><br />
+                    <span>米豆换购</span>
+                </span>
+            </a>
+            <a href="{:U('/mobile/index/index_cash')}">
+                <span>
+                    <img src="__STATIC__/images/ico_new01.png" alt="现金专区" /><br />
+                    <span>现金专区</span>
+                </span>
+            </a>
+            <a href="{:U('Mobileyxyp/Index/index')}">
+                <span>
+                    <img src="__STATIC__/images/ico_new06.png" alt="农创扶贫" /><br />
+                    <span>农创扶贫</span>
+                </span>
+            </a>
+
+        </nav>
+    </div>
+
+    <!--排序按钮-s-->
+    <nav class="storenav p search_list_dump" id="head_search_box product_sort" style="background:#f6f6f6; display: none;">
+        <ul>
+            <li class="sort2 red"  style="width:25%;box-sizing:border-box;"  onclick="stroelist(0,2)">
+
+                <span class="dq" >距离</span>
+                <i></i>
+            </li>
+            <li class="sort1" style="width:25%;box-sizing:border-box;" onclick="stroelist(0,1)">
+               <span class="lb ">综合</span>
+                <i></i>
+            </li>
+
+
+        </ul>
+    </nav>
+    <!--排序按钮-e-->
+
+    <div id="goods_list">
+        <div class="orderlistshpop p " id="template">
+         
+        </div>
+    </div>
+ 
+
+    <!--底部导航-start-->
+    <include file="public/footer_store_nav"/>
+    <!--底部导航-end-->
+    <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    
+    <script type="text/javascript">
+	var ShareLink = "{:U('Mobilered/StoreIndex/index',['invite_code'=>$staff_info['invite_code']],'',true)}"; //默认分享链接
+	var ShareImgUrl = "https://{$Think.server.SERVER_NAME}{$tpshop_config['shop_info_store_logo']}"; //分享图标
+	var ShareTitle = "{$tpshop_config['shop_info_store_title']} - 周边商家"; //分享标题
+	var ShareDesc = "{$tpshop_config['shop_info_store_desc']}"; //分享描述
+	
+        
+        function searchp(){
+            stroelist(0);
+            $("#search_text").blur();
+            return false;
+        }
+
+        //滚动加载更多
+        $(window).scroll(
+            function() {
+                var scrollTop = $(this).scrollTop();
+                var scrollHeight = $(document).height();
+                var windowHeight = $(this).height();
+                if (scrollTop + windowHeight == scrollHeight) {
+                    var sort = $(document.body).attr('sort');
+                    var page = $(document.body).attr('page');
+					
+                    stroelist(page,sort);//调用加载更多
+                }
+            }
+        );
+
+
+        var before_request = 1; // 上一次请求是否已经有返回来, 有才可以进行下一次请求
+        var page = 0;
+
+        function stroelist(page,sort){
+
+            if(page == 0){
+                $("#template").html("");
+            }
+            $('.loadbefore').remove();
+            $(".sort"+sort).addClass('red').siblings().removeClass('red');
+            var param = new Object();
+
+            param["latitude"] = $(document.body).attr('lat');
+            param["longitude"] = $(document.body).attr('lng');
+            param['search_text'] = $('#search_text').val();
+            param["sort"] = (sort==undefined)?1:sort;
+            if(before_request == 0)// 上一次请求没回来 不进行下一次请求
+                return false;
+            before_request = 0;
+            page++;
+            $(document.body).attr('sort',sort);
+            $(document.body).attr('page',page);
+            $.ajax({
+                url:"__URL__/stroelist/p/"+page,
+                data:param,
+                dataType:"json",
+                type:"POST",
+                success:function(data){
+                    layer.closeAll();
+                    if(data != ''){
+                        var str = "";
+                        for(var i in data){
+                            str+='<div class="maleri30" style="margin-top:.5rem;margin-bottom:.5rem;">';
+                            str+='<a href="'+data[i]['url']+'">';
+                            str+='<div class="sc_list ys se_sclist">';
+                            str+='<div class="shopimg fl ys">';
+                            str+='<img src="'+data[i]['litpic']+'">';
+                            str+='</div>';
+                            str+='<div class="deleshow fr">';
+                            str+='<div class="deletes">';
+                            str+='<span class="similar-product-text fl zb">'+data[i]['cname']+'</span>';
+                            str+='</div>';
+                            str+='<div style="width:6.5rem;float:left;">';
+                            str+='   <span class="similar-product-text fl jj2" style="color:#999;width:6.5rem;">'+data[i]['address']+'</span>';
+
+                            str+='    <div class="prices" style="width:6.5rem;">';
+                            str+='    <p class="sc_pri fl"><span>'+data[i]['cc_name']+'</span></p>';
+                            str+='</div>';
+                            str+='</div>';
+                            str+='<div style="width:3rem;float:left;margin-left:.5rem;height:2.5rem;text-align:right;">';
+                            str+='    <span class="zb-xl">'+data[i]['julicon']+'</span>';
+                            str+='</div></div></div></a></div>';
+                        }
+                        str+='<div class="loadbefore"><img class="ajaxloading" src="__STATIC__/images/loading.gif" alt="loading..."></div>';
+                        $("#template").append(str);
+						if(data.length>9){
+							$('.loadbefore').show();
+						}                        
+                        before_request = 1;
+                    }else{
+                        $('.get_more').hide();
+                        $('.loadbefore').remove();
+                    }
+
+                },error:function(data){
+                    layer.closeAll();
+                }
+            });
+        }
+
+
+
+        $(function (){
+			wx.config({
+				debug: false,
+				appId: '{$signPackage["appId"]}',
+				timestamp: '{$signPackage["timestamp"]}',
+				nonceStr: '{$signPackage["nonceStr"]}',
+				signature: '{$signPackage["signature"]}',
+				jsApiList: [
+					// 所有要调用的 API 都要加到这个列表中
+					'getLocation',
+					'onMenuShareTimeline',
+					'onMenuShareAppMessage',
+					'onMenuShareQQ',
+					'onMenuShareQZone'
+				]
+			});
+			
+			wx.ready(function () {
+				layer.open({type: 2,content: '加载中'});
+				wx.checkJsApi({
+					jsApiList: [
+						'getLocation'
+					],
+					success: function (res) {
+						layer.closeAll();
+						console.log(res);
+						$(document.body).attr('lat',res['latitude']);
+						$(document.body).attr('lng',res['longitude']);
+	
+						if (res.checkResult.getLocation == false) {
+							alert('你的微信版本太低，不支持微信JS接口，请升级到最新的微信版本！');
+							return;
+						}
+					},
+					error:function (res) {
+						layer.closeAll();
+						console.log(res);
+						//window.location.reload();
+					}
+				});
+				wx.error(function(res){
+					layer.closeAll();
+					console.log(res);
+					// alert("接口调取失败");
+					//window.location.reload();
+				});
+				wx.getLocation({
+					success: function (res) {
+						$(document.body).attr('lat',res['latitude']);
+						$(document.body).attr('lng',res['longitude']);
+						stroelist(page,2);
+					},
+					cancel: function (res) {
+						alert('用户拒绝授权获取地理位置');
+					}
+				});
+				 // 获取"分享到朋友圈"按钮点击状态及自定义分享内容接口
+				wx.onMenuShareTimeline({
+					title: ShareTitle, // 分享标题
+					link:ShareLink,
+					desc: ShareDesc,
+					imgUrl:ShareImgUrl // 分享图标
+				});
+		
+				// 获取"分享给朋友"按钮点击状态及自定义分享内容接口
+				wx.onMenuShareAppMessage({
+					title:ShareTitle, // 分享标题
+					desc:ShareDesc, // 分享描述
+					link:ShareLink, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+					imgUrl:ShareImgUrl // 分享图标
+				});
+				// 分享到QQ
+				wx.onMenuShareQQ({
+					title: ShareTitle, // 分享标题
+					desc: ShareDesc, // 分享描述
+					link:ShareLink,
+					imgUrl:ShareImgUrl // 分享图标
+				});	
+				// 分享到QQ空间
+				wx.onMenuShareQZone({
+					title: ShareTitle, // 分享标题
+					desc: ShareDesc, // 分享描述
+					link:ShareLink,
+					imgUrl:ShareImgUrl // 分享图标
+				});
+			});	
+		})
+
+
+    </script>
+</body>
+</html>

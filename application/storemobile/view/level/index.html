@@ -1,0 +1,158 @@
+<include file="public/layout" />
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title">
+      <div class="subject">
+        <h3>实体店、员工管理</h3>
+      </div>
+    </div>
+  </div>
+  <!-- 操作说明 -->
+
+  <div class="flexigrid">
+    <div class="mDiv">
+      <div class="ftitle">
+        <h3>等级列表</h3>
+        <h5>(共{$pager->totalRows}条记录)</h5>
+      </div>
+      <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+      <form action="__URL__" id="search-form2" class="navbar-form form-inline" method="get" >
+        <div class="sDiv">
+          <div class="sDiv2">           
+                 
+            <!--排序规则-->
+            
+            <input type="text" size="30" name="key_word" class="qsbox" placeholder="请输入网点名称..." value="{$Think.get.key_word}">
+            <input type="submit" class="btn" value="搜索">
+          </div>
+        </div>
+      </form>
+    </div>
+	<!--<div class="tDiv">
+		<div class="tDiv2">
+			<div class="fbutton">
+				<div class="add" title="新增数据">
+					<span onClick="AddData();"><i class="fa fa-plus"></i>新增数据</span>
+				</div>
+			</div>
+		</div>
+		<div style="clear:both"></div>
+	</div>-->
+	
+    <div class="hDiv">
+      <div class="hDivBox">
+        <table cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+              <th class="sign" axis="col0">
+                <div style="width: 24px;"><i class="ico-check"></i></div>
+              </th>
+			        <th align="left" abbr="article_title" axis="col1" class="">
+                <div style="text-align: left; width: 60px;" class="">ID</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">名称</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 300px;" class="">联系电话</div>
+              </th>
+             <!-- <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">等级</div>
+              </th>
+			        <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">累计佣金</div>
+              </th>-->
+			  </th>
+			        <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:150px;" class="">更新时间</div>
+              </th>  
+			  </th>
+			  <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">状态</div>
+              </th>
+			        <th align="center" abbr="control" axis="col9" class="">
+                <div style="text-align: center; width: 280px;" class="">操作</div>
+              </th>
+              <th style="width:100%" axis="col7">
+                <div></div>
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    
+    <div class="bDiv" style="height: auto;">
+      <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+	  	        <table>
+          <tbody>
+            <foreach name="list" item="vo" key="k" >
+              <tr>
+                <td class="sign">
+                  <div style="width: 24px;"><i class="ico-check"></i></div>
+                </td>
+				        <td align="left" class="">
+                  <div style="text-align: left; width: 60px;">{$vo.cid}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.cname}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 300px;"><if condition="$vo['tel']">{$vo.tel}<else/>{$vo.mobile}</if></div>
+                </td>
+			<!--	<td align="left" class="">
+                  <div style="text-align: center; width: 100px;">实体店</div>
+                </td>-->
+               <!-- <td align="left" class="">
+                  <div style="text-align: center; width: 100px;"> 0 (未实现)</div>
+                </td>-->
+				        <td align="left" class="">
+                  <div style="text-align: center; width: 150px;">{$vo.update_date|date="Y-m-d H:i:s",###}</div>
+                </td>
+				</td>
+				        <td align="left" class="">
+                  <div style="text-align: center; width: 100px;"><if condition='$vo[is_lock] == 1'>正常<else/>锁定</if></div>
+                </td>
+                <td align="center" class="">
+                  <div style="text-align: center; width:280px;">
+				  			<a class="btn blue" href="{:U('/Store/Member/Index',array('store_id'=>$vo['cid']))}">查看成员</a>
+				  	        <a class="btn blue" href="__URL__/staff/store_id/{$vo.cid}">查看员工</a>
+					        <a class="btn blue" href="__URL__/store_view/store_id/{$vo.cid}">详细信息</a>
+				          </div>
+                </td>
+                <td align="" class="" style="width: 100%;">
+                  <div>&nbsp;</div>
+                </td>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+        <!--分页位置--> 
+        {$pager->show()}
+	  
+	  </div>
+      <div class="iDiv" style="display: none;"></div>
+    </div>
+  </div>
+</div>
+<script>
+    $(document).ready(function(){	
+  	    // 表格行点击选中切换
+  	    $('#flexigrid > table>tbody >tr').click(function(){
+  		    $(this).toggleClass('trSelected');
+  		  });
+  		
+    		// 点击刷新数据
+    		$('.fa-refresh').click(function(){
+    			location.href = location.href;
+    		});
+  		
+  	});
+  
+	
+</script>
+</body>
+</html>

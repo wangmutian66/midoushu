@@ -1,0 +1,8 @@
+<div class="h-xx">
+	<div class="sj fl"><img src="__PUBLIC__/company/img/h-ico6.png"><b>本次登录：</b>{$Think.session.store.last_login_time|date='Y-m-d H:i',###}  <if condition="$last_login['tims']">	/	 <b>上次登录：</b> {$last_login.tims|date='Y-m-d H:i:s',###} </if></div>
+	<ul class="cd fr">
+		<li class="bg1"><span>{$msg_count|default=0}</span><a href="{:U('/Store/System/Sms')}"  target="workspace">站内消息</a></li>
+		<li class="bg2"><a href="{:U('/Store/System/Modify')}" target="workspace">修改信息</a></li>
+		<li class="bg3"><a href="{:U('/Store/System/Logout')}">退出系统</a></li>
+	</ul>
+</div>

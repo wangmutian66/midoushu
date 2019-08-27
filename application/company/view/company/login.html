@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="__PUBLIC__/supplier/css/TKlogin.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="__PUBLIC__/static/js/jquery.js"></script>
+<script type="text/javascript" src="__PUBLIC__/static/js/layer/layer.js"></script><!-- 弹窗js 参考文档 http://layer.layui.com/-->
+<title>后台登录</title>
+</head>
+<body class="loginbody">
+<script>
+	function post_check(){
+		
+		if($('#user_name').val()==''){
+			layer.msg('用户名不能为空！', {icon: 2,time: 1000});   //alert('少年，用户名不能为空！');
+			return false;	
+		}	
+		if($('#password').val()==''){
+			layer.msg('密码不能为空！', {icon: 2,time: 1000});   //alert('少年，用户名不能为空！');
+			return false;	
+		}
+	//	return false;	
+	}
+</script>
+<form method="post" onsubmit="return post_check();">
+<div class="login">
+	<ul>
+		<li><input type="text" name="username" id="username" class="login_input" placeholder="请输入登录账号" /></li>
+		<li><input type="password" name="password" id="password" class="login_input" placeholder="请输入您的密码" /></li>
+		<li class="getpsw"><label><input type="checkbox" name="remember_psw" id="remember_psw" value="1" /> 记住密码</label> <a href="#">忘记登录密码？</a></li>
+	</ul>
+	<input type="submit" class="submit" value=" " />
+</div>
+</form>
+
+<div class="clear"></div>
+<include file="public/foot"/>
+
+</body>
+</html>

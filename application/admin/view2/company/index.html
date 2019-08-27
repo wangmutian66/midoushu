@@ -1,0 +1,285 @@
+<include file="public/layout" />
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title">
+      <div class="subject">
+        <h3><if condition="$company_info">{$company_info.cname}<else/><if condition="$searchtype neq 99">子公司管理</if></if></h3>
+        <h5><if condition="$company_info or $searchtype eq 99">实体店管理<else/>子公司列表信息</if></h5>
+      </div>
+    </div>
+  </div>
+  <!-- 操作说明 -->
+  <div id="explanation" class="explanation" style="color: rgb(44, 188, 163); background-color: rgb(237, 251, 248); width: 99%; height: 100%;">
+    <div id="checkZoom" class="title"><i class="fa fa-lightbulb-o"></i>
+      <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+      <span title="收起提示" id="explanationZoom" style="display: block;"></span>
+    </div>
+    <ul>
+      <li><if condition="$searchtype eq 99">实体店<else/>子公司</if>管理设置</li>
+    </ul>
+  </div>
+  <div class="flexigrid">
+    <div class="mDiv">
+      <div class="ftitle">
+        <h3><if condition="$searchtype eq 99 or $Request.param.company_id gt 0">实体店<else/>子公司</if>列表</h3>
+        <h5>(共{$pager->totalRows}条记录)</h5>
+      </div>
+      <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+	   <form action="__URL__/index" id="search-form2" class="navbar-form form-inline" method="get">
+        <div class="sDiv">
+          <div class="sDiv2">           
+            <select name="searchtype" id="searchtype" class="select">
+                <option value="88" <if condition="$Request.param.searchtype eq 88">selected="selected"</if> >子公司</option>
+              	<option value="99" <if condition="$Request.param.searchtype eq 99">selected="selected"</if> >实体店</option>
+            </select>
+
+            </div>
+<div class="sDiv2">
+            <input type="text" size="30" name="keyword" id="keyword" class="qsbox" style="width:200px;" placeholder="请输入关键词" value="{$Request.param.keyword}">
+            <input type="submit"  class="btn" value="搜索">
+          </div>
+        </div>
+      </form>
+    </div>
+	<div class="tDiv">
+		<div class="tDiv2">
+        <div class="fbutton"> 
+                <a href="{:U('/admin/company/export_company')}">
+                    <div class="add" title="导出excel">
+                        <span><i class="fa fa-plus"></i>导出excel</span>
+                    </div>
+                </a> 
+			</div>
+            
+			<div class="fbutton">
+				<a href="{:U('Admin/Company/Add',['company_id'=>$Request.param.company_id,'searchtype'=>$Request.param.searchtype])}">
+					<div class="add" title="新增数据">
+						<span ><i class="fa fa-plus"></i>新增数据</span>
+					</div>
+				</a>
+			</div>
+			
+          <div class="fbutton">
+			  <a href="javascript:;" onClick="sendSms()">
+				  <div class="add" title="发送站内信">
+					  <span>发送站内信</span>
+				  </div>
+			  </a>
+			</div>
+        	<script>
+				function sendSms(){
+					var idlist = '';
+					$('#flexigrid .trSelected').each(function(i,o){
+						// ids.push($(o).data('id'));
+						idlist += $(o).data('id')+',';
+					});
+					var name_list = '';
+					$('#flexigrid .trSelected .cname div').each(function(i,o){
+						// ids.push($(o).data('id'));
+						name_list += $(o).html()+',';
+					});
+					
+					if(idlist == ''){
+						layer.msg('至少选择一项', {icon: 2, time: 2000});
+						return false;
+					}
+					layer.prompt({title: name_list + " 发送站内消息", formType: 2}, function(text, index){
+						layer.close(index);
+						$.ajax({  
+							url: "{:U('/Admin/Company/sendSms')}",  
+							type: 'POST',  
+							data:"text="+text + "&ids="+idlist,  
+							dataType: 'json',  
+							error: function(){alert('请刷新重试')},
+							beforeSend:function(){
+								layer.load('2',{shade: 0.6});
+							},
+							success: function(r){
+								if(r.status == 1){
+									layer.msg('发送站内消息成功！', {icon: 1,time: 3000},function (){
+										location.reload();
+									}); 
+								}else{
+									layer.msg(r.info, {icon: 2,time: 8000});
+								}
+							},
+							complete:function(){
+								layer.closeAll('loading');
+							}
+						});  
+					});	
+				}
+			</script>
+		</div>
+		<div style="clear:both"></div>
+	</div>
+	
+    <div class="hDiv">
+      <div class="hDivBox">
+        <table cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+              <th class="sign" axis="col0">
+                <div style="width: 24px;"><i class="ico-check"></i></div>
+              </th>
+			        <th align="left" abbr="article_title" axis="col1" class="">
+                <div style="text-align: left; width: 30px;" class="">ID</div>
+              </th>
+              <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: left; width: 200px;" class="">公司名称</div>
+              </th>
+              <if condition="$Request.param.company_id gt 0 or $searchtype eq 99">
+              <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: left; width: 240px;" class="">隶属子公司</div>
+              </th>
+              </if>
+              <th align="center" abbr="insert_date" axis="col6" class="">
+                <div style="text-align: center; width: 100px;" class="">手机</div>
+              </th>
+              <!-- <th align="center" abbr="money" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">电话</div>
+              </th> -->
+              <th align="center" abbr="remark" axis="col7" class="">
+                <div style="text-align: center; width: 100px;" class="">联系人</div>
+              </th>
+			   <th align="center" abbr="remark" axis="col7" class="">
+                <div style="text-align: center; width: 60px;" class="">是否冻结</div>
+              </th>
+              <if condition="$Request.param.company_id gt 0 or $searchtype eq 99">
+              <th align="center" abbr="remark" axis="col7" class="">
+                <div style="text-align: center; width: 60px;" class="">是否显示</div>
+              </th>
+              <th align="center" abbr="article_time" axis="col6" class="">
+                <div style="text-align: center; width: 50px;" class="" >排序</div>
+              </th>
+              </if>
+                    <th align="center" abbr="control" axis="col9" class="handle">
+                <div style="text-align: center; width: 260px;" class="">操作</div>
+              </th>
+              <th style="width:100%" axis="col7">
+                <div></div>
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    
+    <div class="bDiv" style="height: auto;">
+      <div id="flexigrid" cellpadding="0" cellspacing="0" border="0" data-url="{:U('/Admin/Company/sendSms')}">
+        <table>
+          <tbody>
+            <foreach name="list" item="vo" key="k" >
+              <tr data-id="{$vo.cid}">
+                <td class="sign">
+                  <div style="width: 24px;"><i class="ico-check"></i></div>
+                </td>
+				        <td align="left" class="">
+                  <div style="text-align: left; width: 30px;">{$vo.cid}</div>
+                </td>
+                <td align="left" class="cname">
+                  <div style="text-align: left; width: 200px;">{$vo.cname}</div>
+                </td>
+                <if condition="$Request.param.company_id gt 0 or $searchtype eq 99">
+                <td align="left" class="cname">
+                  <div style="text-align: left; width: 240px;">{$vo.store_name}</div>
+                </td>
+                </if>
+                <td align="center" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.mobile}</div>
+                </td>
+                <!-- <td align="center" class="">
+                   <div style="text-align: center; width: 100px;">{$vo.tel}</div>
+                </td> -->
+                <td align="center" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.contact}</div>
+                </td>
+
+                <td align="center" axis="col0">
+                  <div style="text-align: center; width:60px;">
+                    <if condition='$vo[is_lock] eq 1'>
+                      <span class="yes" onClick="changeTableVal('company','cid','{$vo.cid}','is_lock',this)" ><i class="fa fa-check-circle"></i>是</span>
+                      <else />
+                      <span class="no" onClick="changeTableVal('company','cid','{$vo.cid}','is_lock',this)" ><i class="fa fa-ban"></i>否</span>
+                    </if>
+                  </div>
+                </td>
+                <if condition="$Request.param.company_id gt 0 or $searchtype eq 99">
+                <td align="center" axis="col0">
+
+                  <div style="text-align: center; width:60px;">
+
+                    <if condition='$vo[is_show] eq 1'>
+                      <span class="yes" onClick="changeTableVal('company','cid','{$vo.cid}','is_show',this)" ><i class="fa fa-check-circle"></i>是</span>
+                      <else />
+                      <span class="no" onClick="changeTableVal('company','cid','{$vo.cid}','is_show',this)" ><i class="fa fa-ban"></i>否</span>
+                    </if>
+                  </div>
+                </td>
+
+                <td align="center" axis="col0">
+                  <div style="text-align: center; width: 50px;">
+                    <input type="text" onKeyUp="this.value=this.value.replace(/[^\d]/g,'')" onpaste="this.value=this.value.replace(/[^\d]/g,'')" onBlur="changeTableVal('company','cid','{$vo.cid}','sort',this)" size="4" value="{$vo.sort}" />
+                  </div>
+                </td>
+                </if>
+                <td align="center" class="handle">
+                  <div style="text-align: center; width:260px;">
+				  	        <a class="btn blue" href="__URL__/modify/id/{$vo.cid}"><i class="fa fa-pencil-square-o"></i>编辑</a>
+                    <!--<a class="btn blue" href="__URL__/del/id/{$vo.cid}"  onClick="if(confirm('确认删除吗？')){return true;}else{return false;}"> <i class="fa fa-trash-o"></i>删除</a>-->
+                    <a class="btn blue" data-url="__URL__/ajax_del/id/{$vo.cid}"  onClick="delcompany(this,'company')"> <i class="fa fa-trash-o"></i>删除</a>
+                    <a class="btn blue" href="{:U('/Admin/company/company_member',array('company_id'=>$vo['cid']))}"><i class="fa fa-search"></i>查看成员</a>
+          					<a class="btn blue" href="{:U('/Admin/CompanyLevel/index',array('company_id'=>$vo['cid']))}"><i class="fa fa-search"></i>查看成员等级</a>
+							<if condition="empty($Request.param.company_id) and ($Request.param.searchtype neq 99)">
+							<a class="btn blue" href="{:U('/Admin/Company/index',array('company_id'=>$vo['cid']))}"><i class="fa fa-search"></i>查看实体店</a>
+							</if>
+                            <if condition="($searchtype eq 99) or !empty($Request.param.company_id)">
+                                <a class="btn blue" href="{:U('/Admin/Staff/index',array('store_id'=>$vo['cid']))}"><i class="fa fa-search"></i>查看员工</a>
+                                <else/>
+                                <a class="btn blue" href="{:U('/Admin/Staff/index',array('company_id'=>$vo['cid']))}"><i class="fa fa-search"></i>查看员工</a>
+                            </if>
+
+
+                      <a class="btn blue" href="{:U('/Admin/CompanyProfit/index',array('company_id'=>$vo['cid']))}"><i class="fa fa-search"></i>资金管理</a>
+				          </div>
+                </td>
+                <td align="" class="" style="width: 100%;">
+                  <div>&nbsp;</div>
+                </td>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+      </div>
+      <div class="iDiv" style="display: none;"></div>
+	   
+    </div>
+    <!--分页位置--> 
+    {$pager->show()} </div>
+</div>
+<script>
+    $(document).ready(function(){	
+	    // 表格行点击选中切换
+	    $('#flexigrid > table>tbody >tr').click(function(){
+		    $(this).toggleClass('trSelected');
+		});
+		
+		// 点击刷新数据
+		$('.fa-refresh').click(function(){
+			location.href = location.href;
+		});
+
+		$(document).keydown(function(e){
+		    if(e.keyCode == 13){
+		        $("#search-form2").submit();
+            }
+        })
+		
+	});
+</script>
+<script src="__PUBLIC__/js/delinfo.js"></script>
+</body>
+</html>

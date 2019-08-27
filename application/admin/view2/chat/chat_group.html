@@ -1,0 +1,152 @@
+<include file="public/layout" />
+
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page" style="padding-top: 0;">
+	<div class="fixed-bar">
+		<div class="item-title">
+
+
+		</div>
+	</div>
+	<!-- 操作说明 -->
+	
+	<div class="flexigrid">
+		<div class="mDiv">
+			<div class="ftitle">
+				<h3>客服分组列表</h3>
+				<h5>(共{$pager->totalRows}条记录)</h5>
+			</div>
+
+		</div>
+        <div class="tDiv">
+      <div class="tDiv2">
+          <div class="fbutton"> 
+        	<a href="{:U('/Admin/chat/add_group')}"><div class="add" title="新增文章"><span><i class="fa fa-plus"></i>新增分组</span></div></a> 
+          </div>
+          <!-- <div class="fbutton"><div class="del" title="将选定行数据批量删除"><span><i class="fa fa-trash"></i>批量删除</span></div></div>-->
+      </div>
+      <div style="clear:both"></div>
+    </div>
+		<div class="hDiv">
+			<div class="hDivBox">
+				<table cellspacing="0" cellpadding="0" style="width: 100%;">
+					<thead>
+						<tr>
+							<th class="sign" width="30" axis="col0"> <div style="width: 24px;"><i class="ico-check"></i></div>
+							</th>
+							<th align="center" width="20"><div style="text-align: center; width: 20px;" class="">ID</div></th>
+							<th align="center" width="200" abbr="isadmin" axis="col4" class=""> <div style="text-align: center; width: 200px;" class="">分组名称</div>
+							</th>
+							<th align="center" width="20" abbr="isadmin" axis="col4" class=""> <div style="text-align: center; width: 200px;" class="">默认分组</div>
+							</th>
+							<th align="center" abbr="control" axis="col9" class=""> <div style="text-align: center; width: 100%;" class="">操作</div>
+							</th>
+							
+
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+		<div class="bDiv" style="height: auto;">
+			<div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+				<table>
+					<tbody>
+						<foreach name="list" item="vo" key="k" >
+							<tr>
+								<td class="sign"><div style="width: 24px;"><i class="ico-check"></i></div></td>
+								<td><div style="width: 20px; text-align: center;">{$vo.id}</div></td>
+								<td align="left"  width="200"  class=""><div style="text-align: center; width: 200px;">{$vo.name}</div></td>
+								<td align="left"  width="20"  class=""><div style="text-align: center; width: 200px;">
+									<if $vo.is_default eq 0>
+									否
+										<else/>
+									是
+									</if>
+								</div></td>
+								<!--<td align="center" class=""><div style="text-align: center; width: 60px;"><a href="{:U('/admin/chat/select_user/')}">查看所有成员</a></div></td>-->
+								<td align="" class="" style="width: 100%;">
+									<div style="text-align: center;  ">
+										<a href="{:U('chat/edit_group',array('pid'=>$vo['id']))}" class="btn blue"><i class="fa fa-pencil-square-o"></i>查看</a>
+										<a class="btn red"  href="javascript:void(0)" data-url="{:U('chat/del_group')}" data-id="{$vo.id}" onClick="delfun(this)"><i class="fa fa-trash-o"></i>删除</a>
+
+										<a class="btn blue"  href="{:U('chat/default_group',array('id'=>$vo['id']))}"><i class="fa fa-steam"></i>设置默认分组</a>
+
+									</div>
+								</td>
+							</tr>
+						</foreach>
+					</tbody>
+				</table>
+			</div>
+			<div class="iDiv" style="display: none;"></div>
+		</div>
+		<!--分页位置--> 
+		{$pager->show()} </div>
+</div>
+<script>
+    $(document).ready(function(){	
+	    // 表格行点击选中切换
+	    $('#flexigrid > table>tbody >tr').click(function(){
+		    $(this).toggleClass('trSelected');
+		});
+		
+		// 点击刷新数据
+		$('.fa-refresh').click(function(){
+			location.href = location.href;
+		});
+		
+		// 整个页面 ID唯一 之前 #frozen 多条信息同在时 无效
+		$(".frozen").click(function (){
+			var obj = $(this);
+			var rid = obj.attr('rid');
+			
+			$.getJSON("{:U('Admin/user/frozen')}",{rid:rid,rstatus:$(this).attr('rstatus')},function (r){
+				if(r.status == 1){
+					obj.attr('rstatus',r.save_status);
+					if(r.save_status == 1){
+						$("#frozen_"+rid).html('正常');
+						obj.text('冻结');
+					}else{
+						$("#frozen_"+rid).html('<font color="#FF0000">冻结</font>');	
+						obj.text('解冻');
+					}
+					
+				}else{
+					//alert(r.msg);
+					layer.msg(r.msg,{icon:2});
+				}
+			})
+		})	
+		
+	});
+
+function delfun(obj) {
+		// 删除按钮
+		layer.confirm('确认删除？', {
+			btn: ['确定', '取消'] //按钮
+		}, function () {
+			$.ajax({
+				type: 'post',
+				url: $(obj).attr('data-url'),
+				data : {act:'del',id:$(obj).attr('data-id')},
+				dataType: 'json',
+				success: function (data) {
+					layer.closeAll();
+					if (data) {
+						$(obj).parent().parent().parent().remove();
+					} else {
+						layer.alert('删除失败', {icon: 2});  //alert('删除失败');
+					}
+				}
+			})
+		}, function () {
+			layer.closeAll();
+		});
+	}
+ 
+</script>
+</body>
+</html>

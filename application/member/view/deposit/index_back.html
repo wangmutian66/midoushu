@@ -1,0 +1,194 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+
+
+
+<!--顶部结束-->
+  <div class="fixed-bar">
+    <div class="item-title">
+		<div class="subject">
+			<h3>资金管理</h3>
+			<h5></h5>
+		</div>
+		<ul class="tab-base nc-row">
+				<li><a href="/index.php/admin/System/index/inc_type/shop_info" class="current"><span>资产总览</span></a></li>
+				<li><a href="/index.php/admin/System/index/inc_type/basic"><span>账户配置</span></a></li>
+				<li><a href="/index.php/admin/System/index/inc_type/sms"><span>交易记录</span></a></li>
+		</ul>
+	</div>
+  </div>
+  <!-- 操作说明 -->
+<!--start-->
+<div class="account-info">
+	
+	<div class="action">
+		<h2>账户名：{$staff_info.uname}</h2><a href="{:U('/Member/Deposit/recordlist')}">账户收支明细</a>
+	</div>
+	<div class="balanceNum">
+		<em>{$staff_info.money|tk_money_format}</em>元可用，<b><a href="{:U('/Member/Deposit/frozenlist')}">{$staff_info.frozen|tk_money_format}</a></b> 元不可用                            
+		<div class="balanceBtn">
+			<a href="{:U('/Member/Deposit/withdraw')}" class="tk_submit"><span>提现</span></a>
+		</div>
+	</div>
+</div>
+
+
+
+<!--end-->
+  <div class="flexigrid">
+    <div class="mDiv">
+      <div class="ftitle">
+        <h3>近期交易记录</h3>
+        
+      </div>
+     <div title="刷新数据" class="pReload"><a href=""><i class="fa fa-refresh"></i></a></div>
+             <form class="navbar-form form-inline" id="remittance-form" method="get" action="__URL__" onSubmit="return check_form();">
+                <input type="hidden" name="create_time" id="create_time" value="{$create_time}">
+                <div class="sDiv">
+                    <div class="sDiv2" style="margin-right: 10px;">
+                        <input type="text" size="30" id="start_time" name="start_time" value="{$start_time}" placeholder="起始时间" class="qsbox">
+                        <input type="button" class="btn" value="起始时间">
+                    </div>
+                    <div class="sDiv2" style="margin-right: 10px;">
+                        <input type="text" size="30" id="end_time" name="end_time" value="{$end_time}" placeholder="截止时间" class="qsbox">
+                        <input type="button" class="btn" value="截止时间">
+                    </div>
+                  
+                    <div class="sDiv2">
+                        
+                        <input type="hidden" name="status"  value="{$status}">
+                        <input class="btn" value="搜索" type="submit">
+                    </div>
+                </div>
+            </form>
+     
+    </div>
+
+	
+	
+    <div class="hDiv">
+      <div class="hDivBox">
+        <table cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+              <th class="sign" axis="col0">
+                <div style="width: 24px;"><i class="ico-check"></i></div>
+              </th>
+			        <th align="left" abbr="article_title" axis="col1" class="">
+                <div style="text-align: left; width: 60px;" class="">ID</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 120px;" class="">时间</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">金额</div>
+              </th>
+			  </th>
+			  <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">收款人</div>
+              </th>  
+			  </th>
+			  <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">状态</div>
+              </th>
+			     <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: center; width:100px;" class="">操作</div>
+              </th> 
+              <th style="width:100%" axis="col7">
+                <div></div>
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    
+    <div class="bDiv" style="height: auto;">
+      <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+	  	        <table>
+          <tbody>
+            <foreach name="list" item="vo" key="k" >
+              <tr>
+                <td class="sign">
+                  <div style="width: 24px;"><i class="ico-check"></i></div>
+                </td>
+				        <td align="left" class="">
+                  <div style="text-align: left; width: 60px;">{$vo.id}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 120px;">{$vo.create_time|date="Y-m-d H:i:s",###}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.money}</div>
+                </td>
+				<td align="left" class="">
+                  <div style="text-align: center; width: 100px;">{$vo.real_name}</div>
+                </td>
+				</td>
+				<td align="left" class="">
+				
+                  <div style="text-align: center; width: 100px;">
+				  	{$vo.status|check_withdrawal}
+				  </div>
+                </td>
+               <td align="left" class="">
+				
+                  <div style="text-align: center; width: 100px;">
+				  	 <a href="{:U('/Member/Deposit/transfer',array('selected'=>$v['id']))}" class="btn blue"><i class="fa fa-hand-o-up"></i>查看详情</a>
+				  </div>
+                </td>
+                <td align="" class="" style="width: 100%;">
+                  <div>&nbsp;</div>
+                </td>
+              </tr>
+            </foreach>
+          </tbody>
+        </table>
+        <!--分页位置--> 
+        {$list->render()}
+	  
+	  </div>
+      <div class="iDiv" style="display: none;"></div>
+    </div>
+  </div>
+</div>
+<script>
+    $(document).ready(function(){
+        // 表格行点击选中切换
+        $('#flexigrid > table>tbody >tr').click(function(){
+            $(this).toggleClass('trSelected');
+        });
+        // 点击刷新数据
+        $('.fa-refresh').click(function(){
+            location.href = location.href;
+        });
+
+        $('#start_time').layDate();
+        $('#end_time').layDate();
+    });
+    
+    function check_form(){
+        var start_time = $.trim($('#start_time').val());
+        var end_time =  $.trim($('#end_time').val());
+        if(start_time == '' ^ end_time == ''){
+            layer.alert('请选择完整的时间间隔', {icon: 2});
+            return false;
+        }
+        if(start_time !== '' && end_time !== ''){
+            $('#create_time').val(start_time+" - "+end_time);
+        }
+        if(start_time == '' && end_time == ''){
+            $('#create_time').val('');
+        }
+
+        return true;
+    }
+  
+
+</script>
+</body>
+</html>

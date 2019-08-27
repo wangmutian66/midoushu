@@ -1,0 +1,128 @@
+<include file="public/layout" />
+<body style="background-color: #FFF; overflow: auto;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>资金池管理</h3>
+                <h5><a href="{:U('Admin/CapitalPool/log_list')}" id="log_list">资金池日志列表</a></h5>
+            </div>
+           
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom"><i class="fa fa-lightbulb-o"></i>
+            <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+            <span id="explanationZoom" title="收起提示"></span> </div>
+        <ul>
+            <li>查询操作资金池。</li>
+        </ul>
+    </div>
+   
+   <script>
+		function postdata(){
+			$.ajax({  
+				url: "{:U('CapitalPool/modify')}",  
+				type: 'POST',  
+				data:$("#handlepost").serialize(),  
+				dataType: 'json',  
+				error: function(){alert('请刷新重试')},
+				beforeSend:function(){
+					parent.layer.load('2',{shade: 0.6});
+				},
+				success: function(r){
+					if(r.status == 1){
+						layer.msg('数据更新成功！', {icon: 1,time: 3000},function (){
+							location.reload();
+						}); 
+					}else{
+						parent.layer.msg(r.info, {icon: 2,time: 2000});
+					}
+				},
+				complete:function(){
+					parent.layer.closeAll('loading');
+				}
+			});  
+			
+			
+			return false;
+		}
+   </script>
+    
+    <form method="post" id="handlepost" action="{:U('CapitalPool/modify')}" name="form1" autocomplete="off" onSubmit="return postdata()" >
+        <div class="ncap-form-default">
+            <dl class="row">
+                <dt class="tit">
+                    <label for="charge_envelope">网站资金：</label>
+                </dt>
+                <dd class="opt" style="font-size:18px;">
+                   	{$item.money|default=0}
+                </dd>
+            </dl>
+            
+            <dl class="row">
+                <dt class="tit">
+                    <label for="cash_envelope">资金修改:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="modify_money" name="modify_money"  required  placeholder="请输入您要修改的资金"  type="text" />
+                    <p class="notic">输入正数为增加资金，输入负数为减少资金</p>
+                </dd>
+            </dl>
+           <!--
+            <dl class="row">
+                <dt class="tit">
+                    <label for="cash_envelope">密码:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="zj_password" name="zj_password" placeholder="请输入资金池密码" autocomplete="new-password" type="password" />
+                    <p class="notic"></p>
+                </dd>
+            </dl>-->
+            
+            <dl class="row">
+                <dt class="tit">
+                    <label for="red_envelope">最后一次操作的管理员</label>
+                </dt>
+                <dd class="opt">
+                    {$item.admin_name}
+                </dd>
+            </dl>
+             <dl class="row">
+                <dt class="tit">
+                    <label for="red_envelope">操作时间</label>
+                </dt>
+                <dd class="opt">
+                    <notempty name="item['update_time']"> {$item.update_time|date="Y-m-d H:i:s",###}  </notempty>
+                    
+                </dd>
+            </dl>
+			 <dl class="row">
+                <dt class="tit">
+                    <label for="red_envelope">备注</label>
+                </dt>
+                <dd class="opt">
+                    <textarea name="remark" id="remark" style="width:400px; height:100px" required></textarea>
+                    
+                </dd>
+            </dl>
+            
+            <div class="bot">
+                <input type="submit" class="tk_submit" value="确认提交"/>
+				<a style="margin-left:100px;" href="{:U('/Admin/CapitalPool/out_back')}" class="tk_submit">使用资金冲全返</a>
+            </div>
+        </div>
+    </form>
+    
+    
+    
+   
+    
+    
+</div>
+<div id="goTop"> <a href="JavaScript:void(0);" id="btntop"><i class="fa fa-angle-up"></i></a><a href="JavaScript:void(0);" id="btnbottom"><i class="fa fa-angle-down"></i></a></div>
+</body>
+</html>

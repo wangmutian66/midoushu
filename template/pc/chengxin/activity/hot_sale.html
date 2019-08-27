@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="renderer" content="webkit">
+<title>热销商品</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/second.css?v={$vnum}" rel="stylesheet">
+<script src="__STATIC__/js/jquery-1.11.1.min.js" type="text/javascript" ></script>
+<script type="text/javascript" src="__STATIC__/js/jquery.min.js"></script>
+<script type="text/javascript" src="__STATIC__/js/style.js" ></script>
+<script src="__PUBLIC__/js/baidu.js"></script>
+</head>
+
+<body>
+	<include file="public/top1" />
+
+	<div class="n-promotion">
+		<div class="bt">
+			<div class="num">热销商品</div>
+			<!-- <a href="" class="more"> 更多 >></a> -->
+			<div style="float: right;margin-right: 10px;color:#bbb">
+			<form action="<?php echo urldecode(U('/Home/Activity/hot_sale',$filter_param,''));?>" method="post" id="price_form">
+	            价格筛选：<input type="text" onpaste="this.value=this.value.replace(/[^\d]/g,'')" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" name="start_price" id="start_price" value="" style="border: 1px solid #bbb;"/>
+	            <span>-</span>
+	            <input type="text" onpaste="this.value=this.value.replace(/[^\d]/g,'')" onkeyup="this.value=this.value.replace(/[^\d]/g,'')"  name="end_price" id="end_price" value="" style="border: 1px solid #bbb;"/>
+	            <input type="submit" value="确定" onClick="if($('#start_price').val() !='' && $('#end_price').val() !='' ) $('#price_form').submit();" style='border: 1px solid #bbb;background-color: white;color: #bbb;padding: 0 4px;outline: none;'/>
+	        </form>
+	        </div>
+		</div>
+		<div class="main">
+			<ul>
+				<volist name="goodsList" id="goods">
+					<li>
+						<div class="pic"><a href="{:U('Goods/goodsInfo',array('id'=>$goods[goods_id],'item_id'=>$goods[item_id]))}" target="_blank"><img src="{$goods.goods_id|goods_thum_images=270,270}"></a></div>
+						<div class="wz">
+							<a href="{:U('Goods/goodsInfo',array('id'=>$goods[goods_id],'item_id'=>$goods[item_id]))}" target="_blank" class="name">{$goods[goods_name]}</a>
+							<div class="price">
+								<div class="l">￥{$goods[shop_price]}</div>
+								<div class="r">{$goods[sales_sum]}人付款</div>
+							</div>
+							<div style="color:#999;font-size:14px;">赠送<span id="back_midou" style="color:red;">{$goods.back_midou}</span>米豆</div>
+						</div>
+					</li>
+				</volist>
+			</ul>
+		</div>
+		{$page}
+	</div>
+
+	<include file="public/footer"/>
+</body>
+</html>

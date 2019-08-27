@@ -1,0 +1,335 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<body style="background-color: #FFF; overflow: auto;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>管理成员</h3>
+                <h5><a href="{:U('/Admin/Company/company_member',array('pid'=>$Request.param.pid))}" id="log_list">成员列表</a></h5>
+            </div>
+            
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    
+    <style>
+ 
+	#handlepost textarea{width:400px; height:150px;}
+   </style>
+    
+    <form method="post" id="handlepost" name="form1" autocomplete="off" >
+        <div class="ncap-form-default">
+            <input type="hidden" name="{$pk}" id="{$pk}" value="{$member[$pk]}" />
+			 <dl class="row">
+                            <dt class="tit">
+                                <label for="lv">用户名:</label>
+                            </dt>
+                            <dd class="opt">
+                                <input id="uname" name="uname"  value="{$member.uname}" autocomplete="new-password"  placeholder=""  type="text" /> 
+                                <p class="notic"> 登录用用户名 </p>
+                            </dd>
+                        </dl>
+            <dl class="row">
+                            <dt class="tit">
+                                <label for="lv">密码:</label>
+                            </dt>
+                            <dd class="opt">
+                                <input id="psw" name="psw"  value="" autocomplete="new-password"  placeholder=""  type="password" /> 
+                                <p class="notic"> 如无需修改，请留空 </p>
+                            </dd>
+                        </dl> 
+            <dl class="row">
+                <dt class="tit">
+                    <label for="lv">真实姓名:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="real_name" name="real_name"  value="{$member.real_name}"  placeholder=""  type="text" /> 
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+            
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">身份证号码:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="tel" name="tel" size="18" value="{$member.id_code}"  placeholder=""  type="text" /> 
+                    <p class="notic"> 删除身份证号码则客户可以重新填写上传身份证照片 </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">身份证正面照:</label>
+                </dt>
+                <dd class="opt">
+                    <a href="{$member.code_img}" target="_blank"><img height="100" src="{$member.code_img}"></a>
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">身份证反面照:</label>
+                </dt>
+                <dd class="opt">
+                    <a href="{$member.code_img2}"  target="_blank"><img height="100" src="{$member.code_img2}"></a>
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">头像:</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a" class="nyroModal" rel="gal" href="{$member.head_pic}">
+                                <i id="img_i" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$member.head_pic} style=max-height:300px>',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+           	            <span class="type-file-box">
+                            <input type="text" id="head_pic" name="head_pic" value="{$member.head_pic}" class="type-file-text">
+                            <input type="button" name="button" id="button1" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify(1,'head_pic','staff_head_pic','img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">头像</p>
+                </dd>
+            </dl>
+			<script>
+				 function img_call_back(fileurl_tmp)
+				{
+					$("#head_pic").val(fileurl_tmp);
+					$("#img_a").attr('href', fileurl_tmp);
+					$("#img_i").attr('onmouseover', "layer.tips('<img src="+fileurl_tmp+" style=max-height:300px>',this,{tips: [1, '#fff']});");
+				}
+			</script>
+			
+            <dl class="row">
+                <dt class="tit">
+                    <label for="lv">手机:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="phone" name="phone"  value="{$member.phone}"  placeholder=""  type="text" /> 
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			
+			<dl class="row">
+                <dt class="tit">
+                    <label for="record_no">所属子公司/实体店</label>
+                </dt>
+                <dd class="opt">
+                    <span>{$member.cname}</span>
+					<div style="display:none">
+						<select name="company_id" style="width:auto; height:auto" id="company_id" class="select" onChange="company_change($(this))">
+						  <option value="">请选择</option>
+						  <volist name='company_list' id='c_list'>
+						  <option value="{$c_list.cid}">{$c_list.cname}</option>
+						  </volist>
+						</select>
+						
+						<select name="store_id" id="store_id" class="select"  style="width:auto; height:auto"  onChange="store_change($(this))">
+						  <option value="">请选择</option>
+						</select>
+					</div>
+					<a href="JavaScript:;" class="modify_zgs">点击编辑</a>
+					
+                    <input type="hidden" name="parent_id"  id="parent_id" value="{$member.parent_id}" />               
+                </dd>
+            </dl>
+	<script>
+		 $(function (){
+			 $(".modify_zgs").click(function (){
+				 $(this).prev('div').show().prev('span').hide();
+			 })
+			$("#company_level").change(function(){
+				$("#levels").find('p').html("分红比率："+$(this).find("option:selected").attr('profit'));	
+			})	
+		})
+		function company_change(obj){
+			var company_id = obj.val();
+			$.getJSON("{:U('/Admin/Company/ajax_get_store')}",{company_id:company_id},function (r){
+				var html = '<option value="">请选择</option>';
+				$("#level_id").html(html);
+				var s = 1;
+				if(r.status == 1){
+					$.each(r.list,function (i,k){
+						var selected = '';
+						if(k.cid == "{$Think.get.store_id}"){
+							selected = " selected"	;
+						}
+						html += "<option value='"+k.cid+"' "+selected+">"+k.cname+"</option>";
+					})
+				}
+				$("#store_id").html(html);
+			})
+			get_level(obj);
+		}
+		
+		function get_level(obj){
+			var company_id =  $("#company_id :selected").val();
+			if(company_id == ''){
+				$("#company_level").html("<option value=''>请选择</option>");
+				$("#store_id").html("<option value=''>请选择</option>");
+				return false;
+			}
+			var store_id = $("#store_id :selected").val();
+			$("#company_level").attr('disabled',true).css('background-color','#EEEEEE');
+			$("#store_id").attr('disabled',true).css('background-color','#EEEEEE');
+			$.getJSON("{:U('/Admin/Company/ajax_get_level/is_staff/no')}",{company_id:company_id,store_id:store_id},function (r){
+				var html = '<option value="">请选择</option>';
+				if(r.status == 1){
+					$.each(r.list,function (i,k){
+						var selected = '';
+						if(k.id == "{$Request.param.level_id}"){
+							selected = " selected"	;
+						}
+						html += "<option value='"+k.id+"' "+selected+" profit='"+k.profit+"'>"+k.lv_name+"</option>";
+					})
+				}
+				$("#company_level").html(html);
+				$("#company_level").attr('disabled',false).css('background-color','#FFF');
+				$("#store_id").attr('disabled',false).css('background-color','#FFF');
+			})
+			
+			
+		}
+		
+		function store_change(obj){
+			get_level(obj);
+			$("#levels").find('p').html(" ");
+		}
+		
+		
+	  </script>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="company_level"><em>*</em>成员等级</label>
+                </dt>
+                <dd class="opt" id='levels'>
+                    <select name="company_level" id="company_level">
+                        <option value="">请选择等级</option>
+                        <volist name="company_level" id="level_vo">
+                            <option value="{$level_vo.id}" profit="{$level_vo.profit}"  <if condition="$level_vo['id'] eq $member['company_level'] ">selected="selected"</if> >{$level_vo.lv_name}</option>
+                        </volist>
+                    </select>
+                    <span class="err"></span>
+                    <p class="notic">分红比率：{$member.profit}</p>
+                </dd>
+            </dl>
+			
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">用户余额:</label>
+                </dt>
+                <dd class="opt">
+                    {$member.money|tk_money_format|default='0'}
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">冻结金额:</label>
+                </dt>
+                <dd class="opt">
+                    {$member.frozen|tk_money_format|default='0'}
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">用户状态:</label>
+                </dt>
+                <dd class="opt">
+                    <div class="onoff">
+                        <label for="is_lock0" class="cb-enable <if condition="$member[is_lock] eq 0">selected</if>">正常</label>
+                        <label for="is_lock1" class="cb-disable <if condition="$member[is_lock] eq 1">selected</if>">冻结</label>
+                        <input id="is_lock0" name="is_lock" value="0" type="radio" <if condition="$member[is_lock] eq 0"> checked="checked"</if>>
+                        <input id="is_lock1" name="is_lock" value="1" type="radio" <if condition="$member[is_lock] eq 1"> checked="checked"</if>>
+                    </div>
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+            
+			
+            <div class="bot">
+                <a href="JavaScript:void(0);" class="ncap-btn-big ncap-btn-green" onClick="return checkCompanyUpdate();">确认提交</a>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="goTop"> <a href="JavaScript:void(0);" id="btntop"><i class="fa fa-angle-up"></i></a><a href="JavaScript:void(0);" id="btnbottom"><i class="fa fa-angle-down"></i></a></div>
+<script type="text/javascript">
+
+    function checkCompanyUpdate(){
+	//	$('#handlepost').submit();
+        var real_name  = $.trim($('input[name="real_name"]').val());
+        var phone      = $('input[name="phone"]').val();
+        var error ='';
+       
+		if($("#uname").val() == ''){
+			error += "用户名不能为空 <br>";	
+		}
+		if($("#psw").val() == '' && "{$Request.action}" != 'company_member_edit'){
+			error += "密码不能为空 <br>";	
+		}
+		if(real_name ==''){
+            error += "真实姓名不能为空 <br>";
+        }
+        if(!checkMobile(phone) && phone != ''){
+            error += "手机号码填写有误<br>";
+        }
+        if(phone ==''){
+            error += "手机号码不能为空<br>";
+        }
+		if($("#company_level").val() == ''){
+			error += "成员等级不能为空<br>";
+		}
+        if(error){
+            layer.alert(error, {icon: 2});  //alert(error);
+            return false;
+        }
+		
+		if($("#company_id").val()!=''){
+			if($("#store_id").val()!=''){
+				$("#parent_id").val($("#store_id").val());
+			}else{
+				$("#parent_id").val($("#company_id").val());
+			}
+		}
+		//alert($("#parent_id").val())
+		$.ajax({  
+			url: "__URL__/{$Request.action}/company_id/{$Request.param.company_id}/store_id/{$Request.param.store_id}",
+			type: 'POST',  
+			data:$("#handlepost").serialize(),  
+			dataType: 'json',  
+			error: function(){alert('请刷新重试')},
+			beforeSend:function(){
+				parent.layer.load('2',{shade: 0.6});
+			},
+			success: function(r){
+				if(r.status == 1){
+					layer.msg('数据更新成功！', {icon: 1,time: 3000,shade: 0.6},function (){
+						//location.reload();
+						window.location.href='{:U("/Admin/Company/company_member/",["company_id"=>$Request.param.company_id,"store_id"=>$Request.param.store_id])}'
+					}); 
+				}else{
+					parent.layer.msg(r.info, {icon: 2,time: 2000,shade: 0.6});
+				}
+			},
+			complete:function(){
+				parent.layer.closeAll('loading');
+			}
+		});  
+		
+     //   $('#handlepost').submit();
+    }
+</script>
+
+
+</body>
+</html>

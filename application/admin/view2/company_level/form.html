@@ -1,0 +1,213 @@
+<include file="public/layout" />
+<!-- <script src="__ROOT__/public/js/company.js"></script> -->
+<body style="background-color: #FFF; overflow: auto;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>操作各公司，实体店等级</h3>
+                <h5><a href="{:U('Admin/CompanyLevel/index')}" id="log_list">等级列表</a></h5>
+            </div>
+            
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    
+   <style>
+   	#handlepost input{width:300px;}
+	#handlepost textarea{width:400px; height:150px;}
+   </style>
+    
+    <form method="post" id="handlepost" name="form1" autocomplete="off" >
+        <div class="ncap-form-default">
+            
+            <input type="hidden" name="{$pk}" id="{$pk}" value="{$item[$pk]}" />
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="lv_name">等级名称:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="lv_name" name="lv_name" value="{$item.lv_name}"    type="text" />
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="record_no">隶属子公司—>实体店</label>
+                </dt>
+                <dd class="opt">
+                    <select name="company_id" id="company_id"  class="small form-control" onChange="company_change($(this))">
+                        <option value="0">请选择子公司</option>                                      
+                        <foreach name="company_list" item="v" key="k" >                                                                                          
+                            <option value="{$v['cid']}" <if condition="$v['cid'] eq $item['company_id']">selected="selected"</if> >
+                                {$v.cname}
+                            </option>
+                        </foreach>
+                    </select>
+                    <select name="store_id" id="store_id" class="small form-control">
+					<option value="0">请选择实体店</option>
+						<foreach name="store_list" item="v" key="k" >       
+						 	<option value="{$v['cid']}" <if condition="$v['cid'] eq $item['store_id']">selected="selected"</if> >
+                                {$v.cname}
+                            </option>
+						</foreach>
+                    </select>                 
+                </dd>
+            </dl>
+
+            <dl class="row" id="staff_level">
+                <dt class="tit">
+                    <label for="lv">是否是员工等级:</label>
+                </dt>
+                <dd class="opt">
+                    <div class="onoff">
+                        <label for="is_staff1" class="cb-enable <if condition="$item[is_staff] eq 1">selected</if>">是</label>
+                        <label for="is_staff0" class="cb-disable <if condition="$item[is_staff] eq 0">selected</if>">否</label>
+                        <input id="is_staff1" name="is_staff" value="1" type="radio" <if condition="$item[is_staff] eq 1"> checked="checked"</if>>
+                        <input id="is_staff0" name="is_staff" value="0" type="radio" <if condition="$item[is_staff] eq 0"> checked="checked"</if>>
+                    </div>
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="lv">是否是推荐子公司:</label>
+                </dt>
+                <dd class="opt">
+                    <div class="onoff">
+                        <label for="is_elite1" class="cb-enable <if condition="$item[is_elite] eq 1">selected</if>">是</label>
+                        <label for="is_elite0" class="cb-disable <if condition="$item[is_elite] eq 0">selected</if>">否</label>
+                        <input id="is_elite1" name="is_elite" value="1" type="radio" <if condition="$item[is_elite] eq 1"> checked="checked"</if>>
+                        <input id="is_elite0" name="is_elite" value="0" type="radio" <if condition="$item[is_elite] eq 0"> checked="checked"</if>>
+                    </div>
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+            <script>
+                $(function(){
+                    if('{$item[is_elite]}' == 1){
+                        $('#staff_level').hide();
+                    }else{
+                        $('#staff_level').show();
+                    }
+                    if('{$item[is_staff]}' == 1){
+                        $('#staff_level').next().hide();
+                    }else{
+                        $('#staff_level').next().show();
+                    }
+
+                    $("input[name='is_elite']").click(function(){
+                        if($(this).attr('value') == 1){
+                            $('#staff_level').hide();
+                        }else{
+                            $('#staff_level').show();
+                        }
+                    })
+                    $("input[name='is_staff']").click(function(){
+                        if($(this).attr('value') == 1){
+                            $('#staff_level').next().hide();
+                        }else{
+                            $('#staff_level').next().show();
+                        }
+                    })
+                })
+            </script>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="lv">提现时间:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="present_time_start" name="present_time_start"  style="width:100px;"  value="{$item.present_time_start|default='15'}"  placeholder=""  type="text" /> - 
+					<input id="present_time_end" name="present_time_end" style="width:100px;"  value="{$item.present_time_end|default='30'}"  placeholder="" type="text" />
+					
+                    <p class="notic"> 每个月的几号至几号 </p>
+                </dd>
+            </dl>
+			
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">提现手续费:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="service_charge" name="service_charge"  value="{$item.service_charge|default='0.6'}"  placeholder=""  type="text" />
+					
+                    <p class="notic"> 请填写小数表示 例：20 (20 = 20%) </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">提现最低限额:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="present_money" name="present_money"  value="{$item.present_money|default='100'}"  placeholder=""  type="text" /> 
+					
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">分红比例:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="profit" name="profit"  value="{$item.profit}"  placeholder=""  type="text" /> 
+                    <p class="notic"> 请输入小于1的小数 例： 0.2  (0.2=20%)</p>
+                </dd>
+            </dl>
+            <input type="hidden" name="addBackFlag" id="addBackFlag" value="0">
+            <div class="bot">
+                <a href="JavaScript:void(0);" class="ncap-btn-big ncap-btn-green" onClick="checkCompanyUpdate(0);">确认提交</a>&nbsp;&nbsp; <a href="JavaScript:void(0);" class="ncap-btn-big ncap-btn-green" onClick="checkCompanyUpdate(1);">继续添加</a>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="goTop"> <a href="JavaScript:void(0);" id="btntop"><i class="fa fa-angle-up"></i></a><a href="JavaScript:void(0);" id="btnbottom"><i class="fa fa-angle-down"></i></a></div>
+
+<script type="text/javascript">
+    //选择分类
+ 
+
+    /** 以下是编辑时默认选中所属子公司、实体店*/
+
+
+    function checkCompanyUpdate(flag){
+        var lv_name = $.trim($('input[name="lv_name"]').val());
+        var error ='';
+        if(lv_name == ''){
+            error += "等级名称不能为空\n";
+        }
+
+        if(error){
+            layer.alert(error, {icon: 2});  //alert(error);
+            return false;
+        }
+        $('#addBackFlag').val(flag);
+        $('#handlepost').submit();
+    }
+    function company_change(obj){
+    var company_id = obj.val();
+    $("#store_id").attr("disabled",true).css("background-color","#EEEEEE;");
+    $.getJSON('/Admin/CompanyLevel/ajax_get_store',{company_id:company_id},function (r){
+        var html = '<option value="">请选择</option>';
+        $("#level_id").html(html);
+        var s = 1;
+        if(r.status == 1){
+            $.each(r.list,function (i,k){
+                var selected = '';
+                if(k.cid == "{$Think.get.store_id}"){
+                    selected = " selected"  ;
+                }
+                html += "<option value='"+k.cid+"' "+selected+">"+k.cname+"</option>";
+            })
+        }
+        $("#store_id").html(html).attr("disabled",false).css("background-color","");
+    })
+}
+</script>
+</body>
+</html>

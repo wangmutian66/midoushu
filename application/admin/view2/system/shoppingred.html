@@ -1,0 +1,85 @@
+<include file="public/layout" />
+<body style="background-color: #FFF; overflow: auto;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>商城设置</h3>
+                <h5>网站全局内容基本选项设置</h5>
+            </div>
+            <ul class="tab-base nc-row">
+                <foreach name="group_list" item="v" key="k">
+                    <li><a href="{:U('System/index',['inc_type'=> $k])}" <if condition="$k==$inc_type">class="current"</if>><span>{$v}</span></a></li>
+                </foreach>
+            </ul>
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom"><i class="fa fa-lightbulb-o"></i>
+            <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+            <span id="explanationZoom" title="收起提示"></span> </div>
+        <ul>
+            <li>系统平台全局设置,包括基础设置、购物、短信、邮件、水印等相关模块。</li>
+        </ul>
+    </div>
+    <form method="post" enctype="multipart/form-data" name="form1" action="{:U('System/handle')}">
+        <input type="hidden" name="form_submit" value="ok" />
+        <div class="ncap-form-default">
+            <dl class="row">
+                <dt class="tit">
+                    <label for="midou_rate">米豆换算比例</label>
+                </dt>
+                <dd class="opt">
+                    <input name="midou_rate" value="{$config.midou_rate|default='10'}" onpaste="this.value=this.value.replace(/[^\d]/g,'')" onKeyUp="this.value=this.value.replace(/[^\d]/g,'')" type="text">
+                    <p class="notic">米豆换算比例：如：10 代表 1米豆=10元人民币</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>最低使用限制</label>
+                </dt>
+                <dd class="opt">
+                    <input name="midou_min_limit" value="{$config.midou_min_limit|default='0'}" onpaste="this.value=this.value.replace(/[^\d]/g,'')" onKeyUp="this.value=this.value.replace(/[^\d]/g,'')" type="text">
+                    <p class="notic">0表示不限制, 大于0时, 用户米豆小于该值将不能使用米豆</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>使用比例</label>
+                </dt>
+                <dd class="opt">
+                    <input name="midou_use_percent" value="{$config.midou_use_percent|default='100'}" onpaste="this.value=this.value.replace(/[^\-?\d.]/g,'')" onKeyUp="this.value=this.value.replace(/[^\-?\d.]/g,'')"  onblur="checkInputNum(this.name,0,100);"  class="input-txt" type="text">
+                    <p class="notic">100时不限制, 为0时不能使用米豆, 50时米豆抵扣金额不能超过该笔订单应付金额的50%</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>返米豆比例</label>
+                </dt>
+                <dd class="opt">
+                    <input name="midou_back_percent" value="{$config.midou_back_percent|default='100'}" onpaste="this.value=this.value.replace(/[^\-?\d.]/g,'')" onKeyUp="this.value=this.value.replace(/[^\-?\d.]/g,'')"  onblur="checkInputNum(this.name,0,100);"  class="input-txt" type="text">
+                    <p class="notic">100时支付多少现金返回等值米豆, 为0时不返回米豆, 50时支付多少现金返回50%等值米豆</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label>线下返米豆比例</label>
+                </dt>
+                <dd class="opt">
+                    <input name="midou_back_percent_unline" value="{$config.midou_back_percent_unline|default='100'}" onpaste="this.value=this.value.replace(/[^\-?\d.]/g,'')" onKeyUp="this.value=this.value.replace(/[^\-?\d.]/g,'')"  onblur="checkInputNum(this.name,0,100);"  class="input-txt" type="text">
+                    <p class="notic">100时支付多少现金返回等值米豆, 为0时不返回米豆, 50时支付多少现金返回50%等值米豆</p>
+                </dd>
+            </dl>
+            <div class="bot">
+                <input type="hidden" name="inc_type" value="{$inc_type}">
+                <a href="JavaScript:void(0);" class="ncap-btn-big ncap-btn-green" onclick="document.form1.submit()">确认提交</a>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="goTop"> <a href="JavaScript:void(0);" id="btntop"><i class="fa fa-angle-up"></i></a><a href="JavaScript:void(0);" id="btnbottom"><i class="fa fa-angle-down"></i></a></div>
+</body>
+</html>

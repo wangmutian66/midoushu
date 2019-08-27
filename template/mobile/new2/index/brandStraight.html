@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>品牌直供</title>
+    <meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+    <meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+    <link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+    <link rel="stylesheet" href="__STATIC__/css/style.css?v={$vnum}">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/css/iconfont.css?v={$vnum}"/>
+    <script src="__STATIC__/js/jquery-3.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <!--<script src="__STATIC__/js/zepto-1.2.0-min.js" type="text/javascript" charset="utf-8"></script>-->
+    <script src="__STATIC__/js/mobile-util.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__STATIC__/js/swipeSlide.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__STATIC__/js/layer.js"  type="text/javascript" ></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $(".new_brand_dh a").click(function(){
+                $(this).addClass("cur").siblings().removeClass("cur");
+            });
+        });
+    </script>
+</head>
+<body>
+    
+    <include file="public/header_nav" title="品牌直供" href="javascript:history.back()"/>
+
+	<div class="new_brand_banner">
+        <adv limit="1" item="v" pid="94">
+            <a href="{$v[ad_link]}"><img src="{$v[ad_code]}" title="{$v[ad_name]}"></a>
+        </adv>
+    </div>
+
+    <div class="new_brand_dh">
+        <volist name="brandStraightCategoryList" id="cate_val">
+            <a href="javascript:;" data-request="1" data-page="0" data-catid="{$cate_val.cat_id}" onclick="list_to_cat(this)">{$cate_val.name}</a>
+        </volist>
+    </div>
+
+    <!-- <div class="new_brand_bt">—— 品牌直供 ——</div> -->
+
+    <div class="guesslike ys">
+        <div class="likeshop ys2">
+            <ul class="product single_item info" id="J_ItemList">
+
+            </ul>
+        </div>
+    </div>
+
+    <!--底部-start-->
+    <include file="public/footer"/>
+    <!--底部-end-->
+    <!--底部导航-start-->
+    <include file="public/footer_nav"/>
+    <!--底部导航-end-->
+    <script src="__PUBLIC__/js/jqueryUrlGet.js?v={$vnum}"></script><!--获取get参数插件-->
+    <script src="__PUBLIC__/js/jquery.lazyload.min.js?v=20181031"></script>
+    <script src="__STATIC__/js/style.js?v={$vnum}" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="__STATIC__/js/sourch_submit.js?v={$vnum}"></script>
+    <script type="text/javascript">
+        $(function () {
+            ajax_sourch_submit();
+            $("img.lazy").lazyload();
+        })
+        /**
+         * 继续加载猜您喜欢
+         * */
+        var before_request = 1; // 上一次请求是否已经有返回来, 有才可以进行下一次请求
+        var page = 0;
+        function ajax_sourch_submit(){
+
+            var catid = $('.new_brand_dh a.sel').attr('data-catid');
+            if(catid == undefined) catid = 0;
+
+            if(catid != 0){
+                page = $('.new_brand_dh a.sel').attr('data-page');
+                before_request = $('.new_brand_dh a.sel').attr('data-request');
+                if(page == 0){
+                    $("#J_ItemList").html('');
+                }
+
+            }
+
+            if(before_request == 0)// 上一次请求没回来 不进行下一次请求
+                return false;
+
+            if(catid == 0){
+                before_request = 0;
+                page++;
+            }else{
+                $('.new_brand_dh a.sel').attr('data-request',0);
+                $('.new_brand_dh a.sel').attr('data-page',++page);
+            }
+
+            $.ajax({
+                type : "get",
+                url:"/index.php?m=Mobile&c=Index&a=ajaxbrandStraight&p="+page+"&cat_id="+catid,
+                success: function(data)
+                {
+                    if(data){
+                        $("#J_ItemList").append(data);
+                        $("img.lazy").lazyload();
+                        var catid = $('.new_brand_dh a.sel').attr('data-catid');
+                        if(catid == undefined){
+                            before_request = 1;
+                        }else{
+                            $('.new_brand_dh a.sel').attr('data-request',1);
+                        }
+                    }else{
+                        $('.get_more').hide();
+                    }
+                }
+            });
+        }
+
+        function list_to_cat(obj){
+            $('.new_brand_dh a').removeClass('sel');
+            $(obj).addClass('sel');
+            $('.new_brand_dh a').attr('data-request',1);
+            $('.new_brand_dh a').attr('data-page',0);
+            ajax_sourch_submit();
+        }
+    </script>
+
+</body>
+</html>

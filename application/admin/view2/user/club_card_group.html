@@ -1,0 +1,195 @@
+<include file="public/layout" />
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>会员充值卡管理</h3>
+                <h5></h5>
+            </div>
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    <div id="explanation" class="explanation" style="color: rgb(44, 188, 163); background-color: rgb(237, 251, 248); width: 99%; height: 100%;">
+        <div id="checkZoom" class="title"><i class="fa fa-lightbulb-o"></i>
+            <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+            <span title="收起提示" id="explanationZoom" style="display: block;"></span>
+        </div>
+        
+    </div>
+    <div class="flexigrid">
+        
+        <div class="hDiv">
+            <div class="hDivBox">
+                <table cellspacing="0" cellpadding="0">
+                    <thead>
+                    <tr>
+                        <th class="sign" axis="col0">
+                            <div style="width: 24px;"><i class="ico-check"></i></div>
+                        </th>
+                        <th align="left" abbr="user_id" axis="col3" class="">
+                            <div style="text-align: center; width: 40px;" class="">ID</div>
+                        </th>
+                        <th align="left" abbr="nickname" axis="col4" class="">
+                            <div style="text-align: center; width: 350px;" class="">分组名称</div>
+                        </th>
+                        <th align="center" abbr="level" axis="col5" class="">
+                            <div style="text-align: center; width: 100px;" class="">面额</div>
+                        </th>
+                        <th align="center" abbr="total_amount" axis="col6" class="">
+                            <div style="text-align: center; width: 50px;" class="">数量</div>
+                        </th>
+                       
+                        <th align="center" abbr="mobile" axis="col6" class="">
+                            <div style="text-align: center; width: 150px;" class="">已使用</div>
+                        </th>
+                        <th align="center" abbr="user_money" axis="col6" class="">
+                            <div style="text-align: center; width: 150px;" class="">创建时间</div>
+                        </th>
+                        <th align="center" abbr="pay_points" axis="col6" class="">
+                            <div style="text-align: center; width: 60px;" class="">状态</div>
+                        </th>
+ 
+                        <th align="center" axis="col1" class="handle">
+                            <div style="text-align: center; width: 150px;">操作</div>
+                        </th>
+                        <th style="width:100%" axis="col7">
+                            <div></div>
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class="tDiv">
+            <div class="tDiv2">
+                <div class="fbutton">
+                    <a href="{:U('User/club_card_group_form')}">
+                        <div class="add" title="添加会员">
+                            <span><i class="fa fa-plus"></i>添加分组</span>
+                        </div>
+                    </a>
+                </div>
+                
+            </div>
+			
+            <div style="clear:both"></div>
+        </div>
+        <div class="bDiv" style="height: auto;" id="ajax_return">
+        <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+    <table>
+        <tbody>
+        <volist name="list" id="vo">
+            <tr data-id="{$list['user_id']}">
+                <td class="sign">
+                    <div style="width: 24px;"><i class="ico-check"></i></div>
+                </td>
+                <td align="left" class="">
+                    <div style="text-align: center; width: 40px;">{$vo.id}</div>
+                </td>
+                <td align="left" class="">
+                    <div style="text-align: center; width: 350px;">{$vo.group_name}</div>
+                </td>
+                <td align="left" class="">
+                    <div style="text-align: center; width: 100px;">{$vo.denomination}</div>
+                </td>
+                <td align="left" class="">
+                    <div style="text-align: center; width: 50px;">{$vo.total_number}</div>
+                </td>
+              
+                <td align="left" class="">
+                    <div style="text-align: center; width:150px;">{$vo.been_used}</div>
+                </td>
+                <td align="left" class="">
+                    <div style="text-align: center; width: 150px;">{$vo.create_time|date='Y-m-d H:i',###}</div>
+                </td>
+                <td align="left" class="">
+                    <div style="text-align: center; width: 60px;"><if condition='$vo.status eq 0'>正常<else/>冻结</if></div>
+                </td>
+                <td align="center" class="handle">
+                    <div style="text-align: center; width: 150px; max-width:250px;">
+                        <a class="btn blue" href="{:U('Admin/user/club_card_group_form',array('id'=>$vo['id']))}"><i class="fa fa-pencil-square-o"></i>详情</a>
+                        <a class="btn blue" href="{:U('Admin/user/club_card_qrcode_list',array('id'=>$vo['id']))}"><i class="fa fa-pencil-square-o"></i>查询二维码</a>
+                      <!--  <a class="btn blue" href="{:U('Admin/user/account_log',array('id'=>$list['user_id']))}"><i class="fa fa-search"></i>资金</a>
+                        <a class="btn blue" href="{:U('Admin/user/address',array('id'=>$list['user_id']))}"><i class="fa fa-steam"></i>收货地址</a>
+						<a class="btn blue" href="{:U('Admin/user/red_envelope',array('user_id'=>$list['user_id']))}"><i class="fa fa-steam"></i>米豆</a>
+                        <a class="btn red"  href="javascript:void(0)" data-id="{$list['user_id']}"  data-url="{:U('Admin/user/ajax_delete',array('id'=>$list['user_id']))}" onClick="delcompany(this,'users')"><i class="fa fa-trash-o"></i>删除</a>-->
+                    </div>
+                </td>
+                <td align="" class="" style="width: 100%;">
+                    <div>&nbsp;</div>
+                </td>
+            </tr>
+        </volist>
+        </tbody>
+    </table>
+</div>
+<!--分页位置-->
+<script>
+    $(".pagination  a").click(function(){
+        var page = $(this).data('p');
+        ajax_get_table('search-form2',page);
+    });
+    $(document).ready(function(){
+        // 表格行点击选中切换
+        $('#flexigrid >table>tbody>tr').click(function(){
+            $(this).toggleClass('trSelected');
+        });
+        $('#user_count').empty().html("{$pager->totalRows}");
+    });
+    function delfun(obj) {
+        // 删除按钮
+        layer.confirm('确认删除？', {
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+            $.ajax({
+                type: 'post',
+                url: $(obj).attr('data-url'),
+                data: {id : $(obj).attr('data-id')},
+                dataType: 'json',
+                success: function (data) {
+                    layer.closeAll();
+                    if (data.status == 1) {
+                        $(obj).parent().parent().parent().remove();
+                    } else {
+                        layer.alert(data.msg, {icon: 2});
+                    }
+                }
+            })
+        }, function () {
+        });
+    }
+</script>
+<script src="__PUBLIC__/js/delinfo.js"></script>
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        
+
+    });
+    //选中全部
+    $('.hDivBox .sign').click(function(){
+        var sign = $('#flexigrid > table>tbody>tr');
+       if($(this).parent().hasClass('trSelected')){
+           sign.each(function(){
+               $(this).removeClass('trSelected');
+           });
+           $(this).parent().removeClass('trSelected');
+       }else{
+           sign.each(function(){
+               $(this).addClass('trSelected');
+           });
+           $(this).parent().addClass('trSelected');
+       }
+    })
+
+   
+
+</script>
+</body>
+</html>

@@ -1,0 +1,766 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/js/company.js"></script>
+
+
+<body style="background-color: #FFF; overflow: auto;">
+    <div id="append_parent"></div>
+    <div id="ajaxwaitid"></div>
+    <div class="page">
+        <div class="fixed-bar">
+            <div class="item-title">
+                <div class="subject">
+                    <h3>管理公司员工</h3>
+                    <h5><a href="{:U('Admin/Staff/index')}" id="log_list">员工列表</a></h5>
+                </div>
+
+            </div>
+        </div>
+        <!-- 操作说明 -->
+
+        <style>
+        #handlepost textarea{width:400px; height:150px;}
+    </style>
+    
+    <form method="post" id="handlepost" name="form1" autocomplete="off" >
+        <div class="ncap-form-default">
+
+            <input type="hidden" name="{$pk}" id="{$pk}" value="{$staff[$pk]}" />
+            <input type="hidden" name="type" id="type" value="{$Request.param.t}" />
+
+            <dl class="row">
+                <dt class="tit">
+                    <label for="lv">用户名:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="uname" name="uname"  value="{$staff.uname}" autocomplete="new-password"  placeholder=""  type="text" /> 
+                    <p class="notic"> 登录用用户名 </p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="lv">密码:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="psw" name="psw"  value="" autocomplete="new-password"  placeholder=""  type="password" /> 
+                    <p class="notic"> <eq name='acts' value='domodify'>如无需修改请留空</eq> </p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="lv">邀请码:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="invite_code" name="invite_code"  value="<if condition='$staff[invite_code]' >{$staff.invite_code}<else />{:judge_invite_code(get_rand_str(10,0,1))}</if>" autocomplete="new-password" readonly placeholder="" type="text" /> 
+                    <p class="notic"> 邀请码唯一 </p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="lv">手机:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="phone" name="phone"  value="{$staff.phone}"  placeholder=""  type="text" /> 
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="lv">身份证号码:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="id_code" name="id_code"  value="{$staff.id_code}"  placeholder=""  type="text" /> 
+                    <p class="notic"> 删除身份证号码则客户可以重新填写上传身份证照片 </p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="lv">身份证正面照:</label>
+                </dt>
+                <dd class="opt">
+                    <a href="{$staff.code_img}" target="_blank"><img height="100" src="{$staff.code_img}"></a>
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="lv">身份证反面照:</label>
+                </dt>
+                <dd class="opt">
+                    <a href="{$staff.code_img2}"  target="_blank"><img height="100" src="{$staff.code_img2}"></a>
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="lv">真实姓名:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="real_name" name="real_name"  value="{$staff.real_name}"  placeholder=""  type="text" /> 
+                    <p class="notic">   </p>
+                </dd>
+            </dl>           
+            <dl class="row">
+                <dt class="tit">
+                    <label for="lv">绑定打印机:</label>
+                </dt>
+                <dd class="opt">
+                    <input id="printer_sn" name="printer_sn"  value="{$staff.printer_sn}"  placeholder=""  type="text" /> 
+                    <p class="notic">  请输入打印机背面编号 （SN） </p>
+                </dd>
+            </dl>
+            
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">员工头像:</label>
+                </dt>
+                <dd class="opt">
+                    <div class="input-file-show">
+                        <span class="show">
+                            <a id="img_a" class="nyroModal" rel="gal" href="{$staff.head_pic}">
+                                <i id="img_i" class="fa fa-picture-o" onMouseOver="layer.tips('<img src={$staff.head_pic} style=max-height:300px>',this,{tips: [1, '#fff']});" onMouseOut="layer.closeAll();"></i>
+                            </a>
+                        </span>
+                        <span class="type-file-box">
+                            <input type="text" id="head_pic" name="head_pic" value="{$staff.head_pic}" class="type-file-text">
+                            <input type="button" name="button" id="button1" value="选择上传..." class="type-file-button">
+                            <input class="type-file-file" onClick="GetUploadify(1,'head_pic','staff_head_pic','img_call_back')" size="30" hidefocus="true" nc_type="change_site_logo" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+                        </span>
+                    </div>
+                    <span class="err"></span>
+                    <p class="notic">员工头像</p>
+                </dd>
+            </dl>
+			<script>
+				 function img_call_back(fileurl_tmp)
+				{
+					$("#head_pic").val(fileurl_tmp);
+					$("#img_a").attr('href', fileurl_tmp);
+					$("#img_i").attr('onmouseover', "layer.tips('<img src="+fileurl_tmp+" style=max-height:300px>',this,{tips: [1, '#fff']});");
+				}
+			</script>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="record_no">隶属子公司—>实体店</label>
+                </dt>
+                <dd class="opt">
+                    <select name="company_id" id="company_id"   onChange="company_change($(this))" class="small form-control">
+                        <option value="0">请选择子公司</option>                                      
+                        <foreach name="company_list" item="v" key="k" >                                                                                          
+                            <option value="{$v['cid']}" <if condition="$v['cid'] eq $staff['company_id'] || $v['cid'] eq $Request.param.company_id">selected="selected"</if> >
+                                {$v.cname}
+                            </option>
+                        </foreach>
+                    </select>
+                    <select name="store_id" id="store_id" class="small form-control" onChange="doQcode();doQcodePay();">
+                        <option value="0">请选择实体店</option>
+                        <foreach name="store_list" item="v" key="k" >
+                            <option value="{$v['cid']}" <if condition="$v['cid'] eq $staff['store_id'] || $v['cid'] eq $_GET['store_id']">selected="selected"</if> >
+                                {$v.cname}
+                            </option>
+                        </foreach>
+                    </select>   
+					<input type="text" id='parent_search' placeholder="匹配实体店" onchange='searchStore();'>
+					<select name="search_content" id="search_res" multiple size=5 style='display:none'></select>
+                </dd>
+            </dl>
+			
+			<script>
+
+
+				$("#store_id").change(function (){
+					var obj = $(this);
+					var company_id = $("#company_id :selected").val();
+					var store_id = $("#store_id :selected").val();
+					$("#parent_id").attr("disabled",true).css("background-color","#EEEEEE;");
+					$.getJSON('{:U("/Admin/Staff/ajax_get_staff/")}',{store_id:store_id,staff_id:'{$staff.id}'},function (r){
+						var html_option ='<option value="">请选择等级</option>';
+						if(r.status == 1){
+							$.each(r.info,function(i,k){
+								html_option += "<option value='"+ k.id +"'>"+k.uname+"</option>";
+							})	
+						}
+						$("#parent_id").html(html_option).attr("disabled",false).css("background-color","");
+					})
+
+					
+					$("#company_level").attr("disabled",true).css("background-color","#EEEEEE;");
+					$.getJSON("/Admin/Company/ajax_get_level/is_staff/yes",{company_id:company_id,store_id:store_id},function (r){
+						var html = '<option value="">请选择</option>';
+						if(r.status == 1){
+							$.each(r.list,function (i,k){
+								html += "<option value='"+k.id+"'>"+k.lv_name+"</option>";
+							})
+						}
+						$("#company_level").html(html).attr("disabled",false).css("background-color","");
+					})	
+
+
+					
+				})
+			</script>
+           
+            <dl class="row" id="ygdj">
+                <dt class="tit">
+                    <label for="company_level">员工等级</label>
+                </dt>
+                <dd class="opt">
+                    <select name="company_level" id="company_level" onChange="doQcode();doQcodePay();dowexinQcode();dowxAlipayQcode();">
+                        <option value="">请选择等级</option>
+                        <volist name="level_list" id="company_level">
+                            <option value="{$company_level.id}" <if condition="$company_level['id'] eq $staff['company_level']">selected="selected"</if> >{$company_level.lv_name}</option>
+                        </volist>
+                    </select>
+                    <span class="err"></span>
+                    <p class="notic">所属员工等级</p>
+                </dd>
+            </dl> 
+            
+          
+           
+			
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">用户余额:</label>
+                </dt>
+                <dd class="opt">
+                    {$staff.money}
+					
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">冻结金额:</label>
+                </dt>
+                <dd class="opt">
+                    {$staff.frozen}
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">用户状态:</label>
+                </dt>
+                <dd class="opt">
+                    <div class="onoff">
+                        <label for="is_lock0" class="cb-enable <if condition="$staff[is_lock] eq 0">selected</if>">正常</label>
+                        <label for="is_lock1" class="cb-disable <if condition="$staff[is_lock] eq 1">selected</if>">冻结</label>
+                        <input id="is_lock0" name="is_lock" value="0" type="radio" <if condition="$staff[is_lock] eq 0"> checked="checked"</if>>
+                        <input id="is_lock1" name="is_lock" value="1" type="radio" <if condition="$staff[is_lock] eq 1"> checked="checked"</if>>
+                    </div>
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">是否是创业推广员:</label>
+                </dt>
+                <dd class="opt">
+                    <div class="onoff">
+                        <label for="type1" class="cb-enable <if condition="$staff[type] eq 1">selected</if>">是</label>
+                        <label for="type0" class="cb-disable <if condition="$staff[type] eq 0">selected</if>">否</label>
+                        <input id="type1" name="type" value="1" type="radio" <if condition="$staff[type] eq 1"> checked="checked"</if>>
+                        <input id="type0" name="type" value="0" type="radio" <if condition="$staff[type] eq 0"> checked="checked"</if>>
+                    </div>
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			<script>
+				$('label[for="type1"]').click(function (){
+					$("#tjstaff").slideDown();
+//					$("#ygdj").slideUp();
+})
+        $('label[for="type0"]').click(function(){
+           $("#tjstaff").slideUp();
+	//				$("#ygdj").slideDown();
+})
+</script>
+<dl class="row" id="tjstaff" <if condition="$staff.type neq 1"> style="display:none"</if>>
+    <dt class="tit">
+        <label for="parent_id">推荐员工</label>
+    </dt>
+    <dd class="opt">
+        <select name="parent_id" id="parent_id">
+            <option value="">请选择员工</option>
+            <volist name="stafflist" id="stafflist">
+                <option value="{$stafflist.id}" <if condition="$stafflist['id'] eq $staff['parent_id'] ">selected="selected"</if> >{$stafflist.uname}</option>
+            </volist>
+        </select>
+        <span class="err"></span>
+        <p class="notic"></p>
+    </dd>
+</dl> 
+<if condition="$Request.action neq 'Add'">
+    <dl class="row">
+        <dt class="tit">
+            <label for="lv_name">推广二维码:</label>
+        </dt>
+        <dd class="opt" >
+           <!--{$staff.qrcode}-->
+
+           <a href="__PUBLIC__{$staff.qrcode}" target="_blank"><img src="__PUBLIC__{$staff.qrcode}" width="50"></a>&nbsp;&nbsp;
+           <!--米豆薯第一个背景显示-->
+           <a href="{$qrcodeBg}" target="_blank"><img src="{$thumbImg}" width="50" id='mermberQcode'></a>
+           <!--米豆薯第二个背景显示-->
+           <a href="{$qrcodePayBg}" target="_blank"><img src="{$thumbBGPayImg}" width="50" id='mermberQcodePay' ></a>
+           <!--微信背景二维码显示-->
+           <a href="{$qrcodeWxPayBg}" target="_blank"><img src="{$thumbWXPayImg}" width="50" id='mermberwxQcodePay' ></a>
+           <!--微信长背景二维码显示-->
+           <!--<a href="{$qrcodeWeixinPayBg}" target="_blank"><img src="{$thumbWixinPayImg}" width="100" id='mermberweixinQcodePay' ></a>-->
+           <!--支付宝长背景二维码显示-->
+           <!--<a href="{$qrcodeAlipayBg}" target="_blank"><img src="{$thumbAlipayImg}" width="100" id='mermberAlipayQcodePay' ></a>-->
+           <!--微信和支付宝长背景二维码显示-->
+           <a href="{$qrcodewxAlipayBg}" target="_blank"><img src="{$thumbwxAlipayImg}" width="100" id='mermberweixinAlipayQcodePay' ></a>
+
+           <!--米豆薯第一个背景-->
+           <span id='code'  style="display:none; position: absolute;width: 30px; height: 30px;"></span>
+           <canvas id="imgCanvas" width="700" height="993" style="display:none;"></canvas>
+
+           <!--米豆薯第二个背景-->
+           <span id='codePay'  style="position: absolute;width: 30px; height: 30px;"></span>
+           <canvas id="imgPayCanvas" width="1480" height="2100" style="display:none;"></canvas>
+           <!--<canvas id="bgPaywxCanvas" width="150" height="150"></canvas>-->
+           <!--微信背景二维码-->
+           <span id='codewxPay' style="position: absolute;width: 30px; height: 30px;"></span>
+           <canvas id="imgwxCanvas"  width="709" height="886"  style="display:none;"></canvas>
+
+           <!--微信长背景二维码-->
+           <!--<span id='codeweixinPay'style="position: absolute;width: 30px; height: 30px;"></span>-->
+           <!--<canvas id="imgweixinCanvas"  width="500" height="307"  style="display:none;"></canvas>-->
+
+           <!--支付宝长背景二维码-->
+           <!--<span id='codeAlipay' style="position: absolute;width: 30px; height: 30px;"></span>-->
+           <!--<canvas id="imgAlipayCanvas"  width="500" height="307"  style="display:none;"></canvas>-->
+
+           <!--支付宝长背景二维码-->
+           <span id='codeweixinAlipay' style="position: absolute;width: 30px; height: 30px;"></span>
+           <canvas id="imgwxAlipayCanvas"  width="500" height="614"  style="display:none;"></canvas>
+
+
+
+       </dd>
+   </dl>
+</if>
+<div class="bot">
+   <p class="notic"><a onclick='doQcode();doQcodePay();dowexinQcode();dowxAlipayQcode();'>手动生成带背景的二维码</a></p>
+   <a href="JavaScript:void(0);" class="ncap-btn-big ncap-btn-green" onClick="checkCompanyUpdate();">确认提交</a>
+</div>
+</div>
+</form>
+</div>
+<div id="goTop"> <a href="JavaScript:void(0);" id="btntop"><i class="fa fa-angle-up"></i></a><a href="JavaScript:void(0);" id="btnbottom"><i class="fa fa-angle-down"></i></a></div>
+
+<script src="__ROOT__/public/static/js/qrcode.js"></script>
+<img src='__ROOT__/public/static/images/qcode_bg.jpg' style='display:none;' id='gb_img'>
+<img src='__ROOT__/public/static/images/qrcode_bg_pay.jpg' style='display:none;' id='gb_pay_img'>
+<img src='__ROOT__/public/static/images/qcode_wx_bg.jpg' style='display:none;' id='gb_wxpay_img'>
+<!--<img src='__ROOT__/public/static/images/weixinpay.jpg' style='display:none;' id='gb_weixinpay_img'>-->
+<!--<img src='__ROOT__/public/static/images/alipay.jpg' style='display:none;' id='gb_alipay_img'>-->
+<img src='__ROOT__/public/static/images/bg_weixin_alipay.jpg' style='display:none;' id='bg_weixin_alipay'>
+
+<script type="text/javascript">
+
+//二维码生成
+    $(function(){
+        var company_id='{$company_id}';
+        var store_id='{$store_id}';
+        $('#company_id').val(company_id);
+        $('#store_id').val(store_id);
+
+        $("#search_res").change(function(){
+            var store_id = $(this).val().toString(); //.split("|")
+            // var regin_val_id = $(this).val().toString().split("|");
+            $.ajax({
+                url:"__URL__/get_store_list",
+                data:{store_id:store_id},
+                dataType:"json",
+                type:"post",
+                success:function(data){
+                    var company = data.company;
+                    var store = data.store;
+                    var companyHTML = "";
+                    for(var i in company){
+                        if(data.company_id==company[i]["cid"]){
+                            companyHTML+="<option value='"+company[i]["cid"]+"' selected>"+company[i]["cname"]+"</option>";
+                        }else{
+                            companyHTML+="<option value='"+company[i]["cid"]+"'>"+company[i]["cname"]+"</option>";
+                        }
+                    }
+                    $("#company_id").html(companyHTML);
+
+
+                    var storeHTML = "<option value=\"0\">请选择</option>";
+                    for(var i in store){
+                        if(store_id==store[i]["cid"]){
+                            storeHTML+="<option value='"+store[i]["cid"]+"' selected>"+store[i]["cname"]+"</option>";
+                        }else{
+                            storeHTML+="<option value='"+store[i]["cid"]+"'>"+store[i]["cname"]+"</option>";
+                        }
+                    }
+                    $("#store_id").html(storeHTML);
+                }
+            });
+        });
+
+
+
+});
+
+	function doQcode() {
+		var invite_code = $('#invite_code').val();
+		//默认使用Canvas画图
+		var qrcode = $('#code').qrcode({
+			text: "https://www.midoushu.com/mobile/User/sweepCode/invite_code/"+invite_code,
+			width: 280,
+			height: 280
+		}).hide();
+
+		//添加文字__ROOT__/public/static/images/qcode_bg.jpg
+		var text = $.trim($('#store_id  option:selected').text());//设置文字内容
+		var canvas = qrcode.find('canvas').get(0);
+
+		var oldCtx = canvas.getContext('2d');
+		var imgCanvas = document.getElementById('imgCanvas');
+		var ctx = imgCanvas.getContext('2d');
+		ctx.fillStyle = 'white';
+		ctx.fillRect(0,0,imgCanvas.width,imgCanvas.height);
+		var img = new Image();
+		img.src = $('#gb_img').attr('src');
+		ctx.drawImage(img, 0, 0, 700, 993);
+		ctx.putImageData(oldCtx.getImageData(0, 0, canvas.width, canvas.height), 210, 345);
+		ctx.fillStyle = '#000';
+		ctx.strokStyle = 'rgb(1,1,0)';
+		//ctx.stroke = 3;
+		ctx.textBaseline = 'middle';
+		ctx.textAlign = 'center';
+		ctx.font = 'bolder 30px SimHei';
+		ctx.globalAlpha = 0.8;
+		ctx.fillText(text, imgCanvas.width / 2, 250);
+		//ctx.fillText(text, imgCanvas.width / 2, imgCanvas.height - 20);
+		// ctx.strokeText(text, imgCanvas.width / 2, imgCanvas.height - 20);
+
+		imgCanvas.style.display = 'none';
+		$('#mermberQcode').attr('src', imgCanvas.toDataURL('image/png')).css({
+			maxWidth:300
+		});
+
+		//存入form 表
+		var imagedata =  encodeURIComponent(imgCanvas.toDataURL('image/png'));
+		$("#qcode").attr("s", imagedata);
+	}
+
+	function doQcodePay() {
+		var invite_code = $('#invite_code').val();
+
+		//默认使用Canvas画图
+		var qrcode = $('#codePay').qrcode({
+			text: "https://www.midoushu.com/mobile/User/sweepCode/invite_code/"+invite_code,
+			width: 720,
+			height: 720
+		}).hide();
+
+		//添加文字__ROOT__/public/static/images/qrcode_bg_pay.jpg
+		var text = $.trim($('#store_id  option:selected').text());//设置文字内容
+		var canvas = qrcode.find('canvas').get(0);
+
+		var oldCtx = canvas.getContext('2d');
+		var imgCanvas = document.getElementById('imgPayCanvas');
+		var ctx = imgCanvas.getContext('2d');
+		ctx.fillStyle = 'white';
+		ctx.fillRect(0,0,imgCanvas.width,imgCanvas.height);
+		var img = new Image();
+		img.src = $('#gb_pay_img').attr('src');
+		ctx.drawImage(img, 0, 0, imgCanvas.width, imgCanvas.height);
+		ctx.putImageData(oldCtx.getImageData(0, 0, canvas.width, canvas.height), 380, 750);
+		ctx.fillStyle = '#000';
+		ctx.strokStyle = 'rgb(1,1,0)';
+		//ctx.stroke = 3;
+		ctx.textBaseline = 'middle';
+		ctx.textAlign = 'center';
+		ctx.font = 'bolder 75px SimHei';
+		ctx.globalAlpha = 0.8;
+		ctx.fillText(text, imgCanvas.width / 2, 1750);
+		//ctx.fillText(text, imgCanvas.width / 2, imgCanvas.height - 20);
+		//ctx.strokeText(text, imgCanvas.width / 2, imgCanvas.height - 800);
+
+		imgCanvas.style.display = 'none';
+		$('#mermberQcodePay').attr('src', imgCanvas.toDataURL('image/png')).css({
+			maxWidth:300
+		});
+
+		//存入form 表
+		var imagedata =  encodeURIComponent(imgCanvas.toDataURL('image/png'));
+		$("#qcodepan").attr("s", imagedata);
+	}
+
+
+
+
+    function dowexinQcode() {
+        var invite_code = $('#invite_code').val();
+
+    //默认使用Canvas画图
+    var qrcode = $('#codewxPay').qrcode({
+        text: "https://www.midoushu.com/mobile/User/sweepCode/invite_code/"+invite_code,
+        width: 370,
+        height: 370
+    }).hide();
+
+    //添加文字__ROOT__/public/static/images/qcode_bg.jpg
+
+    var canvas = qrcode.find('canvas').get(0);
+
+    var oldCtx = canvas.getContext('2d');
+    var imgCanvas = document.getElementById('imgwxCanvas');
+    var ctx = imgCanvas.getContext('2d');
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0,0,imgCanvas.width,imgCanvas.height);
+    var img = new Image();
+    img.src = $('#gb_wxpay_img').attr('src');
+
+    ctx.drawImage(img, 0, 0,imgCanvas.width, imgCanvas.height);
+    ctx.putImageData(oldCtx.getImageData(0, 0, canvas.width, canvas.height), 170, 255);
+
+
+    imgCanvas.style.display = 'none';
+    $('#mermberwxQcodePay').attr('src', imgCanvas.toDataURL('image/png')).css({
+        maxWidth:300
+    });
+
+    //存入form 表
+    var imagedata =  encodeURIComponent(imgCanvas.toDataURL('image/png'));
+    $("#qcodewx").attr("s", imagedata);
+}
+
+
+
+
+
+
+
+
+
+
+//支付宝支付二维码
+function dowxAlipayQcode() {
+    var invite_code = $('#invite_code').val();
+
+    //默认使用Canvas画图
+    var qrcode = $('#codeweixinAlipay').qrcode({
+        text: "https://www.midoushu.com/mobile/User/sweepCode/invite_code/"+invite_code,
+        width: 150,
+        height: 150
+    }).hide();
+
+    //添加文字__ROOT__/public/static/images/qcode_bg.jpg
+    var imgCanvas = document.getElementById('imgwxAlipayCanvas');
+    var ctx = imgCanvas.getContext('2d');
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0,0,imgCanvas.width,imgCanvas.height);
+    var img = new Image();
+    img.src = $('#bg_weixin_alipay').attr('src');
+    ctx.drawImage(img, 0, 0,imgCanvas.width, imgCanvas.height); //整个背景
+
+    var wxcanvas = qrcode.find('canvas').get(0);
+    var oldCtx = wxcanvas.getContext('2d');
+    ctx.putImageData(oldCtx.getImageData(0, 0, wxcanvas.width, wxcanvas.height), 51, 78); //二维码
+
+
+    var alicanvas = qrcode.find('canvas').get(0);
+    var oldCtxali = alicanvas.getContext('2d');
+    ctx.putImageData(oldCtxali.getImageData(0, 0, alicanvas.width, alicanvas.height), 51, 395); //二维码
+
+
+    imgCanvas.style.display = 'none';
+    $('#mermberweixinAlipayQcodePay').attr('src', imgCanvas.toDataURL('image/png')).css({
+        maxWidth:300
+    });
+
+    //存入form 表
+    var imagedata =  encodeURIComponent(imgCanvas.toDataURL('image/png'));
+    $("#qcodewx").attr("s", imagedata);
+}
+
+
+
+
+function handleSave (id) {
+        //导出base64格式的图片数据
+        var mycanvas = document.getElementById("imgCanvas");
+        var base64Data = mycanvas.toDataURL("image/png", 1.0);
+        //封装blob对象
+        var blob = dataURItoBlob(base64Data);
+
+		//导出base64格式的图片数据
+        var imgPayCanvas = document.getElementById("imgPayCanvas");
+        var base64DataPay = imgPayCanvas.toDataURL("image/png", 1.0);
+        //封装blob对象
+        var blobPay = dataURItoBlob(base64DataPay);
+
+        //导出base64格式的图片数据
+        var imgwxCanvas = document.getElementById("imgwxCanvas");
+        var basewx64DataPay = imgwxCanvas.toDataURL("image/png", 1.0);
+        //封装blob对象
+        var blobwxPay = dataURItoBlob(basewx64DataPay);
+
+
+
+        //导出base64格式的图片数据
+        var imgwxAlipayCanvas = document.getElementById("imgwxAlipayCanvas");
+        var basewxAli64DataPay = imgwxAlipayCanvas.toDataURL("image/png", 1.0);
+        //封装blob对象
+        var blobwxAlipay = dataURItoBlob(basewxAli64DataPay);
+
+
+
+        //组装formdata
+        var fd = new FormData();
+        fd.append("fileData", blob);//fileData为自定义
+        fd.append("blobPay", blobPay);//fileName为自定义，名字随机生成或者写死，看需求
+        fd.append("blobwxPay", blobwxPay);//fileName为自定义，名字随机生成或者写死，看需求
+        fd.append("blobwxAlipay", blobwxAlipay);//fileName为自定义，名字随机生成或者写死，看需求
+        fd.append("id", id);
+
+        //ajax上传，ajax的形式随意，JQ的写法也没有问题
+        //需要注意的是服务端需要设定，允许跨域请求。数据接收的方式和<input type="file"/> 上传的文件没有区别
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("POST", "/index.php/admin/staff/toQcdoe");
+        xmlHttp.setRequestHeader("Authorization", 'Bearer ' + localStorage.token);//设置请求header,按需设定，非必须
+        xmlHttp.send(fd);
+		if( xmlHttp.status == 200) {
+
+		}
+        return true;
+
+    }
+
+	function dataURItoBlob (base64Data) {
+		var byteString;
+		if (base64Data.split(',')[0].indexOf('base64') >= 0)
+			byteString = atob(base64Data.split(',')[1]);
+		else
+			byteString = unescape(base64Data.split(',')[1]);
+		var mimeString = base64Data.split(',')[0].split(':')[1].split(';')[0];
+		var ia = new Uint8Array(byteString.length);
+		for (var i = 0; i < byteString.length; i++) {
+			ia[i] = byteString.charCodeAt(i);
+		}
+		return new Blob([ia], {type: mimeString});
+	}
+    //选择分类
+
+
+    function checkCompanyUpdate(){
+        var cname      = $.trim($('input[name="uname"]').val());
+        var password   = $('input[name="psw"]').val();
+        var phone      = $('input[name="phone"]').val();
+        var real_name  = $.trim($('input[name="real_name"]').val());
+        var proportion = $('input[name="proportion"]').val();
+        var error ='';
+        if(cname == ''){
+            error += "用户名不能为空<br>";
+        }
+
+        if("{$Request.action}" != 'edit'){
+         if(password == ''){
+            error += "密码不能为空<br>";
+        }
+        if(password.length<6 || password.length>16){
+            error += "密码长度不正确<br>";
+        }	
+    }
+
+
+    if(!checkMobile(phone) && phone != ''){
+        error += "手机号码填写有误<br>";
+    }
+    if(phone ==''){
+        error += "手机号码不能为空<br>";
+    }
+    if(real_name ==''){
+        error += "真实姓名不能为空<br>";
+    }
+
+    if($("input[name='type']:checked").val() == 0){
+     if($("#company_level").val() == ''){
+        error += "员工必须添加层级<br>";
+    }
+}
+
+if(error){
+            layer.alert(error, {icon: 2});  //alert(error);
+            return false;
+        }
+		
+		
+		$.ajax({  
+			url: "__URL__/{$Request.action}",  
+			type: 'POST',  
+			data:$("#handlepost").serialize(),  
+			dataType: 'json',  
+			error: function(){alert('请刷新重试')},
+			beforeSend:function(){
+				layer.load(2,{shade: 0.6});
+			},
+			success: function(r){
+				if(r.status == 1){
+                    if(handleSave(r.id)){
+                        layer.msg('数据更新成功！', {icon: 1,time: 2000,shade: 0.6},function (){
+                            setTimeout(function(){
+                                location.href= r.info;
+                            },2000);
+                        });
+                    }
+					
+				}else{
+					layer.msg(r.info, {icon: 2,time: 2000,shade: 0.6});
+				}
+			},
+			complete:function(){
+				layer.closeAll('loading');
+			}
+		});  
+
+        return false;
+    }
+    /**实体店模糊搜索**/
+    function searchStore() {
+      var name = $('#parent_search').val().trim();
+      $.ajax({
+        url: "/Admin/Company/ajax_get_keystore/name/"+name,
+        type: 'GET',
+				//dataType: 'json',
+				error: function(){layer.alert('系统繁忙，请稍后再试',{icon:2,time:2000});},
+				success: function(data){
+					$("#search_res").empty();
+					$("#search_res").html(data);
+					$("#search_res").show();
+				}
+			});
+      return false;
+  }
+
+
+  function searchStoreSelected(store_id){
+      var company_id = $("#company_id").val();
+      $("#store_id").attr("disabled",true).css("background-color","#EEEEEE;");
+      $.getJSON('/Admin/Company/ajax_get_store',{company_id:company_id},function (r){
+         var html = '<option value="">请选择</option>';
+         var s = 1;
+         if(r.status == 1){
+            $.each(r.list,function (i,k){
+               var selected = '';
+               if(k.cid == store_id){
+                  selected = " selected"	;
+              }
+              html += "<option value='"+k.cid+"' "+selected+">"+k.cname+"</option>";
+          })
+        }
+        $("#store_id").html(html).attr("disabled",false).css("background-color","");
+    })
+  }
+</script>
+
+</body>
+</html>

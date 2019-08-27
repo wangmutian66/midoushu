@@ -1,0 +1,52 @@
+  
+ <div class="layui-layer-title"   style="cursor: move;margin-top: -23px;width: 227px;margin-left: -22px;" move="ok">请选择账号:</div> <br>
+<if condition="($withdrawalss eq '请选择账号')  ">  
+			<label>
+				<span>支付宝，农业银行，工商银行等...</span>
+			</label>	
+
+<else />
+    <foreach name="withdrawalss" item="vo" key="k" >
+			<label>
+			<input name="feel" type="radio" value="hate"  onclick="numbers('{$vo.bank_card}','{$vo.realname}')" />
+			<span class="pos">
+			    <span class="radio_bg">
+			        <span class="radio_on"></span>
+			    </span>
+			</span>
+			<span>{$vo.bank_card}</span>
+			</label>	
+		</foreach>
+</if>
+		
+<style>
+label input, .radio_on {
+  display: none;
+}            
+.pos {
+    display: inline;
+    
+}        
+.radio_bg {
+  position: relative;
+  display: inline-block;
+  height: 14px;
+  width: 14px;
+  border: 1px solid #B3B4B8;
+  border-radius: 50%;
+}        
+label:hover .radio_bg, label input:checked + span.pos span.radio_bg {
+  border: 1px solid #27B28B;
+}        
+label input:checked + span.pos span.radio_bg .radio_on {
+  display: inline-block;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #27B28B;
+}
+</style>
+ 

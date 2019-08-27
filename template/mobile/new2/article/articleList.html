@@ -1,0 +1,69 @@
+﻿<include file="public/header" title="帮助中心"/>
+<include file="public/header_nav" title="帮助中心" href="javascript:history.back(-1)"/>
+
+    <!--商品详情s-->
+    <div id="goods_list">
+        <volist name="article" id="vo">
+        <div class="orderlistshpop p">
+            <div class="maleri30">
+                <a href="{:U('Article/detail',array('article_id'=>$vo['article_id']))}" class="item">
+                    <div class="sc_list se_sclist">
+                        <div class="shopimg fl">
+                            <img src="{$vo.article_id|article_thum_images=420,280}">
+                        </div>
+                        <div class="deleshow fr">
+                            <div class="deletes">
+                                <span class="similar-product-text fl">{$vo.title}</span>
+                            </div>
+                            <p class="weight">{$vo.add_time|date='Y/m/d',###}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        </volist>
+    </div>
+    <!--商品详情e-->
+
+    <!--加载更多S-->
+    <div class="loadbefore">
+            <img class="ajaxloading" src="picture/loading.gif" alt="loading...">
+    </div>
+    <!--加载更多E-->
+
+
+
+<div class="mask-filter-div" style="display: none;"></div>
+<script type="text/javascript" src="js/sourch_submit.js?v={$vnum}"></script>
+<script type="text/javascript">
+    var  page = 1;
+    /**
+     * ajax加载更多商品
+     */
+    function ajax_sourch_submit()
+    {
+        page += 1;
+        $.ajax({
+            type : "POST",
+            url:"{:U('Mobile/Article/articleList')}",//+tab,
+//          data : $('#filter_form').serialize(),// 你的formid 搜索表单 序列化提交
+            data:{is_ajax:1,p:page},
+            success: function(data)
+            {
+                if($.trim(data) == ''){
+                    $('.loadbefore').hide();
+                    $('#getmore').hide();
+                }else{
+                    $("#goods_list").append(data);
+                }
+                if( $("#goods_list").hasClass('addimgchan')){
+                    $('.orderlistshpop').addClass('addimgchan')
+                }else{
+                    $('.orderlistshpop').removeClass('addimgchan')
+                }
+            }
+        });
+    }
+</script>
+	</body>
+</html>

@@ -1,0 +1,76 @@
+<include file="public/layout" />
+<!--<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>-->
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+	<div class="fixed-bar">
+		<div class="item-title">
+			<div class="subject">
+				<h3>初始化全返订单信息</h3>
+				<h5>全返订单序号显示</h5>
+			</div>
+			
+		</div>
+		
+	</div>
+	<!-- 操作说明 -->
+	<div class="explanation">
+		<div id="checkZoom" class="title"><i class="fa fa-lightbulb-o"></i>
+			<h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+			<span title="收起提示" id="explanationZoom" style="display: block;"></span>
+		</div>
+		<ul>
+			<li>初始化全返数据.</li>
+			<li>订单数据过多会导致初始化时间很长，请不要关闭页面.</li>
+		</ul>
+	</div>
+	
+	<div class="flexigrid">
+		
+		<div class="hDiv">
+			<div class="hDivBox">
+				<button id="start">开始初始化</button><br>
+				<iframe style="width:600px; height:200px;" id="ifr"></iframe>
+			</div>
+		</div>
+			
+		
+	 </div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		// 表格行点击选中切换
+		$('#flexigrid > table>tbody >tr').click(function(){
+			$(this).toggleClass('trSelected');
+		});
+
+		// 点击刷新数据
+		$('.fa-refresh').click(function(){
+			location.href = location.href;
+		});
+
+		/*$('#start_time').layDate();
+		$('#end_time').layDate();*/
+		$("#start").click(function (){
+			$("#ifr").attr('src','{:U("/Admin/Tongji/initialize_start")}');
+		});
+	});
+	
+
+	/*function check_form(){
+		var start_time = $.trim($('#start_time').val());
+		var end_time =  $.trim($('#end_time').val());
+		if(start_time == '' ^ end_time == ''){
+			layer.alert('请选择完整的时间间隔', {icon: 2});
+			return false;
+		}		 
+		return true;
+	}*/
+	
+	
+	
+
+</script>
+</body>
+</html>

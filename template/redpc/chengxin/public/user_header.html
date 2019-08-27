@@ -1,0 +1,39 @@
+	<header class="header" style="height: 101px;">
+	    <div class="top">
+			<div class="left">
+				<a href="" class="re">{$user.nickname}</a>
+				<i class="io"></i>
+			</div>
+			<div class="right" style="width: 510px;">
+				<ul>
+					<li><a href="{:U('Home/User/index')}">个人中心</a></li>
+					<li><a href="{:U('Homered/Cart/index')}" class="ys2">购物车</a></li>
+					<li><a href="{:U('Homered/User/goods_collect')}" class="ys3">我的收藏</a></li>
+					<li><a href="{:U('Goods/all_category')}">商品分类</a></li>
+					<li><a href="tencent://message/?uin={$tpshop_config['shop_info_qq2']}&amp;Site={$tpshop_config['shop_info_store_title']}&amp;Menu=yes" class="ys1">联系客服</a></li>
+					<li><a href="{:U('Home/user/logout')}">退出</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="y-dao">
+			<div class="y-content">
+				<div class="logo2 fle">
+					<a href="{:U('Index/index')}"><img src="{$tpshop_config['shop_info_store_user_logo']|default='__STATIC__/img/logo2.png'}"></a>
+					<span>个人中心</span>
+				</div>
+				<div class="y-nav fle">
+					<p><a href="{:U('Homered/User/index')}">首页</a><i class="san"></i></p>
+					<p><a href="{:U('Home/User/info')}">账户设置</a></p>
+					<p><a href="{:U('Home/User/message_notice')}">消息<span><if condition="$user_message_count gt 0">{$user_message_count}</if></span></a></p>
+					<p><a href="{:U('Home/User/index')}">现金专区</a></p>
+					<p><a href="{:U('Index/index')}">回到商城首页</a></p>
+				</div>
+				<!--<div class="y-sou fri">
+					<form action="">
+						<input type="text" class="y-text fle" />
+						<input type="submit" class="y-sub" value="搜 索" />
+					</form>
+				</div>-->
+			</div>
+		</div>
+	</header>

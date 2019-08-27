@@ -1,0 +1,153 @@
+﻿<include file="public/layout" />
+
+    
+                <!-- header -->
+                <div class="mdk-header js-mdk-header bg-primary" data-fixed>
+                    <div class="mdk-header__content">
+
+                        <nav class="navbar navbar-expand-md bg-primary navbar-dark d-flex-none">
+                            <button class="btn btn-link text-white pl-0" type="button" data-toggle="sidebar">
+                                <i class="material-icons align-middle md-36">short_text</i>
+                            </button>
+                            <div class="page-title m-0">代付订单流水</div>
+
+                            <div class="collapse navbar-collapse" id="mainNavbar" style="width:50px">
+                                <ul class="navbar-nav ml-auto align-items-center">
+
+                                        <li class="nav-item" style="float:right !important">
+                                            <a href="#" class="nav-link dropdown-toggle dropdown-clear-caret" data-toggle="sidebar" data-target="#user-drawer">
+                                              系统操作
+                                              <img src="{$store_info.litpic|default='__PUBLIC__/storemobile/img/errors.jpg'}" class="img-fluid rounded-circle ml-1" width="35"
+                                                alt="">
+                                            </a>
+                                        </li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- content -->
+                <div class="mdk-header-layout__content ls-top-navbar mdk-header-layout__content--scrollable h-100">
+                    <!-- main content -->
+
+                    <div class="container-fluid">                      
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row align-items-center">
+                                    <div class="col-md-4">
+                                        <div class="card-title">线下订单管理<span>等级列表/{$pager->totalRows}条记录</span></div>
+                                    </div>
+                                    <div class="col-md-8 d-flex justify-content-md-end">
+                                        <!--<div class="dropdown mr-2">-->
+                                            <!--<button class="btn btn-white dropdown-toggle" type="button" id="sortOrdersDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">请选择</button>-->
+                                            <!--<div class="dropdown-menu">-->
+                                                <!--<a class="dropdown-item" href="{:U('/Storemobile/Rebate/sweep')}">代付订单流水</a>-->
+                                                <!--<a class="dropdown-item" href="{:U('/Storemobile/Rebate/saoma')}">扫码订单流水</a>-->
+                                                <!---->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                        
+                                    </div>
+                                    <form class="form-inline" style="margin-top:1rem;width:100%" action="__URL__/OrderStore" method="get">
+                                        <div class="col-md-8 d-flex justify-content-md-end" style="margin-bottom:.5rem;">
+                                            <div class="input-group input-daterange">
+                                                <input type="text" class="form-control" value="{$add_time_begin}" name="add_time_begin">
+                                                <div class="input-group-append">
+                                                    <div class="input-group-text">to</div>
+                                                </div>
+                                                <input type="text" class="form-control" value="{$add_time_end}" name="add_time_end">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8 d-flex justify-content-md-end">
+                                            <!--<select class="form-control ys" id="exampleFormControlSelect1" name="pay_status">-->
+                                                <!--<option value="">支付状态</option>-->
+                                                <!--<option value="2" <if condition="$Request.param.pay_status eq 2"> selected </if> >未支付</option>-->
+                <!--<option value="1" <if condition="$Request.param.pay_status eq 1"> selected </if> >已支付</option>-->
+                                            <!--</select>-->
+                                            <div class="form-group mx-sm-3" style="margin-bottom:0;width:60%;margin-right:5%;">
+                                                <input type="text" class="form-control" placeholder="请输入订单编号" style="float:right;width:100%;" name="order_sn" value="{$Request.param.order_sn}">
+                                            </div>
+                                            <button type="submit" class="btn btn-primary" style="float:right;">搜索</button>
+                                         </div>
+                                    </form>
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="liebiao">
+                                <ul>
+                                        <volist name="orderList" id="vo">
+                                    <li>
+                                        <div class="hang">
+                                            <div class="l">订单编号</div>
+                                            <div class="r1">{$vo.order_sn}</div>
+                                        </div>
+                                        <div class="panel">
+                                        <div class="hang">
+                                            <div class="l">收货人</div>
+                                            <div class="r1">{$vo.consignee}:{$vo.mobile}</div>
+                                        </div>
+
+                                        <div class="hang">
+                                            <div class="l">总金额</div>
+                                            <div class="r2">{$vo.goods_price}</div>
+                                            <div class="l">应付金额</div>
+                                            <div class="r2">{$vo.order_amount}</div>
+                                            
+                                        </div>
+                                        
+                                        <div class="hang">
+                                            <div class="l">运费</div>
+                                            <div class="r2">{$vo.shipping_price}</div>
+                                            <div class="l">成本总价</div>
+                                            <div class="r2">{$vo.tk_cost_price|tk_money_format}</div>
+                                        </div>
+
+                                        <div class="hang">
+                                            <div class="l">订单状态</div>
+                                            <div class="r1">{$order_status[$vo[order_status]]}<if condition="$vo['is_cod'] eq '1'"><span style="color: red">(货到付款)</span></if></div>
+                                        </div>
+
+                                        <div class="hang">
+                                            <div class="l">支付方式</div>
+                                            <div class="r2">{$vo.pay_name|default='其他方式'}</div>
+                                            <div class="l">配送方式</div>
+                                            <div class="r2">{$vo.shipping_name}</div>
+                                        </div>
+
+                                        <div class="hang">
+                                            <div class="l">下单时间</div>
+                                            <div class="r1">{$vo.add_time|date='Y-m-d H:i',###}</div>
+                                        </div>
+                                        </div>
+                                        <div class="flip">>>更多信息（查看/收起）</div>
+                                    </li>
+                                    </volist>
+                                  
+                                </ul>
+                            </div>
+                            <div class="col-sm-12 col-md-7">
+                                <div class="dataTables_paginate paging_simple_numbers" id="data-table_paginate">
+                                    <ul class="pagination">
+                                       {$pager->show()}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script src="__PUBLIC__/storemobile/js/bootstrap-datepicker.min.js"></script>
+    <script src="__PUBLIC__/storemobile/js/datepicker.js"></script>
+    <style type="text/css">
+                    .panel{display: none;}
+                    .flip{line-height:2rem;text-align:center;color:#3783b5;}
+                </style>
+                <script> 
+                    $(document).ready(function(){
+                        $(".flip").click(function(){
+                            $(this).prev($(".panel")).slideToggle("slow");
+                        });
+                    });
+                </script>
+         <include file="public/foot" />

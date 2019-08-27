@@ -1,0 +1,75 @@
+<include file="public/header" title="福利提现" body="g4"/>
+<include file="public/header_nav" title="福利提现"  href="javascript:history.back(-1);"/>
+<link rel="stylesheet" href="__STATIC__/css/tian.css?v={$vnum}">
+<div class="floor ma-to-20 y-botj">
+    <div class="h-money h-bot">
+    	福利余额
+    	<p><span>{$user.rebate_money_all|tk_money_format}</span>元</p>
+    </div>
+    <div class="h-money">
+    	可提金额
+    	<p><span>{$user.rebate_money|tk_money_format}</span>元</p>
+    </div>
+	<div class="h-money">
+    	冻结金额
+    	<p><span>{$user.dj_rebate|tk_money_format}</span>元</p>
+    </div>
+    <form action="" method="post" class="y-fom" onsubmit="return checkpost();">
+    	<input type="text" id="money_cash" class="y-teqi fle" placeholder="请输入提现金额" /><span>元</span>
+	
+	
+    	<div style="clear: both;"></div>
+		<input type="password" id="pass" class="y-teqi fle" autocomplete="new-password" placeholder="请输入支付密码" style="margin-top:20px;" />
+
+    	<input type="submit" class="sub" value="确认提现" />
+    </form>
+	
+</div>
+
+<script>
+
+	function checkpost(){
+		var money_cash = $.trim($("#money_cash").val());
+		if(money_cash == ''){
+			showErrorMsg('请输入提现金额');
+			return false;
+		}
+		var pass = $.trim($("#pass").val());
+		if(pass == ''){
+			showErrorMsg('请输入支付密码');
+			return false;
+		}
+		var index ;
+		$.ajax({  
+			url: "{:U('/Mobile/User/doCash')}",  
+			type: 'POST',  
+			data:{money_cash:$("#money_cash").val(),psw:pass},  
+			dataType: 'json',  
+			error: function(){alert('系统繁忙，请稍后再试！')},
+			beforeSend:function(){
+				index = layer.open({type: 2});
+			},
+			success: function(r){
+				if(r.status == 1){
+					showErrorMsg('申请成功，请等待管理员审核');
+					setTimeout(function(){  //使用  setTimeout（）方法设定定时2000毫秒
+					//	window.location.reload();//页面刷新
+						location.href = '{:U("/Mobile/User/")}';
+					},2000);
+				}else{
+					showErrorMsg(r.info);
+				}
+			},
+			complete:function(){
+				layer.close(index);
+			}
+		});  
+		return false;
+		
+	}
+</script>
+<!--底部导航-start-->
+    <include file="public/footer_nav"/>
+
+	</body>
+</html>

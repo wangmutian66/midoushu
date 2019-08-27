@@ -1,0 +1,23 @@
+<foreach name="article" item="vo" key="k">
+    <div class="orderlistshpop p">
+        <div class="maleri30">
+            <a href="{:U('Article/notice_detail',array('article_id'=>$vo['article_id']))}" class="item">
+                <div class="sc_list se_sclist">
+                    <div class="shopimg fl">
+                            <if  condition="$vo[thumb] eq ''">
+                                    <img src="{$vo.article_id|article_thum_images=420,280}" />
+                            <else />
+                                <img src="{$vo.thumb}" width="420" height="280" />
+                            </if>
+                    </div>
+                    <div class="deleshow fr">
+                        <div class="deletes">
+                            <span class="similar-product-text fl">{$vo.title|getSubstr=0,20}</span>
+                        </div>
+                        <p class="weight">{$vo.add_time|date='Y/m/d',###}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</foreach>

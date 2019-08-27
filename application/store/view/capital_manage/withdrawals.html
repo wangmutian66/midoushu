@@ -1,0 +1,186 @@
+<include file="public/layout" />
+<body>
+<form action="" method="post" onSubmit="return postcheck();" id="txform">
+
+<div class="tx-box">
+    <ul>
+        <li>
+            <div class="bt">提现金额：</div>
+            <div class="inp"><input type="text" name="money"  onkeyup="clearNoNum(this)" id="money" autocomplete="off" /></div>
+            <div>可用余额 ({$store_info.store_money|tk_money_format})</div>
+        </li>
+        <li>
+            <div class="bt">提现方式：</div>
+            <div class="inp"> <input type="radio" name="presentation_mode" value="1" checked/> 零钱 <input type="radio" name="presentation_mode" value="2"> 银行卡 </div>
+            
+        </li>
+        <dl class="yhk">
+            <dd>◆ 付款到账实效为1-3日，最快次日到账</dd>
+            <dd>◆ 每笔按付款金额收取手续费，按金额0.1%收取，最低1元，最高25元,</dd>
+            <dd>◆ 银行卡支持17家银行，更多银行逐步开放中 <a href="https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=24_4" target="_blank">查询详细</a></dd>
+            
+        </dl>
+        <li class="yhk">
+            <div class="bt">银行卡号：</div>
+            <div class="inp"><input type="text" name="bank_no" readonly id="bank_no" value="{$store_info.enc_bank_no}" /></div>
+            <div class="xx"></div>
+        </li>
+        
+        <li class="yhk">
+            <div class="bt">用户名：</div>
+            <div class="inp"><input type="text" name="bank_uname" readonly id="bank_uname" value="{$store_info.enc_true_name}" /></div>
+            <div class="xx"></div>
+        </li>
+       
+        <dl class="lq">
+            <dd>◆ 无手续费</dd>
+            <dd>◆ 单笔单日限额2W/2W</dd>
+            <dd>◆ 不支持给非实名用户打款</dd>
+            <dd>◆ 每日最多提现10次</dd>
+            
+        </dl>
+        <li class="lq">
+            <div class="bt">提现微信手机号：</div>
+            <div class="inp"><input type="text" name="txphone" readonly id="txphone" value="{$store_info.receivable_mobile}" /></div>
+            <div class="xx"> <span>如需更改请联系网站管理员</span></div>
+        </li>
+        
+        <li><input type="submit" name="确定提现" ></li>
+    </ul>
+</div>
+
+<style tpye="text/css">
+	ul,li{margin:0;padding:0;list-style:none;}
+	.tx-box{width:100%;padding:15px;box-sizing:border-box;}
+	.tx-box li{width:100%;height:50px;line-height:50px;}
+	.tx-box li .bt{width:150px;height:50px;float:left;font-size:15px;font-family:"微软雅黑";color:#333;text-align:left;}
+	.tx-box li .inp{width:255px;height:50px;float:left;}
+	.tx-box li .inp input[type=text]{width:200px;height:30px;line-height:30px;border-radius:5px;padding:0 10px;}
+	.tx-box li .xx{width:300px;height:50px;float:left;}
+	.tx-box li .xx a{padding:5px 10px;border:1px solid #666;color:#999; cursor:pointer;border-radius:10px;}
+	.tx-box li .xx span{margin-left:10px;color:#ff0000}
+	.tx-box li input[type=submit]{width:100px;height:35px;background:#333;color:#fff;border:none;outline:none;}
+	 dl{line-height:30px; color:#F00; margin-left:150px;}
+	.yhk{display:none}
+</style>
+
+</form>
+<script>
+$(function (){
+	
+
+	$("input[name='presentation_mode']").change(function (){
+		var presentation_mode = $(this).val();
+		if(presentation_mode == 1){
+			$('.lq').show();
+			$('.yhk').hide();
+		}else{
+			$(".lq").hide();
+			$('.yhk').show();	
+		}
+	})
+})
+
+
+function clearNoNum(obj)
+{
+  obj.value = obj.value.replace(/[^\d.]/g,""); //清除“数字”和“.”以外的字符
+  obj.value = obj.value.replace(/^\./g,""); //验证第一个字符是数字而不是.
+  obj.value = obj.value.replace(/\.{2,}/g,"."); //只保留第一个. 清除多余的.
+  obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+}
+function postcheck(){
+	var store_money = '{$store_info.store_money|tk_money_format}';
+	var money = $("#money").val();
+	if(money == ''  || money ==null){
+		showErrorMsg('提现金额不能为空，请重新输入');
+		return false;	
+	}
+	if(money < 1){
+		showErrorMsg('提现金额不能小于1元');
+		return false;
+	}
+	if(money > store_money){
+		showErrorMsg('提现金额不能大于可用余额');
+		return false;
+	}
+	
+	$.ajax({
+		url: "{:U('/Store/CapitalManage/dowithdrawals/test/1')}",
+		type: "POST",
+		data: $("#txform").serialize(),
+		dataType:"json",
+		beforeSend:function(){
+			layer.load('2',{shade: 0.6});
+		},
+		success: function(r){	
+			layer.closeAll('loading');		
+			if(r.status == 1){
+				layer.alert(r.info, {icon: 1},function (){
+					location.href='{:U("/Store/CapitalManage")}';
+				});
+			}else{
+				layer.msg(r.info, {icon: 2});	
+			}
+		},error:function (r){
+			console.log(r);
+		}
+	});
+	return false;
+}
+
+
+function showErrorMsg(msg){
+	layer.open({content:msg,time:2000});
+}
+	function countdown(obj){
+        var obj = $(obj);
+        var s = {$tpshop_config['sms_sms_time_out']};
+        //改变按钮状态
+        obj.unbind('click');
+        //添加样式
+        obj.attr('id','fetchcode');
+        callback();
+        //循环定时器
+        var T = window.setInterval(callback,1000);
+        function callback()
+        {
+            if(s <= 0){
+                //移除定时器
+                window.clearInterval(T);
+                obj.bind('click',sendcode)
+                obj.removeAttr('id','fetchcode');
+                obj.text('获取验证码');
+            }else{
+                obj.text(--s + '秒后再获取');
+            }
+        }
+    }
+
+	//发送短信验证码
+    function sendcode(obj){
+		var tel = "{$store_info.receivable_mobile}";
+		$.ajax({
+			url : "/index.php?m=Home&c=Api&a=send_validate_code&scene=6&type=mobile&send="+tel,
+			type:'post',
+			dataType:'json',
+			data:{send:tel},
+			success:function(res){
+				if(res.status==1){
+					//成功
+					showErrorMsg(res.msg);
+					countdown(obj);
+				}else{
+					//失败
+					showErrorMsg(res.msg);
+					$(obj).text('请刷新再试！');
+					$(obj).attr('id','fetchcode');
+				}
+			}
+		})
+		
+    }
+</script>
+
+</body>
+</html>

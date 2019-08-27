@@ -1,0 +1,26 @@
+<include file="public/TK_top" />
+
+<div class="e-df clearfix">
+	<a href="{:U('/Staff/Paid/log')}" <if condition="empty($Request.param.pay_status)"> class="on" </if>>已支付成功</a>
+	<a href="{:U('/Staff/Paid/log',['pay_status'=>999])}"  <if condition="$Request.param.pay_status eq 999">  class="on" </if>>待付记录</a>
+</div>
+
+<volist name="list" id="vo">
+	<div class="e-fu">
+		<div class="ni clearfix">
+			<p>订单时间：<span>{$vo.create_time|date='Y-m-d H:i:s',###}</span></p>
+			<if condition="$vo.pay_time"> <p>支付时间：<span>{$vo.pay_time|date='Y-m-d H:i:s',###}</span></p> </if>
+			<h3 style="<if condition="$vo.pay_status eq 0"> color:#FF0000 </if>"> {$vo.pay_status|pay_status}</h3>
+		</div>
+		<div class="ni clearfix">
+			<p class="bfw">手机号码：<span>{$vo.mobile|hide_mobile}</span></p>
+			<p class="bfw">付款金额：<span class="yan">{$vo.money}</span></p>
+		</div>
+		
+	</div>
+</volist>
+<div style="text-align:center">
+	{$page}
+</div>
+</body>
+</html>

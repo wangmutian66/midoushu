@@ -1,0 +1,158 @@
+	
+	<header class="header">
+		<div class="top">
+			<div class="left" id='login_user'>
+                <a href="{:U('Home/user/login')}" class="lo">您好,请登录</a>
+                <a href="{:U('Home/user/reg')}" class="re">立即注册</a>
+            </div>
+            <script>
+				var login_user_id = 0;
+                $.getJSON('{:U("/home/api/check_login")}',function (r){
+					if(r.status != 0){
+						login_user_id = r.info.user_id;
+						login_html = '<a href="/Home/User/index" class="lo userinfo">'+r.info.nickname+'</a>';
+                		login_html +=	'<a href="/Home/user/logout" class="re">安全退出</a>';
+						$("#login_user").html(login_html);
+					}
+                })
+            </script>
+			<div class="right">
+				<ul>
+					<li><a href="{:U('Home/User/index')}">个人中心</a></li>
+					<!-- <li><a href="{:U('Home/ReturnCart/index')}" class="ys2">购物车</a></li> -->
+					<li><a href="{:U('Home/User/goods_collect')}" class="ys3">我的收藏</a></li>
+					<li><a href="{:U('ReturnGoods/all_category')}">商品分类</a></li>
+					<!--<li><a href="tencent://message/?uin={$tpshop_config['shop_info_qq2']}&amp;Site={$tpshop_config['shop_info_store_title']}&amp;Menu=yes" class="ys1">联系客服</a></li>-->
+                    <li>
+                 	<if condition="$is_default_chat eq 1">
+                    <a href="{:url('/customer_service/Chat/randkf',array('chat_group_id'=>$chat_group_id))}" target="_blank" class="ys1">联系客服</a>
+                    <else/>
+                    <a href="JavaScript:;"  onclick="window.show_message();" target="_blank" class="ys1">留言客服</a>
+                    </if>
+                    </li>
+				</ul>
+			</div>
+		</div>
+		<div class="logo-bg">
+			<div class="logo-bk">
+				<div class="logo"><img src="{$tpshop_config['shop_info_store_logo']|default='__STATIC__/images/logo.png'}"></div>
+				<!-- <div class="logo-n">提交订单</div> -->
+				<div class="ri">
+					<div class="form">
+						<form id="searchForm" name="" method="get" action="{:U('Home/ReturnGoods/search')}">
+							<input autocomplete="off" name="q" id="q" type="text" value="{$Request.param.q}" placeholder="请输入搜索内容...">
+							<input type="submit" name="" value="搜索">
+						</form>
+					</div>
+					<a href="{:U('Home/ReturnCart/index')}" class="car">
+						<div class="l"><img src="__STATIC__/images/car-2.png"></div>
+						<div class="r">我的购物车</div>
+					</a>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="__STATIC__/js/jquery_1.7.2.js"></script>
+		<script type="text/javascript" src="__STATIC__/js/public.js"></script>
+		<div class="dh" style="background: #ffa828;">
+			<div class="dh-1 menu">
+				<ul>
+					<li class="ys1"><a href="{:U('Index/index')}" target="_blank" style="width:190px;" <if condition=" CONTROLLER_NAME eq 'Index' ">class="ys1"</if> >商城首页</a></li>
+					<li><a href="{:U('Index/index')}" target="_blank" <if condition=" (MODULE_NAME eq 'home') and (CONTROLLER_NAME neq 'ReturnIndex') and (CONTROLLER_NAME neq 'Article') ">class="ys1"</if> >现金专区</a></li>
+					<li><a href="{:U('Homered/Index/index')}" target="_blank">米豆换购</a></li>
+					<!--<li><a href="{:U('ReturnIndex/index')}" target="_blank" <if condition=" (CONTROLLER_NAME eq 'ReturnIndex') or (CONTROLLER_NAME eq 'ReturnGoods') and (CONTROLLER_NAME neq 'ReturnGoods') and (CONTROLLER_NAME neq 'ReturnCart') or (CONTROLLER_NAME eq 'ReturnCart')">class="ys1"</if> >福利专区</a></li>-->
+					<li><a href="{:U('Home/Goods/specialSale')}" target="_blank" >特卖专区</a></li>
+					<li><a href="{:U('Article/detail',array('article_id'=>38))}" target="_blank" <if condition=" CONTROLLER_NAME eq 'Article' and ACTION_NAME neq 'special' ">class="ys1"</if> >操作指南&nbsp;<img src="__STATIC__/images/xjt.png"></a>
+						<div class="dropdown">
+							<span><a href="{:U('Article/detail',array('article_id'=>35))}" target="_blank" style="font-size: 14px;">现金专区PC端新手指南</a></span>	
+							<span><a href="{:U('Article/detail',array('article_id'=>36))}" target="_blank" style="font-size: 14px;">换购专区PC端新手指南</a></span>	
+							<span><a href="{:U('Article/detail',array('article_id'=>37))}" target="_blank" style="font-size: 14px;">福利专区PC端新手指南</a></span>									
+						</div>
+					</li>
+					<li>
+						<a href="{:U('Article/special')}" target="_blank" <if condition=" ACTION_NAME eq 'special' ">class="ys1"</if> >公司官网</a>
+					</li>
+                    
+				</ul>
+			</div>
+			<style>
+				.menu{position:relative;z-index:99999;}
+				.menu ul li{position:relative;z-index:9999;}
+				.menu ul li div.dropdown{ width:160px;display:none;position:absolute;left:-1px;top:40px;background:#ff3700;}
+				.menu ul li div.dropdown span{display:inline-block;width:100%; height:40px; line-height:40px;}
+				.menu ul li div.dropdown span a:hover{}
+				.menu ul li div.on{display:block;}
+			</style>
+			<script language="javascript">
+			$(document).ready(function(){			
+				$(".menu ul li").each(function(i){
+					$(this).hoverIntent(function(){			
+						$(this).addClass("on").siblings("li").removeClass("on");
+						$(this).find(".dropdown").slideDown("fast").parent().siblings().find(".dropdown").slideUp("fast");			
+					},function(){			
+						$(this).removeClass("on").find(".dropdown").slideUp("fast");
+						
+					});
+				});				
+			});
+			</script>
+		</div>
+	</header>
+
+	<!-- banner -->
+	<div id="solid">
+	    <ul>
+	    	<adv pid="59" item="v1" limit="5" key="kr">
+		        <li class="bg{$kr} ys"><a href="{$v1[ad_link]}" target="_blank"><img src="{$v1[ad_code]}"></a></li>
+	        </adv>
+	    </ul>
+	   <div id="btt" style="margin-left:-455px;">
+	    	<adv pid="59" item="v1" limit="5" key="kr">
+		    <span></span> 
+		    </adv>
+	    </div>
+	    <div class="prev"><</div>
+        <div class="next">></div>
+	</div>
+	<style type="text/css">
+		#solid .prev{width:30px ;height:50px;position:absolute;top:190px;left:10px; background:rgba(0,0,0,.2);text-align: center;line-height: 50px;color:#ddd;font-size:30px;cursor: pointer;font-family: "宋体";-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;}
+		#solid .next{width:30px ;height:50px;position:absolute;top:190px;right:10px; background:rgba(0,0,0,.2);text-align: center;line-height: 50px;color:#ddd;font-size:30px;cursor: pointer;font-family: "宋体";-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;}
+		#solid .prev:hover,#solid .next:hover{background:rgba(0,0,0,.5);color:#fff;}
+	</style>
+	<script src="__STATIC__/js/fordboy.js"></script>
+	<!-- banner end -->
+	
+	<div class="sec">
+		<!--  商品分类  -->
+		<div class="containor">
+			<div class="nav_left hide" id="xianshi2">
+				<ul>
+					<volist name="goods_category_tree" id="v" key="kr">
+						<if condition="$v[level] eq 1">
+							<li data-id="{$kr}"><a href="{:U('Home/ReturnGoods/goodsList',array('id'=>$v[id]))}" target="_blank"><span>{$v[name]}</span></a><i class="tb-ifont service-arrow">></i></li>
+						</if>
+					</volist>
+				</ul>
+			</div>
+			<div class="nav_right hide" id="xianshi3">
+				<volist name="goods_category_tree" id="v" key="kr">
+					<div class="sub hide" data-id="{$kr}">
+						<foreach name="v['tmenu']" key="k2" item='v2'>
+							<if condition="$v2[parent_id] eq $v['id']">
+								<dl>
+									<dt><a href="{:U('Home/ReturnGoods/goodsList',array('id'=>$v2[id]))}" target="_blank">{$v2[name]} <i> &gt;</i></a> </dt>
+									<dd>
+										<foreach name="v2['sub_menu']" key="k3" item='v3'>
+											<if condition="$v3[parent_id] eq $v2['id']">
+												<a href="{:U('Home/ReturnGoods/goodsList',array('id'=>$v3[id]))}" target="_blank">{$v3[name]}</a>
+											</if>
+										</foreach>
+									</dd>
+								</dl>
+							</if>
+						</foreach>
+					</div>
+				</volist>
+			</div>
+		</div>
+	</div>
+	

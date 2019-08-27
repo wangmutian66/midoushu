@@ -1,0 +1,107 @@
+<include file="public/layout" />
+<script src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<body style="background-color: #FFF; overflow: auto;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+   
+    <!-- 操作说明 -->
+    
+   <style>
+   	#handlepost input{width:300px;}
+	#handlepost textarea{width:400px; height:150px;}
+   </style>
+    
+    <form method="post" id="handlepost" name="form1" autocomplete="off" >
+        <div class="ncap-form-default">
+           
+		   <dl class="row">
+                            <dt class="tit">
+                                <label for="lv">用户名:</label>
+                            </dt>
+                            <dd class="opt">
+                              {$item.uname}
+                                <p class="notic"> 登录用用户名 </p>
+                            </dd>
+                        </dl>
+			
+            <dl class="row">
+                <dt class="tit">
+                    <label for="lv">真实姓名:</label>
+                </dt>
+                <dd class="opt">
+                    {$item.real_name}
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">成员等级:</label>
+                </dt>
+                <dd class="opt">
+                    {$item.lv_name}
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			
+            <dl class="row">
+                <dt class="tit">
+                    <label for="lv">手机:</label>
+                </dt>
+                <dd class="opt">
+                    {$item.phone}
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">固定电话:</label>
+                </dt>
+                <dd class="opt">
+                    {$item.tel}
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">用户余额:</label>
+                </dt>
+                <dd class="opt">
+                    {$item.money}
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">冻结金额:</label>
+                </dt>
+                <dd class="opt">
+                    {$item.frozen}
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+			<dl class="row">
+                <dt class="tit">
+                    <label for="lv">用户状态:</label>
+                </dt>
+                <dd class="opt">
+                    <div class="onoff">
+                        <if condition="$item['is_lock'] == 1">正常<else/>冻结</if>
+                    </div>
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+           
+			
+            <div class="bot" style="display:none">
+                <a href="JavaScript:void(0);" class="ncap-btn-big ncap-btn-green" onClick="checkCompanyUpdate();">确认提交</a>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="goTop"> <a href="JavaScript:void(0);" id="btntop"><i class="fa fa-angle-up"></i></a><a href="JavaScript:void(0);" id="btnbottom"><i class="fa fa-angle-down"></i></a></div>
+
+
+</body>
+</html>

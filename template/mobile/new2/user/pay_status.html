@@ -1,0 +1,238 @@
+<include file="public/header" title="支付状态" body=""/>
+<include file="public/header_nav" title="支付状态" href="javascript:history.back(-1)"/>
+<link rel="stylesheet" href="/template/mobile/new2/static/css/tian.css?v={$vnum}">
+<style type="text/css">
+.layout{
+    width:100%;
+    padding:.5rem 0;
+    margin:0 auto;
+}
+.erhuh{
+    padding:1rem 0 0;
+    text-align: center; 
+}
+
+.erhuh span{
+    font-size:1.2rem;
+    color:#333;
+    font-family: "微软雅黑";
+    padding: 10px 0;
+    margin-left:.5rem;
+}
+
+.erhuh p{
+    padding: 20px 0;
+}
+
+.succ-tip{
+    font-size:.6rem;
+    color:#333;
+    font-family: "微软雅黑";
+    padding: .5rem 0;
+}
+
+.succ-tip span{
+	font-size:.75rem;
+    color:#999;
+    font-family: "微软雅黑";
+    padding: .5rem 0;
+}
+
+.ddxq-xiaq{
+    text-align: center;
+    margin:1rem auto;
+}
+
+.ddxq-xiaq a{
+	display: block;
+	width:10rem;
+    background: #ff4401;
+    border-radius: 5px;
+    font-size:.75rem;
+    color:#fff;
+    padding:.5rem ;
+    margin:0 auto;
+}
+.ddxq-xiaq a.ys{
+    border:1px solid #333;
+    color:#333;
+}
+
+.ddxq-xiaq a span{
+	color:#f1f103;
+}
+</style>
+<div class="layout after-ta order-ha">
+	<div class="erhuh">
+		
+		<if condition="$order.pay_status eq 1"><i class="icon-succa"><img src="__STATIC__/images/smzf-cg.png" style="width:1.5rem;vertical-align:top;"></i><span>恭喜您，支付成功！</span><else/><span  style="color:#ff0000">对不起，支付失败！</span></if>
+		<!-- <input type="text" value="{$order.staff_id}" name="staff_id" /> -->
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;金额（元）： <b>{$order.money|tk_money_format}</b> <b>元</b></p>
+		<if condition="$order.pay_status eq 1">
+			<div class="succ-tip">
+				<span>您支付的金额已到账，可提示员工查账</span>
+
+				<br/>
+				<p class="succ-p">单号： {$order.paid_sn}</p>
+
+				<a href="{:U('/Mobilered/')}" style="color:#F00; text-decoration:underline; display:block; margin-top:10px;">
+				<i class="icon-succa" style="line-height:1rem;margin-right:.2rem"><img src="__STATIC__/images/smzf-tz.png" style="width:1rem;vertical-align:top;"></i>恭喜您，获得{$midou|tk_money_format|default=0}米豆，免费换购生活用品！</a>
+
+			</div>
+			
+		<else>
+			<div class="succ-tip">
+				<span>您支付的金额未到账，请重新支付</span>
+			</div>
+			<p class="succ-p">单号： {$order.paid_sn}</p>
+		</if>
+	</div>
+		<a href="{:U('user/dosweepCode',array('vs'=>'4','staff_id'=>$order['staff_id']))}"><div style="color:#ff4400;border: 1px solid #ff4400;padding: .3rem;border-radius: .3rem;" class="x"><input type="radio" name="vs"  id="RadioGroup1_2" class="xan" value="4"><span><img src="__STATIC__/images/sm-ico-3.png" style="width:1rem;margin-right:.5rem;">申请成为创业推广员</span></div></a>
+	     <!-- 2018-10-10 下面是增加的 -->
+	    <a href="{:U('user/dosweepCode',array('vs'=>'3','staff_id'=>$order['staff_id']))}"><div style="color:#ff4400;border: 1px solid #ff4400;padding: .3rem;margin-top: 3%;border-radius: .3rem;" class="x"><input type="radio" name="vs"  id="RadioGroup1_2" class="xan" value="3"><span><img src="__STATIC__/images/sm-ico-4.png" style="width:1rem;margin-right:.5rem;">申请成为实体店工作人员</span></div></a>
+	<div class="ddxq-xiaq" >
+	<a href="{:U('Mobilered/Goods/storegoodsList',['store_id'=>$store_id])}" title="当前实体店商城" style="background:#a23209"><span>点击-</span>实体店换购</a>
+	</div>
+	
+	<div class="ddxq-xiaq">
+		
+		<if condition="$order.pay_status eq 1">
+				<a href="{:U('/Mobile/User/pay_paid',['t'=>999])}"><span>点击-</span>支付记录<i></i></a>
+		<else/>
+			<a href="{:U('/Mobile/User/sweepCode',['recommend_id'=>$order['staff_id']])}"><span>点击-</span>重新支付<i></i></a>
+		</if>
+
+	</div>
+
+	<div class="ddxq-xiaq">
+	<a href="{:U('/Mobilered/')}" title="去平台换购" style="background:#c70000"><span>点击-</span>平台换购</a>
+	</div>
+
+	
+<div class="y-zxz" style="text-align: center;margin-top:1rem;"> 
+
+    <label style="border-top:1px solid #eee;">
+	    <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzUzOTg3MTAxMw==&scene=124#wechat_redirect" style="display:block;text-align:center;">
+	    	
+		    	<!-- <span style="float:none;"><img src="__STATIC__/images/gzgz_2.png" style="width:1.3rem;"></span>
+		    	<span style="float:none;font-size:.6rem;">关注米豆薯</span>
+		    	<span style="float:none;"><img src="__STATIC__/images/gzgz_1.png" style="width:1.3rem;"></span>
+		    	<span style="float:none;font-size:.6rem;">微信公众平台</span> -->
+		    	<div><img src="__STATIC__/images/djgzwx.gif" style="width:100%"></div>
+	    	
+	    </a>
+    </label>
+  
+</div>
+
+</div>
+
+<div class="guanzhu_ewm"><img src="__STATIC__/images/mdsewm.jpg"></div>
+
+
+<!--看看热卖-start-->
+<div class="hotshop seehotsho">
+	<div class="thirdlogin">
+		<h4>推荐商品</h4>
+	</div>
+</div>
+<div style="overflow:hidden;width: 80%;margin: 0 auto;padding-top: 40px;">
+	<form action="/mobilered/Goods/search" method="get" id="formSearch">
+		<input type="search" name="q" placeholder="输入您想搜索的商品" style="font-size:.58rem;width: 75%;height: 1.3rem;line-height: 1.3rem;padding-left: 10px;float: left;
+		border: 1px solid #ff4400;border-radius:.3rem 0 0 .3rem;box-sizing:border-box;outline:none;"/>
+		<div style="background: #ff4400;width: 23%;height: 1.3rem;color: #fff;font-size: .58rem;line-height: 1.3rem;float: left;text-align: center;border-radius:0 .3rem .3rem 0"><span class="search">搜索<span></span></div>
+	</form>
+</div>
+<div class="floor guesslike">
+	<div class="likeshop">
+		<ul>
+			<foreach name="elite_goods" item="v">
+				<li>
+					<div class="similer-product products_kuang">
+						<a href="{:U('Mobilered/Goods/goodsInfo',array('id'=>$v[goods_id]))}" title="{$v.goods_name}">
+							<img src="{$v[goods_id]|goods_thum_images=400,400,'red'}"/>
+							<span class="similar-product-text ys">{$v[goods_name]|getSubstr=0,20}</span>
+						</a>
+						<span class="similar-product-price">
+			<span class="big-price">{$v[midou_index]}</span>米豆
+			<span class="big-price" style="text-decoration:line-through;color:#999;margin-left:5px;"> ¥ {$v[market_price]}</span>
+		</span>
+					</div>
+				</li>
+			</foreach>
+		</ul>
+	</div>
+</div>
+
+
+<div class="n-lxkf">
+	<a href="https://www.midoushu.com/customer_service/Chat/randkf">
+		<div class="tp"><img src="__STATIC__/images/lxkf.gif"></div>
+		<span>联系客服</span>
+	</a>
+</div>
+<script>
+	$(document).ready(function(){ 
+	
+		$(".search").click(function(){
+			$('#formSearch').submit();
+			
+		})
+	});
+</script>
+<style type="text/css">
+
+	.n-lxkf{
+		width:100%;
+		height:1.8rem;
+		line-height: 1.5rem;
+		text-align: center;
+		margin:2rem auto 0;
+		font-size:.65rem;
+		color:#666;
+		border-top:1px solid #eee;
+		position: fixed;
+		left:0;
+		bottom:0;
+		background: #fff;
+	}
+
+	.n-lxkf span{
+		display: inline-block;
+	}
+
+	.n-lxkf .tp{
+		width:1rem;
+		height:2rem;
+		display: inline-block;
+		/*line-height: 2rem;*/
+		position: relative;
+	}
+	.xan{display:none}
+
+	.n-lxkf .tp img{
+		width:100%;
+	}
+
+	body{
+		padding-bottom:2.5rem;
+	}
+
+	.guanzhu_ewm{
+		width:16rem;
+		height:6.5rem;
+		margin:0 auto;
+		background:#fff;
+		text-align: center;
+		padding:.5rem 0 1rem;
+	}
+
+	.guanzhu_ewm img{
+		width:5rem;
+	}
+
+</style>
+
+
+</body>
+</html>

@@ -1,0 +1,190 @@
+<include file="public/layout" />
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title">
+      <div class="subject">
+        <h3>提现申请管理</h3>
+        <h5></h5>
+      </div>
+    </div>
+  </div>
+  <!-- 操作说明 -->
+  
+  <div class="flexigrid">
+    <div class="mDiv">
+      <div class="ftitle">
+        <h3>申请列表列表</h3>
+        <h5>(共{$pager->totalRows}条记录)</h5>
+      </div>
+      <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+	  
+    </div>
+	<div class="tDiv">
+		<div class="tDiv2">
+			<div class="fbutton">
+				<div class="add" title="未审核">
+					<span onClick="audit(0);"><i class="fa "></i>未审核 ({$audit_0}) </span>
+				</div>
+			</div>
+			<div class="fbutton">
+				<div class="add" title="审核通过">
+					<span onClick="audit(1);"><i class="fa"></i>审核通过 ({$audit_1})  </span>
+				</div>
+			</div>
+			<div class="fbutton">
+				<div class="add" title="审核未通过">
+					<span onClick="audit(2);"><i class="fa"></i>审核未通过 ({$audit_2}) </span>
+				</div>
+			</div>
+	
+			
+		</div>
+		<div style="clear:both"></div>
+	</div>
+	
+    <div class="hDiv">
+      <div class="hDivBox">
+        <table cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+              <th class="sign" axis="col0">
+                <div style="width: 24px;"><i class="ico-check"></i></div>
+              </th>
+			  <th align="left" abbr="article_title" axis="col1" class="">
+                <div style="text-align: left; width: 60px;" class="">ID</div>
+              </th>
+              <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: left; width: 100px;" class="">员工姓名</div>
+              </th>
+			  <th align="left" abbr="article_title" axis="col3" class="">
+                <div style="text-align: left; width: 100px;" class="">员工姓名</div>
+              </th>
+              <th align="left" abbr="isadmin" axis="col4" class="">
+                <div style="text-align: left; width: 240px;" class="">所属公司</div>
+              </th>
+              <th align="center" abbr="money" axis="col4" class="">
+                <div style="text-align: center; width: 100px;" class="">提现方式</div>
+              </th>
+              <th align="center" abbr="insert_date" axis="col6" class="">
+                <div style="text-align: center; width: 100px;" class="">状态</div>
+              </th>
+              
+              <th align="center" abbr="remark" axis="col7" class="">
+                <div style="text-align: center; width: 80px;" class="">提现人姓名</div>
+              </th>
+              
+              <th align="center" abbr="act" axis="col8" class="">
+                <div style="text-align: center; width: 130px;" class="">申请时间</div>
+              </th>
+              
+              <th align="center" abbr="control" axis="col9" class="">
+                <div style="text-align: center; width: 130px;" class="">备注</div>
+              </th>
+			  <th align="center" abbr="control" axis="col9" class="">
+                <div style="text-align: center; width: 160px;" class="">操作</div>
+              </th>
+              
+              
+              <th style="width:100%" axis="col7">
+                <div></div>
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    
+    <div class="bDiv" style="height: auto;">
+      <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+        <table>
+          <tbody>
+            <foreach name="list" item="vo" key="k" >
+              <tr>
+                <td class="sign">
+                  <div style="width: 24px;"><i class="ico-check"></i></div>
+                </td>
+				<td align="left" class="">
+                  <div style="text-align: left; width: 60px;">{$vo.id}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: left; width: 100px;">{$vo.uname}</div>
+                </td>
+				<td align="left" class="">
+                  <div style="text-align: left; width: 100px;">{$vo.real_name}</div>
+                </td>
+                <td align="left" class="">
+                  <div style="text-align: left; width: 240px;">{$vo.cname}</div>
+                </td>
+                <td align="center" class="">
+                   <div style="text-align: center; width: 100px;">{$vo.withdrawal_way}</div>
+                </td>
+                <td align="center" class="">
+                  <div style="text-align: center; width: 100px;">
+				  <switch name="vo['status']" >
+						<case value="0"><font color="#FF0000">未审核</font></case>
+						<case value="1">审核通过</case>
+						<case value="2">已拒绝</case>
+					</switch>
+				  </div>
+                </td>
+                
+                <td align="center" class="">
+                  <div style="text-align: center; width: 80px;">{$vo.account_name}</div>
+                </td>
+                
+                <td align="center" class="">
+                  <div style="text-align: center; width: 130px;">{$vo.create_time|date='y-m-d H:i:s',###}</div>
+                </td>
+                 <td align="center" class="">
+                  <div style="text-align: center; width: 130px;">{$vo.note}</div>
+                </td>
+                <td align="center" class="">
+                  <div style="text-align: center; width:160px;">
+				  	<a href="__URL__/modify/id/{$vo.id}">查看</a>
+					|
+					<a href="__URL__/del/id/{$vo.id}" onClick="if(confirm('确认删除吗?')){ return true;}else{return false;}">删除</a>
+				
+				  </div>
+                </td>
+                <td align="" class="" style="width: 100%;">
+                  <div>&nbsp;</div>
+                </td>
+              </tr>
+			  <if condition="$vo['reply']">
+			  	<tr>
+					<td colspan="12"><div style="text-align:left; width: 99%;"> <span style="margin-left:45px;">管理员 {$vo.admin_name} 回复： {$vo.reply}</span></div></td>
+				</tr>
+			  </if>
+            </foreach>
+          </tbody>
+        </table>
+      </div>
+      <div class="iDiv" style="display: none;"></div>
+    </div>
+    <!--分页位置--> 
+    {$pager->show()} </div>
+</div>
+<script>
+    $(document).ready(function(){	
+	    // 表格行点击选中切换
+	    $('#flexigrid > table>tbody >tr').click(function(){
+		    $(this).toggleClass('trSelected');
+		});
+		
+		// 点击刷新数据
+		$('.fa-refresh').click(function(){
+			location.href = location.href;
+		});
+		
+	});
+	
+	function audit(status){
+		location.href	=	"{:U('/Admin/Withdrawals/Index/')}status/"+status;	
+	}
+    
+</script>
+</body>
+</html>

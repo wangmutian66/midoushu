@@ -1,0 +1,87 @@
+<include file="public/layout" />
+<body style="background-color: #FFF; overflow: auto;">
+<div id="toolTipLayer" style="position: absolute; z-index: 9999; display: none; visibility: visible; left: 95px; top: 573px;"></div>
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title"><a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+            <div class="subject">
+                <h3>查看留言内容</h3>
+                <h5></h5>
+            </div>
+        </div>
+    </div>
+        <form action="" method="post" id="handleposition">
+        <div class="ncap-form-default">
+            <dl class="row">
+                <dt class="tit">
+                    <label>用户名称</label>
+                </dt>
+                <dd class="opt">
+                    {$message.lyname}
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>电话</label>
+                </dt>
+                <dd class="opt">
+                    {$message.mobile}
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>时间</label>
+                </dt>
+                <dd class="opt">
+                    {$message.create_time}
+
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>内容</label>
+                </dt>
+                <dd class="opt">
+                    {$message.content}
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="tit">
+                    <label>备注</label>
+                </dt>
+                <dd class="opt">
+                    <textarea name="note" id="note" class="tarea" rows="6">{$message.note}</textarea>
+                </dd>
+            </dl>
+            
+            <dl class="row">
+                <dt class="tit">
+                    <label>状态</label>
+                </dt>
+                <dd class="opt">
+                    <input type="radio" name="status"  value="-1" <if condition="$message.status eq -1">checked</if>>已作废
+                    <input type="radio" name="status" value="0" <if condition="$message.status eq 0">checked</if>>待审核
+                    <input type="radio" name="status" value="1" <if condition="$message.status eq 1">checked</if>>已审核
+                    <input type="radio" name="status" value="2" <if condition="$message.status eq 2">checked</if>>已联系
+                    
+
+                </dd>
+            </dl>
+
+            <div class="bot">
+                <a href="JavaScript:void(0);" onClick="$('#handleposition').submit();" class="ncap-btn-big ncap-btn-green" id="submitBtn">确认提交</a>
+            </div>
+
+
+        </div>
+        </form>
+</div>
+
+</body>
+</html>

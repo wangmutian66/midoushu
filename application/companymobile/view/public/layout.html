@@ -1,0 +1,90 @@
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>后台首页</title>
+<link href="__PUBLIC__/static/css/page.css" rel="stylesheet" type="text/css">
+
+    <link type="text/css" href="__PUBLIC__/companymobile/css/vendor-morris.css" rel="stylesheet">
+    <link type="text/css" href="__PUBLIC__/companymobile/css/vendor-bootstrap-datepicker.css" rel="stylesheet">
+
+    <meta name="robots" content="noindex">
+
+    <link type="text/css" href="__PUBLIC__/companymobile/css/app.css" rel="stylesheet">
+    <link type="text/css" href="__PUBLIC__/companymobile/css/app.rtl.css" rel="stylesheet">
+
+    <link type="text/css" href="__PUBLIC__/companymobile/css/simplebar.css" rel="stylesheet">
+
+    <link type="text/css" href="__PUBLIC__/companymobile/css/style.css" rel="stylesheet">
+
+</head>
+<!-- jQuery -->
+<script src="__PUBLIC__/companymobile/js/jquery.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="__PUBLIC__/companymobile/js/popper.js"></script>
+<script src="__PUBLIC__/companymobile/js/bootstrap.min.js"></script>
+
+<!-- Simplebar -->
+<!-- Used for adding a custom scrollbar to the drawer -->
+<script src="__PUBLIC__/companymobile/js/simplebar.js"></script>
+
+
+<!-- Vendor -->
+<script src="__PUBLIC__/companymobile/js/chart.min.js"></script>
+<script src="__PUBLIC__/companymobile/js/moment.min.js"></script>
+
+<!-- APP -->
+<script src="__PUBLIC__/companymobile/js/color_variables.js"></script>
+<script src="__PUBLIC__/companymobile/js/app.js"></script>
+
+
+<script src="__PUBLIC__/companymobile/js/dom-factory.js"></script>
+<!-- DOM Factory -->
+<script src="__PUBLIC__/companymobile/js/material-design-kit.js"></script>
+<!-- MDK -->
+
+<style>
+    [dir=ltr] .ls-top-navbar {
+    padding-top: calc(0px + 1rem);
+}
+</style>
+
+<script>
+    //$(".mdk-drawer__scrim").click()
+    $("ul.drawer-menu .drawer-menu-item").click(function(){
+        $(".mdk-drawer__scrim").click();
+        var titlename = $(this).find(".drawer-menu-text").text();
+        $(".page-title.m-0").html(titlename);
+    });
+    (function() {
+        'use strict';
+        // Self Initialize DOM Factory Components
+        domFactory.handler.autoInit()
+
+
+        // Connect button(s) to drawer(s)
+        var sidebarToggle = document.querySelectorAll('[data-toggle="sidebar"]')
+
+        sidebarToggle.forEach(function(toggle) {
+            toggle.addEventListener('click', function(e) {
+                var selector = e.currentTarget.getAttribute('data-target') || '#default-drawer'
+                var drawer = document.querySelector(selector)
+                if (drawer) {
+                    if (selector == '#default-drawer') {
+                        $('.container-fluid').toggleClass('container--max');
+                    }
+                    drawer.mdkDrawer.toggle();
+                }
+            })
+        })
+    })()
+</script>
+
+
+<script src="__PUBLIC__/companymobile/js/morris.min.js"></script>
+<script src="__PUBLIC__/companymobile/js/raphael.min.js"></script>
+<script src="__PUBLIC__/companymobile/js/bootstrap-datepicker.min.js"></script>
+<script src="__PUBLIC__/companymobile/js/datepicker.js"></script>

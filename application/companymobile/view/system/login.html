@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>用户登录</title>
+
+
+	<!-- Prevent the demo from appearing in search engines -->
+	<meta name="robots" content="noindex">
+
+	<!-- App CSS -->
+	<link type="text/css" href="__PUBLIC__/companymobile/css/app.css" rel="stylesheet">
+	<link type="text/css" href="__PUBLIC__/companymobile/css/app.rtl.css" rel="stylesheet">
+
+	<!-- Simplebar -->
+	<link type="text/css" href="__PUBLIC__/companymobile/css/simplebar.css" rel="stylesheet">
+	<script type="text/javascript" src="__PUBLIC__/static/js/jquery.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/static/js/layer/layer.js"></script><!-- 弹窗js 参考文档 http://layer.layui.com/-->
+	<style type="text/css">
+		body{
+			background:url(__PUBLIC__/companymobile/picture/h-bg0.jpg);
+			background-position: cover;
+			background-size:100% 100%;
+		}
+	</style>
+</head>
+
+<body>
+<div class="mdk-drawer-layout js-mdk-drawer-layout" data-fullbleed data-push data-has-scrolling-region>
+	<div class="mdk-drawer-layout__content mdk-header-layout__content--scrollable" style="overflow-y: auto;" data-simplebar data-simplebar-force-enabled="true">
+
+
+		<div class="container h-vh d-flex justify-content-center align-items-center flex-column">
+			<div class="d-flex justify-content-center align-items-center mb-3">
+
+				<h2 class="ml-2 text-bg mb-0"><strong style="color:#fff">米豆薯品台管理系统</strong></h2>
+			</div>
+			<div class="row w-100 justify-content-center">
+				<div class="card card-login mb-3">
+					<div class="card-body">
+						<form action="#"  id="staff_post_form" name="staff_post_form" method="post" onSubmit="return post_check();">
+							<div class="form-group">
+								<label>用户名</label>
+
+								<div class="input-group input-group--inline">
+									<div class="input-group-addon">
+										<i class="material-icons">account_circle</i>
+									</div>
+									<input type="text" class="form-control"  name="username" id="username" placeholder="请输入用户名" />
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="d-flex">
+									<label>密码</label>
+									<span class="ml-auto"><a href="#">忘记密码？</a></span>
+								</div>
+
+								<div class="input-group input-group--inline">
+									<div class="input-group-addon">
+										<i class="material-icons">lock_outline</i>
+									</div>
+									<input type="password" class="form-control" name="password"  id="password" placeholder="请输入密码" />
+								</div>
+							</div>
+							<div class="text-center">
+								<a href="#" onclick="document.staff_post_form.onsubmit()" class="btn btn-primary">登录</a>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<div class="d-flex justify-content-center">
+				<span class="mr-2" style="color:#fff">© 2018 米豆薯商城 版权所有，并保留所有权利</span>
+
+			</div>
+		</div>
+
+
+	</div>
+</div>
+
+<script>
+    (function() {
+        'use strict';
+
+        // Self Initialize DOM Factory Components
+        domFactory.handler.autoInit();
+    });
+
+
+    function post_check(){
+
+        if($('#user_name').val()==''){
+            layer.msg('用户名不能为空！', {icon: 2,time: 2000});
+            return false;
+        }
+        if($('#password').val()==''){
+            layer.msg('密码不能为空！', {icon: 2,time: 2000});   //alert('少年，用户名不能为空！');
+            return false;
+        }
+        layer.load('2',{shade: 0.6});
+        $.post("{:U('/companymobile/System/doLogin')}",$("form").serialize(),function (r){
+
+            if(r.status == 1){
+                layer.msg('登录成功！', {icon: 1,time: 1000},function (){
+                    location.href='{:U("/companymobile/Index/")}';
+                });
+            }else if(r.status == 2){
+                $('.yc ul').html("");
+                $.each(r.info,function (i,v){
+                    $('.yc ul').append("<li rel='"+v.cid+"'>"+v.cname+"</li>");
+                });
+                $('.yc ul').find('li').unbind('click');
+                $('.yc ul').find('li').bind('click',function (){
+                    $("#store_id").val($(this).attr('rel'));
+                    $("#staff_post_form").submit();
+                })
+                $(".yc").css("display","block");
+            }else{
+                layer.msg(r.info, {icon: 2,time: 2000});
+            }
+            layer.closeAll('loading');
+        },'json');
+        return false;
+    }
+
+
+
+</script>
+</body>
+
+</html>

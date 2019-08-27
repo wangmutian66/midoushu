@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>线下管理平台</title>
+		<link href="/template/pc/chengxin/static/css/style.css?v=X.X.X.8" rel="stylesheet">
+		<link href="/template/pc/chengxin/static/css/member.css?v=X.X.X.8" rel="stylesheet">
+		<link href="__PUBLIC__/company/css/hou.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="__PUBLIC__/static/js/jquery.js"></script>
+		<script type="text/javascript" src="__PUBLIC__/static/js/layer/layer.js"></script><!-- 弹窗js 参考文档 http://layer.layui.com/-->
+		<script src="__PUBLIC__/js/baidu.js"></script>
+
+	</head>
+<body class="h-box">
+	<div class="h-dl">
+		<div class="logo">
+			<img src="__PUBLIC__/company/img/h-logo0.png">
+			<p>【实体店管理平台】</p>
+		</div>
+	</div>
+<div class="y-content">
+	<!--右侧内容-->
+	<div class="y-right y-borm" style="margin: 35px auto 60px auto; background:#fff;">
+		<div class="y-title0">
+			找回密码
+		</div>
+		<div class="y-bz y-sbg1 clearfix">
+			<p class="on">验证身份</p>
+			<p>设置密码</p>
+			<p>完成</p>
+		</div>
+		<div class="y-shr">
+			<form action="" method="post" id="pwdform" class="yzm" onsubmit="return checkdata();">
+				<div class="zhmm">
+					<h3>请填写手机号：</h3>
+					<input type="text" class="yam" name="mobile" id="mobile">
+					<div class="clear"></div>
+				</div>
+				<div class="zhmm">
+					<h3>请填写手机验证码：</h3>
+					<input type="text" class="c_code_msg2" id="code" name="code">
+					<input class="fsyz" type="button" name="" onclick="sendcode(this)" value="获取验证码" />
+				</div>
+				<div class="clear"></div>
+				<input type="submit" class="qrtx"  value="确  认" />
+				<div class="clear"></div>
+			</form>
+		</div>
+	</div>
+	<div class="clear"></div>
+</div>
+<div class="yc">
+	<div class="n">
+		<ul>
+
+		</ul>
+	</div>
+</div>
+<include file="public/foot"/>
+	<script>
+
+        function showErrorMsg(msg){
+            layer.alert(msg,{icon: 2});
+        }
+
+		function checkdata(){
+			var mobile = $('#mobile').val();
+			var code = $('#code').val();
+			if(mobile == ''){
+                showErrorMsg('请填写手机号！');
+                return false;
+			}
+            if(code == ''){
+                showErrorMsg('请填写手机验证码！');
+                return false;
+            }
+            return true;
+
+		}
+
+        function sendcode(o){
+            $.ajax({
+                url:'/index.php?m=Home&c=Api&a=send_validate_code&scene=6&t='+Math.random(),
+                type:'get',
+                dataType:'json',
+                data:{type:'phone',send:$('#mobile').val()},
+                success:function(res){
+                    if(res.status==1){
+                        layer.alert(res.msg, {icon: 1});
+                        timer(o);
+                    }else{
+                        layer.alert(res.msg, {icon: 2});
+                    }
+                }
+            })
+        }
+
+        var wait={$tpshop_config['sms_sms_time_out']};
+        function timer(o) {
+            if (wait == 0) {
+                o.removeAttribute("disabled");
+                o.value="获取验证码";
+                wait = {$tpshop_config['sms_sms_time_out']};
+            } else {
+                o.setAttribute("disabled", true);
+                o.classList.add("fsyz1");
+                o.value="重新发送(" + wait + ")";
+                wait--;
+                setTimeout(function() {
+                    timer(o)
+                }, 1000)
+            }
+        }
+
+	</script>
+</body>
+</html>

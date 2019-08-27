@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>现金专区-{$tpshop_config['shop_info_store_title']}</title>
+    <meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+    <meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+    <link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+    <link rel="stylesheet" href="__STATIC__/css/style.css?v={$vnum}">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/css/iconfont.css?v={$vnum}"/>
+    <script src="__STATIC__/js/jquery-3.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <!--<script src="__STATIC__/js/zepto-1.2.0-min.js" type="text/javascript" charset="utf-8"></script>-->
+    <script src="__STATIC__/js/mobile-util.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__STATIC__/js/swipeSlide.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__STATIC__/js/layer.js"  type="text/javascript" ></script>
+</head>
+<body style="background: #fff;">
+    <!--顶部搜索栏-s-->
+    <header>
+        <div class="content">
+            <div class="ds-in-bl search">
+                <div class="sea-box">
+                    <div class="logo">
+                        <a href=""><img src="__STATIC__/images/logo-2.png" alt="LOGO"></a>
+                    </div>
+                    <span ></span>
+                    <form action=""  method="post">
+                        <div class="sear-input">
+                            <a href="{:U('Goods/ajaxSearch')}">
+                                <input type="text" name="q" id="search_text" class="search_text"   value="" placeholder="请输入您所搜索的商品">
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="ds-in-bl login">
+                <span>
+                    <if condition="$user_id gt 0">
+                        <a href="{:U('Mobile/User/index')}"> <img class="after_login" src="__STATIC__/images/my.png"></a>
+                    <else/>
+                        <a href="{:U('Mobile/User/login')}"> 登录</a>
+                    </if>
+                </span>
+            </div>
+        </div>
+    </header>
+    <!--顶部搜索栏-e-->
+
+    <!--顶部滚动广告栏-s-->
+    <div class="banner ban1">
+        <div class="mslide cash_ys" id="slideTpshop_cash">
+            <ul>
+                <!--广告表-->
+                <adv pid ="107" limit="5" item="v">
+                    <li><a href="{$v.ad_link}">
+                        <img src="{$v[ad_code]}" title="{$v[title]}" style="{$v[style]}" alt="">
+                    </a></li>
+                </adv>
+            </ul>
+        </div>
+    </div>
+    <!--顶部滚动广告栏-e-->
+    
+
+    <!--菜单-start-->
+    <div class="floor dh">
+        <nav>
+            <a href="{:U('Mobilered/Index/index_red')}">
+                <span>
+                    <img src="__STATIC__/images/ico_new02.png" alt="米豆换购" /><br />
+                    <span>米豆换购</span>
+                </span>
+            </a>
+            <a href="{:U('Index/specialSale')}">
+                <span>
+                    <img src="__STATIC__/images/ico_new04.png" alt="特卖专区" /><br />
+                    <span>特卖专区</span>
+                </span>
+            </a>
+            <a href="{:U('Mobileyxyp/Index/index')}">
+                <span>
+                    <img src="__STATIC__/images/ico_new06.png" alt="农创扶贫" /><br />
+                    <span>农创扶贫</span>
+                </span>
+            </a>
+        	<a href="{:U('Mobilered/StoreIndex/index')}">
+                <span>
+                    <img src="__STATIC__/images/ico_new08.png" alt="服务周边" /><br />
+                    <span>服务周边</span>
+                </span>
+            </a>
+        </nav>
+    </div>
+    <!--菜单-end-->
+
+    <!--广告位-start-->
+    <div class="banner ma-to-20" style="margin-top: 3%;">
+        <adv limit="1" item="v" pid="41">
+            <a href="{$v[ad_link]}">
+                <img src="{$v[ad_code]}" title="{$v[title]}" style="{$v[style]}"/>
+            </a>
+        </adv>
+    </div>
+    <!--广告位-end-->
+    
+    <!--新加滑动列表-->
+    <div class="cash_gundong_bt">
+        <div class="l">新品推荐</div>
+        <div class="r"><a href="{:U('Activity/new_sale')}"><div class="circle"></div><div class="circle"></div><div class="circle"></div></a></div>
+    </div>
+    <div>
+        <div class="guesslike ys">
+            <div class="likeshop ys2">
+                <ul class="product single_item info">
+                    <!--商品最多12个-->
+                    <volist name="recommend_list" id="rec_val">
+                        <li class="new_index_list_newcash">
+                            <div class="similer-product products_kuang">   
+                                <a href="{:U('Mobile/Goods/goodsInfo',array('id'=>$rec_val[goods_id]))}" title="{$rec_val.goods_name}">
+                                    <img class="lazy" src="{$rec_val[goods_thum_images]}">
+                                    <span class="similar-product-text ys">{$rec_val.goods_name}</span>
+                                </a>
+                                <span class="similar-product-price">
+                                    ¥<span class="big-price">{$rec_val[shop_price]}</span>
+                                </span>
+                                <span class="similar-product-price">
+                                    <span class="big-price" style="color:#999;font-size:0.58rem;line-height:1rem;">赠送<span id="back_midou" style="color:red;">{$rec_val.back_midou}</span>米豆</span>
+                                </span>
+                            </div>
+                        </li>
+                    </volist>  
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!---->
+    <!--新加滑动列表-->
+    <div class="cash_gundong_bt">
+        <div class="l">热销精选</div>
+        <!--<div class="r"><a href="{:U('Activity/hot_sale')}">更多></a></div>-->
+    </div>
+    <div>
+        <div class="guesslike ys">
+            <div class="likeshop ys2">
+                <ul class="product single_item info">
+                        <!--商品最多12个-->
+                    <volist name="hot_list" id="hot_val">
+                        <li class="new_index_list_newcash">
+                            <div class="similer-product products_kuang">   
+                                <a href="{:U('Mobile/Goods/goodsInfo',array('id'=>$hot_val[goods_id]))}" title="{$hot_val.goods_name}">
+                                <img class="lazy" src="{$hot_val['goods_thum_images']|}">
+                                <span class="similar-product-text ys">{$hot_val.goods_name}</span>
+                                </a>
+                                <span class="similar-product-price">
+                                    ¥<span class="big-price">{$hot_val[shop_price]}</span>
+                                </span>
+                                <span class="similar-product-price">
+                                    <span class="big-price" style="color:#999;font-size:0.58rem;line-height:1rem;">赠送<span id="back_midou" style="color:red;">{$hot_val.back_midou}</span>米豆</span>
+                                </span>
+                            </div>
+                        </li>
+                    </volist>     
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!---->
+
+    
+    <!--分类版块01-->
+
+    <div class="new_index_fl_01">
+        <div class="new_index_bt">———— 品类精选 ————</div>
+        <volist name="index_category" id='category_val'>
+        <div class="bt">
+            <a href="{:url('/Mobile/Index/index8category',['catid'=>$category_val.id])}"><img src="{$category_val.image}" title="{$category_val.mobile_name}"></a>
+        </div>
+        <div class="guesslike ys_new">
+            <div class="likeshop ys_pl">
+                <ul class="product single_item info">
+                        <!--商品最多12个-->
+                    <volist name='category_val.goods_list' id='goods_val'>
+                        <li class="new_index_list_newcash">
+                            <div class="similer-product products_kuang">   
+                                <a href="{:U('Mobile/Goods/goodsInfo',array('id'=>$goods_val[goods_id]))}" title="{$goods_val.goods_name}">
+                                <img class="lazy" data-original="{$goods_val[goods_id]|goods_thum_images=400,400}">
+                                <span class="similar-product-text ys">{$goods_val.goods_name}</span>
+                                </a>
+                                <span class="similar-product-price">
+                                    ¥<span class="big-price">{$goods_val[shop_price]}</span>
+                                </span>
+                                <span class="similar-product-price">
+                                    <span class="big-price" style="color:#999;font-size:0.58rem;line-height:1rem;">赠送<span id="back_midou" style="color:red;">{$goods_val.back_midou}</span>米豆</span>
+                                </span>
+                            </div>
+                        </li>
+                    </volist>
+                </ul>
+            </div>
+        </div>
+        </volist>
+    </div>
+    <!---->
+    <!--猜您喜欢-end-->
+
+    <!--底部-start-->
+    <include file="public/footer"/>
+    <!--底部-end-->
+    <!--底部导航-start-->
+    <include file="public/footer_nav"/>
+    <!--底部导航-end-->
+    <script src="__PUBLIC__/js/jqueryUrlGet.js?v={$vnum}"></script><!--获取get参数插件-->
+    <script src="__PUBLIC__/js/jquery.lazyload.min.js?v=20181031"></script>
+    <script src="__STATIC__/js/style.js?v={$vnum}" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="__STATIC__/js/sourch_submit.js?v={$vnum}"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $("img.lazy").lazyload();
+        })
+        /*** 继续加载猜您喜欢 ***/
+        var before_request = 1; // 上一次请求是否已经有返回来, 有才可以进行下一次请求
+        var page = 0;
+        function ajax_sourch_submit(){
+            if(before_request == 0)// 上一次请求没回来 不进行下一次请求
+                return false;
+            before_request = 0;
+            page++;
+            $.ajax({
+                type : "get",
+                url:"/index.php?m=Mobile&c=Index&a=ajaxGetMore&p="+page,
+                success: function(data)
+                {
+                    if(data){
+                        $("#J_ItemList>ul").append(data);
+                        $("img.lazy").lazyload();
+                        before_request = 1;
+                    }else{
+                        $('.get_more').hide();
+                    }
+                }
+            });
+        }
+        //设置推荐人
+        set_first_leader();
+    </script>
+	</body>
+</html>
+
+    

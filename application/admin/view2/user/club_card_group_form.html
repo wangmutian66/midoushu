@@ -1,0 +1,80 @@
+<include file="public/layout" />
+<body style="background-color: #FFF; overflow: auto;">
+<div id="toolTipLayer" style="position: absolute; z-index: 9999; display: none; visibility: visible; left: 95px; top: 573px;"></div>
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title"><a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+            <div class="subject">
+                <h3>管理充值卡分组</h3>
+                <h5> 分组 ： {$group_item.group_name} 面额：{$group_item.denomination}</h5>
+            </div>
+        </div>
+    </div>
+    <form class="form-horizontal" method="post" id="add_form">
+    	<if condition="$item.id"><input type="hidden" name="id" id="id" value="{$item.id}"></if>
+        <div class="ncap-form-default">
+            <dl class="row">
+                <dt class="tit">
+                    <label for="group_name"><em>*</em>分组名称</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="group_name" id="group_name" value="{$item.group_name}" class="input-txt">
+                    <span class="err"></span>
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="password"><em>*</em>面额</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="denomination" id="denomination" value="{$item.denomination}" class="input-txt">
+                    <span class="err"></span>
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="mobile"><em>*</em>发行数量</label>
+                </dt>
+                <dd class="opt">
+                    <input type="text" name="total_number" id="total_number" value="{$item.total_number|default=10}" class="input-txt">
+                    <span class="err"></span>
+                    <p class="notic">  </p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
+                    <label for="email"> 已使用数量</label>
+                </dt>
+                <dd class="opt">
+                    {$item.been_used|default=0}
+                    <span class="err"></span>
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+            
+            <dl class="row">
+                <dt class="tit">
+                    <label for="sex">状态</label>
+                </dt>
+                <dd class="opt">
+                   
+                    <input name="status" type="radio"  value="0" <if condition="$item.status eq 0"> checked </if>>正常
+                    <input name="status" type="radio" value="1"  value="0" <if condition="$item.status eq 1"> checked </if>>冻结
+                </dd>
+            </dl>
+            <div class="bot"><a href="JavaScript:void(0);" onClick="checkUserUpdate();" class="ncap-btn-big ncap-btn-green" id="submitBtn">确认提交</a></div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    function checkUserUpdate(){
+       
+        $('#add_form').submit();
+    }
+</script>
+</body>
+</html>

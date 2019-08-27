@@ -1,0 +1,211 @@
+<include file="public/layout" />
+<script type="text/javascript" src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title">
+      <div class="subject">
+        <h3>快递推送管理</h3>
+        <h5>所有已发货的订单快递查询推送状态及物流记录</h5>
+      </div>
+    </div>
+  </div>
+  <!-- 操作说明 -->
+  <div id="explanation" class="explanation" style="color: rgb(44, 188, 163); background-color: rgb(237, 251, 248); width: 99%; height: 100%;">
+    <div id="checkZoom" class="title"><i class="fa fa-lightbulb-o"></i>
+      <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+      <span title="收起提示" id="explanationZoom" style="display: block;"></span>
+    </div>
+     <ul>
+      <li>所有已发货的订单快递查询推送状态及物流记录</li>
+    </ul>
+  </div>
+  <div class="flexigrid">
+    <div class="mDiv">
+      <div class="ftitle">
+        <h3>快递推送记录列表</h3>
+        <h5>(共{$pager->totalRows}条记录)</h5>
+      </div>
+      <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+	  <form class="navbar-form form-inline"  method="post" action="{:U('Poll/index')}"  name="search-form2" id="search-form2">
+	  <input type="hidden" name="action_ids" value="">
+      <div class="sDiv">
+      	<div class="sDiv2">
+			<select name="pollStatus" id="pollStatus">
+				<option value="" <if condition="$pollStatus eq ''">selected</if> > 跟踪状态</option>
+				<option value="polling" <if condition="$pollStatus eq 'polling'">selected</if> >进行中</option>
+				<option value="shutdown" <if condition="$pollStatus eq 'shutdown'">selected</if> >关闭</option>
+				<option value="abort" <if condition="$pollStatus eq 'abort'">selected</if> >中止</option>
+				<option value="updateall" <if condition="$pollStatus eq 'updateall'">selected</if> >重新推送</option>
+			</select>
+        </div>
+        <div class="sDiv2">
+			<select name="billStatus" id="billStatus">
+				<option value="" <if condition="$billStatus eq ''">selected</if> > 快递状态</option>
+				<option value="1#揽件" <if condition="$billStatus eq '1#揽件'">selected</if>>1:揽件</option>
+				<option value="0#在途" <if condition="$billStatus eq '0#在途'">selected</if> >0:在途</option>
+				<option value="2#疑难" <if condition="$billStatus eq '2#疑难'">selected</if> >2:疑难</option>
+				<option value="3#签收" <if condition="$billStatus eq '3#签收'">selected</if> >3:签收</option>
+				<option value="4#退签" <if condition="$billStatus eq '4#退签'">selected</if> >4:退签</option>
+				<option value="5#派件" <if condition="$billStatus eq '5#派件'">selected</if> >5:派件</option>
+				<option value="6#退回" <if condition="$billStatus eq '6#退回'">selected</if> >6:退回</option>
+				<option value="7#转单" <if condition="$billStatus eq '7#转单'">selected</if> >7:转单</option>
+			</select>
+        </div>
+        <div class="sDiv2">
+			<select name="company" id="company">
+				<option value="" <if condition="$company eq ''">selected</if> > 快递公司</option>
+				<foreach name="wuliuarr" item="kdname">
+				<option value="{$key}" <if condition="$key eq $company">selected</if>>{$kdname}</option>
+				</foreach>
+			</select>
+        </div>
+        <div class="sDiv2">
+			<input type="text" name="code" id="code" class="qsbox" placeholder="请输入快递单号" title="快递单号" value="{$code}" />
+        </div>
+		  <div class="sDiv2">
+			  <input type="text" name="order_sn" id="order_sn" class="qsbox" placeholder="请输入订单编号" title="订单编号" value="{$order_sn}" />
+		  </div>
+		  <div class="sDiv2">
+			  <input type="text" name="suppliers_name" id="suppliers_name" class="qsbox" placeholder="请输入供货商" title="供货商" value="{$suppliers_name}" />
+		  </div>
+        <div class="sDiv2">	 
+          <input type="submit"  class="btn" value="搜索">
+        </div>
+      </div>
+     </form>
+    </div>
+    <div class="hDiv">
+      <div class="hDivBox" id="ajax_return">
+        <table cellspacing="0" cellpadding="0">
+          <thead>
+	        	<tr>
+	              <th align="left" abbr="order_sn" axis="col3" class="">
+	                <div style="text-align: left; width: 140px;" class="">订单编号</div>
+	              </th>
+					<th align="left" abbr="order_sn" axis="col3" class="">
+						<div style="text-align: left; width: 200px;" class="">供货商</div>
+					</th>
+	              <th align="left" abbr="consignee" axis="col4" class="">
+	                <div style="text-align: left; width: 120px;" class="">订阅时间</div>
+	              </th>
+	              <th align="center" abbr="article_show" axis="col5" class="">
+	                <div style="text-align: center; width: 200px;" class="">订阅状态</div>
+	              </th>
+	              <th align="center" abbr="article_time" axis="col6" class="">
+	                <div style="text-align: center; width:100px;" class="">快递公司</div>
+	              </th>
+	              <th align="center" abbr="article_time" axis="col6" class="">
+	                <div style="text-align: center; width: 160px;" class="">快递单号</div>
+	              </th>
+					<th align="center" abbr="article_time" axis="col6" class="">
+						<div style="text-align: center; width: 100px;" class="">跟踪状态</div>
+					</th>
+					<th align="center" abbr="article_time" axis="col6" class="">
+						<div style="text-align: center; width:80px;" class="">快递状态</div>
+					</th>
+					<th align="center" abbr="article_time" axis="col6" class="">
+						<div style="text-align: center; width: 160px;" class="">推送时间</div>
+					</th>
+	              <th align="center" axis="col1" class="handle">
+	                <div style="text-align: center; width: 150px;">操作</div>
+	              </th>
+	              <th style="width:100%" axis="col7">
+	                <div></div>
+	              </th>
+	            </tr>
+	          </thead>
+        </table>
+      </div>
+    </div>
+
+    <div class="bDiv" style="height: auto;">
+      <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+        <table cellspacing="0" cellpadding="0">
+          <tbody>
+          	<foreach name="list" item="vo" key="k" >
+	        	<tr data-action-id="{$vo.action_id}" id="{$vo.action_id}">
+	              <td align="left" abbr="order_sn" axis="col3" class="">
+					  <div style="text-align: left; width: 140px;" class=""><a href="{:url('Order/detail',['order_id'=>$vo.order_id])}">{$vo.order_sn}</a></div>
+	              </td>
+					<td align="left" abbr="order_sn" axis="col3" class="">
+						<div style="text-align: left; width:200px;" class="">{$vo.suppliers_name|default='自营'}</div>
+					</td>
+	              <td align="left" abbr="consignee" axis="col4" class="">
+	                <div style="text-align: left; width: 120px;" class=""><if condition="$vo['subtime'] gt 0">{$vo['subtime']|date='Y-m-d H:i:s',###}</if></div>
+	              </td>
+	              <td align="center" abbr="article_show" axis="col5" class="">
+	                <div style="text-align: center; width: 200px;" class="">{$vo.ordermessage}</div>
+	              </td>
+	              <td align="center" abbr="article_time" axis="col6" class="">
+	                <div style="text-align: center; width: 100px;" class="">{$wuliuarr[$vo.shipping_code]}</div>
+	              </td>
+	              <td align="center" abbr="article_time" axis="col6" class="">
+	                <div style="text-align: center; width: 160px;" class="">{$vo.invoice_no}</div>
+	              </td>
+					<td align="center" abbr="article_time" axis="col6" class="">
+						<div style="text-align: center; width: 100px;" class="">
+							<if condition="$vo['pollStatus'] eq 'polling'">
+								进行中
+								<elseif condition="$vo['pollStatus'] eq 'shutdown'" />
+								关闭
+								<elseif condition="$vo['pollStatus'] eq 'abort'" />
+								中止
+								<elseif condition="$vo['pollStatus'] eq 'updateall'" />
+								重新推送
+							</if>
+						</div>
+					</td>
+					<td align="center" abbr="article_time" axis="col6" class="">
+						<div style="text-align: center; width:80px;" class="">{$vo.billStatus}</div>
+					</td>
+					<td align="center" abbr="article_time" axis="col6" class="">
+						<div style="text-align: center; width: 160px;" class=""><if condition="$vo['pushTime'] gt 0">{$vo['pushTime']|date='Y-m-d H:i:s',###}</if></div>
+					</td>
+	              <td align="center" axis="col1" class="handle">
+	                <div style="text-align: center; width: 150px;">
+						<a href="{:U('Poll/detail',array('id'=>$vo['id']))}" data-toggle="tooltip" title="" class="btn btn-info green" data-original-title="查看详情"><i class="fa fa-list-alt"></i>查看</a>
+						<if condition="($vo['orderstatus'] neq 200) or ($vo['pollStatus'] eq 'shutdown') or ($vo['pollStatus'] eq 'abort')">
+							<a data-toggle="tooltip" href="javascript:drop_confirm('您确定要重新提交订阅吗?', '{:U('Poll/resub?id='.$vo['id'])}');" class="btn btn-info red" title="" data-original-title="重新订阅"><i class="fa fa-folder-open"></i>重新订阅</a>
+							<else/>
+							<a href="javascript:void(0);" class="btn btn-info" style="color:#ccc;"><i class=" fa fa-folder-open"></i>重新订阅</a>
+						</if>
+					</div>
+	              </td>
+	              <td style="width:100%" axis="col7">
+	                <div></div>
+	              </td>
+	            </tr>
+	            </foreach>
+	          </tbody>
+        </table>
+      </div>
+      <div class="iDiv" style="display: none;"></div>
+    </div>
+    <!--分页位置--> 
+    <div class="row">
+        <div class="col-sm-6 text-left"></div>
+        <div class="col-sm-6 text-right">{$page}</div>
+    </div>
+   	</div>
+</div>
+<script>
+    function drop_confirm(msg, url){
+        //if(confirm(msg)){
+            $.post(url,function(data){
+                if(data.errno == 0)
+                {
+                    location.reload();
+                } else {
+                    alert(data.error);
+                }
+
+            },'json');
+        //}
+    }
+</script>
+</body>
+</html>

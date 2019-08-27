@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="renderer" content="webkit">
+<title>个人信息</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/member.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+<script src="__STATIC__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+<link type="text/css" rel="stylesheet" href="/public/plugins/daterangepicker/daterangepicker-bs3.css">
+<script type="text/javascript" src="/public/plugins/daterangepicker/moment.min.js"></script>
+<script type="text/javascript" src="/public/plugins/daterangepicker/daterangepicker.js"></script>
+<script src="__PUBLIC__/js/global.js?v={$vnum}" type="text/javascript"></script>
+<script src="__PUBLIC__/static/js/layer/layer.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/baidu.js"></script>
+</head>
+
+<body class="bgg">
+	<include file="public/user_header" />
+	<div class="clear"></div>
+	
+	<div class="y-content">
+		<!--左侧菜单-->
+		<include file="public/user_lefter" />
+		
+		<!--右侧内容-->
+		<div class="right00 fri">
+			<div class="y-hbt">
+				个人资料
+			</div>
+			<form action="" method="post">
+			<div class="y-grxx">
+				<h2>亲爱的{$user.nickname}，填写真实的资料，有助于好友找到你哦。</h2>
+				<div class="xx clearfix">
+					<p>当前头像：</p>
+					<div class="bbt">
+			            <div>
+			                <img id="preview" src="{$user.head_pic|default='__STATIC__/images/headPic.jpg'}" onClick="GetUploadify2(1,'head_pic','head_pic','add_img')" width="74" height="74" />
+			                <input type="hidden" name="head_pic" id="head_pic" value="{$user.head_pic}">
+			            </div>
+			        </div>
+				</div>
+				<div class="xx clearfix">
+					<p><span>*</span>昵称：</p>
+					<input type="text" class="tx" name="nickname" id="nickname" value="{$user.nickname}" />
+					<h3>*昵称填写须知：与{:tpCache('shop_info.store_name')}业务或卖家品牌冲突的昵称，{:tpCache('shop_info.store_name')}将有可能收回</h3>
+				</div>
+				<div class="xx clearfix">
+					<p>真实姓名：</p>
+					<input type="text" class="tx" name="real_name" id="real_name" value="{$user.real_name}" style="width: 145px;" />
+				</div>
+				<div class="xx clearfix">
+					<p><span>*</span>性别：</p>
+					<input type="radio" name="sex" id="secret" <if condition="$user['sex'] eq '0'">checked</if> value="0"/><label for="secret">保密</label>
+					<input type="radio" name="sex" id="man" <if condition="$user['sex'] eq '1'">checked</if> value="1"/><label for="man">男</label>
+					<input type="radio" name="sex" id="woman" <if condition="$user['sex'] eq '2'">checked</if> value="2"/><label for="woman">女</label>
+				</div>
+				<div class="xx clearfix">
+					<p><span>*</span>生日：</p>
+					<input type="text" class="tx" name="birthday" id="birthday" value="{$user.birthday|date='Y-m-d',###}" style="width: 145px;" />
+				</div>
+				<!-- <div class="xx clearfix">
+					<p>居住地：</p>
+					<select style="width: 150px;"><option></option><option></option></select>
+					<select style="width: 150px;"><option></option></select>
+					<select style="width: 150px;"><option></option></select>
+				</div> -->
+				<div class="xx clearfix">
+					<p>&nbsp;</p>
+					<input type="submit" class="bao" value="保 存" />
+				</div>
+			</div>
+			</form>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<include file="public/user_footer" />
+	<script type="text/javascript">
+		$(document).ready(function() {
+			// 生日时间
+			$('#birthday').daterangepicker({
+				singleDatePicker: true,
+				showDropdowns: true,
+				minDate: '1900-01-01',
+				maxDate: moment(),
+				startDate: moment(),
+				format: 'YYYY-MM-DD', //控件中from和to 显示的日期格式
+				locale: {
+					applyLabel: '确定',
+					cancelLabel: '取消',
+					fromLabel: '起始时间',
+					toLabel: '结束时间',
+					customRangeLabel: '自定义',
+					daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
+					monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
+						'七月', '八月', '九月', '十月', '十一月', '十二月'],
+					firstDay: 1
+				}
+			});
+			$('.daterangepicker').hide();
+		});
+		$(function(){
+			$('.choice_hobby').click(function(){
+				$(this).toggleClass('red');
+			})
+		})
+		function delimg(file,t){
+			$.get(
+					"/index.php?m=Admin&c=Uploadify&a=delupload",{action:"del", filename:file},function(){}
+			);
+			$('#head_pic').val('');
+			$('#preview').attr('src','');
+			$(t).remove();
+		}
+		function add_img(str){
+			var head_pic = $('#head_pic').val();
+			$('#head_pic').val(str);
+			$('#preview').attr('src',str);
+			$('img[class="headpic"]').attr('src',str);
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+	<header class="header">
+		<div class="top">
+			<if condition="$user">
+				<div class="left">
+					<a href="{:U('Homered/User/index')}" class="lo userinfo">{$user['nickname']}</a>
+					<a href="{:U('Home/user/logout')}" class="re">安全退出</a>
+				</div>
+			<else />
+				<div class="left">
+					<a href="{:U('Home/user/login')}" class="lo">您好,请登录</a>
+					<a href="{:U('Home/user/reg')}" class="re">立即注册</a>
+				</div>
+			</if>
+			<div class="right">
+				<ul>
+					<li><a href="{:U('Homered/User/index')}">个人中心</a></li>
+					<li><a href="{:U('Homered/Cart/index')}" class="ys2">购物车</a></li>
+					<li><a href="{:U('Homered/User/goods_collect')}" class="ys3">我的收藏</a></li>
+					<li><a href="{:U('Goods/all_category')}">商品分类</a></li>
+					<li><a href="tencent://message/?uin={$tpshop_config['shop_info_qq2']}&amp;Site={$tpshop_config['shop_info_store_title']}&amp;Menu=yes" class="ys1">联系客服</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="logo-bg">
+			<div class="logo-bk">
+				<div class="logo"><a href="{:U('Homered/Index/index');}"><img src="{$tpshop_config['shop_info_store_logo']|default='__STATIC__/images/logo.png'}"></div>
+				<!-- <div class="logo-n">用户注册</div> -->
+			</div>
+		</div>
+	</header>

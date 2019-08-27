@@ -1,0 +1,164 @@
+</div>
+    </div>	  
+<!-- drawer -->
+        <div class="mdk-drawer js-mdk-drawer" id="default-drawer">
+            <div class="mdk-drawer__content">
+                <div class="mdk-drawer__inner" data-simplebar data-simplebar-force-enabled="true">
+
+                    <nav class="drawer  drawer--dark">
+                        <div class="drawer-spacer">
+                            <div class="media align-items-center">
+                                <!-- <a href="index.html" class="drawer-brand-circle mr-2"></a> -->
+                                <div class="media-body" style="text-align:center;">
+                                    <a href="index.html" class="h5 m-0 text-link">米豆薯实体店管理系统</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- HEADING -->
+                        <div class="yhtx">
+                            <img src="{$store_info.litpic|default='__PUBLIC__/storemobile/img/errors.jpg'}">
+                        </div>
+
+                        <div class="py-2 drawer-heading" style="text-align:center;margin:0">
+                            {$store_info.cname|default='暂未设置实体店名称'}
+                        </div>
+                        <!-- MENU -->
+                        <ul class="drawer-menu" id="dasboardMenu" data-children=".drawer-submenu">
+                            <foreach name="menu" item="m">
+                            <li class="drawer-menu-item active ">
+                                <a href="{$m.url}">
+                                <i class="material-icons">{$m.icon}</i>
+                                <span class="drawer-menu-text"> {$m.name}</span>
+                              </a>
+                            </li>
+                            </foreach>
+                            <!--<li class="drawer-menu-item active ">-->
+                                <!--<a href="{:U('/Storemobile/Level/Staff',['t'=>2])}">-->
+                                <!--<i class="material-icons">person</i>-->
+                                <!--<span class="drawer-menu-text"> 成员管理</span>-->
+                              <!--</a>-->
+                            <!--</li>-->
+                            <!--<li class="drawer-menu-item active ">-->
+                                <!--<a href="{:U('/Storemobile/System/Setpsw')}">-->
+                                <!--<i class="material-icons">lock_outline</i>-->
+                                <!--<span class="drawer-menu-text"> 修改密码</span>-->
+                              <!--</a>-->
+                            <!--</li>-->
+                            <!--<li class="drawer-menu-item active ">-->
+                                <!--<a href="{:U('/Storemobile/CapitalManage/index')}">-->
+                                <!--<i class="material-icons">attach_money</i>-->
+                                <!--<span class="drawer-menu-text"> 资金管理</span>-->
+                              <!--</a>-->
+                            <!--</li>-->
+                            <!--<li class="drawer-menu-item active ">-->
+                                <!--<a href="{:U('/Storemobile/Rebate/Index')}">-->
+                                <!--<i class="material-icons">autorenew</i>-->
+                                <!--<span class="drawer-menu-text"> 返利流水</span>-->
+                              <!--</a>-->
+                            <!--</li>-->
+                            <!--<li class="drawer-menu-item active ">-->
+                                <!--<a href="{:U('/Storemobile/Rebate/Sweep')}">-->
+                                <!--<i class="material-icons">payment</i>-->
+                                <!--<span class="drawer-menu-text"> 线下消费</span>-->
+                              <!--</a>-->
+                            <!--</li>-->
+                            <!--<li class="drawer-menu-item active ">-->
+                                <!--<a href="{:U('/Storemobile/Rebate/OrderStore')}">-->
+                                    <!--<i class="material-icons">payment</i>-->
+                                    <!--<span class="drawer-menu-text"> 线下换购订单</span>-->
+                                <!--</a>-->
+                            <!--</li>-->
+                        </ul>
+
+                        <div class="banquan">Copyright © 2018<br>米豆薯商城 版权所有，并保留所有权利</div>
+
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- // END drawer -->
+
+        <!-- drawer -->
+        <div class="mdk-drawer js-mdk-drawer" id="user-drawer" data-position="right" data-align="end">
+            <div class="mdk-drawer__content">
+                <div class="mdk-drawer__inner" data-simplebar data-simplebar-force-enabled="true">
+                    <nav class="drawer drawer--light">
+                        <div class="drawer-spacer drawer-spacer-border">
+                            <div class="media align-items-center">
+                                <i class="material-icons" style="width:2rem;">phonelink_setup</i>
+                                <div class="media-body">
+                                    <a  class="h5 m-0">系统</a>
+                                    <div>设置操作</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- MENU -->
+                        <ul class="drawer-menu" id="userMenu" data-children=".drawer-submenu">
+                            <li class="drawer-menu-item">
+                                <a href="{:U('/Storemobile/System/Modify')}">
+                                    <i class="material-icons">lock</i>
+                                    <span class="drawer-menu-text"> 修改信息</span>
+                                  </a>
+                            </li>
+                            <li class="drawer-menu-item">
+                                <a href="{:U('/Storemobile/System/Sms')}">
+                                    <i class="material-icons">notifications</i>
+                                    <span class="drawer-menu-text"> 消息</span>
+                                  </a>
+                            </li>
+                            <li class="drawer-menu-item">
+                                <a href="{:U('/Storemobile/System/Logout')}">
+                                    <i class="material-icons">exit_to_app</i>
+                                    <span class="drawer-menu-text"> 退出登录</span>
+                                  </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- // END drawer -->
+
+    </div>
+
+
+
+
+
+    <script>
+        (function() {
+            'use strict';
+            // Self Initialize DOM Factory Components
+            domFactory.handler.autoInit()
+
+
+            // Connect button(s) to drawer(s)
+            var sidebarToggle = document.querySelectorAll('[data-toggle="sidebar"]')
+
+            sidebarToggle.forEach(function(toggle) {
+                toggle.addEventListener('click', function(e) {
+                    var selector = e.currentTarget.getAttribute('data-target') || '#default-drawer'
+                    var drawer = document.querySelector(selector)
+                    if (drawer) {
+                        if (selector == '#default-drawer') {
+                            $('.container-fluid').toggleClass('container--max');
+                        }
+                        drawer.mdkDrawer.toggle();
+                    }
+                })
+            })
+        })()
+    </script>
+
+
+     <!-- <script src="__PUBLIC__/storemobile/js/morris.min.js"></script>
+    // <script src="__PUBLIC__/storemobile/js/raphael.min.js"></script>
+    // <script src="__PUBLIC__/storemobile/js/bootstrap-datepicker.min.js"></script>
+    // <script src="__PUBLIC__/storemobile/js/datepicker.js"></script> -->
+
+ 
+
+</body>
+
+</html>

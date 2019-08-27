@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>我的账户-{$tpshop_config['shop_info_store_title']}</title>
+<meta name="keywords" content="{$tpshop_config['shop_info_store_keyword']}"/>
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}"/>
+<link rel="shortcut  icon" type="image/x-icon" href="{$tpshop_config['shop_info_store_ico']}" media="screen"  />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<link href="__STATIC__/css/style.css?v={$vnum}" rel="stylesheet">
+<link href="__STATIC__/css/member.css?v={$vnum}" rel="stylesheet">
+<script src="__STATIC__/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/js/global.js?v={$vnum}" type="text/javascript"></script>
+<script src="__PUBLIC__/static/js/layer/layer.js?v={$vnum}" type="text/javascript"></script>
+<script src="__PUBLIC__/js/baidu.js"></script>
+</head>
+
+<body class="bgg">
+	<include file="public/user_header" />
+	<div class="clear"></div>
+	
+	<div class="y-content">
+		<!--左侧菜单-->
+		<include file="public/user_lefter" />
+		
+		<!--右侧内容-->
+		<div class="y-right y-borm fri">
+			<div class="y-title0">
+				<span></span>更换手机号码
+			</div>
+			<div class="y-shr">
+            <form action="" method="post" onSubmit="return check_form();" class="yzm">
+            	<div class="zhmm">
+		        	<h6>原手机：</h6>
+                    <input type="text" class="hao boyu" value="{$user_info['mobile']}" id="old_mobile" name="old_mobile" readonly="readonly" style="cursor: not-allowed;color:#999"/>
+		        </div>
+		        <div class="zhmm">
+		        	<h6>新手机：</h6>
+                    <input type="text" class="hao" id="new_mobile" name="mobile" onpaste="this.value=this.value.replace(/[^\d]/g,'')" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" />
+		        </div>
+		        <div class="zhmm">
+		        	<h6>验证码：</h6>
+		            <input type="text" class="c_code_msg2" name="code" id="new_code">
+		            <input type="button" intervaltime="{$time}" value="获取验证码 " id="btnemailAuthCode2" onClick="sendCode(this,'new_mobile')" class="fsyz"  />
+		        </div>
+		        <div class="zhmm">
+		        	<h6>&nbsp;</h6>
+		            <button class="xyb" type="submit"> 下一步 </button>
+		        </div>
+	        </form>
+            </div>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<include file="public/user_footer" />
+	<script>
+	    // 表单提交验证
+	    function check_form()
+	    {
+	        var old_mobile = $('#old_mobile').val();
+	        var new_mobile = $('#new_mobile').val();
+	        //原邮箱不为空的情况下 验证格式
+	        if(old_mobile != '' && typeof(old_mobile) != 'undefined'){
+	            if(!checkMobile(old_mobile)){
+	                layer.alert('原手机格式错误', {icon: 2});// alert('原手机格式错误');
+	                return false;
+	            }
+	        }
+	        if(!checkMobile(new_mobile)){
+	            layer.alert('新手机格式错误', {icon: 2});//alert('新手机格式错误');
+	            return false;
+	        }
+
+	        if($.trim($('#new_code').val()) == '')
+	        {
+	            layer.alert('验证码不能为空', {icon: 2});//alert('验证码不能为空');
+	            return false;
+	        }
+	        return true;
+	    }
+
+	    function sendCode(obj,input_id){
+	        var id = $(obj).attr('id');
+	        var input = $('#'+input_id).val();
+	        var old_mobile = $('#old_mobile').val();
+	        //原邮箱不为空的情况下 验证格式
+	        if(old_mobile != '' && typeof(old_mobile) != 'undefined'){
+	            if(!checkMobile(old_mobile)){
+	                layer.alert('原手机格式错误', {icon: 2});//alert('原手机格式错误');
+	                return false;
+	            }
+	        }
+	        if(!checkMobile(input)){
+	            layer.alert('手机号码格式错误', {icon: 2});//alert('手机号码格式错误');
+	            return false;
+	        }
+
+	        var url = "/index.php?m=Home&c=Api&a=send_validate_code&scene=6&type=mobile&send="+input;
+	        //发送验证码
+	        $.ajax({
+	            type : "GET",
+	            url  : url,
+	            dataType : 'json',
+	            error: function(request) {
+	                layer.alert('服务器繁忙, 请联系管理员!', {icon: 2});//alert("服务器繁忙, 请联系管理员!");
+	                return;
+	            },
+	            success: function(res) {
+	                if(res.status == 1){
+	                    layer.alert(res.msg,{icon: 1});
+	                    jsInnerTimeout(id);
+	                }else{
+	                    layer.alert(res.msg,{icon: 2});//alert('发送失败');
+	                }
+	            }
+	        });
+	    }
+
+	    //倒计时函数
+	    function jsInnerTimeout(id)
+	    {
+	        var codeObj=$("#"+id);
+	        var intAs= parseInt(codeObj.attr("IntervalTime"));
+
+	        intAs--;
+	        codeObj.attr("disabled","disabled");
+	        if(intAs<=-1)
+	        {
+	            codeObj.removeAttr("disabled");
+	            codeObj.attr("IntervalTime",{$time});
+	            codeObj.val("获取验证码");
+	            return true;
+	        }
+
+	        codeObj.val(intAs+'s后再次获取');
+	        codeObj.attr("IntervalTime",intAs);
+
+	        setTimeout("jsInnerTimeout('"+id+"')",1000);
+	    };
+
+	    $("#btnemailAuthCode2").removeAttr("disabled");
+	</script>
+</body>
+</html>

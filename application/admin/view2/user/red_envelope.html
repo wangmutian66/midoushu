@@ -1,0 +1,169 @@
+<include file="public/layout" />
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+	<div class="fixed-bar">
+		<div class="item-title">
+			<div class="subject">
+				<h3>米豆列表</h3>
+				<h5></h5>
+			</div>
+		</div>
+	</div>
+	<!-- 操作说明 -->
+	<div id="explanation" class="explanation" style="color: rgb(44, 188, 163); background-color: rgb(237, 251, 248); width: 99%; height: 100%;">
+		<div id="checkZoom" class="title"><i class="fa fa-lightbulb-o"></i>
+			<h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+			<span title="收起提示" id="explanationZoom" style="display: block;"></span> </div>
+		    <ul>
+      <li>查看用户 “{$Request.param.user_id|get_user_nickname}” 的米豆记录</li>
+    </ul> 
+	</div>
+	<div class="flexigrid">
+		<div class="mDiv">
+			<div class="ftitle">
+				<h3>米豆记录列表</h3>
+				<h5>(共{$pager->totalRows}条记录)</h5>
+			</div>
+			<div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+			<form class="navbar-form form-inline"  id="search-form2" action="__URL__/red_envelope">
+				
+				 
+                <div class="sDiv">
+					<div class="sDiv2" style="margin-right: 10px;">
+						<input type="text" id="user_id" name="user_id" value="{$Request.param.user_id}"  placeholder="请输入用户ID..."/>						
+					</div>
+                    <div class="sDiv2">
+					
+                        <input type="text" id="search_key" name="search_key" size="30" class="qsbox" value="{$Request.param.search_key}" placeholder="用户手机...">
+                        <input type="submit" class="btn" value="搜索">
+                    </div>
+                </div>
+            </form>
+		</div>
+		<div class="hDiv">
+			<div class="hDivBox">
+				<table cellspacing="0" cellpadding="0">
+					<thead>
+						<tr>
+							<th class="sign" axis="col0"> <div style="width: 24px;"><i class="ico-check"></i></div>
+							</th>
+							
+							<th align="left" abbr="isadmin" axis="col4" class=""> <div style="text-align: left; width: 100px;" class="">红包名称</div>
+							</th>
+							<th align="center" abbr="control" axis="col9" class=""> <div style="text-align: center; width: 60px;" class="">米豆金额</div>
+							</th>
+							<th align="center" abbr="money" axis="col4" class=""> <div style="text-align: center; width:120px;" class="">赠送时间</div>
+							</th>
+							
+							<th align="center" abbr="act" axis="col8" class=""> <div style="text-align: center; width: 130px;" class="">来源</div>
+							</th>
+							
+							<th align="center" abbr="control" axis="col9" class=""> <div style="text-align: center; width: 100px;" class="">订单ID</div>
+							</th>
+							
+						
+							<th style="width:100%" axis="col7"> <div></div>
+							</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+		<div class="bDiv" style="height: auto;">
+			<div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+				<table>
+					<tbody>
+						<foreach name="list" item="vo" key="k" >
+							<tr>
+								<td class="sign"><div style="width: 24px;"><i class="ico-check"></i></div></td>
+								<td align="left" class=""><div style="text-align: center; width: 100px;">{$vo.red_name}</div></td>
+								<td align="center" class=""><div style="text-align: center; width: 60px;">{$vo.money}</div></td>
+								<td align="center" class=""><div style="text-align: center; width: 120px;">{$vo.create_time|date='Y-m-d H:i',###}</div></td>
+								<td align="center" class=""><div style="text-align: center; width: 130px;">{$vo.source}</div></td>
+								<td align="center" class=""><div style="text-align: center; width: 100px;">
+								
+								<a target="_blank" class="open"  href="
+								<if condition="$vo.is_red eq 0">
+								{:U('/Admin/order/detail',['order_id'=>$vo['order_id']])}
+								<else/>
+								{:U('/Admin/order_red/detail',['order_id'=>$vo['order_id']])}
+								</if>">{$vo.order_id} <i class="fa fa-external-link " title="新窗口打开"></i>
+</a>
+
+</div></td>
+								<td align="" class="" style="width: 100%;"><div>&nbsp;</div></td>
+							</tr>
+						</foreach>
+					</tbody>
+				</table>
+			</div>
+			<div class="iDiv" style="display: none;"></div>
+		</div>
+		<!--分页位置--> 
+		{$pager->show()} </div>
+</div>
+<script>
+    $(document).ready(function(){	
+	    // 表格行点击选中切换
+	    $('#flexigrid > table>tbody >tr').click(function(){
+		    $(this).toggleClass('trSelected');
+		});
+		
+		// 点击刷新数据
+		$('.fa-refresh').click(function(){
+			location.href = location.href;
+		});
+		
+		// 整个页面 ID唯一 之前 #frozen 多条信息同在时 无效
+		$(".frozen").click(function (){
+			var obj = $(this);
+			var rid = obj.attr('rid');
+			
+			$.getJSON("{:U('Admin/user/frozen')}",{rid:rid,rstatus:$(this).attr('rstatus')},function (r){
+				if(r.status == 1){
+					obj.attr('rstatus',r.save_status);
+					if(r.save_status == 1){
+						$("#frozen_"+rid).html('正常');
+						obj.text('冻结');
+					}else{
+						$("#frozen_"+rid).html('<font color="#FF0000">冻结</font>');	
+						obj.text('解冻');
+					}
+					
+				}else{
+					//alert(r.msg);
+					layer.msg(r.msg,{icon:2});
+				}
+			})
+		})	
+		
+	});
+
+    function delfun(obj) {
+      // 删除按钮
+      layer.confirm('确认删除？', {
+        btn: ['确定', '取消'] //按钮
+      }, function () {
+        $.ajax({
+          type: 'post',
+          url: $(obj).attr('data-url'),
+          data: {act: 'del', article_id: $(obj).attr('data-id')},
+          dataType: 'json',
+          success: function (data) {
+            layer.closeAll();
+            if (data) {
+              $(obj).parent().parent().parent().remove();
+            } else {
+              layer.alert('删除失败', {icon: 2});  //alert('删除失败');
+            }
+          }
+        })
+      }, function () {
+        layer.closeAll();
+      });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<include file="public/layout" />
+<script type="text/javascript" src="__ROOT__/public/static/js/layer/laydate/laydate.js"></script>
+<link href="__STATIC__/css/ghs-style.css" rel="stylesheet" type="text/css" />
+<!--日期-->
+<script type="text/javascript" src="__STATIC__/js/jquery.min.js"></script>
+<script type="text/javascript" src="__STATIC__/js/dateRange.js"></script>
+<script type="text/javascript" src="__STATIC__/js/monthPicker.js"></script>
+<link rel="stylesheet" type="text/css" href="__STATIC__/css/dateRange.css"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/css/monthPicker.css"/>
+<!--END-->
+<style type="text/css">
+.wrapper {
+	margin: 0 15px 0 15px;
+	float:left;
+	width:500px;
+	margin-top:22px;
+}
+</style>
+</head>
+
+<body>
+	<div class="ghs-yue">
+		<div class="top">
+			<div class="bt">提现状态<div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div></div>
+		</div>
+		<div class="list">
+			<div class="l">提现状态列表</div>
+			<div class="wrapper">
+				<form class="form" method="get" action="{:U('withdrawals_log')}" onsubmit="return check_form();">
+					<input type="hidden" name="create_time" id="create_time" value="{$create_time}" />
+					<input type="hidden" name="start_time" id="start_time" value="{$start_time}" />
+					<input type="hidden" name="end_time" id="end_time" value="{$end_time}" />
+					<div class="ta_date" id="div_date_demo3">
+						<span class="date_title" id="date_demo3"></span>
+						<a class="opt_sel" id="input_trigger_demo3" href="#">
+							<i class="i_orderd"></i>
+						</a>
+					</div>
+					<div id="datePicker"></div>
+					<br/>
+					<script type="text/javascript">
+						var dateRange = new pickerDateRange('date_demo3', {
+							aToday : 'aToday', //今天
+							isTodayValid : true,
+							startDate : '{$start_time}',
+							endDate : '{$end_time}',
+							//needCompare : true,
+							//isSingleDay : true,
+							//shortOpr : true,
+							defaultText : ' 至 ',
+							inputTrigger : 'input_trigger_demo3',
+							theme : 'ta',
+							success : function(obj) {
+								$("#dCon_demo3").html('开始时间 : ' + obj.startDate + '<br/>结束时间 : ' + obj.endDate);
+								$("#create_time").val('开始时间 : ' + obj.startDate + '<br/>结束时间 : ' + obj.endDate);
+								$("#start_time").val(obj.startDate);
+								$("#end_time").val(obj.endDate);
+							}
+						});
+					</script>
+				<input type="submit" name="" value="搜索" class="inp-ss">
+				</form>
+			</div>
+		</div>
+		<div class="bg">
+			<empty name="lists">
+                <p class="norecode" style="font-size: 16px;color: #999999;padding:100px 0;text-align: center;">抱歉，您暂时没有要处理的消息！</p>
+            <else />
+			<table>
+				<tr>
+					<th></th>
+					<th>提现时间</th>
+					<th>提现金额</th>
+					<th>审核状态</th>
+					<th>审核备注</th>
+					<!-- <th>操作</th> -->
+				</tr>
+				<foreach name="lists" item="vv">
+				<tr>
+					<td><img src="__STATIC__/images/xx.jpg"></td>
+					<td class="kuan">{$vv.create_time|date='Y-m-d H:i:s',###}</td>
+					<td class="kuan">{$vv.money}</td>
+					<td class="kuan">
+						<if condition="$vv[status] eq 0"><a href="" class="ck-2 shz">待审核</a></if>
+                        <if condition="$vv[status] eq 1"><a href="" class="ck-2 ytg">审核通过</a></if>
+                        <if condition="$vv[status] eq 2"><a href="" class="ck-2 wtg">提现成功</a></if>
+                        <if condition="$vv[status] eq 3"><a href="" class="ck-2 wtg">拒绝提现</a></if>
+                        <if condition="$vv[status] eq -1"><a href="" class="ck-2 wtg">审核失败</a></if>
+                        <if condition="$vv[status] eq -2"><a href="" class="ck-2 wtg">无效作废</a></if>
+					</td>
+					<td class="kuan">{$vv.remark}</td>
+					<!-- <td class="kuan"><a href="" class="ck"><img src="__STATIC__/images/sc.jpg"></a></td> -->
+				</tr>
+				</foreach>
+				<tr class="trys2">
+					<td colspan="7" class="fenye">
+						{$page}
+					</td>
+				</tr>
+			</table>
+			</empty>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function check_form(){
+	        var start_time = $.trim($('#start_time').val());
+	        var end_time   =  $.trim($('#end_time').val());
+	        if(start_time == '' ^ end_time == ''){
+	            layer.alert('请选择完整的时间间隔', {icon: 2});
+	            return false;
+	        }
+	        if(start_time !== '' && end_time !== ''){
+	            $('#create_time').val(start_time+" - "+end_time);
+	        }
+	        if(start_time == '' && end_time == ''){
+	            $('#create_time').val('');
+	        }
+	        return true;
+	    }
+	</script>
+</body>
+</html>

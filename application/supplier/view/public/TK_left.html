@@ -1,0 +1,78 @@
+<script type="text/javascript" src="__PUBLIC__/static/js/jquery.SuperSlide.2.1.2.js"></script>
+<div class="TK_left">
+	<div class="left_top">
+		<div class="logo"></div>
+		<h1>米豆薯商品管理</h1>
+		<h2>商户管理</h2>
+	</div>
+	<div class="left_middle">
+		<div class="go_home"><a target="workspace" href="{:U('/Supplier/Index/welcome')}">平台首页</a></div>
+		<div class="sideMenu">
+			<h3  class="on"><em></em>安全设置</h3>
+			<ul>
+				<li><a target="workspace" href="{:U('/Supplier/supplier/detail')}">供货商信息</a></li>
+				<li><a target="workspace" href="{:U('/Supplier/supplier/postaddress')}">退换货收货地址</a></li>
+				<li><a target="workspace" href="{:U('/Supplier/supplier/password')}">修改密码</a></li>
+				<li><a target="workspace" href="{:U('/Supplier/supplier/mobile_validate')}">绑定手机</a></li>
+				<li><a target="workspace" href="{:U('/Supplier/supplier/paypwd')}">设置提现密码</a></li>
+			</ul>
+			<h3><em></em>商品管理</h3>
+			<ul>
+				<li><a target="workspace" href="{:U('/Supplier/Goods/goodsList')}">商品列表 >></a></li>
+				<li><a target="workspace" href="{:U('/Supplier/Comment/index')}">评论列表 >></a></li>
+				<li><a target="workspace" href="{:U('/Supplier/Goods/stock_list')}">库存日志 >></a></li>
+			</ul>
+			<h3><em></em>订单管理</h3>
+			<ul>
+				<li><a target="workspace" href="{:U('/Supplier/Order/index')}">全部订单 >></a></li>
+				<li><a target="workspace" href="{:U('/Supplier/Order/delivery_list')}">发货单 >></a></li>
+				<li><a target="workspace" href="{:U('/Supplier/Order/refund_order_list')}">退款单 >></a></li>
+				<li><a target="workspace" href="{:U('/Supplier/Order/return_list')}">退换货 >></a></li>
+			</ul>
+			<h3><em></em>米豆商品管理</h3>
+			<ul>
+				<li><a target="workspace" href="{:U('/Supplier/GoodsRed/goodsList')}">商品列表 >></a></li>
+				<li><a target="workspace" href="{:U('/Supplier/CommentRed/index')}">评论列表 >></a></li>
+				<li><a target="workspace" href="{:U('/Supplier/GoodsRed/stock_list')}">库存日志 >></a></li>
+				<li><a target="workspace" href="{:U('/Supplier/StoreRed/stock_goods_list')}">实体店供货明细 >></a></li>
+				<li><a target="workspace" href="{:U('/Supplier/StoreRed/apply_list')}">实体店申请记录 >></a></li>
+				<li><a target="workspace" href="{:U('/Supplier/StoreRed/supply_goods')}">供货申请 >></a></li>
+			</ul>
+			<h3><em></em>米豆订单管理</h3>
+			<ul>
+				<li><a target="workspace" href="{:U('/Supplier/OrderRed/index')}">全部订单 >></a></li>
+				<li><a target="workspace" href="{:U('/Supplier/OrderRed/delivery_list')}">发货单 >></a></li>
+				<li><a target="workspace" href="{:U('/Supplier/OrderRed/refund_order_list')}">退款单 >></a></li>
+				<li><a target="workspace" href="{:U('/Supplier/OrderRed/return_list')}">退换货 >></a></li>
+			</ul>
+			<h3><em></em>地区&配送</h3>
+			<ul>
+				<li><a target="workspace"href="{:U('/Supplier/Plugin/')}">物流插件 >></a></li>
+			</ul>
+			<h3><em></em>运营管理</h3>
+			<ul>
+				<li><a target="workspace" href="{:U('/Supplier/Withdrawal/suppliers_account_log')}">资金变动 >></a></li>
+				<li><a target="workspace" href="{:U('/Supplier/Settlement/index')}">待结算订单 >></a></li>
+				<li><a target="workspace" href="{:U('/Supplier/SettlementRed/index')}">待结算米豆订单 >></a></li>
+				<li><a target="workspace" href="{:U('/Supplier/Settlement/settlement')}">已申请结算 >></a></li>
+				<li><a target="workspace" href="{:U('/Supplier/SettlementRed/settlement')}">已申请米豆结算 >></a></li>
+				<li><a target="workspace" href="{:U('/Supplier/Withdrawal/index')}">我的提现 >></a></li>
+			</ul>
+		</div>
+		<!-- sideMenu End -->
+		<script type="text/javascript">
+			jQuery(".sideMenu").slide({
+				titCell:"h3", //鼠标触发对象
+				targetCell:"ul", //与titCell一一对应，第n个titCell控制第n个targetCell的显示隐藏
+				effect:"slideDown", //targetCell下拉效果
+				delayTime:300 , //效果时间
+				triggerTime:150, //鼠标延迟触发时间（默认150）
+				defaultPlay:true,//默认是否执行效果（默认true）
+				returnDefault:false //鼠标从.sideMen移走后返回默认状态（默认false）
+			});
+		</script>
+
+	</div>
+	<div class="left_footer">
+	</div>
+</div>

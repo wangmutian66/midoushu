@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<include file="public/TK_public"/>
+</head>
+
+<body style="width:auto">
+
+<div class="m-bt" style="overflow:hidden">
+	<h2><img src="__PUBLIC__/company/img/h-ico10.png">实体店铺</h2>
+	<form class="fl" method="get" action="">
+		<input type="text" class="text fl" name="key_word" id="key_word" placeholder="搜索相关实体店铺名称..." value="{$Request.param.key_word}" />
+		<input type="submit" class="sub fl" value="立即搜索">
+	</form>
+	<!-- <div style='background:#66c2e6;'>  审核通过</div>   <div style='background:#818277;'>  审核中</div>   <div style='background:#dce64e;'>  审核失败</div>  -->
+	<div style="margin-top:17.5px;">
+	<span style="background:#66c2e6;margin-left:10px;margin-right:10px;padding:3px 10px;border-radius:5px;color: #fff;">审核通过</span>
+	<span style="background:#818277;margin-right:10px;padding:3px 10px;border-radius:5px;color: #fff;">审核失败</span>
+	<span style="background:#dce64e;margin-right:10px;padding:3px 10px;border-radius:5px;color: #fff;">审核中</span>
+	</div>
+	<!--<a href="#" class="an fr">申请增加实体店铺</a>-->
+</div>
+<div class="m-lb" style="margin-right:5px;">
+	<ul class="sd clearfix">
+		<volist name="list" id="vo">
+		<li style="text-align:center">
+			<a href="{:U('/Company/level/store_view',['store_id'=>$vo.cid])}"><img src="{$vo.litpic|default='__PUBLIC__/static/images/errors.jpg'}"></a>
+			<div class="zi">
+				<h2>【建立时间：{$vo.create_time|date="Y-m-d",###}】</h2>
+				<a href="{:U('/Company/level/store_view',['store_id'=>$vo.cid])}">{$vo.cname}</a>
+			</div>
+			<div style="margin:0 auto; width:192px;" class="xuesong">
+			<a href="{:U('/Company/Member/Index',['store_id'=>$vo.cid])}" class="kan fl mr10">查看成员</a>
+			<a href="{:U('/Company/level/staff',['store_id'=>$vo.cid])}" class="kan fl">查看员工</a>
+			<a href="javascript:;" class="kan fl mr10 <if condition="$vo.zexamine eq 2">bg<elseif condition="$vo.zexamine eq 1" />zg<elseif condition="$vo.zexamine eq 3" />sg</if>"   <if condition="$vo.zexamine eq 2">style='background:#66c2e6;'</if> <if condition="$vo.zexamine eq 3">style='background:#818277;'</if> <if condition="$vo.zexamine eq 1">style='background:#dce64e;'</if> onclick="zhutui(this,'{$vo.cid}','{$vo.sexamine}')">主推铺货</a>
+			<a href="javascript:;" class="kan fl <if condition="$vo.sexamine eq 2">bg1<elseif condition="$vo.sexamine eq 1" />zg1<elseif condition="$vo.sexamine eq 3" />sg1</if>" <if condition="$vo.sexamine eq 2">style='background:#66c2e6;'</if> <if condition="$vo.sexamine eq 3">style='background:#818277;'</if> <if condition="$vo.sexamine eq 1">style='background:#dce64e;'</if> onclick="yuxu(this,'{$vo.cid}')">审核铺货</a>
+			<a href="{:U('/Company/Member/apply',['store_id'=>$vo.cid])}" <if condition="$vo.gonghuo_examine eq 1">style='background:#dce64e;'</if><if condition="$vo.gonghuo_examine eq 2">style='background:#66c2e6;'</if> <if condition="$vo.gonghuo_examine eq 3">style='background:#ff0000;'</if>class="kan fl mr10">申请供货</a>
+			<a href="{:U('/Company/Member/stock_goods_list',['store_id'=>$vo.cid])}" class="kan fl">供货明细</a>
+
+			<if condition="($vo.gonghuo_examine eq 3) and ($vo.zexamine neq 3) and ($vo.sexamine neq 3)"><a href="javascript:;" class="kan fl "  onclick="yuanyin('申请供货:{$vo.gonghuo_reason}')">查看原因</a><!--  --></if>
+			<if condition="($vo.gonghuo_examine eq 3) and ($vo.zexamine eq 3)"><a href="javascript:;" class="kan fl "  onclick="yuanyin('申请供货:{$vo.gonghuo_reason}','主推铺货:{$vo.reason}')">查看原因</a><!--  --></if>
+			<if condition="($vo.gonghuo_examine eq 3) and ($vo.sexamine eq 3)"><a href="javascript:;" class="kan fl "  onclick="yuanyin('申请供货:{$vo.gonghuo_reason}','审核铺货:{$vo.reason}')">查看原因</a><!--  --></if>
+			<if condition="($vo.gonghuo_examine neq 3) and ($vo.zexamine eq 3)"><a href="javascript:;" class="kan fl "  onclick="yuanyin('主推铺货:{$vo.reason}','')">查看原因</a><!--  --></if>
+			<if condition="($vo.gonghuo_examine neq 3) and ($vo.zexamine eq 3)"><a href="javascript:;" class="kan fl "  onclick="yuanyin('','主推铺货:{$vo.reason}')">查看原因</a><!--  --></if>
+			<if condition="($vo.gonghuo_examine neq 3) and ($vo.sexamine eq 3)"><a href="javascript:;" class="kan fl "  onclick="yuanyin('','审核铺货:{$vo.reason}')">查看原因</a><!--  --></if>
+			<!-- <a class="kan fl mr10"></a>
+			<div style="clear:both"></div> -->
+			<div class="clearfix"></div></div>
+
+		</li>
+		</volist>
+	</ul>
+</div>
+<!--分页-->
+<div class="center">
+	{$pager->show()}
+</div>
+<script type="text/javascript">
+	function zhutui(e,id_value,sexamine){
+		if(sexamine != 2){
+			layer.msg('请先通过审核铺货', {icon: 2,time: 2000});
+			return false;
+		}
+        var value;
+	    if($(e).hasClass('bg')){
+			$(e).removeClass('bg').removeAttr("style");
+            value = 0;
+		}else if($(e).hasClass('sg')){
+			$(e).removeClass('sg').removeAttr("style");
+			$(e).addClass('zg').attr("style","background:#dce64e;");
+            value = 1;
+		}else{
+            $(e).addClass('zg').attr("style","background:#dce64e;");
+            value = 1;
+		}
+        $.ajax({
+            url:"/index.php?m=company&c=Index&a=changeTableVal&table=company&id_name=cid&id_value="+id_value+"&field=zexamine&value="+value,
+            success: function(data){
+
+            }
+        });
+
+	}
+
+    function yuxu(e,id_value){
+	    var value;
+		if($(e).hasClass('bg1')){
+			$(e).removeClass('bg1').removeAttr("style");
+			$(e).siblings('.bg').removeClass('bg').removeAttr("style")
+            value = 0;
+		}else if($(e).hasClass('sg1')){
+			$(e).removeClass('sg1').removeAttr("style");
+			$(e).addClass('zg1').attr("style","background:#dce64e;");
+            value = 1;
+		}else{
+            $(e).addClass('zg1').attr("style","background:#dce64e;");
+            value = 1;
+		}
+        $.ajax({
+            url:"/index.php?m=company&c=Index&a=changeTableVal&table=company&id_name=cid&id_value="+id_value+"&field=sexamine&value="+value,
+            success: function(data){
+
+            }
+        });
+    }
+	function yuanyin(reason,reason2){
+		layer.open({
+            title: '拒绝原因',
+            content: reason+'</br>'+reason2,
+        });
+    }
+
+	
+
+</script>
+</body>
+</html>
